@@ -1,43 +1,43 @@
-## Getting started
+## 开始
 
 ```bash
-# clone the project
+# 克隆项目
 git clone https://github.com/PanJiaChen/vue-element-admin.git
 
-# enter the project directory
-cd vue-element-admin
+# 进入项目目录
+cd 疏哥果妹后台
 
-# install dependency
+# 安装依赖
 npm install
 
-# develop
+# 运行
 npm run dev
 ```
 
 This will automatically open http://localhost:9527
 
-## Build
+## 打包
 
 ```bash
-# build for test environment
+# 为测试环境构建
 npm run build:stage
 
-# build for production environment
+# 为生产环境构建
 npm run build:prod
 ```
 
-## Advanced
+## 高级
 
 ```bash
-# preview the release environment effect
+# 预览发布环境效果
 npm run preview
 
-# preview the release environment effect + static resource analysis
+# 预览发布环境效果+静态资源分析
 npm run preview -- --report
 
-# code format check
+# 代码格式检查
 npm run lint
 
-# code format check and auto fix
+# 代码格式检查和自动修复
 npm run lint -- --fix
 ```
