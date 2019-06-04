@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">New Role</el-button>
+    <el-button type="primary" @click="handleAddRole">添加角色</el-button>
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
       <el-table-column align="center" label="Role Key" width="220">
@@ -20,8 +20,8 @@
       </el-table-column>
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button>
-          <el-button type="danger" size="small" @click="handleDelete(scope)">Delete</el-button>
+          <el-button type="primary" size="small" @click="handleEdit(scope)">修改</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -83,7 +83,8 @@ export default {
       checkStrictly: false,
       defaultProps: {
         children: 'children',
-        label: 'title'
+        label: 'title',
+        id: 'path'
       }
     }
   },
@@ -109,7 +110,6 @@ export default {
       const res = await getRoles()
       this.rolesList = res.data
     },
-
     // 重新定义路由结构，使其看起来与侧栏相同
     generateRoutes(routes, basePath = '/') {
       const res = []
@@ -124,7 +124,7 @@ export default {
           path: path.resolve(basePath, route.path),
           title: route.meta && route.meta.title
         }
-        // 递归的孩子路线
+        // 递归的子路由
         if (route.children) {
           data.children = this.generateRoutes(route.children, data.path)
         }
@@ -181,17 +181,14 @@ export default {
         })
         .catch(err => { console.error(err) })
     },
+    // 递归子路由
     generateTree(routes, basePath = '/', checkedKeys) {
       const res = []
-
       for (const route of routes) {
         const routePath = path.resolve(basePath, route.path)
-
-        // recursive child routes
         if (route.children) {
           route.children = this.generateTree(route.children, routePath, checkedKeys)
         }
-
         if (checkedKeys.includes(routePath) || (route.children && route.children.length >= 1)) {
           res.push(route)
         }
@@ -200,10 +197,9 @@ export default {
     },
     async confirmRole() {
       const isEdit = this.dialogType === 'edit'
-
       const checkedKeys = this.$refs.tree.getCheckedKeys()
       this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
-
+      return
       if (isEdit) {
         await updateRole(this.role.key, this.role)
         for (let index = 0; index < this.rolesList.length; index++) {
@@ -231,19 +227,20 @@ export default {
         type: 'success'
       })
     },
-    // reference: src/view/layout/components/Sidebar/SidebarItem.vue
+    // 参考: src/view/layout/components/Sidebar/SidebarItem.vue
     onlyOneShowingChild(children = [], parent) {
       let onlyOneChild = null
+      // 去掉 hidden 为true的路由列表
       const showingChildren = children.filter(item => !item.hidden)
 
-      // When there is only one child route, the child route is displayed by default
+      // 当只有一个子路由时，默认情况下显示子路由
       if (showingChildren.length === 1) {
         onlyOneChild = showingChildren[0]
         onlyOneChild.path = path.resolve(parent.path, onlyOneChild.path)
         return onlyOneChild
       }
 
-      // Show parent if there are no child route to display
+      // 如果没有要显示的子路由，则显示父路由
       if (showingChildren.length === 0) {
         onlyOneChild = { ... parent, path: '', noShowingChildren: true }
         return onlyOneChild
