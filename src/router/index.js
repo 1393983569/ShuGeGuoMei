@@ -83,7 +83,29 @@ export const constantRoutes = [
       }
     ]
   },
-
+  // {
+  //   path: '/shopManage',
+  //   name: 'shopManage',
+  //   component: Layout,
+  //   meta: {
+  //     roles: ['店铺管理'],
+  //     icon: 'dashboard',
+  //     title: '店铺管理'
+  //   },
+  //   // component: Main,
+  //   children: [
+  //     {
+  //       path: 'shop',
+  //       name: 'shop',
+  //       meta: {
+  //         roles: ['editor'],
+  //         icon: 'dashboard',
+  //         title: '店铺'
+  //       },
+  //       component: () => import('@/views/shopManage/shop.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/profile',
     component: Layout,
@@ -146,7 +168,74 @@ export const asyncRoutes = [
       }
     ]
   },
-
+  {
+    path: '/shopManage',
+    name: 'shopManage',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '店铺管理'
+    },
+    // component: Main,
+    children: [
+      {
+        path: 'shop',
+        name: 'shop',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '店铺'
+        },
+        component: () => import('@/views/shopManage/shop.vue')
+      }
+    ]
+  },
+  {
+    path: '/goodsManage',
+    name: 'goodsManage',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '商品管理'
+    },
+    // component: Main,
+    children: [
+      {
+        path: 'goods',
+        name: 'goods',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '商品'
+        },
+        component: () => import('@/views/goodsManage/goods.vue')
+      }
+    ]
+  },
+  {
+    path: '/dataManage',
+    name: 'dataManage',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '数据中心'
+    },
+    children: [
+      {
+        path: 'dataCenter',
+        name: 'dataCenter',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '数据'
+        },
+        component: () => import('@/views/dataManage/dataCenter.vue')
+      }
+    ]
+  },
   // /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   // chartsRouter,
