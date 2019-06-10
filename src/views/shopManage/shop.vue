@@ -42,7 +42,10 @@
         </el-table-column>
       </el-table>
     </div>
-    <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" :show-detail="showDetail" @isClose="isClose" @isCloseDetail="isCloseDetail" />
+    <!-- 店铺编辑 -->
+    <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" @isClose="isClose" />
+    <!-- 店铺详情 -->
+    <shop-detail :show-detail="showDetail" @isCloseDetail="isCloseDetail" />
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
       <div slot="footer" style="boeder:1px solid black">
@@ -68,10 +71,11 @@
 </template>
 <script>
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
-import shopEdit from '@/views/shopManage/shopEidt.vue'
+import shopEdit from './shopEidt.vue'
+import shopDetail from './shopDetail.vue'
 export default {
   components: {
-    selectorAddress, shopEdit
+    selectorAddress, shopEdit, shopDetail
   },
   data() {
     return {
