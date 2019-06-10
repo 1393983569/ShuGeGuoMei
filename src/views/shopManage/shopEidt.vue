@@ -5,15 +5,15 @@
       <div class="title-size-color">{{ dialogTitle }}</div><br>
       <div v-if="showState" />
       <div v-else class="size-color">
-        <span class="title">店铺ID：</span>&nbsp;
+        <span class="size-color">店铺ID：</span>&nbsp;
       </div>
       <div class="size-color" style="margin:10px;">
-        店铺名称：<el-input v-model="name" style="width:500px;" placeholder="请输入店铺名称" />
+        店铺名称：<el-input v-model="shop.name" style="width:500px;" placeholder="请输入店铺名称" />
       </div>
       <div class="size-color" style="margin:10px;">
-        店铺简称：<el-input v-model="simpleName" style="width:500px;" placeholder="请输入店铺简称" />
+        店铺简称：<el-input v-model="shop.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
       </div>
-
+      <!-- 图片上传 -->
       <div v-if="showState" class="size-color" style="margin:10px;">
         店铺图片：
         <el-upload
@@ -32,20 +32,20 @@
         店铺图片：
       </div>
       <div class="size-color" style="margin:10px;">
-        掌柜姓名：<el-input v-model="shopownerName" style="width:300px;" placeholder="请输入店铺图片" />
+        掌柜姓名：<el-input v-model="shop.shopownerName" style="width:300px;" placeholder="请输入店铺图片" />
       </div>
       <div class="size-color" style="margin:10px;">
-        手机号：&nbsp;&nbsp;&nbsp; <el-input v-model="shopownerPhone" style="width:300px;" placeholder="请输入手机号" />
+        手机号：&nbsp;&nbsp;&nbsp; <el-input v-model="shop.shopownerPhone" style="width:300px;" placeholder="请输入手机号" />
       </div>
       <div class="size-color" style="margin:10px;">
-        初始密码：<el-input v-model="shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
+        初始密码：<el-input v-model="shop.shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
       </div>
       <div class="size-color" style="margin:10px;">
-        店铺地址：<selectorAddress />
-        <el-input v-model="detailsAddress" style="width:500px;margin-left:88px;margin-top:10px;" placeholder="请输入详细地址" />
+        店铺地址：<selectorAddress @getProvince="getProvince" @getCity="getCity" @getCountry="getCountry" />
+        <el-input v-model="shop.detailsAddress" style="width:500px;margin-left:88px;margin-top:10px;" placeholder="请输入详细地址" />
       </div>
       <div class="size-color" style="margin:10px;">
-        店铺面积：<el-input v-model="area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
+        店铺面积：<el-input v-model="shop.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
       </div>
       <div class="size-color" style="margin:10px;">
         经营品类：
@@ -72,7 +72,7 @@
       </div>
       <div class="size-color" style="margin:10px;">
         经营模式：
-        <el-select v-model="modelId" style="width:400px;">
+        <el-select v-model="shop.modelId" style="width:400px;">
           <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </div>
@@ -82,20 +82,22 @@
       <div class="size-color" style="margin:10px;">
         会员人数(人)：
       </div>
+      <!-- 新建 -->
       <div v-if="showState" slot="footer">
         <el-button @click="handleClose">取消</el-button>
         <el-button @click="addShopHandle">保存</el-button>
       </div>
+      <!-- 编辑 -->
       <div v-else slot="footer">
         <el-button @click="handleClose">取消</el-button>
-        <el-button>确定</el-button>
+        <el-button @click="addEditHandle">保存</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
-import { addShop } from '@/api/shop.js'
+import { addShop, editShop } from '@/api/shop.js'
 export default {
   components: {
     selectorAddress
@@ -116,32 +118,34 @@ export default {
   },
   data() {
     return {
-      modelId: '',
-      modelList: [],
+      // modelId: 0,
+      modelList: [
+        {
+          id: 1,
+          name: '直营'
+        },
+        {
+          id: 2,
+          name: '加盟'
+        },
+        {
+          id: 3,
+          name: '供应商'
+        }
+      ],
       employeeTable: [],
       categoryTable: [{}],
       // dialogTitle:'',
       dialogImageUrl: '',
       dialogVisible: false,
-      name: '',
-      simpleName: '',
-      shopownerName: '',
-      shopownerPhone: '',
-      shopownerPassword: '',
-      provinceId: '',
-      cityId: '',
-      countyId: '',
-      detailsAddress: '',
-      area: '',
-      categoryOneIdL: '',
-      categoryTwoId: '',
-      management: '',
-      status: '',
-      deleteStatus: ''
+      shop: {}
     }
   },
-  mounted() {
-
+  watch: {
+    'shop.modelId'(e) {
+      console.log(e, 'hhhhh')
+      // this.shop.modelId = Integer.parseInt(e)
+    }
   },
   methods: {
     // 修改table header的背景色
@@ -172,10 +176,39 @@ export default {
     },
     // 添加店铺
     addShopHandle() {
-      const tempObj = {}
-      tempObj.name = this.name
-      tempObj.shopownerName = this.shopownerName
-      addShop(tempObj).then().catch()
+      console.log(this.shop)
+      addShop(this.shop).then(res => {
+        if (res) {
+          this.$message.info('操作成功')
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(error => {
+        this.$message.error(error)
+      })
+    },
+    // 编辑店铺
+    addEditHandle() {
+      editShop().then(res => {
+        if (res) {
+          this.$message.info('操作成功')
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(error => {
+        this.$message.error(error)
+      })
+    },
+    getProvince(id) {
+      this.shop.provinceId = id
+    },
+    getCity(id) {
+      console.log(id, 'cid')
+      this.shop.cityId = id
+    },
+    getCountry(id) {
+      console.log(id, 'couid')
+      this.shop.countryId = id
     }
   }
 }

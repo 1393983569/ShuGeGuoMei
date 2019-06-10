@@ -22,6 +22,8 @@ export default {
 .title-size-color{
   font-size:24px;
   color:#4a5a7f;
+}
+body{
   font-family:Microsoft YaHei;
 }
 </style>

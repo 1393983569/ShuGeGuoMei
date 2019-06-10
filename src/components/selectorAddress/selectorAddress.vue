@@ -9,7 +9,7 @@
       <el-option v-for="item in cityList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span class="item">区/县:</span>
-    <el-select v-model="districtId" style="width:100px;font-size:18px;color:#6e7b99;">
+    <el-select v-model="countryId" style="width:100px;font-size:18px;color:#6e7b99;">
       <el-option v-for="item in districtList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
   </div>
@@ -20,7 +20,7 @@ export default {
     return {
       provinceId: '',
       cityId: '',
-      districtId: '',
+      countryId: '',
       cityList: [
         {
           id: 1,
@@ -50,9 +50,9 @@ export default {
       this.cityId = e
       this.$emit('getCity', this.cityId)
     },
-    'districtId'(e) {
-      this.districtId = e
-      this.$emit('getDistrict', this.districtId)
+    'countryId'(e) {
+      this.countryId = e
+      this.$emit('getCountry', this.countryId)
     }
   }
 }

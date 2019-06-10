@@ -29,6 +29,19 @@ export const editShop = (data) => {
   }
   return request({
     url: '/admin/shop/update',
+    method: 'post',
+    data: params
+  })
+}
+/**
+ * 查询店铺列表
+ * @param {Integer} pageNum 当前页
+ * @param {Integer} pageSize 每页记录数
+ */
+export const getShopList = (pageNum, pageSize) => {
+  const params = new URLSearchParams()
+  return request({
+    url: `/admin/shop/getAll?pageNum=${pageNum}&&pageSize=${pageSize}`,
     method: 'get',
     data: params
   })
