@@ -17,13 +17,16 @@ export default {
 }
 .size-color div{
   display: inline-block;
-  vertical-align: top;
+  /* vertical-align: top; */
 }
 .title-size-color{
   font-size:24px;
   color:#4a5a7f;
 }
 body{
+  font-size:18px;
+  color:#6e7b99;
+  /* font-weight:bold; */
   font-family:Microsoft YaHei;
 }
 </style>
