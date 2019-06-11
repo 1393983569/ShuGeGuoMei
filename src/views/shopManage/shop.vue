@@ -1,7 +1,7 @@
 <template>
   <div style="margin:20px;">
     <div style="margin:20px;display: flex;flex-direction: row;align-items: center;">
-      <selectorAddress @getProvince="getProvince" @getCity="getCity" @getDistrict="getDistrict" />
+      <selectorAddress @getProvince="getProvince" @getCity="getCity" @getCountry="getCountry" />
       &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="item">经营模式:</span>
       <el-select v-model="modelId" style="width:100px;" size="mini">
         <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
@@ -42,7 +42,10 @@
         </el-table-column>
       </el-table>
     </div>
-    <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" :show-detail="showDetail" @isClose="isClose" @isCloseDetail="isCloseDetail" />
+    <!-- 店铺编辑 -->
+    <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" @isClose="isClose" />
+    <!-- 店铺详情 -->
+    <shop-detail :show-detail="showDetail" @isCloseDetail="isCloseDetail" />
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
       <div slot="footer" style="boeder:1px solid black">
@@ -68,10 +71,12 @@
 </template>
 <script>
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
-import shopEdit from '@/views/shopManage/shopEidt.vue'
+import shopEdit from './shopEidt.vue'
+import shopDetail from './shopDetail.vue'
+import { getShopList } from '@/api/shop.js'
 export default {
   components: {
-    selectorAddress, shopEdit
+    selectorAddress, shopEdit, shopDetail
   },
   data() {
     return {
@@ -100,20 +105,32 @@ export default {
           employeeNum: 4
         }
       ],
-      provinceId: '',
-      cityId: '',
-      districtId: '',
       modelId: '',
       orderId: '',
       orderList: [],
       modelList: [],
-      dialogTitle: ''
+      dialogTitle: '',
+      provinceId: '',
+      cityId: '',
+      countryId: ''
     }
   },
   mounted() {
-
+    this.getShopList()
   },
   methods: {
+    // 查询店铺列表
+    getShopList() {
+      getShopList().then(res => {
+        if (res.status === 1) {
+          this.shopTable = res.info.records
+        } else {
+          this.$message.info('查询失败')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     // 修改table tr行的背景色
     tableRowStyle({ row, rowIndex }) {
       // return 'background-color: pink'
@@ -154,8 +171,8 @@ export default {
     getCity(e) {
       this.cityId = e
     },
-    getDistrict(e) {
-      this.districtId = e
+    getCountry(e) {
+      this.countryId = e
     },
     isClose(e) {
       this.showEdit = e
