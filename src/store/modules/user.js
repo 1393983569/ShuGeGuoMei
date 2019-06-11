@@ -30,6 +30,7 @@ const mutations = {
 
 const actions = {
   // user login
+  // commit 解构赋值 默认传一个state 只取其中的commit
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
