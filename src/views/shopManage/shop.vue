@@ -124,6 +124,7 @@ export default {
     // 查询店铺列表
     getShopList() {
       getShopList(this.pageNum, this.pageSize).then(res => {
+        console.log(res, 'rrrrr')
         if (res.status === 1) {
           this.shopTable = res.info.records
         } else {

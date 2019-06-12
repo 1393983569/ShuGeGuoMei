@@ -14,13 +14,13 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在发送请求之前做些什么
-
     if (store.getters.token) {
       // 让每个请求携带令牌
       // ['X-Token']是一个自定义头键
       // 请根据实际情况修改
       config.headers['X-Token'] = getToken()
     }
+    console.log(config, '***********')
     return config
   },
   error => {

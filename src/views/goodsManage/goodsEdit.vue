@@ -76,17 +76,16 @@
       </div>
       <div style="margin:10px;">
         <span style="font-size:18px;color:#6e7b99;font-weight:bold;">保质期：</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;<el-upload<el-date-picker
+        &nbsp;&nbsp;&nbsp;&nbsp;<el-date-picker
           type="date"
           placeholder="选择日期"
           style="width:200px;"
-        >
-        </el-date-picker>
-        </el-upload<el-date-picker></div>
+        />
+      </div>
       <div style="margin:10px;">
         <span style="font-size:18px;color:#6e7b99;font-weight:bold;">保鲜期：</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;<el-upload<el-input style="width:200px;" placeholder="请输入保鲜时间"></el-input> 小时
-        </el-upload<el-input></div>
+        &nbsp;&nbsp;&nbsp;&nbsp;<el-input style="width:200px;" placeholder="请输入保鲜时间" /> 小时
+      </div>
       <div style="margin:10px;">
         <span style="font-size:18px;color:#6e7b99;font-weight:bold;">产地：</span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<el-select v-model="countryId" style="width:100px;">
