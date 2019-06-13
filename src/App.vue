@@ -29,4 +29,7 @@ body{
   /* font-weight:bold; */
   font-family:Microsoft YaHei;
 }
+.body-margin{
+  margin:20px;
+}
 </style>

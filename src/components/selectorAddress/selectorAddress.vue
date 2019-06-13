@@ -1,15 +1,15 @@
 <template>
   <div style="margin:10px;display:inline;">
-    <span class="item">省:</span>
-    <el-select v-model="provinceId" style="width:100px;font-size:18px;color:#6e7b99;">
+    <span class="size-color">省:</span>
+    <el-select v-model="provinceId" style="width:90px;font-size:18px;color:#6e7b99;">
       <el-option v-for="item in provinceList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
-    <span class="item">市:</span>
-    <el-select v-model="cityId" style="width:100px;font-size:18px;color:#6e7b99;">
+    <span class="size-color">市:</span>
+    <el-select v-model="cityId" style="width:90px;font-size:18px;color:#6e7b99;">
       <el-option v-for="item in cityList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
-    <span class="item">区/县:</span>
-    <el-select v-model="countryId" style="width:100px;font-size:18px;color:#6e7b99;">
+    <span class="size-color">区/县:</span>
+    <el-select v-model="countryId" style="width:90px;font-size:18px;color:#6e7b99;">
       <el-option v-for="item in districtList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
   </div>
@@ -58,9 +58,9 @@ export default {
 }
 </script>
 <style>
-.item{
+/* .item{
   font-size:18px;
   color:#6e7b99;
   font-weight:bold;
-}
+} */
 </style>

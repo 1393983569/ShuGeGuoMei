@@ -1,5 +1,5 @@
 <template>
-  <div style="margin:20px;">
+  <div class="container">
     <el-table :data="ADTable" border :header-cell-style="headerStyle" center>
       <el-table-column prop="releaseTime" label="发布时间" />
       <el-table-column prop="title" label="标题" />
@@ -14,22 +14,31 @@
       </el-table-column>
       <el-table-column prop="state" label="上下架状态" />
       <el-table-column prop="operate" :width="460" label="操作">
-        <template>
-          <el-button>查看详情</el-button>
+        <template slot-scope="scope">
+          <el-button @click="handleDetail(scope.row)">查看详情</el-button>
           <el-button>顶置</el-button>
-          <el-button>编辑</el-button>
-          <el-button>上架</el-button>
+          <el-button @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button @click="putawayHandle">上架</el-button>
           <el-button>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 广告详情 -->
+    <ad-detail :show-ad-detail="showAdDetail" @handleClose="handleClose" />
+    <!-- 广告编辑 -->
+    <ad-edit :show-ad-edit="showAdEdit" @closeEdit="closeEdit" />
   </div>
 </template>
 <script>
+import AdDetail from './ADDetail.vue'
+import AdEdit from './AdEdit.vue'
 export default {
+  components: { AdDetail, AdEdit },
   data() {
     return {
-      ADTable: [{}, {}]
+      ADTable: [{}, {}],
+      showAdDetail: false,
+      showAdEdit: false
     }
   },
   methods: {
@@ -37,6 +46,37 @@ export default {
       if (rowIndex === 0) {
         return 'background-color:#f0f2f3;font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
       }
+    },
+    // 查看详情
+    handleDetail() {
+      this.showAdDetail = true
+    },
+    // 关闭详情
+    handleClose(e) {
+      this.showAdDetail = e
+    },
+    // 编辑广告
+    handleEdit() {
+      this.showAdEdit = true
+    },
+    // 关闭编辑
+    closeEdit(e) {
+      this.showAdEdit = e
+    },
+    // 上架
+    putawayHandle() {
+      this.$alert('是否上架该条广告？', '上架广告', {
+        confirmButtonTex: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '上架成功'
+        })
+      }).catch(() => {
+
+      })
     }
   }
 }

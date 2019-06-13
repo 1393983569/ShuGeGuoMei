@@ -41,7 +41,7 @@ export const editShop = (data) => {
 export const getShopList = (pageNum, pageSize) => {
   const params = new URLSearchParams()
   return request({
-    url: `/admin/shop/getAll?pageNum=${pageNum}&&pageSize=${pageSize}`,
+    url: `/admin/shop/getAll?pageNum=${pageNum}&pageSize=${pageSize}`,
     method: 'get',
     data: params
   })
