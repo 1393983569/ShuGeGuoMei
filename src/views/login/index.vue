@@ -16,6 +16,7 @@
             v-model="loginForm.username"
             placeholder="Username"
             name="username"
+            icon="用户"
             type="text"
             tabindex="1"
             autocomplete="on"
@@ -36,14 +37,14 @@
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
           <!--<span class="svg-container">-->
-            <!--<svg-icon icon-class="password" />-->
+            <!--<svg-icon icon-class="密码" />-->
           <!--</span>-->
             <!--<md-input v-model="loginForm.password" icon="search" name="title" placeholder="输入标题">-->
               <!--标题-->
             <!--</md-input>  -->
             <md-input
               v-model="loginForm.password"
-              icon="search"
+              icon="密码"
               :key="passwordType"
               ref="password"
               :type="passwordType"
