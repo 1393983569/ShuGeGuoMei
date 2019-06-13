@@ -4,8 +4,8 @@
     <el-dialog :visible="showEdit" :before-close="handleClose" width="1200px" height="700">
       <div class="title-size-color">{{ dialogTitle }}</div><br>
       <div v-if="showState" />
-      <div v-else class="size-color">
-        <span class="size-color">店铺ID：</span>&nbsp;
+      <div v-else class="size-color" style="margin:10px;">
+        店铺ID：
       </div>
       <div class="size-color" style="margin:10px;">
         店铺名称：<el-input v-model="shop.name" style="width:500px;" placeholder="请输入店铺名称" />
@@ -47,9 +47,9 @@
       <div class="size-color" style="margin:10px;">
         店铺面积：<el-input v-model="shop.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
       </div>
-      <div class="size-color" style="margin:10px;">
+      <div class="size-color" style="margin:10px;display:flex;align-items:flex-start;">
         经营品类：
-        <el-table :data="categoryTable" border :header-cell-style="tableHeaderColor" :span-method="objectSpanMethod" style="width:700px;">
+        <el-table :data="categoryTable" border :header-cell-style="tableHeaderColor" :span-method="objectSpanMethod">
           <el-table-column prop="first" label="一级品类" />
           <el-table-column prop="firstId" label="一级品类ID" />
           <el-table-column prop="second" label="二级品类" />
@@ -61,9 +61,9 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="size-color" style="margin:10px;">
+      <div class="size-color" style="margin:10px;display:flex;align-items:flex-start;">
         职员人数：
-        <el-table :data="employeeTable" border :header-cell-style="tableHeaderColor" style="width:400px;">
+        <el-table :data="employeeTable" border :header-cell-style="tableHeaderColor">
           <el-table-column prop="num" label="序号" />
           <el-table-column prop="name" label="姓名" />
           <el-table-column prop="level" label="职级" />
@@ -76,10 +76,12 @@
           <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </div>
-      <div class="size-color" style="margin:10px;">
+      <div v-if="showState" />
+      <div v-else class="size-color" style="margin:10px;">
         成本结构：
       </div>
-      <div class="size-color" style="margin:10px;">
+      <div v-if="showState" />
+      <div v-else class="size-color" style="margin:10px;">
         会员人数(人)：
       </div>
       <!-- 新建 -->
@@ -185,6 +187,7 @@ export default {
         }
       }).catch(error => {
         this.$message.error(error)
+        console.log(error)
       })
     },
     // 编辑店铺
@@ -196,7 +199,8 @@ export default {
           this.$message.error('操作失败')
         }
       }).catch(error => {
-        this.$message.error(error)
+        this.$data.message.error(error)
+        console.log(error)
       })
     },
     getProvince(id) {

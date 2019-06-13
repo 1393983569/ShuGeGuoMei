@@ -215,6 +215,72 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/newsManage',
+    name: 'newsManage',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '消息管理'
+    },
+    // component: Main,
+    children: [
+      {
+        path: 'news',
+        name: 'news',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '消息中心'
+        },
+        component: () => import('@/views/newsManage/news/news.vue')
+      },
+      {
+        path: 'newsRelease',
+        name: 'newsRelease',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '消息发布'
+        },
+        component: () => import('@/views/newsManage/newsRelease.vue')
+      }
+    ]
+  },
+  {
+    path: '/ADManage',
+    name: 'ADManage',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '广告管理'
+    },
+    // component: Main,
+    children: [
+      {
+        path: 'AD',
+        name: 'AD',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '广告中心'
+        },
+        component: () => import('@/views/ADManage/AD/AD.vue')
+      },
+      {
+        path: 'ADRelease',
+        name: 'ADRelease',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '广告发布'
+        },
+        component: () => import('@/views/ADManage/ADRelease.vue')
+      }
+    ]
+  },
+  {
     path: '/dataManage',
     name: 'dataManage',
     component: Layout,
