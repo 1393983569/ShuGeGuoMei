@@ -214,7 +214,7 @@ export default {
   $color-white: white;
   $color-grey: #9E9E9E;
   $color-grey-light: #E0E0E0;
-  $color-blue: #2196F3;
+  $color-blue: #429f13;
   $color-red: #F44336;
   $color-black: black;
   // Base clases:

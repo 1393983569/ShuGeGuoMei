@@ -64,7 +64,7 @@ const componentsRouter = {
       path: 'mixin',
       component: () => import('@/views/components-demo/mixin'),
       name: 'ComponentMixinDemo',
-      meta: { title: 'Component Mixin' }
+      meta: { title: '混合组件' }
     },
     {
       path: 'back-to-top',

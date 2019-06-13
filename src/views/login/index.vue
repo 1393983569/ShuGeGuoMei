@@ -8,10 +8,10 @@
 
       <div class="login-input">
         <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-          <el-input
+        <!--<span class="svg-container">-->
+          <!--<svg-icon icon-class="user" />-->
+        <!--</span>-->
+          <md-input
             ref="username"
             v-model="loginForm.username"
             placeholder="Username"
@@ -19,18 +19,33 @@
             type="text"
             tabindex="1"
             autocomplete="on"
-          />
+          >
+            手机号
+          </md-input>
+          <!--<el-input-->
+            <!--ref="username"-->
+            <!--v-model="loginForm.username"-->
+            <!--placeholder="Username"-->
+            <!--name="username"-->
+            <!--type="text"-->
+            <!--tabindex="1"-->
+            <!--autocomplete="on"-->
+          <!--/>-->
         </el-form-item>
 
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-            <el-input
+          <!--<span class="svg-container">-->
+            <!--<svg-icon icon-class="password" />-->
+          <!--</span>-->
+            <!--<md-input v-model="loginForm.password" icon="search" name="title" placeholder="输入标题">-->
+              <!--标题-->
+            <!--</md-input>  -->
+            <md-input
+              v-model="loginForm.password"
+              icon="search"
               :key="passwordType"
               ref="password"
-              v-model="loginForm.password"
               :type="passwordType"
               placeholder="Password"
               name="password"
@@ -39,14 +54,29 @@
               @keyup.native="checkCapslock"
               @blur="capsTooltip = false"
               @keyup.enter.native="handleLogin"
-            />
-            <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
+            >
+              密码
+            </md-input>
+            <!--<el-input-->
+              <!--:key="passwordType"-->
+              <!--ref="password"-->
+              <!--v-model="loginForm.password"-->
+              <!--:type="passwordType"-->
+              <!--placeholder="Password"-->
+              <!--name="password"-->
+              <!--tabindex="2"-->
+              <!--autocomplete="on"-->
+              <!--@keyup.native="checkCapslock"-->
+              <!--@blur="capsTooltip = false"-->
+              <!--@keyup.enter.native="handleLogin"-->
+            <!--/>-->
+            <!--<span class="show-pwd" @click="showPwd">-->
+              <!--<svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
+            <!--</span>-->
           </el-form-item>
         </el-tooltip>
 
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleLogin">登录</el-button>
       </div>
     </el-form>
   </div>
@@ -55,11 +85,12 @@
 <script>
 import { validUsername } from '@/utils/validate'
 // import SocialSign from './components/SocialSignin'
-
+import MdInput from '@/components/MDinput'
 export default {
   name: 'Login',
   components: {
     // SocialSign
+    MdInput
   },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -226,10 +257,12 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #DEEDC1;
+    /*background: rgba(0, 0, 0, 0.1);*/
     border-radius: 5px;
     color: #454545;
+    /*margin-bottom: 45px;*/
+    display: block;
   }
 }
 </style>
@@ -251,6 +284,9 @@ $light_gray:#eee;
   overflow: hidden;
 
   .login-form {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
     position: relative;
     width: 941px;
     height: 697px;
@@ -261,9 +297,16 @@ $light_gray:#eee;
   .login-input{
     /*position: absolute;*/
     width: 600px;
-    height: 364px;
+    height: 420px;
     margin: 0 auto;
-    top: 20px;
+  }
+  .login-button {
+    width:100%;
+    margin-bottom:30px;
+    margin-top: 20px;
+    background: #D0E6A5 100%;
+    border: solid 1px #C5CEB4;
+    box-shadow: 3px 3px 5px 0 #C5CEB4;
   }
   .svg-container {
     padding: 6px 5px 6px 15px;
