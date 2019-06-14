@@ -16,10 +16,10 @@ import componentsRouter from './modules/components'
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
  *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
+ * hidden: true                   如果设置为true，项目将不会显示在侧栏中(默认为false)
+ * alwaysShow: true               如果设置为true，将始终显示根菜单
+ *                                如果不总是设置show，当项目有多个子路由时，
+ *                                它将成为嵌套模式，否则不显示根菜单
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
@@ -27,8 +27,8 @@ import componentsRouter from './modules/components'
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     noCache: true                if set true, the page will no be cached(default is false)
-    affix: true                  if set true, the tag will affix in the tags-view
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+    affix: true                  如果设置为true，则标记将附加在标记视图中
+    breadcrumb: false            如果设置为false，则该项将隐藏在breadcrumb中(默认为true)
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
  */
@@ -322,6 +322,30 @@ export const asyncRoutes = [
           title: '商品采集'
         },
         component: () => import('@/views/collectShop/collectShopList.vue')
+      },
+      {
+        path: 'particulars',
+        name: 'particulars',
+        hidden: true,
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '商品详情',
+          breadcrumb: false
+        },
+        component: () => import('@/views/collectShop/particulars.vue')
+      },
+      {
+        path: 'addAndEdit',
+        name: 'addAndEdit',
+        hidden: true,
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '修改添加',
+          breadcrumb: false
+        },
+        component: () => import('@/views/collectShop/addAndEdit.vue')
       }
     ]
   },

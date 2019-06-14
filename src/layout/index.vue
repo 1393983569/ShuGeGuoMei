@@ -7,7 +7,7 @@
         <navbar />
         <tags-view v-if="needTagsView" />
       </div>
-      <app-main />
+      <app-main style="margin: 20px" />
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>

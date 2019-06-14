@@ -30,6 +30,15 @@ body{
   font-family:Microsoft YaHei;
 }
 .body-margin{
-  margin:20px;
+  /*margin:20px;*/
 }
+body .el-table th.gutter{
+  display: table-cell!important;
+}
+body .el-table thead{
+ background: #3A71A8;
+}
+/*body .el-table colgroup.gutter{*/
+  /*display: table-cell!important;*/
+/*}*/
 </style>
