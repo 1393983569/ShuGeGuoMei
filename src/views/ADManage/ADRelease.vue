@@ -1,27 +1,32 @@
 <template>
-  <div style="margin:20px;">
-    <div style="display:flex;flex-direction:row;justify-content:flex-end;">
-      <el-button style="margin-right:20px;">取消</el-button>
-      <el-button>确定</el-button>
-    </div>
-    <div class="size-color" style="margin:10px;">标题：&nbsp;&nbsp;&nbsp;&nbsp;<el-input style="width:500px;" placeholder="单行输入" /></div>
-    <div class="size-color" style="margin:10px;">
-      轮播图：
-      <el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
-        list-type="picture-card"
-        :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove"
-      >
-        <i class="el-icon-plus" />
-      </el-upload>
-      <el-dialog :visible.sync="dialogVisible" size="tiny">
-        <img width="100%" :src="dialogImageUrl" alt="">
-      </el-dialog>
-    </div>
-    <div style="margin:10px;display:flex;align-items:flex-start;font-weight:bold;">
-      <div>内容：</div>&nbsp;&nbsp;&nbsp;&nbsp;<tinymce v-model="content" :height="300" :width="700" />
-    </div>
+  <div class="body-margin" style="display:float;">
+    <el-form ref="ADForm" :model="ADForm" :rules="rules" label-width="100px">
+      <div style="float:left;">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="ADForm.title" style="width:400px;" />
+        </el-form-item>
+        <el-form-item label="轮播图" prop="viewpager">
+          <el-upload
+            action="https://jsonplaceholder.typicode.com/posts/"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+          >
+            <i class="el-icon-plus" />
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible" size="tiny">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <tinymce v-model="ADForm.content" :height="300" :width="700" />
+        </el-form-item>
+      </div>
+      <el-form-item style="float:right;">
+        <el-button @click="resetForm('ADForm')">取消</el-button>
+        <el-button @click="submitForm('ADForm')">确定</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>
@@ -34,7 +39,17 @@ export default {
       content: '',
       // 图片上传
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      ADForm: {
+        title: '',
+        viewpager: '',
+        content: ''
+      },
+      rules: {
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        viewpager: [{ required: true, message: '请上传轮播图', trigger: 'blur' }],
+        content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
+      }
     }
   },
   methods: {
@@ -45,6 +60,18 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 发布广告接口
+        } else {
+          return false
+        }
+      })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     }
   }
 }

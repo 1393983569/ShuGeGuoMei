@@ -13,10 +13,14 @@ export default {
 .size-color{
   font-size:18px;
   color:#6e7b99;
+  /* font-weight:bold; */
+}
+.font-weight{
   font-weight:bold;
 }
 .size-color div{
   display: inline-block;
+  margin:2px;
   /* vertical-align: top; */
 }
 .title-size-color{
@@ -31,5 +35,16 @@ body{
 }
 .body-margin{
   margin:20px;
+}
+.table-margin-top{
+  margin-top:10px;
+}
+.table-font-color{
+  color:#6e7b99;
+  font-size:18px;
+  font-family:Microsoft YaHei;
+}
+.div-margin{
+  margin: 10px;
 }
 </style>

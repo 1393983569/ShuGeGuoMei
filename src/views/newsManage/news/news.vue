@@ -1,13 +1,13 @@
 <template>
   <div style="margin:20px;">
     <!-- 头部查询 -->
-    <div class="size-color" style="margin:10px;display:float;">
+    <div class="size-color" style="display:float;">
       查询类型：<el-select v-model="dateType">
         <el-option v-for="item in dateTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      <div v-if="dateState === 2" style="margin-right:20px;">整年：<el-date-picker v-model="year" align="right" type="year" placeholder="选择年" /></div>
-      <div v-else-if="dateState === 3" style="margin-right:20px;">整月：<el-date-picker v-model="month" align="right" type="month" placeholder="选择月" /></div>
-      <div v-else style="margin-right:20px;">日期：<el-date-picker v-model="datePick" type="date" placeholder="选择日期" /></div>
+      <div v-if="dateState === 2">整年：<el-date-picker v-model="year" type="year" placeholder="选择年" /></div>
+      <div v-else-if="dateState === 3">整月：<el-date-picker v-model="month" type="month" placeholder="选择月" /></div>
+      <div v-else>日期：<el-date-picker v-model="datePick" type="date" placeholder="选择日期" /></div>
       消息类别：<el-select v-model="newsType">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
@@ -15,20 +15,20 @@
         <el-dropdown split-button>
           个人设置
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item><i class="el-icon-edit" />修改密码</el-dropdown-item>
+            <el-dropdown-item>修改密码</el-dropdown-item>
             <el-dropdown-item>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
     <!-- 列表 -->
-    <div class="size-color" style="margin:10px;">
-      <el-table border :header-cell-style="tableHeaderColor" :data="newsTable">
+    <div class="size-color table-margin-top">
+      <el-table :header-cell-style="tableHeaderColor" :data="newsTable" center stripe>
         <el-table-column prop="releaseTime" label="发布时间" />
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="object" label="对象" />
         <el-table-column prop="type" label="类型" />
-        <el-table-column prop="operate" label="操作">
+        <el-table-column prop="operate" label="操作" width="220px">
           <template slot-scope="scope">
             <el-button @click="handleDetail(scope.row)">查看详情</el-button>
             <el-button @click="handleDelete(scope.row)">删除</el-button>
