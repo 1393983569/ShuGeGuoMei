@@ -302,6 +302,29 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/collectShop',
+    name: 'collectShop',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '商品采集'
+    },
+    // component: Main,
+    children: [
+      {
+        path: 'collectShopList',
+        name: 'collectShopList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '商品采集'
+        },
+        component: () => import('@/views/collectShop/collectShopList.vue')
+      }
+    ]
+  },
   // /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   // chartsRouter,
