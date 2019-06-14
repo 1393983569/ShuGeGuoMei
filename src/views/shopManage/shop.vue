@@ -1,19 +1,19 @@
 <template>
-  <div style="margin:20px;">
-    <div style="margin:20px;display: flex;flex-direction: row;align-items: center;">
+  <div class="body-margin">
+    <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress @getProvince="getProvince" @getCity="getCity" @getCountry="getCountry" />
-      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="item">经营模式:</span>
-      <el-select v-model="modelId" style="width:100px;" size="mini">
+      <span class="item">经营模式:</span>
+      <el-select v-model="modelId" style="width:100px;">
         <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      &nbsp; &nbsp; &nbsp;<span class="item">排序:</span>
-      <el-select v-model="orderId" style="width:100px;" size="mini">
+      <span class="item">排序:</span>
+      <el-select v-model="orderId" style="width:100px;">
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      <div style="margin-left:80px;">
-        <el-button size="mini">筛选</el-button>
-        <el-button size="mini">清空</el-button>
-        <el-button size="mini" @click="handleAdd">新建</el-button>
+      <div style="float:right;">
+        <el-button>筛选</el-button>
+        <el-button>清空</el-button>
+        <el-button @click="handleAdd">新建</el-button>
       </div>
     </div>
     <div style="margin:10px;">
@@ -25,7 +25,7 @@
         stripe
         style="color:#6e7b99;font-size:18px;font-family:Microsoft YaHei;font-weight:light;border:solid #f0f2ff3;"
       >
-        <el-table-column prop="shopId" label="店铺ID" />
+        <el-table-column prop="shopId" label="店铺ID" width="200px" />
         <el-table-column prop="shopShortName" label="店铺简称" />
         <el-table-column prop="shopName" label="店铺名称" />
         <el-table-column prop="vipNum" label="会员数" />

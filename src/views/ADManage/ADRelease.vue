@@ -20,7 +20,7 @@
       </el-dialog>
     </div>
     <div style="margin:10px;display:flex;align-items:flex-start;font-weight:bold;">
-      内容：&nbsp;&nbsp;&nbsp;&nbsp;<tinymce v-model="content" :height="300" :width="700" />
+      <div>内容：</div>&nbsp;&nbsp;&nbsp;&nbsp;<tinymce v-model="content" :height="300" :width="700" />
     </div>
   </div>
 </template>
