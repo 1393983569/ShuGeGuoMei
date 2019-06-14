@@ -1,32 +1,37 @@
 <template>
-  <div style="margin:20px;">
-    <div style="display:flex;flex-direction:row;">
-      <div style="margin:10px;">
-        <span style="font-size:18px;color:#6e7b99;font-weight:bold;">状态：</span>
+  <div class="body-margin">
+    <div class="size-color" style="display:float;">
+      <div>
+        <span>状态：</span>
         <el-select v-model="stateId" style="width:100px;">
           <el-option v-for="item in stateList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </div>
-      <div style="margin:10px;">
-        <span style="font-size:18px;color:#6e7b99;font-weight:bold;">一级品类：</span>
+      <div>
+        <span>一级品类：</span>
         <el-select v-model="firstCategoryId" style="width:100px;">
           <el-option v-for="item in firstCategoryList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </div>
-      <div style="margin:10px;">
-        <span style="font-size:18px;color:#6e7b99;font-weight:bold;">二级品类：</span>
+      <div>
+        <span>二级品类：</span>
         <el-select v-model="secondCategoryId" style="width:100px;">
           <el-option v-for="item in secondCategoryList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </div>
-      <div style="margin:10px;margin-left:400px;">
+      <div style="float:right;">
         <el-button>筛选</el-button>
         <el-button>清空</el-button>
         <el-button @click="handleAdd">添加商品</el-button>
       </div>
     </div>
-    <el-table :data="goodsTable" :header-cell-style="tableHeaderColor" style="color:#6e7b99;font-size:18px;font-family:Microsoft YaHei;font-weight:light;border:solid #f0f2ff3;">
-      <el-table-column prop="img" label="缩略图" />
+    <el-table :data="goodsTable" :header-cell-style="tableHeaderColor" stripe class="table-margin-top table-font-color">
+      <el-table-column prop="imgUrl" label="缩略图">
+        <template slot-scope="scope">
+          <!-- {{ scope.row.imgUrl }} -->
+          <img :src="scope.row.imgUrl" style="width:100%;height:100%;">
+        </template>
+      </el-table-column>
       <el-table-column prop="shopId" label="店铺ID" />
       <el-table-column prop="goodsName" label="商品名称" />
       <el-table-column prop="state" label="状态" />
@@ -82,7 +87,17 @@ export default {
           state: '缺货',
           enterPrice: 0.30,
           outPrice: 0.80,
-          sellPrice: 1.00
+          sellPrice: 1.00,
+          imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
+        },
+        {
+          shopId: '6201022001',
+          goodsName: '萝卜',
+          state: '缺货',
+          enterPrice: 0.30,
+          outPrice: 0.80,
+          sellPrice: 1.00,
+          imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
         }
       ],
       imgUrl: '',

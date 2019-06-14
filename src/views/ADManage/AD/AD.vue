@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <el-table :data="ADTable" border :header-cell-style="headerStyle" center>
+  <div class="body-margin">
+    <el-table :data="ADTable" :header-cell-style="headerStyle" center>
       <el-table-column prop="releaseTime" label="发布时间" />
       <el-table-column prop="title" label="标题" />
       <el-table-column prop="picture" label="轮播图" width="300px">

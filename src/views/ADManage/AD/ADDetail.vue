@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="body-margin">
     <el-dialog :visible="showAdDetail" :before-close="handleClose">
       <div slot="title" class="title-size-color" style="margin:10px;">广告详情</div>
       <div class="size-color" style="margin:10px;">标题：</div>

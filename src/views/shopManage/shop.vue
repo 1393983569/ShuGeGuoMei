@@ -3,8 +3,8 @@
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress @getProvince="getProvince" @getCity="getCity" @getCountry="getCountry" />
       <span class="item">经营模式:</span>
-      <el-select v-model="modelId" style="width:100px;">
-        <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
+      <el-select v-model="management" style="width:100px;">
+        <el-option v-for="item in managementList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <span class="item">排序:</span>
       <el-select v-model="orderId" style="width:100px;">
@@ -16,22 +16,22 @@
         <el-button @click="handleAdd">新建</el-button>
       </div>
     </div>
-    <div style="margin:10px;">
+    <div>
       <el-table
         :row-style="tableRowStyle"
         :header-cell-style="tableHeaderColor"
         :data="shopTable"
         center
         stripe
-        style="color:#6e7b99;font-size:18px;font-family:Microsoft YaHei;font-weight:light;border:solid #f0f2ff3;"
+        class="table-margin-top table-font-color"
       >
-        <el-table-column prop="shopId" label="店铺ID" width="200px" />
-        <el-table-column prop="shopShortName" label="店铺简称" />
-        <el-table-column prop="shopName" label="店铺名称" />
-        <el-table-column prop="vipNum" label="会员数" />
-        <el-table-column prop="manageModel" label="经营模式" />
-        <el-table-column prop="managerName" label="掌柜姓名" />
-        <el-table-column prop="employeeNum" label="职员人数" />
+        <el-table-column prop="id" label="店铺ID" width="200px" />
+        <el-table-column prop="simpleName" label="店铺简称" />
+        <el-table-column prop="name" label="店铺名称" />
+        <!-- <el-table-column prop="vipNum" label="会员数" /> -->
+        <el-table-column prop="management" label="经营模式" />
+        <el-table-column prop="shopownerName" label="掌柜姓名" />
+        <!-- <el-table-column prop="employeeNum" label="职员人数" /> -->
         <el-table-column prop="operate" label="操作" width="300px">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
@@ -45,7 +45,7 @@
     <!-- 店铺编辑 -->
     <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" @isClose="isClose" />
     <!-- 店铺详情 -->
-    <shop-detail :show-detail="showDetail" @isCloseDetail="isCloseDetail" />
+    <shop-detail :show-detail="showDetail" :shop-object="shopObject" @isCloseDetail="isCloseDetail" />
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
       <div slot="footer" style="boeder:1px solid black">
@@ -85,36 +85,31 @@ export default {
       showDelete: false,
       showStart: false,
       showDetail: false,
-      shopTable: [
-        {
-          shopId: '6201022001',
-          shopShortName: '万达店',
-          shopName: '天水路22号万达店铺',
-          vipNum: 300,
-          manageModel: '直营',
-          managerName: '夏洛特',
-          employeeNum: 2
-        },
-        {
-          shopId: '6201022001',
-          shopShortName: '万达店',
-          shopName: '天水路22号万达店铺',
-          vipNum: 200,
-          manageModel: '直营',
-          managerName: '马冬梅',
-          employeeNum: 4
-        }
-      ],
-      modelId: '',
+      shopTable: [],
+      management: '',
       orderId: '',
       orderList: [],
-      modelList: [],
+      managementList: [
+        {
+          id: 1,
+          name: '直营'
+        },
+        {
+          id: 2,
+          name: '加盟'
+        },
+        {
+          id: 3,
+          name: '供应商'
+        }
+      ],
       dialogTitle: '',
       provinceId: '',
       cityId: '',
       countryId: '',
       pageNum: 1,
-      pageSize: 10
+      pageSize: 10,
+      shopObject: {}
     }
   },
   mounted() {
@@ -124,14 +119,20 @@ export default {
     // 查询店铺列表
     getShopList() {
       getShopList(this.pageNum, this.pageSize).then(res => {
-        console.log(res, 'rrrrr')
+        // console.log(res, 'jjjjjjjjjj')
         if (res.status === 1) {
-          this.shopTable = res.info.records
-        } else {
-          this.$message.info('查询失败')
+          res.info.records.map(e => {
+            // console.log(e, 'gggggg')
+            if (e.management === 1) {
+              e.management = '直营'
+            } else if (e.management === 2) {
+              e.management = '加盟'
+            } else {
+              e.management = '供应商'
+            }
+            this.shopTable.push(e)
+          })
         }
-      }).catch(err => {
-        this.$message.error(err)
       })
     },
     // 修改table tr行的背景色
@@ -163,6 +164,8 @@ export default {
     },
     handleDetail(row) {
       this.showDetail = true
+      console.log(row, 'row...')
+      this.shopObject = row
     },
     isCloseDetail() {
       this.showDetail = false

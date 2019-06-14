@@ -20,7 +20,7 @@ service.interceptors.request.use(
       // 请根据实际情况修改
       config.headers['X-Token'] = getToken()
     }
-    console.log(config, '***********')
+    // console.log(config, '***********')
     return config
   },
   error => {
@@ -45,8 +45,8 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    // 如果自定义代码不是20000，则判断为错误。
-    if (res.code !== 20000) {
+    // 如果自定义代码不是1，则判断为错误。
+    if (res.status !== 1) {
       Message({
         message: res.message || 'Error',
         type: 'error',
