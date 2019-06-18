@@ -1,7 +1,9 @@
 <template>
-  <div class="body-margin" style="display:float;">
+  <!-- <div class="body-margin" style="display:float;"> -->
+  <div class="body-margin">
     <el-form ref="newsForm" :model="newsForm" :rules="rules" label-width="100px">
-      <div style="float:left;">
+      <!-- <div style="float:left;"> -->
+      <div>
         <el-form-item label="标题" prop="title">
           <el-input v-model="newsForm.title" style="width:400px;" />
         </el-form-item>
@@ -19,7 +21,8 @@
           <tinymce v-model="newsForm.content" :height="300" :width="700" />
         </el-form-item>
       </div>
-      <el-form-item style="float:right;">
+      <!-- <el-form-item style="float:right;"> -->
+      <el-form-item>
         <el-button @click="resetForm('newsForm')">取消</el-button>
         <el-button @click="submitForm('newsForm')">确定</el-button>
       </el-form-item>
@@ -31,6 +34,7 @@
 import Tinymce from '@/components/Tinymce'
 
 export default {
+  name: 'NewsRelease',
   // name: 'TinymceDemo',
   components: { Tinymce },
   data() {

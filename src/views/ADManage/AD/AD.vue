@@ -1,6 +1,7 @@
 <template>
-  <div class="body-margin">
-    <el-table :data="ADTable" :header-cell-style="headerStyle" center>
+  <div class="body-margin" style="display:float;">
+    <el-button style="float:right;margin-bottom:10px;" @click="handleRelease">广告发布</el-button>
+    <el-table :data="ADTable" :header-cell-style="headerStyle" center stripe>
       <el-table-column prop="releaseTime" label="发布时间" />
       <el-table-column prop="title" label="标题" />
       <el-table-column prop="picture" label="轮播图" width="300px">
@@ -46,6 +47,10 @@ export default {
       if (rowIndex === 0) {
         return 'background-color:#f0f2f3;font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
       }
+    },
+    // 广告发布
+    handleRelease() {
+      this.$router.push({ name: 'ADRelease' })
     },
     // 查看详情
     handleDetail() {

@@ -1,7 +1,9 @@
 <template>
-  <div class="body-margin" style="display:float;">
+  <!-- <div class="body-margin" style="display:float;"> -->
+  <div class="body-margin">
     <el-form ref="ADForm" :model="ADForm" :rules="rules" label-width="100px">
-      <div style="float:left;">
+      <!-- <div style="float:left;"> -->
+      <div>
         <el-form-item label="标题" prop="title">
           <el-input v-model="ADForm.title" style="width:400px;" />
         </el-form-item>
@@ -22,7 +24,8 @@
           <tinymce v-model="ADForm.content" :height="300" :width="700" />
         </el-form-item>
       </div>
-      <el-form-item style="float:right;">
+      <!-- <el-form-item style="float:right;"> -->
+      <el-form-item>
         <el-button @click="resetForm('ADForm')">取消</el-button>
         <el-button @click="submitForm('ADForm')">确定</el-button>
       </el-form-item>
@@ -32,6 +35,7 @@
 <script>
 import Tinymce from '@/components/Tinymce'
 export default {
+  name: 'ADRelease',
   components: { Tinymce },
   data() {
     return {

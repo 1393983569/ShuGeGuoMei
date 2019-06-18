@@ -12,6 +12,7 @@
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
+        <el-button @click="handleReleaseNews">发布消息</el-button>
         <el-dropdown split-button>
           个人设置
           <el-dropdown-menu slot="dropdown">
@@ -91,6 +92,10 @@ export default {
     }
   },
   methods: {
+    // 消息发布
+    handleReleaseNews() {
+      this.$router.push({ name: 'newsRelease' })
+    },
     // 列表头样式设置
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {
