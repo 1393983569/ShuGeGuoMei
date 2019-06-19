@@ -110,6 +110,9 @@ export default {
       showGrounding: false
     }
   },
+  mounted() {
+
+  },
   methods: {
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {

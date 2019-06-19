@@ -5,13 +5,13 @@
       <div class="title-size-color">{{ dialogTitle }}</div><br>
       <div v-if="showState" />
       <div v-else class="size-color div-margin font-weight">
-        店铺ID：
+        店铺ID：{{ editObject.id }}
       </div>
       <div class="size-color div-margin font-weight">
-        店铺名称：<el-input v-model="shop.name" style="width:500px;" placeholder="请输入店铺名称" />
+        店铺名称：<el-input v-model="editObject.name" style="width:500px;" placeholder="请输入店铺名称" />
       </div>
       <div class="size-color div-margin font-weight">
-        店铺简称：<el-input v-model="shop.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
+        店铺简称：<el-input v-model="editObject.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
       </div>
       <!-- 图片上传 -->
       <div v-if="showState" class="size-color div-margin font-weight">
@@ -29,23 +29,23 @@
         </el-dialog>
       </div>
       <div v-else class="size-color div-margin font-weight">
-        店铺图片：
+        店铺图片：<img :src="editObject.imge">
       </div>
       <div class="size-color div-margin font-weight">
-        掌柜姓名：<el-input v-model="shop.shopownerName" style="width:300px;" placeholder="请输入店铺图片" />
+        掌柜姓名：<el-input v-model="editObject.shopownerName" style="width:300px;" placeholder="请输入店铺图片" />
       </div>
       <div class="size-color div-margin font-weight">
-        手机号：&nbsp;&nbsp;&nbsp; <el-input v-model="shop.shopownerPhone" style="width:300px;" placeholder="请输入手机号" />
+        手机号：&nbsp;&nbsp;&nbsp; <el-input v-model="editObject.shopownerPhone" style="width:300px;" placeholder="请输入手机号" />
       </div>
       <div class="size-color div-margin font-weight">
-        初始密码：<el-input v-model="shop.shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
+        初始密码：<el-input v-model="editObject.shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
       </div>
       <div class="size-color div-margin font-weight">
-        店铺地址：<selectorAddress @getProvince="getProvince" @getCity="getCity" @getCountry="getCountry" />
-        <el-input v-model="shop.detailsAddress" style="width:500px;margin-left:88px;" placeholder="请输入详细地址" />
+        店铺地址：<selectorAddress :province1id="editObject.provinceId + ''" :city1id="editObject.cityId + ''" :county1id="editObject.countyId + ''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
+        <el-input v-model="editObject.detailsAddress" style="width:500px;margin-left:88px;" placeholder="请输入详细地址" />
       </div>
       <div class="size-color div-margin font-weight">
-        店铺面积：<el-input v-model="shop.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
+        店铺面积：<el-input v-model="editObject.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
       </div>
       <div class="size-color div-margin font-weight" style="display:flex;align-items:flex-start;">
         经营品类：
@@ -61,7 +61,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="size-color div-margin font-weight" style="display:flex;align-items:flex-start;">
+      <!-- <div class="size-color div-margin font-weight" style="display:flex;align-items:flex-start;">
         职员人数：
         <el-table :data="employeeTable" border :header-cell-style="tableHeaderColor">
           <el-table-column prop="num" label="序号" />
@@ -69,10 +69,10 @@
           <el-table-column prop="level" label="职级" />
           <el-table-column prop="phone" label="电话" />
         </el-table>
-      </div>
+      </div> -->
       <div class="size-color div-margin font-weight">
         经营模式：
-        <el-select v-model="shop.modelId" style="width:400px;">
+        <el-select v-model="editObject.management" style="width:400px;">
           <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </div>
@@ -116,11 +116,17 @@ export default {
     dialogTitle: {
       type: String,
       default: ''
+    },
+    editObject: {
+      type: Object,
+      default: Array
     }
   },
   data() {
     return {
-      // modelId: 0,
+      provinceId: '',
+      cityId: '',
+      countyId: '',
       modelList: [
         {
           id: 1,
@@ -136,17 +142,16 @@ export default {
         }
       ],
       employeeTable: [],
-      categoryTable: [{}],
+      categoryTable: [],
       // dialogTitle:'',
       dialogImageUrl: '',
-      dialogVisible: false,
-      shop: {}
+      dialogVisible: false
+      // shop: {}
     }
   },
   watch: {
-    'shop.modelId'(e) {
-      console.log(e, 'hhhhh')
-      // this.shop.modelId = Integer.parseInt(e)
+    'editObject.management'(e) {
+      console.log(e, 'jjjjjj')
     }
   },
   methods: {
@@ -178,8 +183,9 @@ export default {
     },
     // 添加店铺
     addShopHandle() {
-      console.log(this.shop)
-      addShop(this.shop).then(res => {
+      console.log(this.editObject)
+
+      addShop(this.editObject).then(res => {
         if (res) {
           this.$message.info('操作成功')
         } else {
@@ -192,43 +198,39 @@ export default {
     },
     // 编辑店铺
     addEditHandle() {
-      editShop().then(res => {
+      this.editObject.provinceId = parseInt(this.editObject.provinceId)
+      this.editObject.cityId = parseInt(this.editObject.cityId)
+      this.editObject.countyId = parseInt(this.editObject.countyId)
+      if (this.editObject.management === '直营') {
+        this.editObject.management = 1
+        // this.editObject = row
+      } else if (this.editObject.management === '加盟') {
+        this.editObject.management = 2
+      } else {
+        this.editObject.management = 3
+      }
+      editShop(this.editObject).then(res => {
         if (res) {
-          this.$message.info('操作成功')
+          this.$message.success('操作成功')
         } else {
           this.$message.error('操作失败')
         }
       }).catch(error => {
         this.$data.message.error(error)
-        console.log(error)
       })
     },
     getProvince(id) {
-      this.shop.provinceId = id
+      this.editObject.provinceId = id
     },
     getCity(id) {
-      console.log(id, 'cid')
-      this.shop.cityId = id
+      this.editObject.cityId = id
     },
-    getCountry(id) {
-      console.log(id, 'couid')
-      this.shop.countryId = id
+    getCounty(id) {
+      this.editObject.countyId = id
     }
   }
 }
 </script>
 <style>
-  .item{
-    margin: 10px;
-    font-size: 18px;
-    color:#6e7b99;
-    font-family: Microsoft YaHei;
-  }
-  /* .title{
-    margin:10px;
-    font-size:18px;
-    color:#6e7b99;
-    font-weight:bold;
 
-  } */
 </style>

@@ -42,11 +42,11 @@ export default {
   },
   computed: {
     visitedViews() {
-      console.log(this.$store.state.tagsView.visitedViews, '&&&&&&&&&&&&&&&&&&&&&&&&&&')
+      // console.log(this.$store.state.tagsView.visitedViews, '&&&&&&&&&&&&&&&&&&&&&&&&&&')
       return this.$store.state.tagsView.visitedViews
     },
     routes() {
-      console.log(this.$store.state.permission.routes, '**********')
+      // console.log(this.$store.state.permission.routes, '**********')
       return this.$store.state.permission.routes
     }
   },
@@ -159,8 +159,8 @@ export default {
       if (latestView) {
         this.$router.push(latestView)
       } else {
-        //如果没有标签视图，默认是重定向到主页，
-        //你可以根据你的需要来调整。
+        // 如果没有标签视图，默认是重定向到主页，
+        // 你可以根据你的需要来调整。
         if (view.name === 'Dashboard') {
           // to reload home page
           this.$router.replace({ path: '/redirect' + view.fullPath })

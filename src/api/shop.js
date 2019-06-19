@@ -46,3 +46,28 @@ export const getShopList = (pageNum, pageSize) => {
     data: params
   })
 }
+/**
+ * 删除店铺
+ * @param {Integer} id 店铺id
+ */
+export const deleteShop = (id) => {
+  const params = new URLSearchParams()
+  return request({
+    url: `/admin/shop/delete?id=${id}`,
+    method: 'get',
+    data: params
+  })
+}
+/**
+ * 启用/停用店铺
+ * @param {Integer} id 店铺id
+ * @param {Integer} status 店铺状态
+ */
+export const startShop = (id, status) => {
+  const params = new URLSearchParams()
+  return request({
+    url: `/admin/shop/updateStatus?id=${id}&status=${status}`,
+    method: 'get',
+    data: params
+  })
+}
