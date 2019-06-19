@@ -1,7 +1,7 @@
 <template>
   <el-table
     :data="tableData"
-    :header-cell-style="{background:'#CCCCCC', textAlign: 'center'}"
+    :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
     center
     stripe
     >
