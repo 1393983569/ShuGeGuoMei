@@ -51,12 +51,16 @@
 </template>
 <script>
 import newsDetail from './newsDetail.vue'
+import { getNews } from '@/api/news.js'
 export default {
   components: { newsDetail },
   data() {
     return {
       // 日期选择
       dateType: 1,
+      currentPage: 1,
+      sizePage: 10,
+      category: '',
       dateTypeList: [
         {
           id: 1,
@@ -91,7 +95,25 @@ export default {
       this.dateState = e
     }
   },
+  mounted() {
+    this.getNewsList()
+  },
   methods: {
+    // 查询消息列表
+    getNewsList() {
+      const obj = {}
+      obj.pageNum = this.currentPage
+      obj.pageSize = this.sizePage
+      obj.year = this.year
+      obj.month = this.month
+      obj.day = this.day
+      obj.category = this.category
+      getNews(obj).then(res => {
+        console.log(res, 'res....')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 消息发布
     handleReleaseNews() {
       this.$router.push({ name: 'newsRelease' })

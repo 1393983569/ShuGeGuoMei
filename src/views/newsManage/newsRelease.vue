@@ -32,7 +32,7 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
-
+// import { addNews } from '@/api/news.js'
 export default {
   name: 'NewsRelease',
   // name: 'TinymceDemo',

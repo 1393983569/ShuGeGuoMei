@@ -8,22 +8,27 @@
       :span-method="arraySpanMethod"
     >
       <el-table-column prop="name" label="一级品类" />
-      <el-table-column prop="id" label="一级品类ID" />
+      <el-table-column prop="id" label="一级品类ID">
+        <template slot-scope="scope">
+          <el-checkbox>{{ scope.row.id }}</el-checkbox>
+        </template>
+      </el-table-column>
       <el-table-column prop="names" label="二级品类" />
-      <el-table-column prop="ids" label="二级品类ID" />
+      <el-table-column prop="ids" label="二级品类ID">
+        <template slot-scope="scope">
+          <el-checkbox>{{ scope.row.ids }}</el-checkbox>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 <script>
 import { getCategory } from '@/api/category.js'
-// import { once } from 'events';
-// import { resolve } from 'dns';
 export default {
   data() {
     return {
       categoryTable: [],
-      seconds: [],
-      temp: []
+      spanCateTable: []
     }
   },
   mounted() {
@@ -31,21 +36,38 @@ export default {
   },
   methods: {
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(row, column, rowIndex, columnIndex, 'row...')
       if (columnIndex === 0) {
-        // let num = 0
-        // // console.log(row,'0,row')
-        // for(let i in this.temp) {
-        //   if(this.temp[i].name === row.name) {
-        //     console.log(row, i ,'row')
-        //     num += 1
-        //   }
-        // }
+        if (rowIndex % 4 === 0) {
+          return {
+            rowspan: 4,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
+      if (columnIndex === 1) {
+        if (rowIndex % 4 === 0) {
+          return {
+            rowspan: 4,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
       }
     },
     getCategoryList() {
+      this.spanCateTable = []
       this.categoryTable = []
       getCategory().then(res => {
+        this.spanCateTable = res.info
         if (res.status === 1) {
           console.log(res.info, 'hhhh')
           this.temp = res.info
@@ -69,7 +91,6 @@ export default {
       }).catch()
     },
     tableHeaderColor() {}
-
   }
 }
 </script>
