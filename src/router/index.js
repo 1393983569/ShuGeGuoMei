@@ -188,6 +188,16 @@ export const asyncRoutes = [
           title: '店铺'
         },
         component: () => import('@/views/shopManage/shop.vue')
+      },
+      {
+        path: 'category',
+        name: 'category',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '品类'
+        },
+        component: () => import('@/views/shopManage/category.vue')
       }
     ]
   },
@@ -238,6 +248,7 @@ export const asyncRoutes = [
       {
         path: 'newsRelease',
         name: 'newsRelease',
+        hidden: true,
         meta: {
           roles: ['admin'],
           icon: 'dashboard',
@@ -271,6 +282,7 @@ export const asyncRoutes = [
       {
         path: 'ADRelease',
         name: 'ADRelease',
+        hidden: true,
         meta: {
           roles: ['admin'],
           icon: 'dashboard',

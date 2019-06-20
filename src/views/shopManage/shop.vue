@@ -42,6 +42,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin:10px;">
+        <el-pagination
+          :page-sizes="[10, 15]"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </div>
     <!-- 店铺编辑 -->
     <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
@@ -54,6 +64,7 @@
         <el-button style="width:160px;border:none;font-size:18px;">确定</el-button>
       </div>
     </el-dialog>
+    <!-- 删除弹框 -->
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
       <div slot="footer" style="boeder:1px solid black">
@@ -61,6 +72,7 @@
         <el-button style="width:160px;border:none;font-size:18px;" @click="confirmDelete">确定</el-button>
       </div>
     </el-dialog>
+    <!-- 启用弹框 -->
     <el-dialog :visible.sync="showStart" center width="380px" title="启用店铺" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否启用该店铺？</div>
       <div slot="footer" style="boeder:1px solid black">
@@ -83,6 +95,9 @@ export default {
   },
   data() {
     return {
+      currentPage: 1,
+      pagesize: 10,
+      total: 0,
       // 店铺属性
       id: 0,
       name: '',
@@ -116,10 +131,6 @@ export default {
         {
           id: 2,
           name: '加盟'
-        },
-        {
-          id: 3,
-          name: '供应商'
         }
       ],
       dialogTitle: '',
@@ -135,21 +146,28 @@ export default {
     this.getShopList()
   },
   methods: {
+    handleSizeChange(e) {
+      this.pageSize = e
+      this.getShopList()
+    },
+    handleCurrentChange(e) {
+      this.currentPage = e
+      this.getShopList()
+    },
     // 查询店铺列表
     getShopList() {
       this.shopTable = []
       getShopList(this.pageNum, this.pageSize).then(res => {
         // console.log(res, 'jjjjjjjjjj')
         if (res.status === 1) {
+          this.total = res.info.totalpage
           // this.$message.success('启用成功！')
           res.info.records.map(e => {
             // console.log(e, 'gggggg')
             if (e.management === 1) {
               e.management = '直营'
-            } else if (e.management === 2) {
-              e.management = '加盟'
             } else {
-              e.management = '供应商'
+              e.management = '加盟'
             }
             this.shopTable.push(e)
           })
@@ -176,13 +194,18 @@ export default {
       this.showDelete = true
       this.id = row.id
     },
-    async confirmDelete() {
-      const res = deleteShop(this.id)
-      if (res.status === 1) {
-        this.$message.success('删除成功！')
-      } else {
-        this.$message.error(res.info)
-      }
+    confirmDelete() {
+      deleteShop(this.id).then(res => {
+        if (res.status === 1) {
+          this.$message.success('删除成功！')
+          this.getShopList()
+          this.showDelete = false
+        } else {
+          this.$message.error(res.info)
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     // 启用店铺
     handleStart(row) {

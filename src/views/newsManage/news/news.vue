@@ -12,6 +12,7 @@
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
+        <el-button @click="handleReleaseNews">发布消息</el-button>
         <el-dropdown split-button>
           个人设置
           <el-dropdown-menu slot="dropdown">
@@ -50,12 +51,16 @@
 </template>
 <script>
 import newsDetail from './newsDetail.vue'
+import { getNews } from '@/api/news.js'
 export default {
   components: { newsDetail },
   data() {
     return {
       // 日期选择
       dateType: 1,
+      currentPage: 1,
+      sizePage: 10,
+      category: '',
       dateTypeList: [
         {
           id: 1,
@@ -90,7 +95,29 @@ export default {
       this.dateState = e
     }
   },
+  mounted() {
+    this.getNewsList()
+  },
   methods: {
+    // 查询消息列表
+    getNewsList() {
+      const obj = {}
+      obj.pageNum = this.currentPage
+      obj.pageSize = this.sizePage
+      obj.year = this.year
+      obj.month = this.month
+      obj.day = this.day
+      obj.category = this.category
+      getNews(obj).then(res => {
+        console.log(res, 'res....')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // 消息发布
+    handleReleaseNews() {
+      this.$router.push({ name: 'newsRelease' })
+    },
     // 列表头样式设置
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {
