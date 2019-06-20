@@ -88,7 +88,7 @@
 
 <script>
   export default {
-    name: 'collectShop',
+    name: 'collectShopList',
     data () {
       return{
         tableData: [{

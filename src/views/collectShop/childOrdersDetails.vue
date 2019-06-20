@@ -78,7 +78,7 @@
   import { getSummaries } from '_u/logic'
   import HeadButton from '@/components/HeadButton'
   export default {
-    name: 'collectShop',
+    name: 'childOrdersDetails',
     components: {
       HeadButton
     },
@@ -132,11 +132,8 @@
       },
       // 删除
       deleteOrder() {
-        console.log('sssssssssss')
         // 成功后返回上一级
-        this.$router.push({
-          name: 'orderDetails'
-        })
+        this.$router.back()
       },
       // 表格统计规则
       getSummaries(param) {

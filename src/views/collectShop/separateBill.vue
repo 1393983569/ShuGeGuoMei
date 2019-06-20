@@ -101,7 +101,7 @@
 
 <script>
   export default {
-    name: 'collectShop',
+    name: 'separateBill',
     data () {
       return{
         tableData: [{

@@ -1,4 +1,4 @@
-// Any plugins you want to use has to be imported
+// 您想使用的任何插件都必须导入
 // Detail plugins list see https://www.tinymce.com/docs/plugins/
 // Custom builds see https://www.tinymce.com/download/custom-builds/
 

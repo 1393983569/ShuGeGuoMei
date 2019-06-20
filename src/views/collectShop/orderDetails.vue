@@ -108,7 +108,7 @@
   import { sumList } from '_u/logic'
   import childOrdersList from './childOrdersList'
   export default {
-    name: 'collectShop',
+    name: 'orderDetails',
     components: {
       childOrdersList
     },

@@ -1,41 +1,62 @@
 <template>
   <el-table
-    :data="row"
+    :data="dataList"
     :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
     center
     stripe
   >
     <el-table-column
       prop="date"
-      label="子订单编号">
+      label="会员ID">
       <template slot-scope="scope">
         <p>{{ scope.row.date }}</p>
       </template>
     </el-table-column>
     <el-table-column
       prop="name"
-      label="订单编号">
+      label="手机号">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
       prop="name"
-      label="订单店铺">
+      label="身份">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
       prop="name"
-      label="订单金额(元)">
+      label="级别">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
       prop="name"
-      label="订单类型">
+      label="注册店铺">
+      <template slot-scope="scope">
+        <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="注册时间">
+      <template slot-scope="scope">
+        <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="余额（元）">
+      <template slot-scope="scope">
+        <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="积分">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
       </template>
@@ -51,12 +72,8 @@
           @click="viewDetails(scope.$index, scope.row)">查看详情</el-button>
         <el-button
           size="mini"
-          type="primary"
-          @click="sendOrders(scope.$index, scope.row)">派单</el-button>
-        <el-button
-          size="mini"
           type="danger"
-          @click="removeOrder(scope.$index, scope.row)">删除</el-button>
+          @click="sendOrders(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -64,7 +81,7 @@
 
 <script>
   export default {
-    name: 'childOrdersList',
+    name: 'memberList',
     props: {
       row: {
         type: Array,
@@ -73,14 +90,30 @@
     },
     data () {
       return{
-
+        dataList: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }]
       }
     },
     methods: {
       // 查看详情
       viewDetails(index, row) {
         this.$router.push({
-          name: 'childOrdersDetails',
+          name: 'membershipDetails',
           params: {
             row: row
           }

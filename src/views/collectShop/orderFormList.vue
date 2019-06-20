@@ -79,7 +79,7 @@
 
 <script>
   export default {
-    name: 'collectShop',
+    name: 'orderFormList',
     data () {
       return{
         tableData: [{
