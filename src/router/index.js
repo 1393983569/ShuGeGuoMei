@@ -331,7 +331,7 @@ export const asyncRoutes = [
     meta: {
       roles: ['admin'],
       icon: 'dashboard',
-      title: '商品采集'
+      title: '采集平台'
     },
     // component: Main,
     children: [
@@ -341,9 +341,43 @@ export const asyncRoutes = [
         meta: {
           roles: ['admin'],
           icon: 'dashboard',
-          title: '商品采集'
+          title: '商品库'
         },
         component: () => import('@/views/collectShop/collectShopList.vue')
+      },
+      {
+        path: 'orderFormList',
+        name: 'orderFormList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '订单'
+        },
+        component: () => import('@/views/collectShop/orderFormList.vue')
+      },
+      {
+        path: 'separateBill',
+        name: 'separateBill',
+        hidden: true,
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '拆单',
+          breadcrumb: false
+        },
+        component: () => import('@/views/collectShop/separateBill.vue')
+      },
+      {
+        path: 'orderDetails',
+        name: 'orderDetails',
+        hidden: true,
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '订单详情',
+          breadcrumb: false
+        },
+        component: () => import('@/views/collectShop/orderDetails.vue')
       },
       {
         path: 'particulars',
@@ -356,6 +390,18 @@ export const asyncRoutes = [
           breadcrumb: false
         },
         component: () => import('@/views/collectShop/particulars.vue')
+      },
+      {
+        path: 'childOrdersDetails',
+        name: 'childOrdersDetails',
+        hidden: true,
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '子订单详情',
+          breadcrumb: false
+        },
+        component: () => import('@/views/collectShop/childOrdersDetails.vue')
       },
       {
         path: 'addAndEdit',
@@ -380,7 +426,7 @@ export const asyncRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-
+// 设置滚动行为
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

@@ -4,24 +4,15 @@
     :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
     center
     stripe
-    >
+  >
     <el-table-column
-      label="缩略图">
+      label="订单时间">
       <template slot-scope="scope">
-        <!--scope.row.img-->
-        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg" style="width: 80px; height: 80px">
+        <p>{{ scope.row.date }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="店铺ID">
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="商品名称">
+      label="订单编号">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.name }}</p>
@@ -29,7 +20,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="状态">
+      label="订单店铺">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.name }}</p>
@@ -37,7 +28,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="进价(元/斤)">
+      label="订单金额(元)">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.name }}</p>
@@ -45,7 +36,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="出价(元/斤)">
+      label="订单类型">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.name }}</p>
@@ -53,7 +44,15 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="零售价(元/斤)">
+      label="订单状态">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>{{ scope.row.name }}</p>
+        </el-popover>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="子订单数">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.name }}</p>
@@ -62,7 +61,7 @@
     </el-table-column>
     <el-table-column
       label="操作"
-      width="350"
+      width="180"
     >
       <template slot-scope="scope">
         <el-button
@@ -72,15 +71,7 @@
         <el-button
           size="mini"
           type="primary"
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button
-          size="mini"
-          type="success"
-          @click="handleEdit(scope.$index, scope.row)">下架</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="separateBill(scope.$index, scope.row)">拆单</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -114,16 +105,16 @@
       // 查看详情
       viewDetails(index, row) {
         this.$router.push({
-          name: 'particulars',
+          name: 'orderDetails',
           params: {
             row: row
           }
         })
       },
-      // 修改
-      handleEdit(index, row) {
+      // 拆单
+      separateBill(index, row) {
         this.$router.push({
-          name: 'addAndEdit',
+          name: 'separateBill',
           params: {
             row: row
           }
