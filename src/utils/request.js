@@ -33,14 +33,14 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   /**
-   * If you want to get http information such as headers or status
+   * 如果您想获得http信息，例如头信息或状态信息
    * Please return  response => response
   */
 
   /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
+   * 通过自定义代码确定请求状态
+   * 这里只是一个例子
+   * 你也可以通过HTTP状态码来判断状态
    */
   response => {
     const res = response.data
@@ -56,7 +56,7 @@ service.interceptors.response.use(
       // 50008:非法令牌;50012:其他客户登录;50014:令牌过期;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+        MessageBox.confirm('您已经注销，您可以取消以停留在此页面，或再次登录', '确认注销', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'
