@@ -42,7 +42,7 @@
           <el-input v-model="editObject.shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
         </el-form-item>
         <el-form-item label="店铺地址：" prop="detailsAddress">
-          <selectorAddress :province1id="editObject.provinceId + ''" :city1id="editObject.cityId + ''" :county1id="editObject.countyId + ''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
+          <selectorAddress :province1id="editObject.provinceId+''" :city1id="editObject.cityId+''" :county1id="editObject.countyId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
           <el-input v-model="editObject.detailsAddress" style="width:500px;margin-top:10px;" placeholder="请输入详细地址" />
         </el-form-item>
         <el-form-item label="店铺面积：" prop="area">

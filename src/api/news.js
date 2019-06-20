@@ -37,7 +37,7 @@ export const deleteNews = (id) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: `/admin/message/getAll?id=${id}`,
+    url: `/admin/message/delete?id=${id}`,
     method: 'get'
     // data: params
   })

@@ -1,7 +1,7 @@
 <template>
   <div class="body-margin">
     <div style="display:float;flex-direction: row;align-items: center;">
-      <selectorAddress @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
+      <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
       <span class="item">经营模式:</span>
       <el-select v-model="management" style="width:100px;">
         <el-option v-for="item in managementList" :key="item.id" :value="item.id" :label="item.name" />
@@ -95,8 +95,8 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
-      pagesize: 10,
+      pageNum: 1,
+      pageSize: 10,
       total: 0,
       // 店铺属性
       id: 0,
@@ -134,11 +134,12 @@ export default {
         }
       ],
       dialogTitle: '',
-      pageNum: 1,
-      pageSize: 10,
       shopObject: {},
       // 店铺编辑对象
-      editObject: {}
+      editObject: {},
+      provinceId: '',
+      cityId: '',
+      countyId: ''
     }
   },
   watch: {},
@@ -146,21 +147,29 @@ export default {
     this.getShopList()
   },
   methods: {
+    // 分页查询
     handleSizeChange(e) {
       this.pageSize = e
       this.getShopList()
     },
     handleCurrentChange(e) {
-      this.currentPage = e
+      this.pageNum = e
       this.getShopList()
     },
     // 查询店铺列表
     getShopList() {
       this.shopTable = []
-      getShopList(this.pageNum, this.pageSize).then(res => {
-        // console.log(res, 'jjjjjjjjjj')
+      const obj = {}
+      obj.pageNum = this.pageNum
+      obj.pageSize = this.pageSize
+      obj.provinceId = this.provinceId
+      obj.cityId = this.cityId
+      obj.countyId = this.countyId
+      obj.management = this.management
+      getShopList(obj).then(res => {
+        console.log(res, 'jjjjjjjjjj')
         if (res.status === 1) {
-          this.total = res.info.totalpage
+          this.total = res.info.totalrecord
           // this.$message.success('启用成功！')
           res.info.records.map(e => {
             // console.log(e, 'gggggg')
@@ -227,6 +236,7 @@ export default {
       }
     },
     handleEdit(row) {
+      console.log(row, 'row,,,,,,')
       this.showEdit = true
       this.showState = false
       this.dialogTitle = '编辑'
@@ -263,7 +273,9 @@ export default {
       this.orderId = ''
     },
     // 条件查询
-    handleSearch() {}
+    handleSearch() {
+      this.getShopList()
+    }
   }
 }
 </script>

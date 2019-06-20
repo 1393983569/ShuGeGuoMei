@@ -66,8 +66,8 @@
   </div>
 </template>
 <script>
-import goodsEdit from '@/views/goodsManage/goodsEdit.vue'
-import goodsDetail from '@/views/goodsManage/goodsDetail.vue'
+import goodsEdit from './goodsEdit.vue'
+import goodsDetail from './goodsDetail.vue'
 export default {
   components: {
     goodsEdit, goodsDetail

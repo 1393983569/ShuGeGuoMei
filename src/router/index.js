@@ -208,7 +208,7 @@ export const asyncRoutes = [
     meta: {
       roles: ['admin'],
       icon: 'dashboard',
-      title: '商品管理'
+      title: '集采平台'
     },
     // component: Main,
     children: [
@@ -218,9 +218,19 @@ export const asyncRoutes = [
         meta: {
           roles: ['admin'],
           icon: 'dashboard',
-          title: '商品'
+          title: '商品库'
         },
-        component: () => import('@/views/goodsManage/goods.vue')
+        component: () => import('@/views/goodsManage/goods/goods.vue')
+      },
+      {
+        path: 'orders',
+        name: 'orders',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '订单'
+        },
+        component: () => import('@/views/goodsManage/orders/orders.vue')
       }
     ]
   },
