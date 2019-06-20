@@ -1,30 +1,30 @@
 <template>
   <!-- <div class="body-margin" style="display:float;"> -->
   <div class="body-margin">
-    <el-form ref="newsForm" :model="newsForm" :rules="rules" label-width="100px">
+    <el-form ref="newsForm" :model="object" :rules="rules" label-width="100px">
       <!-- <div style="float:left;"> -->
       <div>
         <el-form-item label="标题" prop="title">
-          <el-input v-model="newsForm.title" style="width:400px;" />
+          <el-input v-model="object.title" style="width:400px;" />
         </el-form-item>
-        <el-form-item label="对象" prop="object">
-          <el-select v-model="newsForm.object" clearable multiple style="width:300px;">
-            <el-option v-for="(item, index) in objectList" :key="index" :value="item.id" :label="item.name" />
+        <el-form-item label="对象" prop="objects">
+          <el-select v-model="shopIdList" clearable multiple style="width:300px;">
+            <el-option v-for="(item, index) in objectList" :key="index" :value="`${item.id}:${item.name}`" :label="item.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="类别" prop="newsType">
-          <el-select v-model="newsForm.newsType" style="width:300px;">
+          <el-select v-model="object.category" style="width:300px;">
             <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <tinymce v-model="newsForm.content" :height="300" :width="700" />
+          <tinymce v-model="object.content" :height="300" :width="700" />
         </el-form-item>
       </div>
       <!-- <el-form-item style="float:right;"> -->
       <el-form-item>
-        <el-button @click="resetForm('newsForm')">取消</el-button>
-        <el-button @click="submitForm('newsForm')">确定</el-button>
+        <el-button @click="resetForm('object')">取消</el-button>
+        <el-button @click="submitForm('object')">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -32,22 +32,24 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
-// import { addNews } from '@/api/news.js'
+import { addNews } from '@/api/news.js'
+import { getAllShop } from '@/api/shop.js'
 export default {
   name: 'NewsRelease',
   // name: 'TinymceDemo',
   components: { Tinymce },
   data() {
     return {
-      newsForm: {
+      object: {
         title: '',
         object: '',
         newsType: '',
         content: ''
       },
+      // object: {},
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        object: [{ required: true, message: '请输入对象', trigger: 'blur' }],
+        objects: [{ required: true, message: '请输入对象', trigger: 'blur' }],
         newsType: [{ required: true, message: '请输入类别', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
       },
@@ -58,28 +60,37 @@ export default {
           name: '通讯'
         }
       ],
-      objectList: [
-        {
-          id: 1,
-          name: '高俅'
-        },
-        {
-          id: 2,
-          name: '林冲'
-        }
-      ]
+      objectList: [],
+      shopList: [],
+      shopIdList: []
     }
   },
   watch: {
     'content'(e) {
       console.log(e, 'eeeee')
+    },
+    'object.shopId'(e) {
+      console.log(e, 'jjjjjjj')
+      e.forEach(element => {
+        console.log(element.split(':'), 'element....')
+        const temp = {}
+        temp.id = parseInt(element.split(':')[0])
+        temp.name = element.split(':')[1]
+        this.shopList.push(temp)
+      })
     }
+  },
+  mounted() {
+    this.getAllShop()
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // alert('submit!');
+          addNews().then(res => {
+            this.shopList = []
+            this.$parent.getNewsList()
+          }).catch()
         } else {
           return false
         }
@@ -87,6 +98,19 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    // 查询所有商铺
+    getAllShop() {
+      getAllShop().then(res => {
+        console.log(res, 'kkkkkkk')
+        if (res.status === 1) {
+          this.objectList = res.info
+        } else {
+          this.$message.error(res.info)
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
     }
   }
 }

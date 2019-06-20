@@ -13,7 +13,6 @@ export default {
 .size-color{
   font-size:18px;
   color:#6e7b99;
-  /* font-weight:bold; */
 }
 .font-weight{
   font-weight:bold;
@@ -21,7 +20,6 @@ export default {
 .size-color div{
   display: inline-block;
   margin:2px;
-  /* vertical-align: top; */
 }
 .title-size-color{
   font-size:24px;
@@ -32,9 +30,6 @@ body{
   color:#6e7b99;
   /* font-weight:bold; */
   font-family:Microsoft YaHei;
-}
-.body-margin{
-  /*margin:20px;*/
 }
 body .el-table th.gutter{
   display: table-cell!important;

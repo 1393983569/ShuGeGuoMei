@@ -38,11 +38,14 @@ export const editShop = (data) => {
  * @param {Integer} pageNum 当前页
  * @param {Integer} pageSize 每页记录数
  */
-export const getShopList = (pageNum, pageSize) => {
+export const getShopList = (data) => {
   const params = new URLSearchParams()
+  for (const key in data) {
+    if (data[key]) params.append(key, data[key])
+  }
   return request({
-    url: `/admin/shop/getAll?pageNum=${pageNum}&pageSize=${pageSize}`,
-    method: 'get',
+    url: '/admin/shop/getAll',
+    method: 'post',
     data: params
   })
 }
@@ -67,6 +70,17 @@ export const startShop = (id, status) => {
   const params = new URLSearchParams()
   return request({
     url: `/admin/shop/updateStatus?id=${id}&status=${status}`,
+    method: 'get',
+    data: params
+  })
+}
+/**
+ * 查询所有商铺
+ */
+export const getAllShop = () => {
+  const params = new URLSearchParams()
+  return request({
+    url: '/admin/shop/selectAll',
     method: 'get',
     data: params
   })

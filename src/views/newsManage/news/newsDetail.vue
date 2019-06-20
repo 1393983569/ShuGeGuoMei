@@ -2,12 +2,12 @@
   <div style="margin:20px;">
     <el-dialog :visible="showDetail" :before-close="handleClose">
       <div slot="title" class="title-size-color">查看详情</div>
-      <div class="size-color" style="margin:10px;">标题：</div>
-      <div class="size-color" style="margin:10px;">发布时间：</div>
-      <div class="size-color" style="margin:10px;">对象：</div>
-      <div class="size-color" style="margin:10px;">消息类型：</div>
-      <div class="size-color" style="margin:10px;">内容：</div>
-      <div class="size-color" style="margin:10px;">发布者：</div>
+      <div class="size-color div-margin"><span class="font-weight">标题：</span>{{ detailtObject.title }}</div>
+      <div class="size-color div-margin"><span class="font-weight">发布时间：</span>{{ detailtObject.createTime }}</div>
+      <div class="size-color div-margin"><span class="font-weight">对象：</span>{{ detailtObject.shopId }}</div>
+      <div class="size-color div-margin"><span class="font-weight">消息类型：</span>{{ detailtObject.category }}</div>
+      <div class="size-color div-margin"><span class="font-weight">内容：</span>{{ detailtObject.content }}</div>
+      <div class="size-color div-margin"><span class="font-weight">发布者：</span>{{ releaseperson }}</div>
     </el-dialog>
   </div>
 </template>
@@ -17,10 +17,20 @@ export default {
     showDetail: {
       type: Boolean,
       default: false
+    },
+    detailtObject: {
+      type: Object,
+      default: Array
     }
   },
   data() {
-    return {}
+    return {
+      releaseperson: ''
+    }
+  },
+  mounted() {
+    console.log(this.$store, 'this.$store ......')
+    this.releaseperson = this.$store.state.user.name
   },
   methods: {
     handleClose() {

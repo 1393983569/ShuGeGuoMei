@@ -25,10 +25,10 @@
     <!-- 列表 -->
     <div class="size-color table-margin-top">
       <el-table :header-cell-style="tableHeaderColor" :data="newsTable" center stripe>
-        <el-table-column prop="releaseTime" label="发布时间" />
+        <el-table-column prop="createTime" label="发布时间" />
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="object" label="对象" />
-        <el-table-column prop="type" label="类型" />
+        <el-table-column prop="category" label="类型" />
         <el-table-column prop="operate" label="操作" width="220px">
           <template slot-scope="scope">
             <el-button @click="handleDetail(scope.row)">查看详情</el-button>
@@ -36,6 +36,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin:10px;">
+        <el-pagination
+          :page-sizes="[10, 15]"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </div>
     <!-- 删除确认弹框 -->
     <el-dialog :visible.sync="showDelete" center width="380px" title="上架商品" style="border-ra">
@@ -46,12 +56,12 @@
       </div>
     </el-dialog>
     <!-- 消息详情 -->
-    <news-detail :show-detail="showDetail" @isCloseDetail="isCloseDetail" />
+    <news-detail :show-detail="showDetail" :detailt-object="detailtObject" @isCloseDetail="isCloseDetail" />
   </div>
 </template>
 <script>
 import newsDetail from './newsDetail.vue'
-import { getNews } from '@/api/news.js'
+import { getNews, deleteNews } from '@/api/news.js'
 export default {
   components: { newsDetail },
   data() {
@@ -60,7 +70,10 @@ export default {
       dateType: 1,
       currentPage: 1,
       sizePage: 10,
+      total: 1,
       category: '',
+      id: '',
+      detailtObject: {},
       dateTypeList: [
         {
           id: 1,
@@ -83,7 +96,7 @@ export default {
       newsType: '',
       newsTypeList: [],
       // 消息列表
-      newsTable: [{}],
+      newsTable: [],
       // 删除确认
       showDelete: false,
       // 消息详情
@@ -99,8 +112,18 @@ export default {
     this.getNewsList()
   },
   methods: {
+    // 分页方法
+    handleSizeChange(e) {
+      this.sizePage = e
+      this.getNewsList()
+    },
+    handleCurrentChange(e) {
+      this.currentPage = e
+      this.getNewsList()
+    },
     // 查询消息列表
     getNewsList() {
+      this.newsTable = []
       const obj = {}
       obj.pageNum = this.currentPage
       obj.pageSize = this.sizePage
@@ -110,6 +133,15 @@ export default {
       obj.category = this.category
       getNews(obj).then(res => {
         console.log(res, 'res....')
+        if (res.status === 1) {
+          this.total = res.info.totalrecord
+          res.info.records.forEach(e => {
+            e.category = e.category === 1 ? '资讯' : '通知'
+            this.newsTable.push(e)
+          })
+        } else {
+          console.log('操作失败')
+        }
       }).catch(err => {
         console.log(err)
       })
@@ -127,14 +159,27 @@ export default {
     // 消息删除确认
     handleDelete(row) {
       this.showDelete = true
+      this.id = row.id
     },
     // 删除消息
     deleteNews() {
-      this.showDelete = false
+      deleteNews(this.id).then(res => {
+        if (res.status === 1) {
+          this.$message.success('删除成功！')
+          this.getNewsList()
+          this.showDelete = false
+        } else {
+          this.$message.error(res.info)
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
     },
     // 显示详情页
     handleDetail(row) {
+      console.log(row, 'ooooooo')
       this.showDetail = true
+      this.detailtObject = row
     },
     // 关闭详情页
     isCloseDetail(e) {
