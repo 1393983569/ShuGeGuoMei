@@ -2,12 +2,12 @@
   <div class="body-margin">
     <el-dialog :visible="showAdDetail" :before-close="handleClose">
       <div slot="title" class="title-size-color" style="margin:10px;">广告详情</div>
-      <div class="size-color" style="margin:10px;">标题：</div>
-      <div class="size-color" style="margin:10px;">轮播图：</div>
-      <div class="size-color" style="margin:10px;">发布时间：</div>
-      <div class="size-color" style="margin:10px;">内容：</div>
-      <div class="size-color" style="margin:10px;">状态：</div>
-      <div class="size-color" style="margin:10px;">发布者：</div>
+      <div class="size-color div-margin"><span class="font-weight">标题：</span>{{ adObject.tile }}</div>
+      <div class="size-color div-margin"><span class="font-weight">轮播图：</span>{{ adObject.img }}</div>
+      <div class="size-color div-margin"><span class="font-weight">发布时间：</span>{{ adObject.createTime }}</div>
+      <div class="size-color div-margin"><span class="font-weight">内容：</span>{{ adObject.content }}</div>
+      <div class="size-color div-margin"><span class="font-weight">状态：</span>{{ adObject.status }}</div>
+      <div class="size-color div-margin"><span class="font-weight">发布者：</span>{{ releasePerson }}</div>
     </el-dialog>
   </div>
 </template>
@@ -17,12 +17,21 @@ export default {
     showAdDetail: {
       type: Boolean,
       default: false
+    },
+    adObject: {
+      type: Object,
+      default: Array
     }
   },
   data() {
     return {
       // showAdDetail: '',
+      releasePerson: ''
     }
+  },
+  mounted() {
+    // console.log( this.$store, 'llllllll')
+    this.releasePerson = this.$store.state.user.name
   },
   methods: {
     handleClose() {

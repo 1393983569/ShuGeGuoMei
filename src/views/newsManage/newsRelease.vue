@@ -46,7 +46,6 @@ export default {
         newsType: '',
         content: ''
       },
-      // object: {},
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         objects: [{ required: true, message: '请输入对象', trigger: 'blur' }],
@@ -56,8 +55,12 @@ export default {
       content: '',
       newsTypeList: [
         {
+          id: 0,
+          name: '通知'
+        },
+        {
           id: 1,
-          name: '通讯'
+          name: '资讯'
         }
       ],
       objectList: [],

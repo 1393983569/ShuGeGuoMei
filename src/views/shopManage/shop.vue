@@ -271,6 +271,7 @@ export default {
       this.countyId = ''
       this.management = ''
       this.orderId = ''
+      this.getShopList()
     },
     // 条件查询
     handleSearch() {

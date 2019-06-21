@@ -26,7 +26,7 @@
       <el-row>
         <el-col :span="2">
           <div>
-            &nbsp
+            &nbsp;
           </div>
         </el-col>
         <el-col :span="20">
@@ -42,42 +42,48 @@
             >
               <el-table-column
                 prop="date"
-                label="商品名称">
+                label="商品名称"
+              >
                 <template slot-scope="scope">
                   <p>{{ scope.row.date }}</p>
                 </template>
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="商品ID">
+                label="商品ID"
+              >
                 <template slot-scope="scope">
                   <p>{{ scope.row.name }}</p>
                 </template>
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="规格">
+                label="规格"
+              >
                 <template slot-scope="scope">
                   <p>{{ scope.row.name }}</p>
                 </template>
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="单价">
+                label="单价"
+              >
                 <template slot-scope="scope">
                   <p>{{ scope.row.name }}</p>
                 </template>
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="数量">
+                label="数量"
+              >
                 <template slot-scope="scope">
                   <p>{{ scope.row.name }}</p>
                 </template>
               </el-table-column>
               <el-table-column
                 prop="money"
-                label="金额">
+                label="金额"
+              >
                 <template slot-scope="scope">
                   <p>{{ scope.row.money }}</p>
                 </template>
@@ -93,11 +99,11 @@
     <el-row style="margin-bottom: 10px">
       <el-col :span="2">
         <div>
-          &nbsp
+          &nbsp;
         </div>
       </el-col>
       <el-col :span="20">
-        <childOrdersList :row="tableData"></childOrdersList>
+        <childOrdersList :row="tableData" />
       </el-col>
     </el-row>
 
@@ -105,85 +111,85 @@
 </template>
 
 <script>
-  import { sumList } from '_u/logic'
-  import childOrdersList from './childOrdersList'
-  export default {
-    name: 'collectShop',
-    components: {
-      childOrdersList
-    },
-    data () {
-      return{
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          money: 1000
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          money: 1000
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          money: 1000
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          money: 1000
-        }]
-      }
-    },
-    methods: {
-      // 查看详情
-      viewDetails(index, row) {
-        this.$router.push({
-          name: 'orderDetails',
-          params: {
-            row: row
-          }
-        })
-      },
-      // 拆单
-      separateBill(index, row) {
-        this.$router.push({
-          name: 'separateBill',
-          params: {
-            row: row
-          }
-        })
-      },
-      getSummaries(param) {
-        const { columns, data } = param
-        const sums = []
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '小计金额'
-            return
-          }
-          const values = data.map(item => {
-            if (column.property === 'money' && item[column.property]) {
-              return Number(item[column.property])
-            }
-          })
-          if (!values.every(value => isNaN(value))) {
-            let sun = sumList(values)
-            sums[index] = `￥${sun}`
-          } else {
-            sums[index] = '';
-          }
-        })
-        console.log(sums)
-        return sums
-      }
-    },
-    mounted () {
+import { sumList } from '_u/logic'
+import childOrdersList from './childOrdersList'
+export default {
+  name: 'CollectShop',
+  components: {
+    childOrdersList
+  },
+  data() {
+    return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
+        money: 1000
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄',
+        money: 1000
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄',
+        money: 1000
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄',
+        money: 1000
+      }]
+    }
+  },
+  mounted() {
 
+  },
+  methods: {
+    // 查看详情
+    viewDetails(index, row) {
+      this.$router.push({
+        name: 'orderDetails',
+        params: {
+          row: row
+        }
+      })
+    },
+    // 拆单
+    separateBill(index, row) {
+      this.$router.push({
+        name: 'separateBill',
+        params: {
+          row: row
+        }
+      })
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '小计金额'
+          return
+        }
+        const values = data.map(item => {
+          if (column.property === 'money' && item[column.property]) {
+            return Number(item[column.property])
+          }
+        })
+        if (!values.every(value => isNaN(value))) {
+          const sun = sumList(values)
+          sums[index] = `￥${sun}`
+        } else {
+          sums[index] = ''
+        }
+      })
+      console.log(sums)
+      return sums
     }
   }
+}
 </script>
 
 <style scoped>

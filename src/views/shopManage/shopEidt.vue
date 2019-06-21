@@ -187,6 +187,9 @@ export default {
     },
     'editObject.management'(e) {
       console.log(e, 'jjjjjj')
+    },
+    'editObject'(e) {
+      console.log(e, '^^^^^^^^^^^')
     }
   },
   mounted() {

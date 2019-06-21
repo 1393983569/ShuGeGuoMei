@@ -201,39 +201,39 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/goodsManage',
-    name: 'goodsManage',
-    component: Layout,
-    meta: {
-      roles: ['admin'],
-      icon: 'dashboard',
-      title: '集采平台'
-    },
-    // component: Main,
-    children: [
-      {
-        path: 'goods',
-        name: 'goods',
-        meta: {
-          roles: ['admin'],
-          icon: 'dashboard',
-          title: '商品库'
-        },
-        component: () => import('@/views/goodsManage/goods/goods.vue')
-      },
-      {
-        path: 'orders',
-        name: 'orders',
-        meta: {
-          roles: ['admin'],
-          icon: 'dashboard',
-          title: '订单'
-        },
-        component: () => import('@/views/goodsManage/orders/orders.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/goodsManage',
+  //   name: 'goodsManage',
+  //   component: Layout,
+  //   meta: {
+  //     roles: ['admin'],
+  //     icon: 'dashboard',
+  //     title: '集采平台'
+  //   },
+  //   // component: Main,
+  //   children: [
+  //     {
+  //       path: 'goods',
+  //       name: 'goods',
+  //       meta: {
+  //         roles: ['admin'],
+  //         icon: 'dashboard',
+  //         title: '商品库'
+  //       },
+  //       component: () => import('@/views/goodsManage/goods/goods.vue')
+  //     },
+  //     {
+  //       path: 'orders',
+  //       name: 'orders',
+  //       meta: {
+  //         roles: ['admin'],
+  //         icon: 'dashboard',
+  //         title: '订单'
+  //       },
+  //       component: () => import('@/views/goodsManage/orders/orders.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/newsManage',
     name: 'newsManage',

@@ -1,6 +1,6 @@
 <template>
   <div class="body-margin">
-    <el-dialog :visible.sync="showAdEdit" :before-close="hadleClose">
+    <el-dialog :visible.sync="showAdEdit" :before-close="hadleClose" width="840">
       <div class="size-color" style="margin:10px;">
         标题：<el-input placeholder="请输入标题" style="width:500px;" />
       </div>

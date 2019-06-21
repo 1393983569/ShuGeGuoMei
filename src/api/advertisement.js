@@ -35,16 +35,19 @@ export const editAdvertisement = (data) => {
  * @param {int} pageSize 每页记录数
  */
 export const getAdvertisement = (pageNum, pageSize) => {
-  // const params = new URLSearchParams()
-  // for (const key in data) {
-  //   if (data[key]) params.append(key, data[key])
-  // }
+  const params = new URLSearchParams()
+  params.append('pageNum', pageNum)
+  params.append('pageSize', pageSize)
   return request({
-    url: `/admin/advertisement/getAll?pageNum=${pageNum}&pageSize=${pageSize}`,
-    method: 'get'
-    // data: params
+    url: '/admin/advertisement/getAll',
+    method: 'post',
+    data: params
   })
 }
+/**
+ * 删除广告
+ * @param {int} id 广告id
+ */
 export const deleteAdvertisement = (id) => {
   // const params = new URLSearchParams()
   // for (const key in data) {
@@ -52,6 +55,22 @@ export const deleteAdvertisement = (id) => {
   // }
   return request({
     url: `/admin/advertisement/delete?id=${id}`,
+    method: 'get'
+    // data: params
+  })
+}
+/**
+ * 上架广告
+ * @param {int} id 广告id
+ * @param {int} status 广告状态
+ */
+export const shelfAdvertisement = (status, id) => {
+  // const params = new URLSearchParams()
+  // for (const key in data) {
+  //   if (data[key]) params.append(key, data[key])
+  // }
+  return request({
+    url: `/admin/advertisement/isShelf?status=${status}&id=${id}`,
     method: 'get'
     // data: params
   })

@@ -7,7 +7,7 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="ADForm.title" style="width:400px;" />
         </el-form-item>
-        <el-form-item label="轮播图" prop="viewpager">
+        <el-form-item label="轮播图" prop="url">
           <el-upload
             action="https://jsonplaceholder.typicode.com/posts/"
             list-type="picture-card"
@@ -34,6 +34,7 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
+import { addAdvertisement } from '@/api/advertisement.js'
 export default {
   name: 'ADRelease',
   components: { Tinymce },
@@ -51,7 +52,7 @@ export default {
       },
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        viewpager: [{ required: true, message: '请上传轮播图', trigger: 'blur' }],
+        url: [{ required: true, message: '请上传轮播图', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
       }
     }
@@ -63,12 +64,19 @@ export default {
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
+      this.ADForm.url = file.url
       this.dialogVisible = true
     },
     submitForm(formName) {
+      console.log(formName, 'formName....')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 发布广告接口
+          addAdvertisement(this.ADForm).then(res => {
+            console.log(res, 'ggggggg')
+          }).catch(err => {
+            console.log(err)
+          })
         } else {
           return false
         }
