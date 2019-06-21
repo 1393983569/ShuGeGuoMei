@@ -89,7 +89,7 @@
   border-color: #ff9749;
 }
 
-// 删除按钮
+// 删除按钮 danger
 .el-button--danger{
   background-color: #ff6a6a;
   border-color: #ff6a6a;
@@ -100,7 +100,7 @@
   border-color: #ff4941;
 }
 
-// 编辑按钮
+// 编辑 主要按钮 primary
 .el-button--primary{
   background-color: #76adff;
   border-color: #76adff;
@@ -111,7 +111,7 @@
   border-color: #5fa2ff;
 }
 
-// 上下架 启用 停用按钮
+// 上下架 启用 停用按钮success
 .el-button--success{
   background-color: #25d0c2;
   border-color: #25d0c2;
@@ -129,4 +129,20 @@
 // 列表头颜色
 .el-table th{
   background-color: #f0f2f3;
+}
+
+// 表头靠左
+//.el-table th.is-leaf, .el-table td{
+  //text-align: left !important;
+//}
+
+// 自定义提示框
+.dialogCustom{
+  .el-dialog__body{
+    padding: 0 !important;
+  }
+  .el-dialog__footer{
+    text-align: center;
+    padding: 0;
+  }
 }

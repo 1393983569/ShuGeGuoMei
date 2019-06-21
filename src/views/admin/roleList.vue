@@ -4,68 +4,26 @@
     :header-cell-style="{background:'#f0f2f3',   }"
     center
     stripe
-    >
+  >
     <el-table-column
-      label="缩略图">
-      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg" style="width: 80px; height: 80px">
-    </el-table-column>
-    <el-table-column
-      label="店铺ID">
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="商品名称">
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="状态">
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="进价(元/斤)">
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="出价(元/斤)">
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="零售价(元/斤)">
+      label="角色名称">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
       label="操作"
-      width="350"
+      width="180"
     >
       <template slot-scope="scope">
         <el-button
           size="mini"
           type="warning"
-          @click="viewDetails(scope.$index, scope.row)">查看详情</el-button>
+          @click="viewDetails(scope.$index, scope.row)">查看权限</el-button>
         <el-button
           size="mini"
           type="primary"
           @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button
-          size="mini"
-          type="success"
-          @click="handleEdit(scope.$index, scope.row)">下架</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -73,7 +31,7 @@
 
 <script>
   export default {
-    name: 'collectShop',
+    name: 'jurisdiction',
     data () {
       return{
         tableData: [{

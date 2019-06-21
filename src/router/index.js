@@ -541,6 +541,16 @@ export const asyncRoutes = [
           title: '后台用户'
         },
         component: () => import('@/views/admin/adminList.vue')
+      },
+      {
+        path: 'roleList',
+        name: 'roleList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '角色'
+        },
+        component: () => import('@/views/admin/roleList.vue')
       }
     ]
   },
