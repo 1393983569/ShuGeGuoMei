@@ -7,23 +7,45 @@
   >
     <el-table-column
       prop="date"
-      label="充值时间">
+      label="用户名">
       <template slot-scope="scope">
         <p>{{ scope.row.date }}</p>
       </template>
     </el-table-column>
     <el-table-column
       prop="name"
-      label="充值金额（元）">
+      label="手机号">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
       prop="name"
-      label="经办人">
+      label="角色">
       <template slot-scope="scope">
         <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="创建时间">
+      <template slot-scope="scope">
+        <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="操作"
+      width="280"
+    >
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          type="primary"
+          @click="editData(scope.$index, scope.row)">编辑</el-button>
+        <el-button
+          size="mini"
+          type="danger"
+          @click="removeData(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -60,17 +82,8 @@
       }
     },
     methods: {
-      // 查看详情
-      viewDetails(index, row) {
-        this.$router.push({
-          name: 'membershipDetails',
-          params: {
-            row: row
-          }
-        })
-      },
-      // 派单
-      separateBill(index, row) {
+      // 编辑
+      editData(index, row) {
         // this.$router.push({
         //   name: 'separateBill',
         //   params: {
@@ -79,7 +92,7 @@
         // })
       },
       // 删除
-      removeOrder(index, row) {
+      removeData(index, row) {
 
       }
     },

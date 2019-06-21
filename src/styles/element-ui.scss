@@ -77,3 +77,56 @@
 .el-range-editor.el-input__inner {
   display: inline-flex !important;
 }
+
+// 详情按钮  warning
+.el-button--warning{
+  background-color: #ffa96a;
+  border-color: #ffa96a;
+}
+
+.el-button--warning:hover, .el-button--warning:focus{
+  background-color: #ff9749;
+  border-color: #ff9749;
+}
+
+// 删除按钮
+.el-button--danger{
+  background-color: #ff6a6a;
+  border-color: #ff6a6a;
+}
+
+.el-button--danger:hover, .el-button--danger:focus{
+  background-color: #ff4941;
+  border-color: #ff4941;
+}
+
+// 编辑按钮
+.el-button--primary{
+  background-color: #76adff;
+  border-color: #76adff;
+}
+
+.el-button--primary:hover, .el-button--primary:focus{
+  background-color: #5fa2ff;
+  border-color: #5fa2ff;
+}
+
+// 上下架 启用 停用按钮
+.el-button--success{
+  background-color: #25d0c2;
+  border-color: #25d0c2;
+}
+
+.el-button--success:hover, .el-button--success:focus{
+  background-color: #00c6b4;
+  border-color: #00c6b4;
+}
+
+// 列表斑马线深色
+.el-table--striped .el-table__body tr.el-table__row--striped td{
+  //background-color: #00c6b4;
+}
+// 列表头颜色
+.el-table th{
+  background-color: #f0f2f3;
+}

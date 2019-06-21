@@ -19,7 +19,7 @@
        <el-table
         style="display: inline-block;"
         :data="tableData"
-        :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
+        :header-cell-style="{  textAlign: 'center'}"
         center
         stripe
       >

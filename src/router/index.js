@@ -522,6 +522,28 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '后台用户'
+    },
+    children: [
+      {
+        path: 'adminList',
+        name: 'adminList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '后台用户'
+        },
+        component: () => import('@/views/admin/adminList.vue')
+      }
+    ]
+  },
   // /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   // chartsRouter,

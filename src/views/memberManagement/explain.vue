@@ -1,7 +1,9 @@
 <template>
   <div>
     <h3>会员系统说明：</h3>
-    <tinymce></tinymce>
+    <div class="components-container">
+      <tinymce v-model="content"></tinymce>
+    </div>
   </div>
 </template>
 
@@ -13,7 +15,9 @@
       tinymce
     },
     data() {
-
+      return{
+        content: ''
+      }
     }
   }
 </script>

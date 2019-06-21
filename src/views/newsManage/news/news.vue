@@ -153,7 +153,7 @@ export default {
     // 列表头样式设置
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {
-        return 'background-color:#f0f2f3;font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
+        return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
       }
     },
     // 消息删除确认

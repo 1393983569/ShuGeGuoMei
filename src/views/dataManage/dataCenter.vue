@@ -60,7 +60,7 @@ export default {
 </script>
 <style>
 .el-aside {
-  background-color: #f0f2f3;
+ 
   color: #333;
   text-align: center;
   height: 200px;
