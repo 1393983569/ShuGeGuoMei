@@ -1,86 +1,88 @@
 <template>
   <el-table
-    :data="tableData"
+    :data="dataList"
     :header-cell-style="{ textAlign: 'center'}"
     center
     stripe
   >
     <el-table-column
-      label="订单时间"
+      prop="date"
+      label="一级品类"
     >
       <template slot-scope="scope">
         <p>{{ scope.row.date }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="订单编号"
+      prop="name"
+      label="二级品类"
     >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="订单店铺"
+      prop="name"
+      label="商品ID"
     >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="订单金额(元)"
+      prop="name"
+      label="商品名称"
     >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="订单类型"
+      prop="name"
+      label="规格"
     >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="订单状态"
+      prop="name"
+      label="单位"
     >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="子订单数"
+      prop="name"
+      label="库存"
     >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      label="操作"
-      width="180"
+      prop="name"
+      label="零售价"
     >
       <template slot-scope="scope">
-        <el-button
-          size="mini"
-          type="warning"
-          @click="viewDetails(scope.$index, scope.row)"
-        >查看详情</el-button>
-        <el-button
-          size="mini"
-          type="primary"
-          @click="separateBill(scope.$index, scope.row)"
-        >拆单</el-button>
+        <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="折扣率"
+    >
+      <template slot-scope="scope">
+        <p>{{ scope.row.name }}</p>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="折扣价"
+    >
+      <template slot-scope="scope">
+        <p>{{ scope.row.name }}</p>
       </template>
     </el-table-column>
   </el-table>
@@ -88,10 +90,16 @@
 
 <script>
 export default {
-  name: 'OrderFormList',
+  name: 'CollectShop',
+  props: {
+    row: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
-      tableData: [{
+      dataList: [{
         date: '2016-05-02',
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
@@ -117,20 +125,24 @@ export default {
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({
-        name: 'orderDetails',
+        name: 'childOrdersDetails',
         params: {
           row: row
         }
       })
     },
-    // 拆单
+    // 派单
     separateBill(index, row) {
-      this.$router.push({
-        name: 'separateBill',
-        params: {
-          row: row
-        }
-      })
+      // this.$router.push({
+      //   name: 'separateBill',
+      //   params: {
+      //     row: row
+      //   }
+      // })
+    },
+    // 删除
+    removeOrder(index, row) {
+
     }
   }
 }

@@ -417,6 +417,133 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/marketing',
+    name: 'marketing',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '营销包管理'
+    },
+    children: [
+      {
+        path: 'marketPrice',
+        name: 'marketPrice',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '价格行情'
+        },
+        component: () => import('@/views/marketing/marketPrice/marketPrice.vue')
+      },
+      {
+        path: 'pricing',
+        name: 'pricing',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '商品定价表'
+        },
+        component: () => import('@/views/marketing/pricing/pricing.vue')
+      }
+    ]
+  },
+  {
+    path: '/memberManagement',
+    name: 'memberManagement',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '会员管理'
+    },
+    children: [
+      {
+        path: 'memberList',
+        name: 'memberList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '会员管理'
+        },
+        component: () => import('@/views/memberManagement/memberList.vue')
+      },
+      {
+        path: 'membershipDetails',
+        name: 'membershipDetails',
+        hidden: true,
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '会员详情'
+        },
+        component: () => import('@/views/memberManagement/membershipDetails.vue')
+      },
+      {
+        path: 'rechargeRecord',
+        name: 'rechargeRecord',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '充值记录'
+        },
+        component: () => import('@/views/memberManagement/rechargeRecord.vue')
+      },
+      {
+        path: 'expenseCalendar',
+        name: 'expenseCalendar',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '消费记录'
+        },
+        component: () => import('@/views/memberManagement/expenseCalendar.vue')
+      },
+      {
+        path: 'integralDetails',
+        name: 'integralDetails',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '积分详情'
+        },
+        component: () => import('@/views/memberManagement/integralDetails.vue')
+      },
+      {
+        path: 'explain',
+        name: 'explain',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '会员系统说明'
+        },
+        component: () => import('@/views/memberManagement/explain.vue')
+      }
+    ]
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '后台用户'
+    },
+    children: [
+      {
+        path: 'adminList',
+        name: 'adminList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '后台用户'
+        },
+        component: () => import('@/views/admin/adminList.vue')
+      }
+    ]
+  },
   // /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   // chartsRouter,

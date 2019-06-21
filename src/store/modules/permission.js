@@ -22,8 +22,8 @@ function hasPermission(roles, route) {
  */
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-
-  routes.forEach(route => {
+  // forEach 来维持递归
+  routes.forEach((route) => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
@@ -50,7 +50,6 @@ const mutations = {
 const actions = {
   // 生成路由
   generateRoutes({ commit }, roles) {
-    console.log(roles)
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('editor')) {

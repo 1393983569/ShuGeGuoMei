@@ -21,7 +21,7 @@
       <el-table
         style="display: inline-block;"
         :data="tableData"
-        :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
+        :header-cell-style="{ textAlign: 'center'}"
         show-summary
         :summary-method="getSummaries"
         center
@@ -29,42 +29,48 @@
       >
         <el-table-column
           prop="name"
-          label="商品名称">
+          label="商品名称"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.date }}</p>
           </template>
         </el-table-column>
         <el-table-column
           prop="name"
-          label="商品ID">
+          label="商品ID"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.address }}</p>
           </template>
         </el-table-column>
         <el-table-column
           prop="name"
-          label="规格">
+          label="规格"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.address }}</p>
           </template>
         </el-table-column>
         <el-table-column
           prop="name"
-          label="单价">
+          label="单价"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.money }}</p>
           </template>
         </el-table-column>
         <el-table-column
           prop="name"
-          label="数量">
+          label="数量"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.name }}</p>
           </template>
         </el-table-column>
         <el-table-column
           prop="money"
-          label="金额">
+          label="金额"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.money }}</p>
           </template>
@@ -75,78 +81,75 @@
 </template>
 
 <script>
-  import { getSummaries } from '_u/logic'
-  import HeadButton from '@/components/HeadButton'
-  export default {
-    name: 'collectShop',
-    components: {
-      HeadButton
-    },
-    data () {
-      return{
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          money: 1000
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          money: 1000
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          money: 1000
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          money: 1000
-        }]
-      }
-    },
-    methods: {
-      // 查看详情
-      viewDetails(index, row) {
-        this.$router.push({
-          name: 'orderDetails',
-          params: {
-            row: row
-          }
-        })
-      },
-      // 拆单
-      separateBill(index, row) {
-        this.$router.push({
-          name: 'separateBill',
-          params: {
-            row: row
-          }
-        })
-      },
-      // 派单
-      sendOrders() {
+import { getSummaries } from '_u/logic'
+import HeadButton from '@/components/HeadButton'
+export default {
+  name: 'ChildOrdersDetails',
+  components: {
+    HeadButton
+  },
+  data() {
+    return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
+        money: 1000
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄',
+        money: 1000
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄',
+        money: 1000
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄',
+        money: 1000
+      }]
+    }
+  },
+  mounted() {
 
-      },
-      // 删除
-      deleteOrder() {
-        console.log('sssssssssss')
-        // 成功后返回上一级
-        this.$router.push({
-          name: 'orderDetails'
-        })
-      },
-      // 表格统计规则
-      getSummaries(param) {
-        return getSummaries(param, 'money')
-      }
+  },
+  methods: {
+    // 查看详情
+    viewDetails(index, row) {
+      this.$router.push({
+        name: 'orderDetails',
+        params: {
+          row: row
+        }
+      })
     },
-    mounted () {
+    // 拆单
+    separateBill(index, row) {
+      this.$router.push({
+        name: 'separateBill',
+        params: {
+          row: row
+        }
+      })
+    },
+    // 派单
+    sendOrders() {
 
+    },
+    // 删除
+    deleteOrder() {
+      // 成功后返回上一级
+      this.$router.back()
+    },
+    // 表格统计规则
+    getSummaries(param) {
+      return getSummaries(param, 'money')
     }
   }
+}
 </script>
 
 <style scoped>

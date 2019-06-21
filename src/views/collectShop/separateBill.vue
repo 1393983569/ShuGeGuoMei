@@ -8,29 +8,31 @@
           v-for="item in options"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
     </div>
     <div style="display: flex;">
       <div style="display: inline-block; vertical-align: top; width: 100px">
         分拣派单：
       </div>
-       <el-table
+      <el-table
         style="display: inline-block;"
         :data="tableData"
-        :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
+        :header-cell-style="{ textAlign: 'center'}"
         center
         stripe
       >
         <el-table-column
-          label="订单时间">
+          label="订单时间"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.date }}</p>
           </template>
         </el-table-column>
         <el-table-column
-          label="订单编号">
+          label="订单编号"
+        >
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.name }}</p>
@@ -38,7 +40,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="订单店铺">
+          label="订单店铺"
+        >
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.name }}</p>
@@ -46,7 +49,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="订单金额(元)">
+          label="订单金额(元)"
+        >
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.name }}</p>
@@ -54,7 +58,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="订单类型">
+          label="订单类型"
+        >
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.name }}</p>
@@ -62,7 +67,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="订单状态">
+          label="订单状态"
+        >
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.name }}</p>
@@ -70,7 +76,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="子订单数">
+          label="子订单数"
+        >
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.name }}</p>
@@ -84,69 +91,71 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="viewDetails(scope.$index, scope.row)">查看详情</el-button>
+              @click="viewDetails(scope.$index, scope.row)"
+            >查看详情</el-button>
             <el-button
               size="mini"
-              @click="separateBill(scope.$index, scope.row)">拆单</el-button>
+              @click="separateBill(scope.$index, scope.row)"
+            >拆单</el-button>
           </template>
         </el-table-column>
         <el-table-column
           type="selection"
-          width="55">
-        </el-table-column>
+          width="55"
+        />
       </el-table>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'collectShop',
-    data () {
-      return{
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
-      }
-    },
-    methods: {
-      // 查看详情
-      viewDetails(index, row) {
-        this.$router.push({
-          name: 'orderDetails',
-          params: {
-            row: row
-          }
-        })
-      },
-      // 拆单
-      separateBill(index, row) {
-        this.$router.push({
-          name: 'separateBill',
-          params: {
-            row: row
-          }
-        })
-      }
-    },
-    mounted () {
+export default {
+  name: 'SeparateBill',
+  data() {
+    return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }]
+    }
+  },
+  mounted() {
 
+  },
+  methods: {
+    // 查看详情
+    viewDetails(index, row) {
+      this.$router.push({
+        name: 'orderDetails',
+        params: {
+          row: row
+        }
+      })
+    },
+    // 拆单
+    separateBill(index, row) {
+      this.$router.push({
+        name: 'separateBill',
+        params: {
+          row: row
+        }
+      })
     }
   }
+}
 </script>
 
 <style scoped>

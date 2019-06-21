@@ -34,7 +34,7 @@
             <el-table
               style="display: inline-block;"
               :data="tableData"
-              :header-cell-style="{background:'#f0f2f3', textAlign: 'center'}"
+              :header-cell-style="{ textAlign: 'center'}"
               show-summary
               :summary-method="getSummaries"
               center
@@ -114,82 +114,44 @@
 import { sumList } from '_u/logic'
 import childOrdersList from './childOrdersList'
 export default {
-  name: 'CollectShop',
+  name: 'OrderDetails',
   components: {
     childOrdersList
   },
-  data() {
-    return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-        money: 1000
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄',
-        money: 1000
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        money: 1000
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄',
-        money: 1000
-      }]
-    }
+  // 拆单
+  separateBill(index, row) {
+    this.$router.push({
+      name: 'separateBill',
+      params: {
+        row: row
+      }
+    })
   },
-  mounted() {
-
-  },
-  methods: {
-    // 查看详情
-    viewDetails(index, row) {
-      this.$router.push({
-        name: 'orderDetails',
-        params: {
-          row: row
+  getSummaries(param) {
+    const { columns, data } = param
+    const sums = []
+    columns.forEach((column, index) => {
+      if (index === 0) {
+        sums[index] = '小计金额'
+        return
+      }
+      const values = data.map(item => {
+        if (column.property === 'money' && item[column.property]) {
+          return Number(item[column.property])
         }
       })
-    },
-    // 拆单
-    separateBill(index, row) {
-      this.$router.push({
-        name: 'separateBill',
-        params: {
-          row: row
-        }
-      })
-    },
-    getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '小计金额'
-          return
-        }
-        const values = data.map(item => {
-          if (column.property === 'money' && item[column.property]) {
-            return Number(item[column.property])
-          }
-        })
-        if (!values.every(value => isNaN(value))) {
-          const sun = sumList(values)
-          sums[index] = `￥${sun}`
-        } else {
-          sums[index] = ''
-        }
-      })
-      console.log(sums)
-      return sums
-    }
+      if (!values.every(value => isNaN(value))) {
+        const sun = sumList(values)
+        sums[index] = `￥${sun}`
+      } else {
+        sums[index] = ''
+      }
+    })
+    console.log(sums)
+    return sums
   }
 }
+
 </script>
 
 <style scoped>

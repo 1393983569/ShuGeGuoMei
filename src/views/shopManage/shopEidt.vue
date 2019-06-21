@@ -243,7 +243,7 @@ export default {
     // 修改table header的背景色
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {
-        return 'background-color:#f0f2f3;font-size:18px;color:#6e7b99;font-family:Microsoft YaHei; '
+        return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei; '
       }
     },
     //  上传图片
