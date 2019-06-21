@@ -188,17 +188,17 @@ export const asyncRoutes = [
           title: '店铺'
         },
         component: () => import('@/views/shopManage/shop.vue')
-      },
-      {
-        path: 'category',
-        name: 'category',
-        meta: {
-          roles: ['admin'],
-          icon: 'dashboard',
-          title: '品类'
-        },
-        component: () => import('@/views/shopManage/category.vue')
       }
+      // {
+      //   path: 'category',
+      //   name: 'category',
+      //   meta: {
+      //     roles: ['admin'],
+      //     icon: 'dashboard',
+      //     title: '品类'
+      //   },
+      //   component: () => import('@/views/shopManage/category.vue')
+      // }
     ]
   },
   // {

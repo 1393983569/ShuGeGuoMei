@@ -7,7 +7,6 @@ import request from '../utils/request'
 export const addShop = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
-    // console.log(key, 'key....')
     if (data[key]) params.append(key, data[key])
   }
   return request({

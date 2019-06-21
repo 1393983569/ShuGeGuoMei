@@ -1,7 +1,7 @@
 <template>
   <div class="body-margin" style="display:float;">
-    <el-button style="float:right;margin-bottom:10px;" @click="handleRelease">广告发布</el-button>
-    <el-table :data="ADTable" :header-cell-style="headerStyle" center stripe>
+    <el-button style="float:right;margin-bottom:10px;" type="primary" @click="handleRelease">广告发布</el-button>
+    <el-table :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
       <el-table-column prop="tile" label="标题" />
       <el-table-column prop="picture" label="轮播图" width="300px">
@@ -16,11 +16,11 @@
       <el-table-column prop="status" label="上下架状态" />
       <el-table-column prop="operate" :width="460" label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleDetail(scope.row)">查看详情</el-button>
-          <el-button>顶置</el-button>
-          <el-button @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button @click="putawayHandle(scope.row)">{{ state = scope.row.status === "上架" ? '下架': '上架' }}</el-button>
-          <el-button @click="deleteHandle(scope.row)">删除</el-button>
+          <el-button type="warning" size="mini" @click="handleDetail(scope.row)">查看详情</el-button>
+          <el-button size="mini" type="success" @click="handleStick(scope.$index, scope.row)">顶置</el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="success" size="mini" @click="putawayHandle(scope.row)">{{ state = scope.row.status === "上架" ? '下架': '上架' }}</el-button>
+          <el-button type="danger" size="mini" @click="deleteHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -91,11 +91,11 @@ export default {
       this.pageNum = e
       this.getAdvertiseList()
     },
-    headerStyle({ row, column, rowIndex, columnIndex }) {
-      if (rowIndex === 0) {
-        return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
-      }
-    },
+    // headerStyle({ row, column, rowIndex, columnIndex }) {
+    //   if (rowIndex === 0) {
+    //     return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
+    //   }
+    // },
     // 查询广告列表
     async getAdvertiseList() {
       this.ADTable = []
@@ -141,7 +141,7 @@ export default {
       this.id = row.id
     },
     shelfAdConfirm() {
-      shelfAdvertisement(this.shelfStatus, this.shelfAdId).then(res => {
+      shelfAdvertisement(this.shelfStatus, this.id).then(res => {
         if (res.status === 1) {
           this.$message.success(this.shelfTitle + '广告成功！')
           this.showShelf = false
@@ -171,6 +171,9 @@ export default {
         console.log(err)
         this.$message.error('删除广告失败！')
       })
+    },
+    handleStick(index, row) {
+      console.log(index, row)
     }
   }
 }

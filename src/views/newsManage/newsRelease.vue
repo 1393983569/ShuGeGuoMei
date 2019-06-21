@@ -23,8 +23,8 @@
       </div>
       <!-- <el-form-item style="float:right;"> -->
       <el-form-item>
-        <el-button @click="resetForm('object')">取消</el-button>
-        <el-button @click="submitForm('object')">确定</el-button>
+        <el-button type="warning" @click="resetForm('object')">取消</el-button>
+        <el-button type="primary" @click="submitForm('object')">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -112,6 +112,7 @@ export default {
           this.$message.error(res.info)
         }
       }).catch(err => {
+        console.log(err)
         this.$message.error(err)
       })
     }

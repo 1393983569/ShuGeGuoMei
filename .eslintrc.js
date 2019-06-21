@@ -150,7 +150,7 @@ module.exports = {
     'no-useless-computed-key': 2,
     'no-useless-constructor': 2,
     'no-useless-escape': 0,
-    'no-whitespace-before-property': 2,
+    'no-whitespace-before-property': 0,
     'no-with': 2,
     'one-var': [2, {
       'initialized': 'never'

@@ -3,7 +3,7 @@
     <div style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;align-items:center;">
       店铺名称：
       <el-select v-model="shopId">
-        <el-option v-for="item in shopList" :key="item.id" :value="itme.id" :label="item.name" />
+        <el-option v-for="item in shopList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
     </div>
 
@@ -49,11 +49,31 @@
   </div>
 </template>
 <script>
+import { getAllShop } from '@/api/shop.js'
 export default {
   data() {
     return {
       shopList: [],
       shopId: ''
+    }
+  },
+  mounted() {
+    this.getAllShop()
+  },
+  methods: {
+    // 查询所有商铺
+    getAllShop() {
+      getAllShop().then(res => {
+        console.log(res, 'kkkkkkk')
+        if (res.status === 1) {
+          this.shopList = res.info
+        } else {
+          this.$message.error('查询店铺失败')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询店铺失败')
+      })
     }
   }
 }
