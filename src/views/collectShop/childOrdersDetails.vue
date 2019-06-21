@@ -21,7 +21,7 @@
       <el-table
         style="display: inline-block;"
         :data="tableData"
-        :header-cell-style="{ textAlign: 'center'}"
+        :header-cell-style="{   }"
         show-summary
         :summary-method="getSummaries"
         center
