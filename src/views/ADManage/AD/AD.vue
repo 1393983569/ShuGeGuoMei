@@ -69,7 +69,7 @@ export default {
       showAdEdit: false,
       pageSize: 10,
       pageNum: 1,
-      total: 1,
+      total: 0,
       adObject: {},
       shelfTitle: '',
       showShelf: false,
@@ -97,19 +97,18 @@ export default {
     //   }
     // },
     // 查询广告列表
-    async getAdvertiseList() {
+    getAdvertiseList() {
       this.ADTable = []
-      const res = await getAdvertisement(this.pageNum, this.pageSize)
-      if (res.status === 1) {
+      getAdvertisement(this.pageNum, this.pageSize).then(res => {
         this.total = res.info.totalrecord
-        console.log(res, 'hhhhhh')
         res.info.records.forEach(e => {
           e.status = e.status === 0 ? '上架' : '下架'
           this.ADTable.push(e)
         })
-      } else {
-        this.$message.error(res.info)
-      }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询广告失败！')
+      })
     },
     // 广告发布
     handleRelease() {
@@ -117,7 +116,6 @@ export default {
     },
     // 查看详情
     handleDetail(row) {
-      // console.log(row, 'detail;;;;;;')
       this.adObject = row
       this.showAdDetail = true
     },
@@ -145,6 +143,7 @@ export default {
         if (res.status === 1) {
           this.$message.success(this.shelfTitle + '广告成功！')
           this.showShelf = false
+          this.getAdvertiseList()
         } else {
           this.$message.error(this.shelfTitle + '广告失败！')
         }

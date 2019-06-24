@@ -70,7 +70,7 @@ export default {
       dateType: 1,
       currentPage: 1,
       sizePage: 10,
-      total: 1,
+      total: 0,
       category: '',
       id: '',
       detailtObject: {},
@@ -141,16 +141,11 @@ export default {
       obj.day = this.day
       obj.category = this.category
       getNews(obj).then(res => {
-        console.log(res, 'res....')
-        if (res.status === 1) {
-          this.total = res.info.totalrecord
-          res.info.records.forEach(e => {
-            e.category = e.category === 1 ? '资讯' : '通知'
-            this.newsTable.push(e)
-          })
-        } else {
-          this.$message.error('查询失败')
-        }
+        this.total = res.info.totalrecord
+        res.info.records.forEach(e => {
+          e.category = e.category === 1 ? '资讯' : '通知'
+          this.newsTable.push(e)
+        })
       }).catch(err => {
         console.log(err)
         this.$message.error('查询失败')
@@ -174,13 +169,9 @@ export default {
     // 删除消息
     deleteNews() {
       deleteNews(this.id).then(res => {
-        if (res.status === 1) {
-          this.$message.success('删除成功！')
-          this.getNewsList()
-          this.showDelete = false
-        } else {
-          this.$message.error('删除失败')
-        }
+        this.$message.success('删除成功！')
+        this.getNewsList()
+        this.showDelete = false
       }).catch(err => {
         console.log(err)
         this.$message.error('删除失败')

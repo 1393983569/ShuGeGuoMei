@@ -19,17 +19,17 @@
 import { getProvince, getCity, getArea } from '@/api/priovinCityArea.js'
 export default {
   props: {
-    province1Id: {
+    province1id: {
       type: String,
       default: '',
       require: true
     },
-    city1Id: {
+    city1id: {
       type: String,
       default: '',
       require: true
     },
-    county1Id: {
+    county1id: {
       type: String,
       default: '',
       require: true
@@ -56,7 +56,8 @@ export default {
           this.$message.error('查询城市失败！')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('查询城市出错！')
       })
     },
     'cityId'(e) {
@@ -69,33 +70,34 @@ export default {
           this.$message.error('查询区县失败！')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('查询区县出错！')
       })
     },
     'countyId'(e) {
       this.countyId = e
       this.$emit('getCounty', this.countyId)
     },
-    'province1Id'(e) {
+    'province1id'(e) {
       this.provinceId = e
     },
-    'city1Id'(e) {
+    'city1id'(e) {
       this.cityId = e
     },
-    'county1Id'(e) {
+    'county1id'(e) {
       this.countyId = e
     }
   },
   mounted() {
     this.getProvinceList()
-    if (this.province1Id) {
-      this.provinceId = this.province1Id
+    if (this.province1id) {
+      this.provinceId = this.province1id
     }
-    if (this.city1Id) {
-      this.cityId = this.city1Id
+    if (this.city1id) {
+      this.cityId = this.city1id
     }
-    if (this.county1Id) {
-      this.countyId = this.county1Id
+    if (this.county1id) {
+      this.countyId = this.county1id
     }
   },
   methods: {
@@ -107,7 +109,8 @@ export default {
           this.$message.error('查询省份失败！')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('查询省份出错！')
       })
     }
   }

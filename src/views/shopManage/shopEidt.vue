@@ -74,7 +74,7 @@
             </el-table-column>
             <el-table-column prop="ids" label="二级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-model="list" v-show="scope.row.id">
+                <el-checkbox-group v-show="scope.row.id" v-model="list">
                   <el-checkbox :label="scope.row" @change="handlecheck(scope.row)">{{ scope.row.id }}</el-checkbox>
                 </el-checkbox-group>
               </template>
@@ -183,13 +183,32 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       mergeList: [],
-      position: 0
+      position: 0,
       // shop: {}
+      categoryArray: []
     }
   },
   watch: {
-    'list'(e) {
-      console.log(e, 'eeeeeeee')
+    'list'(list) {
+      console.log(list, 'eeeeeeee')
+      // let index= 0
+      // let obj = {}
+      // obj.arr = []
+      // for(let i = 0;i<list.length; i++) {
+      //   if(list[index].id === list[i].id) {
+      //     obj.id = list[index].id
+      //     obj.name = list[index].name
+      //     let item = {}
+      //     item.ids = list[i].ids
+      //     item.names = list[i].names
+      //     obj.arr.push(item)
+      //     console.log(item)
+      //   }else{
+      //     index= i
+      //   }
+      // }
+      // this.categoryArray.push(obj)
+      // console.log(this.categoryArray, '*********')
     },
     'firstLevel'(e) {
       console.log(e, '==========')
@@ -206,7 +225,7 @@ export default {
   },
   methods: {
     handlecheck(row) {
-      console.log(row, 'lllll')
+      // console.log(row, 'lllll')
       this.editObject.categoryOneId = row.id
       this.editObject.categoryTwoId = row.ids
     },
@@ -230,18 +249,18 @@ export default {
       }
     },
     // 递归单元格
-    recursionTableData (arr) {
-      let res = []
+    recursionTableData(arr) {
+      const res = []
       arr.forEach((item, index) => {
         let data = {}
         if (item.seconds && item.seconds.length) {
-          for (let secondsItem of item.seconds) {
+          for (const secondsItem of item.seconds) {
             data = {
               childrenId: item.id,
               childrenName: item.name,
               id: secondsItem.id,
               name: secondsItem.name,
-              categoryOneId: secondsItem.categoryOneId,
+              categoryOneId: secondsItem.categoryOneId
             }
             res.push(data)
           }
@@ -315,19 +334,14 @@ export default {
       this.editObject.area = parseInt(this.editObject.area)
       // this.editObject.image = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
       addShop(this.editObject).then(res => {
-        if (res) {
-          this.$message.info('操作成功')
-          this.handleClose()
-          this.editObject = {}
-          this.provinceId = ''
-          this.cityId = ''
-          this.countyId = ''
-          this.management = ''
-          this.$parent.getShopList()
-        } else {
-          this.$message.error('操作失败')
-          this.editObject = {}
-        }
+        this.$message.info('操作成功')
+        this.handleClose()
+        this.editObject = {}
+        this.provinceId = ''
+        this.cityId = ''
+        this.countyId = ''
+        this.management = ''
+        this.$parent.getShopList()
       }).catch(error => {
         this.$message.error('添加商铺失败！')
         console.log(error)
@@ -345,12 +359,8 @@ export default {
         this.editObject.management = 2
       }
       editShop(this.editObject).then(res => {
-        if (res.status === 1) {
-          this.$message.success('操作成功')
-          this.$parent.getShopList()
-        } else {
-          this.$message.error('操作失败')
-        }
+        this.$message.success('操作成功')
+        this.$parent.getShopList()
       }).catch(error => {
         console.log(error)
         this.$message.error('编辑商铺失败！')

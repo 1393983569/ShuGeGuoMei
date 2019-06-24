@@ -34,7 +34,7 @@
         <el-button type="primary" @click="second = false">确 定</el-button>
       </span>
     </el-dialog>
-    <hint :title="'删除'" :text="'是否删除该后台用户？'" v-model="hintState" @confirm="deleteUser" />
+    <hint v-model="hintState" :title="'删除'" :text="'是否删除该后台用户？'" @confirm="deleteUser" />
     <el-table
       :data="dataList"
       center
@@ -138,6 +138,11 @@
     },
     mounted() {
 
+  },
+  methods: {
+    // 编辑
+    editData(index, row) {
+      this.dialogVisible = true
     },
     methods: {
       // 编辑
@@ -159,6 +164,7 @@
       }
     }
   }
+}
 </script>
 
 <style scoped>

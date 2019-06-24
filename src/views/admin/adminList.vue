@@ -4,19 +4,20 @@
       title="编辑"
       :visible.sync="dialogVisible"
       width="50%"
-      :before-close="handleClose">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
+      :before-close="handleClose"
+    >
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="90px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item label="手机号：" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item label="角色：" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item label="初始密码：" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -24,7 +25,7 @@
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
-    <hint :title="'删除'" :text="'是否删除该后台用户？'" v-model="hintState" @confirm="deleteUser" />
+    <hint v-model="hintState" :title="'删除'" :text="'是否删除该后台用户？'" @confirm="deleteUser" />
     <el-table
       :data="dataList"
       center
@@ -86,7 +87,7 @@
 <script>
 import hint from '@/components/Hint'
 export default {
-  name: 'adminList',
+  name: 'AdminList',
   components: {
     hint
   },
@@ -142,7 +143,6 @@ export default {
       this.dataList.splice(this.listIndex, 1)
       // 成功后隐藏
       this.hintState = false
-
     }
   }
 }
