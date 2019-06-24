@@ -84,68 +84,68 @@
 </template>
 
 <script>
-import hint from '@/components/Hint'
-export default {
-  name: 'adminList',
-  components: {
-    hint
-  },
-  props: {
-    row: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      dataList: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      ruleForm: [],
-      rules: [],
-      dialogVisible: false,
-      hintState: false,
-      listIndex: '',
-      listRow: {}
-    }
-  },
-  mounted() {
-
-  },
-  methods: {
-    // 编辑
-    editData(index, row) {
-      this.dialogVisible = true
+  import hint from '@/components/Hint'
+  export default {
+    name: 'categoryList',
+    components: {
+      hint
     },
-    // 删除
-    removeData(index, row) {
-      this.hintState = true
-      this.listIndex = index
-      this.listRow = row
+    props: {
+      row: {
+        type: Array,
+        default: () => []
+      }
     },
-    // 删除用户
-    deleteUser() {
-      this.dataList.splice(this.listIndex, 1)
-      // 成功后隐藏
-      this.hintState = false
+    data() {
+      return {
+        dataList: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }],
+        ruleForm: [],
+        rules: [],
+        dialogVisible: false,
+        hintState: false,
+        listIndex: '',
+        listRow: {}
+      }
+    },
+    mounted() {
 
+    },
+    methods: {
+      // 编辑
+      editData(index, row) {
+        this.dialogVisible = true
+      },
+      // 删除
+      removeData(index, row) {
+        this.hintState = true
+        this.listIndex = index
+        this.listRow = row
+      },
+      // 删除用户
+      deleteUser() {
+        this.dataList.splice(this.listIndex, 1)
+        // 成功后隐藏
+        this.hintState = false
+
+      }
     }
   }
-}
 </script>
 
 <style scoped>

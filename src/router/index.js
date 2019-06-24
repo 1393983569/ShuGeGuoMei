@@ -554,6 +554,29 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/category',
+    name: 'category',
+    component: Layout,
+    meta: {
+      roles: ['admin'],
+      icon: 'dashboard',
+      title: '基础数据设置'
+    },
+    // component: Main,
+    children: [
+      {
+        path: 'categoryList',
+        name: 'categoryList',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '品类基础数据'
+        },
+        component: () => import('@/views/category/categoryList')
+      }
+    ]
+  },
   // /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   // chartsRouter,
