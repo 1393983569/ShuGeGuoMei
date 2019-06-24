@@ -87,7 +87,7 @@
 <script>
 import hint from '@/components/Hint'
 export default {
-  name: 'AdminList',
+  name: 'CategoryList',
   components: {
     hint
   },
