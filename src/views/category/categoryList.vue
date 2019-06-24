@@ -1,27 +1,37 @@
 <template>
   <div>
     <el-dialog
-      title="编辑"
-      :visible.sync="dialogVisible"
+      title="编辑一级品类"
+      :visible.sync="stair"
       width="50%"
       :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号：" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="角色：" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="初始密码：" prop="name">
+        <p>一级品类ID：01</p>
+        <el-form-item label="一级品类名称" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="stair = false">取 消</el-button>
+        <el-button type="primary" @click="stair = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="编辑二级品类"
+      :visible.sync="second"
+      width="50%"
+      :before-close="handleClose">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
+        <p>一级品类ID：01</p>
+        <p>一级品类：瓜</p>
+        <p>二级品类ID：01</p>
+        <el-form-item label="一级品类名称" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="second = false">取 消</el-button>
+        <el-button type="primary" @click="second = false">确 定</el-button>
       </span>
     </el-dialog>
     <hint :title="'删除'" :text="'是否删除该后台用户？'" v-model="hintState" @confirm="deleteUser" />
@@ -32,7 +42,7 @@
     >
       <el-table-column
         prop="date"
-        label="用户名"
+        label="一级品类"
       >
         <template slot-scope="scope">
           <p>{{ scope.row.date }}</p>
@@ -40,7 +50,7 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="手机号"
+        label="一级品类ID"
       >
         <template slot-scope="scope">
           <p>{{ scope.row.name }}</p>
@@ -48,7 +58,7 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="角色"
+        label="二级品类"
       >
         <template slot-scope="scope">
           <p>{{ scope.row.name }}</p>
@@ -56,7 +66,7 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="创建时间"
+        label="二级品类ID"
       >
         <template slot-scope="scope">
           <p>{{ scope.row.name }}</p>
@@ -117,7 +127,10 @@
         }],
         ruleForm: [],
         rules: [],
-        dialogVisible: false,
+        // 一级品类
+        stair: false,
+        // 二级品类
+        second: false,
         hintState: false,
         listIndex: '',
         listRow: {}
@@ -129,7 +142,7 @@
     methods: {
       // 编辑
       editData(index, row) {
-        this.dialogVisible = true
+        this.stair = true
       },
       // 删除
       removeData(index, row) {
