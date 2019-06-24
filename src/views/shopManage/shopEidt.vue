@@ -55,19 +55,27 @@
             border
             :span-method="arraySpanMethod"
           >
-            <el-table-column prop="name" label="一级品类" />
+            <el-table-column prop="id" label="一级品类">
+              <template slot-scope="scope">
+                <p>{{ scope.row.childrenName }}</p>
+              </template>
+            </el-table-column>
             <el-table-column prop="id" label="一级品类ID">
               <template slot-scope="scope">
                 <el-checkbox-group v-model="firstLevel">
-                  <el-checkbox :label="scope.row">{{ scope.row.id }}</el-checkbox>
+                  <el-checkbox :label="scope.row">{{ scope.row.childrenId }}</el-checkbox>
                 </el-checkbox-group>
               </template>
             </el-table-column>
-            <el-table-column prop="names" label="二级品类" />
+            <el-table-column prop="id" label="二级品类">
+              <template slot-scope="scope">
+                <p>{{ scope.row.name }}</p>
+              </template>
+            </el-table-column>
             <el-table-column prop="ids" label="二级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-model="list">
-                  <el-checkbox :label="scope.row" @change="handlecheck(scope.row)">{{ scope.row.ids }}</el-checkbox>
+                <el-checkbox-group v-model="list" v-show="scope.row.id">
+                  <el-checkbox :label="scope.row" @change="handlecheck(scope.row)">{{ scope.row.id }}</el-checkbox>
                 </el-checkbox-group>
               </template>
             </el-table-column>
@@ -173,7 +181,9 @@ export default {
       firstLevel: [],
       // dialogTitle:'',
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      mergeList: [],
+      position: 0
       // shop: {}
     }
   },
@@ -202,44 +212,77 @@ export default {
     },
     // 合并单元格
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(row, column, rowIndex, columnIndex, 'row...')
-      // if (columnIndex === 0) {
-      //   // 第一列的合并方法
-      //   const row1 = this.firstCate[rowIndex];
-      //   const col1 = row1 > 0 ? 1 : 0; // 如果被合并了row = 0; 则他这个列需要取消
-      //   return {
-      //     rowspan: row1,
-      //     colspan: col1,
-      //   };
-      // }
+      if (columnIndex === 0) {
+        const rowData = this.mergeList[rowIndex]
+        const colData = rowData > 0 ? 1 : 0
+        return {
+          rowspan: rowData,
+          colspan: colData
+        }
+      }
+      if (columnIndex === 1) {
+        const rowData = this.mergeList[rowIndex]
+        const colData = rowData > 0 ? 1 : 0
+        return {
+          rowspan: rowData,
+          colspan: colData
+        }
+      }
+    },
+    // 递归单元格
+    recursionTableData (arr) {
+      let res = []
+      arr.forEach((item, index) => {
+        let data = {}
+        if (item.seconds && item.seconds.length) {
+          for (let secondsItem of item.seconds) {
+            data = {
+              childrenId: item.id,
+              childrenName: item.name,
+              id: secondsItem.id,
+              name: secondsItem.name,
+              categoryOneId: secondsItem.categoryOneId,
+            }
+            res.push(data)
+          }
+          this.recursionTableData(item.seconds)
+        } else {
+          data = {
+            childrenId: item.id,
+            childrenName: item.name
+          }
+          res.push(data)
+        }
+      })
+      return res
+    },
+    // 生成合并数组
+    getMergeList() {
+      this.mergeList = []
+      this.categoryTable.forEach((item, index) => {
+        if (index === 0) {
+          this.mergeList.push(1)
+          this.position = index
+        } else {
+          if (item.childrenId === this.categoryTable[index - 1].childrenId) {
+            this.mergeList[this.position] += 1
+            this.mergeList.push(0)
+          } else {
+            this.mergeList.push(1)
+            this.position = index
+          }
+        }
+      })
     },
     // 查询品类
     getCategoryList() {
       this.categoryTable = []
       getCategory().then(res => {
-        if (res.status === 1) {
-          console.log(res.info, 'hhhh')
-          this.temp = res.info
-          for (const key in res.info) {
-            const secondList = res.info[key].seconds
-            if (secondList.length > 0) {
-              for (const i in secondList) {
-                const list = {
-                  id: res.info[key].id,
-                  name: res.info[key].name,
-                  ids: secondList[i].id,
-                  names: secondList[i].name
-                }
-                this.categoryTable.push(list)
-              }
-            } else {
-              this.categoryTable.push(res.info[key])
-            }
-          }
-        }
+        this.temp = res.info
+        this.categoryTable = this.recursionTableData(res.info)
+        this.getMergeList()
       }).catch(err => {
-        console.log(err)
-        this.$message.error('查询品类出错！')
+        this.$message.error(err)
       })
     },
     // 修改table header的背景色
