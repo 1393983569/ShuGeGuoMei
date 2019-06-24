@@ -19,17 +19,17 @@
 import { getProvince, getCity, getArea } from '@/api/priovinCityArea.js'
 export default {
   props: {
-    province1Id: {
+    province1id: {
       type: String,
       default: '',
       require: true
     },
-    city1Id: {
+    city1id: {
       type: String,
       default: '',
       require: true
     },
-    county1Id: {
+    county1id: {
       type: String,
       default: '',
       require: true
@@ -78,26 +78,26 @@ export default {
       this.countyId = e
       this.$emit('getCounty', this.countyId)
     },
-    'province1Id'(e) {
+    'province1id'(e) {
       this.provinceId = e
     },
-    'city1Id'(e) {
+    'city1id'(e) {
       this.cityId = e
     },
-    'county1Id'(e) {
+    'county1id'(e) {
       this.countyId = e
     }
   },
   mounted() {
     this.getProvinceList()
-    if (this.province1Id) {
-      this.provinceId = this.province1Id
+    if (this.province1id) {
+      this.provinceId = this.province1id
     }
-    if (this.city1Id) {
-      this.cityId = this.city1Id
+    if (this.city1id) {
+      this.cityId = this.city1id
     }
-    if (this.county1Id) {
-      this.countyId = this.county1Id
+    if (this.county1id) {
+      this.countyId = this.county1id
     }
   },
   methods: {
