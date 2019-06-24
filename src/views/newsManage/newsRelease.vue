@@ -106,10 +106,10 @@ export default {
     getAllShop() {
       getAllShop().then(res => {
         console.log(res, 'kkkkkkk')
-        if (res.status === 1) {
+        if (res.info.length > 0) {
           this.objectList = res.info
         } else {
-          this.$message.error(res.info)
+          this.$message.error('商铺暂无数据！')
         }
       }).catch(err => {
         console.log(err)

@@ -56,7 +56,8 @@ export default {
           this.$message.error('查询城市失败！')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('查询城市出错！')
       })
     },
     'cityId'(e) {
@@ -69,7 +70,8 @@ export default {
           this.$message.error('查询区县失败！')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('查询区县出错！')
       })
     },
     'countyId'(e) {
@@ -107,7 +109,8 @@ export default {
           this.$message.error('查询省份失败！')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('查询省份出错！')
       })
     }
   }

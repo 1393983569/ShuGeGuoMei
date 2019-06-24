@@ -18,10 +18,12 @@
     </div>
     <div>
       <el-table
+        ref="singleTable"
         :row-style="tableRowStyle"
         :data="shopTable"
         center
         stripe
+        :default-sort="tableAttribute"
         class="table-margin-top"
       >
         <el-table-column prop="id" label="店铺ID" width="200px" />
@@ -29,6 +31,7 @@
         <el-table-column prop="name" label="店铺名称" />
         <el-table-column prop="vipNum" label="会员数" />
         <el-table-column prop="management" label="经营模式" />
+        <el-table-column prop="sellNum" label="销售额" />
         <el-table-column prop="shopownerName" label="掌柜姓名" />
         <!-- <el-table-column prop="employeeNum" label="职员人数" /> -->
         <el-table-column prop="operate" label="操作" width="300px">
@@ -113,11 +116,11 @@ export default {
       // 排序
       orderList: [
         {
-          id: 1,
+          id: 'sellNum',
           name: '销售额'
         },
         {
-          id: 2,
+          id: 'vipNum',
           name: '会员数'
         }
       ],
@@ -138,10 +141,21 @@ export default {
       editObject: {},
       provinceId: '',
       cityId: '',
-      countyId: ''
+      countyId: '',
+      tableAttribute: {}
     }
   },
-  watch: {},
+  watch: {
+    orderId(newValue, oldValue) {
+      console.log(newValue, oldValue, '%%%%%%%')
+      if (oldValue) {
+        this.tableAttribute.order = 'descending'
+        this.tableAttribute.prop = newValue
+        this.getTableData()
+        // this.getShopList()
+      }
+    }
+  },
   mounted() {
     this.getShopList()
   },
@@ -166,10 +180,8 @@ export default {
       obj.countyId = this.countyId
       obj.management = this.management
       getShopList(obj).then(res => {
-        console.log(res, 'jjjjjjjjjj')
-        if (res.status === 1) {
+        if (res.info.records.length > 0) {
           this.total = res.info.totalrecord
-          // this.$message.success('启用成功！')
           res.info.records.map(e => {
             // console.log(e, 'gggggg')
             if (e.management === 1) {
@@ -180,11 +192,25 @@ export default {
             this.shopTable.push(e)
           })
         } else {
-          this.$message.error('查询商铺列表出错！')
+          this.$message.error('商铺暂无数据！')
         }
       }).catch(err => {
         console.log(err)
+        this.$message.error('商铺查询出错！')
       })
+    },
+    // table排序
+    getTableData() {
+      var _this = this
+      // 清空排序 重新赋值
+      _this.$refs.singleTable.clearSort()
+      for (const i of _this.$refs.singleTable.columns) {
+        if (i.property === _this.tableAttribute.prop) {
+          i.order = _this.tableAttribute.order
+        } else {
+          i.order = ''
+        }
+      }
     },
     // 修改table tr行的背景色
     tableRowStyle({ row, rowIndex }) {
@@ -200,6 +226,11 @@ export default {
       this.showEdit = true
       this.showState = true
       this.dialogTitle = '新建'
+      this.editObject = {
+        provinceId: '',
+        cityId: '',
+        countyId: ''
+      }
     },
     // 删除店铺
     handleDelete(row) {
@@ -227,16 +258,16 @@ export default {
       this.name = row.name
     },
     // 确定启用店铺
-    async confirmStart() {
+    confirmStart() {
       this.status = 0
-      const res = await startShop(this.id, this.status)
-      if (res.status === 1) {
+      startShop(this.id, this.status).then(res => {
         this.$message.success('启用成功！')
         this.showStart = false
         this.getShopList()
-      } else {
-        this.$message.error(res.info)
-      }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('启用失败！')
+      })
     },
     handleEdit(row) {
       console.log(row, 'row,,,,,,')
