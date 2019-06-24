@@ -11,19 +11,18 @@
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
-        <el-button @click="handleSearch">筛选</el-button>
-        <el-button @click="handleClearCondition">清空</el-button>
-        <el-button @click="handleAdd">新建</el-button>
+        <el-button type="primary" @click="handleSearch">筛选</el-button>
+        <el-button type="danger" @click="handleClearCondition">清空</el-button>
+        <el-button type="primary" @click="handleAdd">新建</el-button>
       </div>
     </div>
     <div>
       <el-table
         :row-style="tableRowStyle"
-        :header-cell-style="tableHeaderColor"
         :data="shopTable"
         center
         stripe
-        class="table-margin-top table-font-color"
+        class="table-margin-top"
       >
         <el-table-column prop="id" label="店铺ID" width="200px" />
         <el-table-column prop="simpleName" label="店铺简称" />
@@ -34,11 +33,11 @@
         <!-- <el-table-column prop="employeeNum" label="职员人数" /> -->
         <el-table-column prop="operate" label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button v-if="scope.row.status === 1" size="mini" @click="handleStart(scope.row)">启用</el-button>
-            <el-button v-else size="mini" @click="handleStart(scope.row)">停用</el-button>
-            <el-button size="mini" @click="handleDelete(scope.row)">删除</el-button>
-            <el-button size="mini" @click="handleDetail(scope.row)">详情</el-button>
+            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button v-if="scope.row.status === 1" type="success" size="mini" @click="handleStart(scope.row)">启用</el-button>
+            <el-button v-else type="success" size="mini" @click="handleStart(scope.row)">停用</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="warning" size="mini" @click="handleDetail(scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -180,7 +179,11 @@ export default {
             }
             this.shopTable.push(e)
           })
+        } else {
+          this.$message.error('查询商铺列表出错！')
         }
+      }).catch(err => {
+        console.log(err)
       })
     },
     // 修改table tr行的背景色

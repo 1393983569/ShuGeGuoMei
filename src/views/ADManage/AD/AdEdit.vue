@@ -1,18 +1,18 @@
 <template>
   <div class="body-margin">
-    <el-dialog :visible.sync="showAdEdit" :before-close="hadleClose" width="840">
+    <el-dialog :visible.sync="showAdEdit" :before-close="hadleClose" width="840" title="广告编辑">
       <div class="size-color" style="margin:10px;">
         标题：<el-input placeholder="请输入标题" style="width:500px;" />
       </div>
       <div class="size-color" style="margin:10px;">
         轮播图：<el-input placeholder="请输入标题" style="width:500px;" />
       </div>
-      <div style="margin:10px;display:flex;align-items:flex-start;font-weight:bold;font-size:18px;color:#6e7b99;">
-        内容：&nbsp;&nbsp;&nbsp;&nbsp;<tinymce v-model="content" :height="300" :width="700" />
+      <div style="display:flex;align-items:flex-start;">
+        <span class="size-color">内容：</span><tinymce v-model="content" :height="300" :width="700" />
       </div>
       <div slot="footer">
-        <el-button @click="hadleClose">取消</el-button>
-        <el-button>确定</el-button>
+        <el-button type="warning" @click="hadleClose">取消</el-button>
+        <el-button type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>

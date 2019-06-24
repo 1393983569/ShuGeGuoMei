@@ -1,18 +1,18 @@
 <template>
   <div style="margin:20px;">
     <!-- 头部查询 -->
-    <div class="size-color" style="display:float;">
-      查询类型：<el-select v-model="dateType">
+    <div style="display:float;">
+      <!-- 查询类型：<el-select v-model="dateType">
         <el-option v-for="item in dateTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div v-if="dateState === 2">整年：<el-date-picker v-model="year" type="year" placeholder="选择年" /></div>
       <div v-else-if="dateState === 3">整月：<el-date-picker v-model="month" type="month" placeholder="选择月" /></div>
-      <div v-else>日期：<el-date-picker v-model="datePick" type="date" placeholder="选择日期" /></div>
+      <div v-else>日期：<el-date-picker v-model="datePick" type="date" placeholder="选择日期" /></div> -->
       消息类别：<el-select v-model="newsType">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
-        <el-button @click="handleReleaseNews">发布消息</el-button>
+        <el-button type="primary" @click="handleReleaseNews">发布消息</el-button>
         <el-dropdown split-button>
           个人设置
           <el-dropdown-menu slot="dropdown">
@@ -24,15 +24,15 @@
     </div>
     <!-- 列表 -->
     <div class="size-color table-margin-top">
-      <el-table :header-cell-style="tableHeaderColor" :data="newsTable" center stripe>
+      <el-table :data="newsTable" center stripe>
         <el-table-column prop="createTime" label="发布时间" />
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="object" label="对象" />
         <el-table-column prop="category" label="类型" />
         <el-table-column prop="operate" label="操作" width="220px">
           <template slot-scope="scope">
-            <el-button @click="handleDetail(scope.row)">查看详情</el-button>
-            <el-button @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="warning" size="mini" @click="handleDetail(scope.row)">查看详情</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -94,7 +94,16 @@ export default {
       dateState: 1,
       // 消息类别
       newsType: '',
-      newsTypeList: [],
+      newsTypeList: [
+        {
+          id: 0,
+          name: '通知'
+        },
+        {
+          id: 1,
+          name: '资讯'
+        }
+      ],
       // 消息列表
       newsTable: [],
       // 删除确认
@@ -140,10 +149,11 @@ export default {
             this.newsTable.push(e)
           })
         } else {
-          console.log('操作失败')
+          this.$message.error('查询失败')
         }
       }).catch(err => {
         console.log(err)
+        this.$message.error('查询失败')
       })
     },
     // 消息发布
@@ -151,11 +161,11 @@ export default {
       this.$router.push({ name: 'newsRelease' })
     },
     // 列表头样式设置
-    tableHeaderColor({ row, column, rowIndex, columnIndex }) {
-      if (rowIndex === 0) {
-        return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
-      }
-    },
+    // tableHeaderColor({ row, column, rowIndex, columnIndex }) {
+    //   if (rowIndex === 0) {
+    //     return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei;'
+    //   }
+    // },
     // 消息删除确认
     handleDelete(row) {
       this.showDelete = true
@@ -169,15 +179,16 @@ export default {
           this.getNewsList()
           this.showDelete = false
         } else {
-          this.$message.error(res.info)
+          this.$message.error('删除失败')
         }
       }).catch(err => {
-        this.$message.error(err)
+        console.log(err)
+        this.$message.error('删除失败')
       })
     },
     // 显示详情页
     handleDetail(row) {
-      console.log(row, 'ooooooo')
+      // console.log(row, 'ooooooo')
       this.showDetail = true
       this.detailtObject = row
     },

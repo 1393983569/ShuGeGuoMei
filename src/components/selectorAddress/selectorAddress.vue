@@ -1,16 +1,16 @@
 <template>
   <div style="margin:10px;display:inline;">
     <!-- <p>{{province1Id, city1Id, county1Id}}</p> -->
-    <span class="size-color font-weight">省:</span>
-    <el-select v-model="provinceId" style="width:90px;font-size:18px;color:#6e7b99;">
+    <span class="font-weight">省:</span>
+    <el-select v-model="provinceId" style="width:90px;">
       <el-option v-for="item in provinceList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
-    <span class="size-color font-weight">市:</span>
-    <el-select v-model="cityId" style="width:90px;font-size:18px;color:#6e7b99;">
+    <span class="font-weight">市:</span>
+    <el-select v-model="cityId" style="width:90px;">
       <el-option v-for="item in cityList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
-    <span class="size-color font-weight">区/县:</span>
-    <el-select v-model="countyId" style="width:90px;font-size:18px;color:#6e7b99;">
+    <span class="font-weight">区/县:</span>
+    <el-select v-model="countyId" style="width:90px;">
       <el-option v-for="item in countyList" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
   </div>

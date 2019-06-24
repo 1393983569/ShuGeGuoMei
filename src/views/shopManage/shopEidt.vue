@@ -50,7 +50,6 @@
         </el-form-item>
         <el-form-item label="经营品类：" prop="category">
           <el-table
-            :header-cell-style="tableHeaderColor"
             :data="categoryTable"
             center
             border
@@ -85,13 +84,13 @@
         <div v-else class="size-color div-margin font-weight"> 会员人数：</div>
         <!-- 新建 -->
         <el-form-item v-if="showState">
-          <el-button @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button @click="addShopHandle('shopForm')">保存</el-button>
+          <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
+          <el-button type="primary" @click="addShopHandle('shopForm')">保存</el-button>
         </el-form-item>
         <!-- 编辑 -->
         <el-form-item v-else>
-          <el-button @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button @click="editShopHandle('shopForm')">保存</el-button>
+          <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
+          <el-button type="primary" @click="editShopHandle('shopForm')">保存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -238,7 +237,10 @@ export default {
             }
           }
         }
-      }).catch()
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询品类出错！')
+      })
     },
     // 修改table header的背景色
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
@@ -284,7 +286,7 @@ export default {
           this.editObject = {}
         }
       }).catch(error => {
-        this.$message.error(error)
+        this.$message.error('添加商铺失败！')
         console.log(error)
       })
     },
@@ -300,14 +302,15 @@ export default {
         this.editObject.management = 2
       }
       editShop(this.editObject).then(res => {
-        if (res) {
+        if (res.status === 1) {
           this.$message.success('操作成功')
           this.$parent.getShopList()
         } else {
           this.$message.error('操作失败')
         }
       }).catch(error => {
-        this.$data.message.error(error)
+        console.log(error)
+        this.$message.error('编辑商铺失败！')
       })
     },
     addShopHandle(formName) {

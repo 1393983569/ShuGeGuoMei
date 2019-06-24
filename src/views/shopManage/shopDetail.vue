@@ -33,7 +33,7 @@
       <div class="size-color div-margin">
         <span class="font-weight">经营品类：</span>
         <!-- <el-table :data="categoryTable" :header-cell-style="tableHeaderColor" :span-method="objectSpanMethod"> -->
-        <el-table :data="categoryTable" :header-cell-style="tableHeaderColor">
+        <el-table :data="categoryTable">
           <el-table-column prop="first" label="一级品类" />
           <el-table-column prop="firstId" label="一级品类ID" />
           <el-table-column prop="second" label="二级品类" />
