@@ -57,14 +57,15 @@
           >
             <el-table-column prop="id" label="一级品类">
               <template slot-scope="scope">
-                <p>{{ scope.row.childrenName }}</p>
+                <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange(scope.row)">{{ scope.row.childrenName }}</el-checkbox> -->
+                <el-checkbox-group v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange(scope.row)">
+                  <el-checkbox :label="scope.row">{{ scope.row.childrenName }}</el-checkbox>
+                </el-checkbox-group>
               </template>
             </el-table-column>
             <el-table-column prop="id" label="一级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-model="firstLevel">
-                  <el-checkbox :label="scope.row">{{ scope.row.childrenId }}</el-checkbox>
-                </el-checkbox-group>
+                <p>{{ scope.row.childrenId }}</p>
               </template>
             </el-table-column>
             <el-table-column prop="id" label="二级品类">
@@ -74,8 +75,8 @@
             </el-table-column>
             <el-table-column prop="ids" label="二级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-show="scope.row.id" v-model="list">
-                  <el-checkbox :label="scope.row" @change="handlecheck(scope.row)">{{ scope.row.id }}</el-checkbox>
+                <el-checkbox-group v-show="scope.row.id" v-model="checkedCategory" @change="handleCheckedCategoryChange">
+                  <el-checkbox :label="scope.row">{{ scope.row.id }}</el-checkbox>
                 </el-checkbox-group>
               </template>
             </el-table-column>
@@ -94,6 +95,7 @@
         <el-form-item v-if="showState">
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
           <el-button type="primary" @click="addShopHandle('shopForm')">保存</el-button>
+          <el-button type="primary" @click="getFirstCategory()">########</el-button>
         </el-form-item>
         <!-- 编辑 -->
         <el-form-item v-else>
@@ -108,6 +110,7 @@
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { addShop, editShop } from '@/api/shop.js'
 import { getCategory } from '@/api/category.js'
+// import { filter } from 'minimatch';
 export default {
   components: {
     selectorAddress
@@ -132,6 +135,12 @@ export default {
   },
   data() {
     return {
+      finalArray: [],
+      addCategoryObj: {},
+      firstcategory: [],
+      isIndeterminate: true,
+      checkAll: [],
+      checkedCategory: [],
       // 确定不能为空
       shopForm: {
         name: '',
@@ -224,6 +233,59 @@ export default {
     this.getCategoryList()
   },
   methods: {
+    getFirstCategory() {
+      this.firstcategory.forEach((e, index) => {
+        const array = this.checkedCategory.filter(a => {
+          return e.id === a.childrenId
+        })
+        const secondCategory = []
+        if (array.length > 1) {
+          // 有子类
+          array.forEach(item => {
+            const cateItem = {}
+            cateItem.id = item.id
+            cateItem.name = item.name
+            secondCategory.push(cateItem)
+          })
+          this.addCategoryObj.id = array[0].childrenId
+          this.addCategoryObj.name = array[0].childrenName
+          this.addCategoryObj.seconds = secondCategory
+          this.finalArray.push(this.addCategoryObj)
+        } else if (array.length === 1) {
+          // 无子类
+          this.addCategoryObj.id = array[0].childrenId
+          this.addCategoryObj.name = array[0].childrenName
+          this.addCategoryObj.seconds = []
+          this.finalArray.push(this.addCategoryObj)
+        }
+      })
+    },
+    handleCheckAllChange(row) {
+      this.checkedCategory = []
+      this.checkAll.forEach(e => {
+        if (e.id) {
+          const categoryOneId = e.categoryOneId
+          // 返回两次
+          const tem = this.categoryTable.filter(function(item) {
+            return item.categoryOneId === categoryOneId
+          })
+          this.checkedCategory = this.checkedCategory.concat(tem)
+        } else {
+          const obj = {}
+          obj.childrenId = e.childrenId
+          obj.childrenName = e.childrenName
+          this.checkedCategory.push(obj)
+        }
+      })
+      this.isIndeterminate = false
+    },
+    handleCheckedCategoryChange(value) {
+      this.checkedCategory = value
+      console.log(this.checkedCategory, 'checked.......')
+    },
+    checkedFunction(row) {
+      console.log(row, 'hhhhhhhhhhhhhh')
+    },
     handlecheck(row) {
       // console.log(row, 'lllll')
       this.editObject.categoryOneId = row.id
@@ -297,6 +359,7 @@ export default {
     getCategoryList() {
       this.categoryTable = []
       getCategory().then(res => {
+        this.firstcategory = res.info
         this.temp = res.info
         this.categoryTable = this.recursionTableData(res.info)
         this.getMergeList()
@@ -321,11 +384,6 @@ export default {
     // 添加店铺
     addShopHandles() {
       // 添加多个category
-      // console.log(this.list, 'list.......')
-      // this.list.forEach(e => {
-      //   this.editObject.categoryOneId = e.id
-      //   this.editObject.categoryTwoId = e.ids
-      // })
       this.editObject.provinceId = parseInt(this.editObject.provinceId)
       this.editObject.cityId = parseInt(this.editObject.cityId)
       this.editObject.countyId = parseInt(this.editObject.countyId)
