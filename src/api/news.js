@@ -9,7 +9,7 @@ export const addNews = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/message/add',
+    url: '/admin/addMess',
     method: 'post',
     data: params
   })
@@ -23,7 +23,7 @@ export const getNews = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/message/getAll',
+    url: '/admin/getAllMess',
     method: 'post',
     data: params
   })
@@ -37,7 +37,7 @@ export const deleteNews = (id) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: `/admin/message/delete?id=${id}`,
+    url: `/admin/deleteMess?id=${id}`,
     method: 'get'
     // data: params
   })
