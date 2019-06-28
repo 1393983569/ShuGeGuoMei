@@ -37,8 +37,8 @@
         <el-table-column prop="operate" label="操作" width="300px">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button v-if="scope.row.status === 1" type="success" size="mini" @click="handleStart(scope.row)">启用</el-button>
-            <el-button v-else type="success" size="mini" @click="handleStart(scope.row)">停用</el-button>
+            <el-button type="success" size="mini" @click="handleStart(scope.row)">{{ scope.row.status=== 1? '启用': '停用' }}</el-button>
+
             <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
             <el-button type="warning" size="mini" @click="handleDetail(scope.row)">详情</el-button>
           </template>
@@ -75,8 +75,8 @@
       </div>
     </el-dialog>
     <!-- 启用弹框 -->
-    <el-dialog :visible.sync="showStart" center width="380px" title="启用店铺" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否启用该店铺？</div>
+    <el-dialog :visible.sync="showStart" center width="380px" :title="`${startShopTitle}店铺`" style="border-ra">
+      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否{{ startShopTitle }}该店铺？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showStart = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="confirmStart">确定</el-button>
@@ -113,6 +113,7 @@ export default {
       orderId: '',
       // 启动
       status: 1,
+      startShopTitle: '',
       // 排序
       orderList: [
         {
@@ -252,21 +253,25 @@ export default {
     },
     // 启用店铺
     handleStart(row) {
-      console.log(row, 'row,,,,,,')
       this.showStart = true
       this.id = row.id
       this.name = row.name
+      this.status = row.status === 1 ? 0 : 1
+      if (this.status === 1) {
+        this.startShopTitle = '停用'
+      } else {
+        this.startShopTitle = '启用'
+      }
     },
     // 确定启用店铺
     confirmStart() {
-      this.status = 0
       startShop(this.id, this.status).then(res => {
-        this.$message.success('启用成功！')
+        this.$message.success(this.startShopTitle + '成功！')
         this.showStart = false
         this.getShopList()
       }).catch(err => {
         console.log(err)
-        this.$message.error('启用失败！')
+        this.$message.error(this.startShopTitle + '失败！')
       })
     },
     handleEdit(row) {

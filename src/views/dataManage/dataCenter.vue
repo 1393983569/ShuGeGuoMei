@@ -46,11 +46,17 @@
         </el-main>
       </el-container>
     </div>
+    <br>
+    <div>
+      <incomTrend />
+    </div>
   </div>
 </template>
 <script>
 import { getAllShop } from '@/api/shop.js'
+import incomTrend from './incomTrend.vue'
 export default {
+  components: { incomTrend },
   data() {
     return {
       shopList: [],

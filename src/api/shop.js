@@ -7,12 +7,18 @@ import request from '../utils/request'
 export const addShop = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
-    if (data[key]) params.append(key, data[key])
+    if (data[key]) {
+      params.append(key, data[key])
+    }
   }
   return request({
     url: '/admin/shop/add',
+    // headers: {
+    //   'content-Type': 'application/json;charset=UTF-8'
+    // },
     method: 'post',
     data: params
+    // data: { 'name': name, 'simpleName': simpleName, 'shopownerName': shopownerName, 'shopownerPhone': shopownerPhone, 'shopownerPassword': shopownerPassword, 'provinceId': provinceId, 'cityId': cityId, 'countyId': countyId, 'detailsAddress': detailsAddress, 'area': area, 'categoryJson': categoryJson, 'management': management }
   })
 }
 /**

@@ -16,7 +16,7 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-
+import echarts from 'echarts'
 import * as filters from './filters' // global filters
 
 /**
@@ -35,6 +35,8 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
+
+Vue.prototype.$echarts = echarts
 
 // register global utility filters
 Object.keys(filters).forEach(key => {
