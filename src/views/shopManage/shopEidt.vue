@@ -4,15 +4,15 @@
     <el-dialog :visible="showEdit" :before-close="handleClose" width="1200px" height="700">
       <div class="title-size-color">{{ dialogTitle }}</div><br>
       <div v-if="showState" />
-      <div v-else class="size-color div-margin font-weight">
-        店铺ID：{{ editObject.id }}
+      <div v-else class=" div-margin font-weight">
+        &nbsp;&nbsp;店铺ID：{{ editObject.id }}
       </div>
       <el-form ref="shopForm" :model="shopForm" :rules="rules" label-width="100px">
         <el-form-item label="店铺名称：" prop="name">
-          <el-input v-model="editObject.name" style="width:500px;" placeholder="请输入店铺名称" />
+          <el-input v-model="shopForm.name" style="width:500px;" placeholder="请输入店铺名称" />
         </el-form-item>
         <el-form-item label="店铺简称：" prop="simpleName">
-          <el-input v-model="editObject.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
+          <el-input v-model="shopForm.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
         </el-form-item>
         <el-form-item label="店铺图片：" prop="picture">
           <div v-if="showState" class="size-color div-margin font-weight">
@@ -24,7 +24,7 @@
             >
               <i class="el-icon-plus" />
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible" size="tiny">
+            <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
           </div>
@@ -32,21 +32,21 @@
             <img :src="editObject.imge">
           </div>
         </el-form-item>
-        <el-form-item label="掌柜姓名：" prop="shopownerName">
-          <el-input v-model="editObject.shopownerName" style="width:300px;" placeholder="请输入掌柜姓名" />
+        <el-form-item label="掌柜姓名：" prop="adminName">
+          <el-input v-model="shopForm.adminName" style="width:300px;" placeholder="请输入掌柜姓名" />
         </el-form-item>
-        <el-form-item label="手机号：" prop="shopownerPhone">
-          <el-input v-model="editObject.shopownerPhone" style="width:300px;" placeholder="请输入手机号" />
+        <el-form-item label="手机号：" prop="adminPhone">
+          <el-input v-model="shopForm.adminPhone" style="width:300px;" placeholder="请输入手机号" />
         </el-form-item>
-        <el-form-item label="初始密码：" prop="shopownerPassword">
-          <el-input v-model="editObject.shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
+        <el-form-item label="初始密码：" prop="adminPassword">
+          <el-input v-model="shopForm.adminPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
         </el-form-item>
         <el-form-item label="店铺地址：" prop="detailsAddress">
-          <selectorAddress :province1id="editObject.provinceId+''" :city1id="editObject.cityId+''" :county1id="editObject.countyId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
-          <el-input v-model="editObject.detailsAddress" style="width:500px;margin-top:10px;" placeholder="请输入详细地址" />
+          <selectorAddress :province1id="shopForm.provinceId+''" :city1id="shopForm.cityId+''" :county1id="shopForm.countyId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
+          <el-input v-model="shopForm.detailsAddress" style="width:500px;margin-top:10px;" placeholder="请输入详细地址" />
         </el-form-item>
         <el-form-item label="店铺面积：" prop="area">
-          <el-input v-model="editObject.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
+          <el-input v-model="shopForm.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
         </el-form-item>
         <el-form-item label="经营品类：" prop="category">
           <el-table
@@ -57,14 +57,15 @@
           >
             <el-table-column prop="id" label="一级品类">
               <template slot-scope="scope">
-                <p>{{ scope.row.childrenName }}</p>
+                <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange(scope.row)">{{ scope.row.childrenName }}</el-checkbox> -->
+                <el-checkbox-group v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange(scope.row)">
+                  <el-checkbox :label="scope.row">{{ scope.row.childrenName }}</el-checkbox>
+                </el-checkbox-group>
               </template>
             </el-table-column>
             <el-table-column prop="id" label="一级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-model="firstLevel">
-                  <el-checkbox :label="scope.row">{{ scope.row.childrenId }}</el-checkbox>
-                </el-checkbox-group>
+                <p>{{ scope.row.childrenId }}</p>
               </template>
             </el-table-column>
             <el-table-column prop="id" label="二级品类">
@@ -74,22 +75,22 @@
             </el-table-column>
             <el-table-column prop="ids" label="二级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-show="scope.row.id" v-model="list">
-                  <el-checkbox :label="scope.row" @change="handlecheck(scope.row)">{{ scope.row.id }}</el-checkbox>
+                <el-checkbox-group v-show="scope.row.id" v-model="checkedCategory" @change="handleCheckedCategoryChange">
+                  <el-checkbox :label="scope.row">{{ scope.row.id }}</el-checkbox>
                 </el-checkbox-group>
               </template>
             </el-table-column>
           </el-table>
         </el-form-item>
         <el-form-item label="经营模式：" prop="management">
-          <el-select v-model="editObject.management" style="width:400px;">
+          <el-select v-model="shopForm.management" style="width:400px;">
             <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
           </el-select>
         </el-form-item>
         <div v-if="showState" />
-        <div v-else class="size-color div-margin font-weight">成本结构：</div>
+        <div v-else class="div-margin font-weight">成本结构：</div>
         <div v-if="showState" />
-        <div v-else class="size-color div-margin font-weight"> 会员人数：</div>
+        <div v-else class="div-margin font-weight"> 会员人数：</div>
         <!-- 新建 -->
         <el-form-item v-if="showState">
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
@@ -101,6 +102,9 @@
           <el-button type="primary" @click="editShopHandle('shopForm')">保存</el-button>
         </el-form-item>
       </el-form>
+      <!-- <div slot="footer">
+        <el-button type="danger" @click="handleClose">关闭弹框</el-button>
+      </div> -->
     </el-dialog>
   </div>
 </template>
@@ -108,6 +112,7 @@
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { addShop, editShop } from '@/api/shop.js'
 import { getCategory } from '@/api/category.js'
+// import { filter } from 'minimatch';
 export default {
   components: {
     selectorAddress
@@ -132,17 +137,26 @@ export default {
   },
   data() {
     return {
+      finalArray: [],
+      addCategoryObj: {},
+      firstcategory: [],
+      isIndeterminate: true,
+      checkAll: [],
+      checkedCategory: [],
       // 确定不能为空
       shopForm: {
+        provinceId: '',
+        cityId: '',
+        countyId: '',
         name: '',
         simpleName: '',
         picture: '',
-        shopownerName: '',
-        shopownerPhone: '',
-        shopownerPassword: '',
+        adminName: '',
+        adminPhone: '',
+        adminPassword: '',
         detailsAddress: '',
         area: '',
-        category: '',
+        // category: '',
         cost: '',
         management: '',
         vipnum: ''
@@ -150,20 +164,18 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入店铺名称', trigger: 'blur' }],
         simpleName: [{ required: true, message: '请输入店铺简称', trigger: 'blur' }],
-        picture: [{ required: true, message: '请上传店铺图片', trigger: 'blur' }],
-        shopownerName: [{ required: true, message: '请输入掌柜姓名', trigger: 'blur' }],
-        shopownerPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        shopownerPassword: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
+        // picture: [{ required: true, message: '请上传店铺图片', trigger: 'blur' }],
+        adminName: [{ required: true, message: '请输入掌柜姓名', trigger: 'blur' }],
+        adminPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        adminPassword: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
         detailsAddress: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         area: [{ required: true, message: '请输入店铺面积', trigger: 'blur' }],
-        category: [{ required: true, message: '请输经营品类', trigger: 'blur' }],
+        // category: [{ required: true, message: '请输经营品类', trigger: 'blur' }],
         // cost: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         // vipnum: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         management: [{ required: true, message: '请输入标题', trigger: 'blur' }]
       },
-      provinceId: '',
-      cityId: '',
-      countyId: '',
+
       list: [],
       checked: false,
       modelList: [
@@ -217,18 +229,101 @@ export default {
       console.log(e, 'jjjjjj')
     },
     'editObject'(e) {
-      console.log(e, '^^^^^^^^^^^')
+      this.shopForm = e
+      // if(e) {
+      //   if(e.categoryJson) {
+      //     let arr = []
+      //     let tempArr = []
+      //     arr = JSON.parse(e.categoryJson)
+      //     arr.map(e => {
+      //       let a = {}
+      //       a.childrenId = e.id
+      //       a.childrenName = e.name
+      //       tempArr.push(a)
+      //     })
+      //     console.log(tempArr, '**************')
+      //     // this.isIndeterminate = false
+      //     this.checkAll = tempArr
+      //   }
+      // }
+      // console.log(JSON.parse(e.categoryJson),  '^^^^^^^^^^^')
+
+      // this.checkAll = JSON.parse(e.categoryJson)
     }
   },
   mounted() {
     this.getCategoryList()
   },
   methods: {
-    handlecheck(row) {
-      // console.log(row, 'lllll')
-      this.editObject.categoryOneId = row.id
-      this.editObject.categoryTwoId = row.ids
+    // 处理品类数据格式
+    getFirstCategory() {
+      this.finalArray = []
+      this.firstcategory.forEach((e, index) => {
+        const array = this.checkedCategory.filter(a => {
+          return e.id === a.childrenId
+        })
+        const secondCategory = []
+        if (array.length > 1) {
+          // 有子类
+          array.forEach(item => {
+            const cateItem = {}
+            cateItem.id = item.id
+            cateItem.name = item.name
+            secondCategory.push(cateItem)
+          })
+          const addCategoryObj1 = {}
+          addCategoryObj1.id = array[0].childrenId
+          addCategoryObj1.name = array[0].childrenName
+          addCategoryObj1.seconds = secondCategory
+          this.finalArray.push(addCategoryObj1)
+        } else if (array.length === 1) {
+          // 无子类
+          const addCategoryObj2 = {}
+          addCategoryObj2.id = array[0].childrenId
+          addCategoryObj2.name = array[0].childrenName
+          addCategoryObj2.seconds = []
+          this.finalArray.push(addCategoryObj2)
+        }
+      })
+      // console.log(this.finalArray, JSON.stringify(this.finalArray), 'hhhhhhh')
     },
+    // 品类选择处理
+    handleCheckAllChange(row) {
+      console.log(this.checkAll)
+      this.checkedCategory = []
+      // console.log(this.checkAll, 'jjjjj')
+      this.checkAll.forEach(e => {
+        // console.log(this.checkAll, '&&&&&&&&')
+        if (e.id) {
+          const categoryOneId = e.categoryOneId
+          // 返回两次
+          const tem = this.categoryTable.filter(function(item) {
+            return item.categoryOneId === categoryOneId
+          })
+          this.checkedCategory = this.checkedCategory.concat(tem)
+        } else {
+          const obj = {}
+          obj.childrenId = e.childrenId
+          obj.childrenName = e.childrenName
+          this.checkedCategory.push(obj)
+        }
+      })
+      this.isIndeterminate = false
+      this.getFirstCategory()
+    },
+    handleCheckedCategoryChange(value) {
+      this.checkedCategory = value
+      console.log(value, 'ggggggggg')
+      this.getFirstCategory()
+    },
+    checkedFunction(row) {
+      console.log(row, 'hhhhhhhhhhhhhh')
+    },
+    // handlecheck(row) {
+    //   // console.log(row, 'lllll')
+    //   this.editObject.categoryOneId = row.id
+    //   this.editObject.categoryTwoId = row.ids
+    // },
     // 合并单元格
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -297,6 +392,7 @@ export default {
     getCategoryList() {
       this.categoryTable = []
       getCategory().then(res => {
+        this.firstcategory = res.info
         this.temp = res.info
         this.categoryTable = this.recursionTableData(res.info)
         this.getMergeList()
@@ -317,29 +413,28 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+      // this.showEdit =  false
     },
     // 添加店铺
     addShopHandles() {
       // 添加多个category
-      // console.log(this.list, 'list.......')
-      // this.list.forEach(e => {
-      //   this.editObject.categoryOneId = e.id
-      //   this.editObject.categoryTwoId = e.ids
-      // })
-      this.editObject.provinceId = parseInt(this.editObject.provinceId)
-      this.editObject.cityId = parseInt(this.editObject.cityId)
-      this.editObject.countyId = parseInt(this.editObject.countyId)
-      this.editObject.shopownerPhone = parseInt(this.editObject.shopownerPhone)
-      this.editObject.shopownerPassword = parseInt(this.editObject.shopownerPassword)
-      this.editObject.area = parseInt(this.editObject.area)
+      this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
+      this.shopForm.cityId = parseInt(this.shopForm.cityId)
+      this.shopForm.countyId = parseInt(this.shopForm.countyId)
+      console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
+      // return
+      this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
+      this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
+      this.shopForm.area = parseInt(this.shopForm.area)
+      this.shopForm.categoryJson = JSON.stringify(this.finalArray)
       // this.editObject.image = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
-      addShop(this.editObject).then(res => {
+      addShop(this.shopForm).then(res => {
         this.$message.info('操作成功')
         this.handleClose()
-        this.editObject = {}
         this.provinceId = ''
-        this.cityId = ''
-        this.countyId = ''
+        this.finalArray = []
+        this.checkAll = []
+        this.checkedCategory = []
         this.management = ''
         this.$parent.getShopList()
       }).catch(error => {
@@ -349,16 +444,24 @@ export default {
     },
     // 编辑店铺
     editShopHandle() {
-      this.editObject.provinceId = parseInt(this.editObject.provinceId)
-      this.editObject.cityId = parseInt(this.editObject.cityId)
-      this.editObject.countyId = parseInt(this.editObject.countyId)
-      if (this.editObject.management === '直营') {
-        this.editObject.management = 1
+      this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
+      this.shopForm.cityId = parseInt(this.shopForm.cityId)
+      this.shopForm.countyId = parseInt(this.shopForm.countyId)
+      console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
+      // return
+      this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
+      this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
+      this.shopForm.area = parseInt(this.shopForm.area)
+      if (this.finalArray.length > 0) {
+        this.shopForm.categoryJson = JSON.stringify(this.finalArray)
+      }
+      if (this.shopForm.management === '直营') {
+        this.shopForm.management = 1
         // this.editObject = row
       } else {
-        this.editObject.management = 2
+        this.shopForm.management = 2
       }
-      editShop(this.editObject).then(res => {
+      editShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.$parent.getShopList()
       }).catch(error => {
@@ -383,13 +486,13 @@ export default {
       this.$refs[formName].resetFields()
     },
     getProvince(id) {
-      this.editObject.provinceId = id
+      this.shopForm.provinceId = id
     },
     getCity(id) {
-      this.editObject.cityId = id
+      this.shopForm.cityId = id
     },
     getCounty(id) {
-      this.editObject.countyId = id
+      this.shopForm.countyId = id
     }
   }
 }

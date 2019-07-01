@@ -16,13 +16,13 @@
         <span class="font-weight">店铺图片：</span><img :src="shopObject.image">
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">掌柜姓名：</span>{{ shopObject.shopownerName }}
+        <span class="font-weight">掌柜姓名：</span>{{ shopObject.adminName }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">手机号：</span>{{ shopObject.shopownerPhone }}
+        <span class="font-weight">手机号：</span>{{ shopObject.adminPhone }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">初始密码：</span> {{ shopObject.shopownerPassword }}
+        <span class="font-weight">初始密码：</span> {{ shopObject.adminPassword }}
       </div>
       <div class="size-color div-margin">
         <span class="font-weight">店铺地址：</span>{{ shopObject.detailsAddress }}

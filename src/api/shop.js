@@ -7,12 +7,18 @@ import request from '../utils/request'
 export const addShop = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
-    if (data[key]) params.append(key, data[key])
+    if (data[key]) {
+      params.append(key, data[key])
+    }
   }
   return request({
-    url: '/admin/shop/add',
+    url: '/admin/addShop',
+    // headers: {
+    //   'content-Type': 'application/json;charset=UTF-8'
+    // },
     method: 'post',
     data: params
+    // data: { 'name': name, 'simpleName': simpleName, 'shopownerName': shopownerName, 'shopownerPhone': shopownerPhone, 'shopownerPassword': shopownerPassword, 'provinceId': provinceId, 'cityId': cityId, 'countyId': countyId, 'detailsAddress': detailsAddress, 'area': area, 'categoryJson': categoryJson, 'management': management }
   })
 }
 /**
@@ -27,7 +33,7 @@ export const editShop = (data) => {
     }
   }
   return request({
-    url: '/admin/shop/update',
+    url: '/admin/updateShop',
     method: 'post',
     data: params
   })
@@ -43,7 +49,7 @@ export const getShopList = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/shop/getAll',
+    url: '/admin/getAllShop',
     method: 'post',
     data: params
   })
@@ -55,7 +61,7 @@ export const getShopList = (data) => {
 export const deleteShop = (id) => {
   const params = new URLSearchParams()
   return request({
-    url: `/admin/shop/delete?id=${id}`,
+    url: `/admin/deleteShop?id=${id}`,
     method: 'get',
     data: params
   })
@@ -68,7 +74,7 @@ export const deleteShop = (id) => {
 export const startShop = (id, status) => {
   const params = new URLSearchParams()
   return request({
-    url: `/admin/shop/updateStatus?id=${id}&status=${status}`,
+    url: `/admin/updateStatus?id=${id}&status=${status}`,
     method: 'get',
     data: params
   })
@@ -79,7 +85,7 @@ export const startShop = (id, status) => {
 export const getAllShop = () => {
   const params = new URLSearchParams()
   return request({
-    url: '/admin/shop/selectAll',
+    url: '/admin/selectAllShop',
     method: 'get',
     data: params
   })

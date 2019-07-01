@@ -10,7 +10,7 @@ export const getProvince = () => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: '/basics/areaCode/selectProvince',
+    url: '/basics/selectSysProvince',
     method: 'get'
     // data: params
   })
@@ -23,7 +23,7 @@ export const getCity = (id) => {
   // const params = new URLSearchParams()
   // params.append('parentId', id)
   return request({
-    url: `/basics/areaCode/selectCity?parentId=${id}`,
+    url: `/basics/selectSysCity?provinceId=${id}`,
     method: 'get'
     // data: params
   })
@@ -36,7 +36,7 @@ export const getArea = (id) => {
   // const params = new URLSearchParams()
   // params.append('cityId', id)
   return request({
-    url: `/basics/areaCode/selectArea?cityId=${id}`,
+    url: `/basics/selectSysArea?cityId=${id}`,
     method: 'get'
     // data: params
   })

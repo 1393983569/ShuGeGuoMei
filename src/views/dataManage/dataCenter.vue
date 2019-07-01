@@ -9,13 +9,12 @@
 
     <div>
       <el-container>
-        <el-aside width="100px">
-          <div style="margin-top:30px;font-size:18px;color:#6e7b99;font-weight:bold;">
-            <span>营</span><br>
-            <span>业</span><br>
-            <span>概</span><br>
-            <span>况</span><br>
-          </div>
+        <el-aside width="100px" class="asideClass">
+          营业概况
+          <!-- <span>营</span><br>
+          <span>业</span><br>
+          <span>概</span><br>
+          <span>况</span><br> -->
         </el-aside>
         <el-main>
           <div class="item">
@@ -46,11 +45,35 @@
         </el-main>
       </el-container>
     </div>
+    <br>
+    <div>
+      <incomTrend />
+    </div>
+    <br>
+    <div>
+      <lossData />
+    </div>
+    <br>
+    <div>
+      <goodsData />
+    </div>
+    <br>
+    <div class="font-weight">盈亏分析</div>
+    <div style="margin-top:4px;"><promitLoss /></div>
+    <br>
+    <div class="font-weight">会员分析</div>
+    <div style="margin-top:4px;"><vip /></div>
   </div>
 </template>
 <script>
 import { getAllShop } from '@/api/shop.js'
+import incomTrend from './jingying/incomTrend.vue'
+import lossData from './jingying/lossData.vue'
+import goodsData from './jingying/goodsData.vue'
+import promitLoss from './promitLoss/promitLoss.vue'
+import vip from './vip/vipData.vue'
 export default {
+  components: { incomTrend, lossData, goodsData, promitLoss, vip },
   data() {
     return {
       shopList: [],
@@ -79,21 +102,21 @@ export default {
 }
 </script>
 <style>
-.el-aside {
-
+.asideClass {
   color: #333;
+  background-color: #CCCCCC;
   text-align: center;
-  height: 200px;
+  line-height:200px;
   margin:0px;
   padding:0px;
 }
 .el-main {
   display:flex;
   flex-direction: row;
-  background-color: #f8fbfc;
+  background-color: #FFFFFF;
   color: #333;
   text-align: center;
-   margin:0px;
+  margin:0px;
   padding:0px;
 }
 .item{
@@ -101,5 +124,8 @@ export default {
   align-items: center;
   width:220px;
   text-align: center;
+}
+body{
+  background-color: #F6F6F6;
 }
 </style>

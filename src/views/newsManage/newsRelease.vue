@@ -1,30 +1,30 @@
 <template>
   <!-- <div class="body-margin" style="display:float;"> -->
   <div class="body-margin">
-    <el-form ref="newsForm" :model="object" :rules="rules" label-width="100px">
+    <el-form ref="newsForm" :model="newsForm" :rules="rules" label-width="100px">
       <!-- <div style="float:left;"> -->
       <div>
         <el-form-item label="标题" prop="title">
-          <el-input v-model="object.title" style="width:400px;" />
+          <el-input v-model="newsForm.title" style="width:400px;" />
         </el-form-item>
-        <el-form-item label="对象" prop="objects">
-          <el-select v-model="shopIdList" clearable multiple style="width:300px;">
+        <el-form-item label="对象" prop="shopIdList">
+          <el-select v-model="newsForm.shopArray" clearable multiple style="width:300px;">
             <el-option v-for="(item, index) in objectList" :key="index" :value="`${item.id}:${item.name}`" :label="item.name" />
           </el-select>
         </el-form-item>
-        <el-form-item label="类别" prop="newsType">
-          <el-select v-model="object.category" style="width:300px;">
+        <el-form-item label="类别" prop="category">
+          <el-select v-model="newsForm.category" style="width:300px;">
             <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <tinymce v-model="object.content" :height="300" :width="700" />
+          <tinymce v-model="newsForm.content" :height="300" :width="700" />
         </el-form-item>
       </div>
       <!-- <el-form-item style="float:right;"> -->
       <el-form-item>
-        <el-button type="warning" @click="resetForm('object')">取消</el-button>
-        <el-button type="primary" @click="submitForm('object')">确定</el-button>
+        <el-button type="warning" @click="resetForm('newsForm')">取消</el-button>
+        <el-button type="primary" @click="submitForm('newsForm')">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -40,16 +40,17 @@ export default {
   components: { Tinymce },
   data() {
     return {
-      object: {
+      newsForm: {
         title: '',
-        object: '',
-        newsType: '',
+        shopArray: [],
+        category: '',
         content: ''
+        // shopJson: [],
       },
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        objects: [{ required: true, message: '请输入对象', trigger: 'blur' }],
-        newsType: [{ required: true, message: '请输入类别', trigger: 'blur' }],
+        shopArray: [{ required: true, message: '请输入对象', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入类别', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
       },
       content: '',
@@ -64,7 +65,7 @@ export default {
         }
       ],
       objectList: [],
-      shopList: [],
+      // shopArray: [],
       shopIdList: []
     }
   },
@@ -87,13 +88,38 @@ export default {
     this.getAllShop()
   },
   methods: {
+    addNewsHandle() {
+      console.log(this.newsForm.shopArray, '$$$$$$$$$$$')
+      if (this.newsForm.shopArray) {
+        this.newsForm.shopArray.map(e => {
+          const obj = {}
+          obj.id = e.split(':')[0]
+          obj.name = e.split(':')[1]
+          this.newsForm.shopArray.push(obj)
+        })
+        const array = []
+        array.title = this.newsForm.title
+        array.category = this.newsForm.category
+        array.content = this.newsForm.content
+        array.shopJson = JSON.stringify(this.newsForm.shopArray)
+      } else {
+        this.$message.error('请选择对象')
+        return
+      }
+      addNews(this.newsForm).then(res => {
+        if (res.status === 1) {
+          this.shopList = []
+          this.$parent.getNewsList()
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('添加消息失败')
+      })
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addNews().then(res => {
-            this.shopList = []
-            this.$parent.getNewsList()
-          }).catch()
+          this.addNewsHandle()
         } else {
           return false
         }

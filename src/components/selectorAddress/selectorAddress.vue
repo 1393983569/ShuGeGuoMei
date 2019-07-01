@@ -47,32 +47,39 @@ export default {
   },
   watch: {
     'provinceId'(e) {
-      this.provinceId = e
-      this.$emit('getProvince', this.provinceId)
-      getCity(this.provinceId).then(res => {
-        if (res.status === 1) {
-          this.cityList = res.info
-        } else {
-          this.$message.error('查询城市失败！')
-        }
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('查询城市出错！')
-      })
+      if (e !== null) {
+        this.provinceId = e
+        this.$emit('getProvince', this.provinceId)
+        getCity(this.provinceId).then(res => {
+          if (res.info.length > 0) {
+            this.cityList = res.info
+          } else {
+            this.$message.error('暂无城市')
+          }
+        }).catch(err => {
+          console.log(err)
+          this.$message.error('查询城市出错！')
+        })
+      }
     },
     'cityId'(e) {
-      this.cityId = e
-      this.$emit('getCity', this.cityId)
-      getArea(this.cityId).then(res => {
-        if (res.status === 1) {
-          this.countyList = res.info
-        } else {
-          this.$message.error('查询区县失败！')
-        }
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('查询区县出错！')
-      })
+      console.log(e)
+      // return
+      if (e) {
+        this.cityId = e
+        this.$emit('getCity', this.cityId)
+        getArea(this.cityId).then(res => {
+          if (res.info.length > 0) {
+            console.log('ddddddd')
+            this.countyList = res.info
+          } else {
+            this.$message.error('暂无区县！')
+          }
+        }).catch(err => {
+          console.log(err)
+          this.$message.error('查询区县出错！')
+        })
+      }
     },
     'countyId'(e) {
       this.countyId = e

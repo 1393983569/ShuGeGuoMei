@@ -9,7 +9,7 @@ export const addAdvertisement = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/advertisement/add',
+    url: '/admin/addAdv',
     method: 'post',
     data: params
   })
@@ -24,7 +24,7 @@ export const editAdvertisement = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/advertisement/edit',
+    url: '/admin/editAdv',
     method: 'post',
     data: params
   })
@@ -39,7 +39,7 @@ export const getAdvertisement = (pageNum, pageSize) => {
   params.append('pageNum', pageNum)
   params.append('pageSize', pageSize)
   return request({
-    url: '/admin/advertisement/getAll',
+    url: '/admin/getAllAdv',
     method: 'post',
     data: params
   })
@@ -54,7 +54,7 @@ export const deleteAdvertisement = (id) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: `/admin/advertisement/delete?id=${id}`,
+    url: `/admin/deleteAdv?id=${id}`,
     method: 'get'
     // data: params
   })
@@ -70,7 +70,7 @@ export const shelfAdvertisement = (status, id) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: `/admin/advertisement/isShelf?status=${status}&id=${id}`,
+    url: `/admin/isShelf?status=${status}&id=${id}`,
     method: 'get'
     // data: params
   })
