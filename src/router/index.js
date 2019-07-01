@@ -551,6 +551,16 @@ export const asyncRoutes = [
           title: '角色'
         },
         component: () => import('@/views/admin/roleList.vue')
+      },
+      {
+        path: 'roleOperation',
+        name: 'roleOperation',
+        meta: {
+          roles: ['admin'],
+          icon: 'dashboard',
+          title: '角色操作'
+        },
+        component: () => import('@/views/admin/roleOperation.vue')
       }
     ]
   },

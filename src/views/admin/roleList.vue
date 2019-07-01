@@ -57,18 +57,20 @@
       // 查看详情
       viewDetails(index, row) {
         this.$router.push({
-          name: 'particulars',
+          name: 'roleOperation',
           params: {
-            row: row
+            row: row,
+            state: 'select'
           }
         })
       },
       // 修改
       handleEdit(index, row) {
         this.$router.push({
-          name: 'addAndEdit',
+          name: 'roleOperation',
           params: {
-            row: row
+            row: row,
+            state: 'edit'
           }
         })
       }

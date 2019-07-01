@@ -1,5 +1,5 @@
 // import { login, logout, getInfo } from '@/api/user'
-import { logout } from '@/api/user'
+import { logout, login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -33,19 +33,17 @@ const actions = {
   // user login
   // commit 解构赋值 默认传一个state 只取其中的commit
   login({ commit }, userInfo) {
-    setToken('123')
-    commit('SET_TOKEN', '123')
-    // const { username, password } = userInfo
+    const { mobile, password } = userInfo
     return new Promise((resolve, reject) => {
-      resolve()
-      // login({ username: username.trim(), password: password }).then(response => {
-      //   const { data } = response
-      //   commit('SET_TOKEN', data.token)
-      //   setToken(data.token)
-      //   resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
+      login({ mobile: mobile, password: password }).then(response => {
+        const data = response
+        console.log(data, '------------------------')
+        commit('SET_TOKEN', 'chengGong')
+        setToken(data.token)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
 

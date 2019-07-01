@@ -1,10 +1,14 @@
 import request from '@/utils/request'
 
 export function login(data) {
+  const params = new URLSearchParams()
+  for (const key in data) {
+    if (data[key]) params.append(key, data[key])
+  }
   return request({
-    url: '/user/login',
+    url: '/basics/shopLogin',
     method: 'post',
-    data
+    params
   })
 }
 

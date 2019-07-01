@@ -36,3 +36,10 @@ export function deleteRole(id) {
     method: 'delete'
   })
 }
+
+export function selectAfter(type) {
+  return request({
+    url: `/basics/selectAfter?type=0`,
+    method: 'get'
+  })
+}

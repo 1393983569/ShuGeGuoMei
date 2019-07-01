@@ -48,7 +48,7 @@ service.interceptors.response.use(
     // 如果自定义代码不是1，则判断为错误。
     if (res.status !== 1) {
       Message({
-        message: res.message || 'Error',
+        message: res.info || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
@@ -66,7 +66,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.info || 'Error'))
     } else {
       return res
     }

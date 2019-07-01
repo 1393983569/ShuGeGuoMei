@@ -160,7 +160,6 @@
         this.dataList.splice(this.listIndex, 1)
         // 成功后隐藏
         this.hintState = false
-
       }
     }
   }

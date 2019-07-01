@@ -4,7 +4,6 @@
         :title="title"
         :visible.sync="value"
         width="50%"
-        :before-close="handleClose"
         class="dialogCustom"
       >
         <div class="dialogBorder">

@@ -10,7 +10,7 @@
         :placeholder="fillPlaceHolder"
         :readonly="readonly"
         :disabled="disabled"
-        :autocomplete="autoComplete"
+        :auto-complete="autocomplete"
         :required="required"
         type="email"
         class="material-input"
@@ -25,7 +25,7 @@
         :placeholder="fillPlaceHolder"
         :readonly="readonly"
         :disabled="disabled"
-        :autocomplete="autoComplete"
+        :auto-complete="autocomplete"
         :required="required"
         type="url"
         class="material-input"
@@ -41,7 +41,7 @@
         :step="step"
         :readonly="readonly"
         :disabled="disabled"
-        :autocomplete="autoComplete"
+        :auto-complete="autocomplete"
         :max="max"
         :min="min"
         :minlength="minlength"
@@ -60,7 +60,7 @@
         :placeholder="fillPlaceHolder"
         :readonly="readonly"
         :disabled="disabled"
-        :autocomplete="autoComplete"
+        :auto-complete="autocomplete"
         :max="max"
         :min="min"
         :required="required"
@@ -77,7 +77,7 @@
         :placeholder="fillPlaceHolder"
         :readonly="readonly"
         :disabled="disabled"
-        :autocomplete="autoComplete"
+        :auto-complete="autocomplete"
         :required="required"
         type="tel"
         class="material-input"
@@ -92,7 +92,7 @@
         :placeholder="fillPlaceHolder"
         :readonly="readonly"
         :disabled="disabled"
-        :autocomplete="autoComplete"
+        :auto-complete="autocomplete"
         :minlength="minlength"
         :maxlength="maxlength"
         :required="required"
@@ -136,7 +136,7 @@ export default {
       type: Boolean,
       default: true
     },
-    autoComplete: {
+    autocomplete: {
       type: String,
       default: 'off'
     },
