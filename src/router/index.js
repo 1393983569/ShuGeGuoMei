@@ -318,7 +318,7 @@ export const asyncRoutes = [
         meta: {
           roles: ['admin'],
           icon: 'dashboard',
-          title: '数据'
+          title: '数据中心'
         },
         component: () => import('@/views/dataManage/dataCenter.vue')
       }

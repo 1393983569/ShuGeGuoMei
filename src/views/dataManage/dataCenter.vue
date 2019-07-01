@@ -60,6 +60,9 @@
     <br>
     <div class="font-weight">盈亏分析</div>
     <div style="margin-top:4px;"><promitLoss /></div>
+    <br>
+    <div class="font-weight">会员分析</div>
+    <div style="margin-top:4px;"><vip /></div>
   </div>
 </template>
 <script>
@@ -68,8 +71,9 @@ import incomTrend from './jingying/incomTrend.vue'
 import lossData from './jingying/lossData.vue'
 import goodsData from './jingying/goodsData.vue'
 import promitLoss from './promitLoss/promitLoss.vue'
+import vip from './vip/vipData.vue'
 export default {
-  components: { incomTrend, lossData, goodsData, promitLoss },
+  components: { incomTrend, lossData, goodsData, promitLoss, vip },
   data() {
     return {
       shopList: [],
@@ -100,6 +104,7 @@ export default {
 <style>
 .asideClass {
   color: #333;
+  background-color: #CCCCCC;
   text-align: center;
   line-height:200px;
   margin:0px;
@@ -108,10 +113,10 @@ export default {
 .el-main {
   display:flex;
   flex-direction: row;
-  background-color: #f8fbfc;
+  background-color: #FFFFFF;
   color: #333;
   text-align: center;
-   margin:0px;
+  margin:0px;
   padding:0px;
 }
 .item{
@@ -119,5 +124,8 @@ export default {
   align-items: center;
   width:220px;
   text-align: center;
+}
+body{
+  background-color: #F6F6F6;
 }
 </style>

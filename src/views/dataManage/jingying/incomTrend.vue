@@ -5,7 +5,7 @@
         收入趋势
       </el-aside>
       <el-main>
-        <div ref="chart1" class="chartStyle" />
+        <div ref="chart1" class="chartStyleIncome" />
       </el-main>
     </el-container>
   </div>
@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       option: {
-        backgroundColor: '#f8fbfc',
+        backgroundColor: '#FFFFFF',
         tooltip: {},
         title: [{
           // text: '在线构建',
@@ -113,15 +113,16 @@ export default {
 }
 </script>
 <style>
-.chartStyle {
+.chartStyleIncome {
   height: 400px;
   width:100%;
+  height: 100%;
   box-sizing: border-box;
   line-height: 400px;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  margin: 5px;
-  background-color: aliceblue;
+  /* margin: 5px; */
+  /* background-color:rgb(221, 12, 12);ss */
 }
 .el-aside {
     background-color: #D3DCE6;

@@ -24,7 +24,7 @@
             >
               <i class="el-icon-plus" />
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible" size="tiny">
+            <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
           </div>
@@ -32,14 +32,14 @@
             <img :src="editObject.imge">
           </div>
         </el-form-item>
-        <el-form-item label="掌柜姓名：" prop="shopownerName">
-          <el-input v-model="shopForm.shopownerName" style="width:300px;" placeholder="请输入掌柜姓名" />
+        <el-form-item label="掌柜姓名：" prop="adminName">
+          <el-input v-model="shopForm.adminName" style="width:300px;" placeholder="请输入掌柜姓名" />
         </el-form-item>
-        <el-form-item label="手机号：" prop="shopownerPhone">
-          <el-input v-model="shopForm.shopownerPhone" style="width:300px;" placeholder="请输入手机号" />
+        <el-form-item label="手机号：" prop="adminPhone">
+          <el-input v-model="shopForm.adminPhone" style="width:300px;" placeholder="请输入手机号" />
         </el-form-item>
-        <el-form-item label="初始密码：" prop="shopownerPassword">
-          <el-input v-model="shopForm.shopownerPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
+        <el-form-item label="初始密码：" prop="adminPassword">
+          <el-input v-model="shopForm.adminPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
         </el-form-item>
         <el-form-item label="店铺地址：" prop="detailsAddress">
           <selectorAddress :province1id="shopForm.provinceId+''" :city1id="shopForm.cityId+''" :county1id="shopForm.countyId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
@@ -102,9 +102,9 @@
           <el-button type="primary" @click="editShopHandle('shopForm')">保存</el-button>
         </el-form-item>
       </el-form>
-      <div slot="footer">
+      <!-- <div slot="footer">
         <el-button type="danger" @click="handleClose">关闭弹框</el-button>
-      </div>
+      </div> -->
     </el-dialog>
   </div>
 </template>
@@ -151,9 +151,9 @@ export default {
         name: '',
         simpleName: '',
         picture: '',
-        shopownerName: '',
-        shopownerPhone: '',
-        shopownerPassword: '',
+        adminName: '',
+        adminPhone: '',
+        adminPassword: '',
         detailsAddress: '',
         area: '',
         // category: '',
@@ -165,9 +165,9 @@ export default {
         name: [{ required: true, message: '请输入店铺名称', trigger: 'blur' }],
         simpleName: [{ required: true, message: '请输入店铺简称', trigger: 'blur' }],
         // picture: [{ required: true, message: '请上传店铺图片', trigger: 'blur' }],
-        shopownerName: [{ required: true, message: '请输入掌柜姓名', trigger: 'blur' }],
-        shopownerPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        shopownerPassword: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
+        adminName: [{ required: true, message: '请输入掌柜姓名', trigger: 'blur' }],
+        adminPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        adminPassword: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
         detailsAddress: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         area: [{ required: true, message: '请输入店铺面积', trigger: 'blur' }],
         // category: [{ required: true, message: '请输经营品类', trigger: 'blur' }],
@@ -413,6 +413,7 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+      // this.showEdit =  false
     },
     // 添加店铺
     addShopHandles() {
@@ -422,19 +423,18 @@ export default {
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
       console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
       // return
-      this.shopForm.shopownerPhone = parseInt(this.shopForm.shopownerPhone)
-      this.shopForm.shopownerPassword = parseInt(this.shopForm.shopownerPassword)
+      this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
+      this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
       this.shopForm.categoryJson = JSON.stringify(this.finalArray)
       // this.editObject.image = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
       addShop(this.shopForm).then(res => {
         this.$message.info('操作成功')
         this.handleClose()
-        this.shopForm = {}
         this.provinceId = ''
-        this.cityId = ''
         this.finalArray = []
-        this.countyId = ''
+        this.checkAll = []
+        this.checkedCategory = []
         this.management = ''
         this.$parent.getShopList()
       }).catch(error => {
@@ -449,8 +449,8 @@ export default {
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
       console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
       // return
-      this.shopForm.shopownerPhone = parseInt(this.shopForm.shopownerPhone)
-      this.shopForm.shopownerPassword = parseInt(this.shopForm.shopownerPassword)
+      this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
+      this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
       if (this.finalArray.length > 0) {
         this.shopForm.categoryJson = JSON.stringify(this.finalArray)

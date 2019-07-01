@@ -32,7 +32,7 @@
         <el-table-column prop="vipNum" label="会员数" />
         <el-table-column prop="management" label="经营模式" />
         <el-table-column prop="sellNum" label="销售额" />
-        <el-table-column prop="shopownerName" label="掌柜姓名" />
+        <el-table-column prop="adminName" label="掌柜姓名" />
         <!-- <el-table-column prop="employeeNum" label="职员人数" /> -->
         <el-table-column prop="operate" label="操作" width="300px">
           <template slot-scope="scope">
@@ -156,6 +156,15 @@ export default {
         // this.getShopList()
       }
     }
+    // 'cityId'(e) {
+    //   console.log(e, 'lllll')
+    // },
+    // 'provinceId'(e){
+    //   console.log(e, 'kkkkkk')
+    // },
+    // 'countyId'(e){
+    //   console.log(e, 'jjjjjjs')
+    // }
   },
   mounted() {
     this.getShopList()
@@ -176,9 +185,11 @@ export default {
       const obj = {}
       obj.pageNum = this.pageNum
       obj.pageSize = this.pageSize
-      obj.provinceId = this.provinceId
-      obj.cityId = this.cityId
-      obj.countyId = this.countyId
+      if (this.provinceId && this.cityId && this.countyId) {
+        obj.provinceId = this.provinceId
+        obj.cityId = this.cityId
+        obj.countyId = this.countyId
+      }
       obj.management = this.management
       getShopList(obj).then(res => {
         if (res.info.records.length > 0) {

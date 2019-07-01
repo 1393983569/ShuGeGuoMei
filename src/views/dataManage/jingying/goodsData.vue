@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="100px">
+      <el-aside width="100px" class="aside-background-color">
         商品数据
       </el-aside>
       <el-main>
@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       option: {
+        backgroundColor: '#FFFFFF',
         tooltip: {
           trigger: 'axis',
           axisPointer: {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="100px">
+      <el-aside width="100px" class="aside-background-color">
         年度盈亏曲线
       </el-aside>
       <el-main>
@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       option: {
+        backgroundColor: '#FFFFFF',
         // title: {
         //   text: '折线图堆叠'
         // },

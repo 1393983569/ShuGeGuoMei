@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="100px">
+      <el-aside width="100px" class="aside-background-color">
         损耗数据
       </el-aside>
       <el-main>
@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       option: {
+        backgroundColor: '#FFFFFF',
         // title : {
         //   text: '某站点用户访问来源',
         //   subtext: '纯属虚构',
