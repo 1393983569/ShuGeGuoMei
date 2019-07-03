@@ -136,7 +136,7 @@ export const asyncRoutes = [
     meta: {
       title: '许可',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['permission'] // you can set roles in root nav
     },
     children: [
       {
@@ -145,13 +145,13 @@ export const asyncRoutes = [
         name: 'PagePermission',
         meta: {
           title: '请求允许',
-          roles: ['editor'] // or you can only set roles in sub nav
+          roles: ['PagePermission'] // or you can only set roles in sub nav
         }
       },
       {
         path: 'directive',
         component: () => import('@/views/permission/directive'),
-        name: '指令的许可',
+        name: 'PermissionDirective',
         meta: {
           title: 'Directive Permission'
           // 如果不设置角色，表示:此页面不需要权限
@@ -163,7 +163,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: '角色权限',
-          roles: ['editor']
+          roles: ['RolePermission']
         }
       }
     ]
@@ -173,7 +173,7 @@ export const asyncRoutes = [
     name: 'shopManage',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['shopManage'],
       icon: 'dashboard',
       title: '店铺管理'
     },
@@ -183,7 +183,7 @@ export const asyncRoutes = [
         path: 'shop',
         name: 'shop',
         meta: {
-          roles: ['admin'],
+          roles: ['shop'],
           icon: 'dashboard',
           title: '店铺'
         },
@@ -239,7 +239,7 @@ export const asyncRoutes = [
     name: 'newsManage',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['newsManage'],
       icon: 'dashboard',
       title: '消息管理'
     },
@@ -249,7 +249,7 @@ export const asyncRoutes = [
         path: 'news',
         name: 'news',
         meta: {
-          roles: ['admin'],
+          roles: ['news'],
           icon: 'dashboard',
           title: '消息中心'
         },
@@ -260,7 +260,7 @@ export const asyncRoutes = [
         name: 'newsRelease',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['newsRelease'],
           icon: 'dashboard',
           title: '消息发布'
         },
@@ -273,7 +273,7 @@ export const asyncRoutes = [
     name: 'ADManage',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['ADManage'],
       icon: 'dashboard',
       title: '广告管理'
     },
@@ -283,7 +283,7 @@ export const asyncRoutes = [
         path: 'AD',
         name: 'AD',
         meta: {
-          roles: ['admin'],
+          roles: ['AD'],
           icon: 'dashboard',
           title: '广告中心'
         },
@@ -294,7 +294,7 @@ export const asyncRoutes = [
         name: 'ADRelease',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['ADRelease'],
           icon: 'dashboard',
           title: '广告发布'
         },
@@ -307,7 +307,7 @@ export const asyncRoutes = [
     name: 'dataManage',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['dataManage'],
       icon: 'dashboard',
       title: '数据中心'
     },
@@ -316,7 +316,7 @@ export const asyncRoutes = [
         path: 'dataCenter',
         name: 'dataCenter',
         meta: {
-          roles: ['admin'],
+          roles: ['dataCenter'],
           icon: 'dashboard',
           title: '数据中心'
         },
@@ -329,7 +329,7 @@ export const asyncRoutes = [
     name: 'collectShop',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['collectShop'],
       icon: 'dashboard',
       title: '采集平台'
     },
@@ -339,7 +339,7 @@ export const asyncRoutes = [
         path: 'collectShopList',
         name: 'collectShopList',
         meta: {
-          roles: ['admin'],
+          roles: ['collectShopList'],
           icon: 'dashboard',
           title: '商品库'
         },
@@ -349,7 +349,7 @@ export const asyncRoutes = [
         path: 'orderFormList',
         name: 'orderFormList',
         meta: {
-          roles: ['admin'],
+          roles: ['orderFormList'],
           icon: 'dashboard',
           title: '订单'
         },
@@ -360,7 +360,7 @@ export const asyncRoutes = [
         name: 'separateBill',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['separateBill'],
           icon: 'dashboard',
           title: '拆单',
           breadcrumb: false
@@ -372,7 +372,7 @@ export const asyncRoutes = [
         name: 'orderDetails',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['orderDetails'],
           icon: 'dashboard',
           title: '订单详情',
           breadcrumb: false
@@ -384,7 +384,7 @@ export const asyncRoutes = [
         name: 'particulars',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['particulars'],
           icon: 'dashboard',
           title: '商品详情',
           breadcrumb: false
@@ -396,7 +396,7 @@ export const asyncRoutes = [
         name: 'childOrdersDetails',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['childOrdersDetails'],
           icon: 'dashboard',
           title: '子订单详情',
           breadcrumb: false
@@ -408,7 +408,7 @@ export const asyncRoutes = [
         name: 'addAndEdit',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['addAndEdit'],
           icon: 'dashboard',
           title: '修改添加',
           breadcrumb: false
@@ -422,7 +422,7 @@ export const asyncRoutes = [
     name: 'marketing',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['marketing'],
       icon: 'dashboard',
       title: '营销包管理'
     },
@@ -431,7 +431,7 @@ export const asyncRoutes = [
         path: 'marketPrice',
         name: 'marketPrice',
         meta: {
-          roles: ['admin'],
+          roles: ['marketPrice'],
           icon: 'dashboard',
           title: '价格行情'
         },
@@ -441,7 +441,7 @@ export const asyncRoutes = [
         path: 'pricing',
         name: 'pricing',
         meta: {
-          roles: ['admin'],
+          roles: ['pricing'],
           icon: 'dashboard',
           title: '商品定价表'
         },
@@ -454,7 +454,7 @@ export const asyncRoutes = [
     name: 'memberManagement',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['memberManagement'],
       icon: 'dashboard',
       title: '会员管理'
     },
@@ -463,7 +463,7 @@ export const asyncRoutes = [
         path: 'memberList',
         name: 'memberList',
         meta: {
-          roles: ['admin'],
+          roles: ['memberList'],
           icon: 'dashboard',
           title: '会员管理'
         },
@@ -474,7 +474,7 @@ export const asyncRoutes = [
         name: 'membershipDetails',
         hidden: true,
         meta: {
-          roles: ['admin'],
+          roles: ['membershipDetails'],
           icon: 'dashboard',
           title: '会员详情'
         },
@@ -484,7 +484,7 @@ export const asyncRoutes = [
         path: 'rechargeRecord',
         name: 'rechargeRecord',
         meta: {
-          roles: ['admin'],
+          roles: ['rechargeRecord'],
           icon: 'dashboard',
           title: '充值记录'
         },
@@ -494,7 +494,7 @@ export const asyncRoutes = [
         path: 'expenseCalendar',
         name: 'expenseCalendar',
         meta: {
-          roles: ['admin'],
+          roles: ['expenseCalendar'],
           icon: 'dashboard',
           title: '消费记录'
         },
@@ -504,7 +504,7 @@ export const asyncRoutes = [
         path: 'integralDetails',
         name: 'integralDetails',
         meta: {
-          roles: ['admin'],
+          roles: ['integralDetails'],
           icon: 'dashboard',
           title: '积分详情'
         },
@@ -514,7 +514,7 @@ export const asyncRoutes = [
         path: 'explain',
         name: 'explain',
         meta: {
-          roles: ['admin'],
+          roles: ['explain'],
           icon: 'dashboard',
           title: '会员系统说明'
         },
@@ -527,7 +527,7 @@ export const asyncRoutes = [
     name: 'admin',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      // roles: ['admin'],
       icon: 'dashboard',
       title: '后台用户'
     },
@@ -536,7 +536,7 @@ export const asyncRoutes = [
         path: 'adminList',
         name: 'adminList',
         meta: {
-          roles: ['admin'],
+          // roles: ['adminList'],
           icon: 'dashboard',
           title: '后台用户'
         },
@@ -546,7 +546,7 @@ export const asyncRoutes = [
         path: 'roleList',
         name: 'roleList',
         meta: {
-          roles: ['admin'],
+          // roles: ['roleList'],
           icon: 'dashboard',
           title: '角色'
         },
@@ -556,7 +556,7 @@ export const asyncRoutes = [
         path: 'roleOperation',
         name: 'roleOperation',
         meta: {
-          roles: ['admin'],
+          // roles: ['roleOperation'],
           icon: 'dashboard',
           title: '角色操作'
         },
@@ -569,7 +569,7 @@ export const asyncRoutes = [
     name: 'category',
     component: Layout,
     meta: {
-      roles: ['admin'],
+      roles: ['category'],
       icon: 'dashboard',
       title: '基础数据设置'
     },
@@ -579,7 +579,7 @@ export const asyncRoutes = [
         path: 'categoryList',
         name: 'categoryList',
         meta: {
-          roles: ['admin'],
+          roles: ['categoryList'],
           icon: 'dashboard',
           title: '品类基础数据'
         },

@@ -1,6 +1,6 @@
-// import { login, logout, getInfo } from '@/api/user'
-import { logout, login } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { logout, login, getInfo } from '@/api/user'
+import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
+import { getButtonRole, getRole } from '@/utils/logic'
 import router, { resetRouter } from '@/router'
 
 const state = {
@@ -8,7 +8,9 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  roleId: '',
+  buttonRoleList: []
 }
 
 const mutations = {
@@ -26,20 +28,28 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_ROLEID: (state, roleId) => {
+    state.roleId = roleId
+  },
+  SET_BUTTONROLELIST: (state, buttonRoleList) => {
+    state.buttonRoleList = buttonRoleList
   }
 }
 
 const actions = {
-  // user login
+  // 用户登录
   // commit 解构赋值 默认传一个state 只取其中的commit
   login({ commit }, userInfo) {
     const { mobile, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ mobile: mobile, password: password }).then(response => {
         const data = response
-        console.log(data, '------------------------')
         commit('SET_TOKEN', 'chengGong')
-        setToken(data.token)
+        commit('SET_NAME', data.info.name)
+        commit('SET_ROLEID', data.info.role.id)
+        setUserId(data.info.role.id)
+        setToken(data.info.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -47,43 +57,42 @@ const actions = {
     })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      const data = {
-        roles: ['admin'],
-        introduction: 'I am a super administrator',
-        avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        name: 'Super Admin'
-      }
-      commit('SET_ROLES', ['admin'])
-      commit('SET_NAME', 'ff')
-      commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
-      commit('SET_INTRODUCTION', 'introduction')
-      resolve(data)
-      // getInfo(state.token).then(response => {
-      //   const { data } = response
-      //   if (!data) {
-      //     reject('Verification failed, please Login again.')
-      //   }
-      //   const { roles, name, avatar, introduction } = data
-      //   // roles must be a non-empty array
-      //   if (!roles || roles.length <= 0) {
-      //     reject('getInfo: roles must be a non-null array!')
-      //   }
-      //   // commit('SET_ROLES', roles)
-      //   // commit('SET_NAME', name)
-      //   // commit('SET_AVATAR', avatar)
-      //   // commit('SET_INTRODUCTION', introduction)
-
-      //   resolve(data)
-      // }).catch(error => {
-      //   reject(error)
-      // })
+      getInfo(getUserId()).then(response => {
+        try {
+          let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
+          let roleList = getRole(JSON.parse(response.info.menu))
+          console.log(roleList, '@@@@@@@@@@@@@@@@@@@')
+          commit('SET_BUTTONROLELIST', buttonRoleList)
+          commit('SET_ROLES', roleList)
+          commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+          const data = {
+            buttonRoleList: state.buttonRoleList,
+            name: state.name,
+            avatar: state.avatar,
+            introduction: state.introduction,
+            roles: state.roles
+          }
+          if (!data) {
+            reject('验证失败，请重新登录。')
+          }
+          const { roles, name, avatar, introduction } = data
+          if (!roles || roles.length <= 0) {
+            reject('getInfo:角色必须是非空数组!')
+          }
+          resolve(data)
+        } catch (e) {
+          console.log(e)
+        }
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
 
-  // user logout
+  // 用户退出
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {

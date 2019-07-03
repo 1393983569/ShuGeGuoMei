@@ -30,3 +30,50 @@ export const getSummaries = (param, prop) => {
   })
   return sums
 }
+
+/**
+ * 递归生成页面所对应的按钮
+ */
+export const getButtonRole = (role) => {
+  let list = []
+  const recursion = (listValue) => {
+    listValue.forEach((item, index) => {
+      let data = {}
+      if (!item.children) {
+        data.name = item.name
+        data.checkList = item.checkList
+        list.push(data)
+      }
+      if (item.children) {
+        recursion(item.children)
+      }
+    })
+    return list
+  }
+  return recursion(role)
+}
+
+/**
+ * 递归生成页面权限
+ */
+export const getRole = (role) => {
+  let list = []
+  const recursion = (listValue) => {
+    listValue.forEach((item, index) => {
+      if (item.checkList.length !== 0) {
+        if (item.roles) {
+          item.roles.forEach(itemx => {
+            if (!list.includes(itemx)) {
+              list.push(itemx)
+            }
+          })
+        }
+      }
+      if (item.children) {
+        recursion(item.children)
+      }
+    })
+    return list
+  }
+  return recursion(role)
+}

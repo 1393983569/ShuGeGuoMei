@@ -1,7 +1,7 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" @click="getUserRole">确定</el-button>
+      <el-button v-if="showButton" type="primary" @click="getUserRole">确定</el-button>
     </breadcrumb>
     <el-table
       :data="tableData"
@@ -33,7 +33,7 @@
 <script>
   import Breadcrumb from '@/components/Breadcrumb'
   import { asyncRoutes } from '@/router/index'
-  import { getAllMenu } from '@/api/admin/roleOperation'
+  import { getAllMenu, addMenu, editMenu } from '@/api/admin/roleOperation'
   export default {
     name: 'roleOperation',
     components: {
@@ -41,22 +41,41 @@
     },
     data () {
       return {
-        tableData: []
+        tableData: [],
+        showButton: false,
+        userId: '',
+        operationState: ''
       }
     },
     mounted() {
-      this.getUserListRole()
+
+    },
+    // 用来判断查看或者编辑
+    beforeRouteEnter: (to, form, next) => {
+      next((mv) => {
+        console.log(to, form)
+        mv.userId = mv.$route.params.id
+        if (mv.$route.params.state === 'select') {
+          mv.showButton = false
+        } else {
+          mv.showButton = true
+        }
+        mv.getUserListRole()
+      })
     },
     methods: {
       getUserListRole() {
-        getAllMenu(1).then(res => {
-          if (res.info.length === 0) {
+        getAllMenu(this.userId).then(res => {
+          if (res.info === null) {
             this.tableData = this.recursionList(asyncRoutes)
+            this.operationState = 'add'
           } else {
-            this.tableData = res.info
+            this.tableData = JSON.parse(res.info.menu)
+            this.id = res.info.id
+            this.operationState = 'edit'
           }
         }).catch(err => {
-
+          console.log(err)
         })
       },
       // 删除数组没有的值
@@ -68,7 +87,23 @@
       },
       // 确定权限
       getUserRole() {
-        console.log(this.tableData)
+        if (this.operationState === 'add') {
+          // 添加
+          addMenu(this.tableData, this.userId).then(res => {
+            this.$message.success('成功')
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        } else if (this.operationState === 'edit') {
+          // 编辑
+          editMenu(this.tableData, this.id).then(res => {
+            this.$message.success('成功')
+          }).catch(err => {
+            this.$message.error(err)
+          })
+        } else {
+          this.$message.error('错误状态')
+        }
       },
       // 递归路由列表
       recursionList(data) {
@@ -80,6 +115,8 @@
           delete tmp.redirect
           tmp.checkList = []
           tmp.title = tmp.meta ? tmp.meta.title : ''
+          console.log(tmp.meta)
+          tmp.roles = tmp.meta ? tmp.meta.roles : ''
           delete tmp.meta
           // 禁用父级下的子级
           if (tmp.children) {
@@ -92,7 +129,7 @@
           if (tmp.children) {
             tmp.children = this.recursionList(tmp.children)
           }
-          if (tmp.path !== '*') list.push(tmp)
+          if (tmp.path !== '*' && !tmp.hidden) list.push(tmp)
         })
         return list
       },
@@ -104,13 +141,13 @@
               item.stateSelet = false
             } else {
               item.stateSelet = true
-              item.checkList = this.deleteList(item.checkList, '查看')
+              item.checkList = this.deleteList(item.checkList, '操作')
             }
             if (e.includes('操作')) {
               item.stateOperation = false
             } else {
               item.stateOperation = true
-              item.checkList = this.deleteList(item.checkList, '操作')
+              item.checkList = this.deleteList(item.checkList, '查看')
             }
           })
         }

@@ -30,37 +30,35 @@
 </template>
 
 <script>
+  import { selectAfter } from '@/api/admin/roleList'
   export default {
     name: 'jurisdiction',
     data () {
       return{
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+        tableData: []
       }
     },
+    mounted() {
+      this.getList()
+    },
     methods: {
+      getList() {
+        this.tableData = []
+        selectAfter().then(res => {
+          console.log(res)
+          this.tableData.push(...res.info)
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       // 查看详情
       viewDetails(index, row) {
         this.$router.push({
           name: 'roleOperation',
           params: {
             row: row,
-            state: 'select'
+            state: 'select',
+            id: row.id
           }
         })
       },
@@ -70,13 +68,11 @@
           name: 'roleOperation',
           params: {
             row: row,
-            state: 'edit'
+            state: 'edit',
+            id: row.id
           }
         })
       }
-    },
-    mounted () {
-
     }
   }
 </script>

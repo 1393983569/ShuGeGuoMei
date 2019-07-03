@@ -19,13 +19,13 @@ router.beforeEach(async(to, from, next) => {
 
   // 确定用户是否已登录
   const hasToken = getToken()
-
   if (hasToken) {
     if (to.path === '/login') {
       // 如果已登录，则重定向到主页
       next({ path: '/' })
       NProgress.done()
     } else {
+      // 第一次登录还没调用过 gitInfo 说以会走else
       // 确定用户是否通过getInfo获得了他的权限角色
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
@@ -35,13 +35,10 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           // note: 角色必须是对象数组! such as: ['admin'] or ,['developer','editor']
           const { roles } = await store.dispatch('user/getInfo')
-
           // 根据角色生成可访问路由映射
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
           // 动态添加可访问路由
           router.addRoutes(accessRoutes)
-
           // hack method to ensure that addRoutes is complete
           // 设置replace: true，这样导航就不会留下历史记录
           next({ ...to, replace: true })

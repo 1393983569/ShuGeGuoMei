@@ -6,23 +6,22 @@ export function login(data) {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/basics/shopLogin',
+    url: '/basics/login',
     method: 'post',
     params
   })
 }
 
-export function getInfo(token) {
+export function getInfo(roleId) {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: `/basics/getAllMenu?roleId=${roleId}`,
+    method: 'get'
   })
 }
 
 export function logout() {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '/basics/logout',
+    method: 'get'
   })
 }
