@@ -25,6 +25,7 @@
           </div>
         </div>
       </div>
+      <profession />
     </div>
     <!-- <el-container>
       <el-aside width="100px">
@@ -37,7 +38,9 @@
   </div>
 </template>
 <script>
+import profession from './profession.vue'
 export default {
+  components: { profession },
   data() {
     return {
       optionSex: {

@@ -59,16 +59,16 @@
     <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
     <!-- 店铺详情 -->
     <shop-detail :show-detail="showDetail" :shop-object="shopObject" @isCloseDetail="isCloseDetail" />
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
+    <!-- <el-dialog :visible.sync="showDelete" center width="380px" title="店铺详情" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;">确定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 删除弹框 -->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
+    <el-dialog :visible.sync="showDelete" center width="380px" title="删除店铺" style="border-ra">
+      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该店铺？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="confirmDelete">确定</el-button>
@@ -204,7 +204,7 @@ export default {
             this.shopTable.push(e)
           })
         } else {
-          this.$message.error('商铺暂无数据！')
+          this.$message.error('暂无数据！')
         }
       }).catch(err => {
         console.log(err)

@@ -4,10 +4,10 @@
       <div slot="title" class="title-size-color">查看详情</div>
       <div class="size-color div-margin"><span class="font-weight">标题：</span>{{ detailtObject.title }}</div>
       <div class="size-color div-margin"><span class="font-weight">发布时间：</span>{{ detailtObject.createTime }}</div>
-      <div class="size-color div-margin"><span class="font-weight">对象：</span>{{ detailtObject.shopId }}</div>
+      <div class="size-color div-margin"><span class="font-weight">对象：</span><span v-for="item in detailtObject.shopJson" :key="item.id">{{ item.name }} | </span></div>
       <div class="size-color div-margin"><span class="font-weight">消息类型：</span>{{ detailtObject.category }}</div>
-      <div class="size-color div-margin"><span class="font-weight">内容：</span>{{ detailtObject.content }}</div>
-      <div class="size-color div-margin"><span class="font-weight">发布者：</span>{{ releaseperson }}</div>
+      <div class="size-color div-margin" style="display:flex;flex-direction:row;"><span class="font-weight">内容：</span><div style="width:400px;height:200px;border:1px #6e7b99 solid;border-radius:5px;padding:3px;" v-html="detailtObject.content" /></div>
+      <div class="size-color div-margin"><span class="font-weight">发布者：</span>{{ detailtObject.name }}</div>
     </el-dialog>
   </div>
 </template>
@@ -39,4 +39,6 @@ export default {
   }
 }
 </script>
-<style></style>
+<style>
+
+</style>

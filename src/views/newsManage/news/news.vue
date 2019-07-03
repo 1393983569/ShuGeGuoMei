@@ -27,8 +27,19 @@
       <el-table :data="newsTable" center stripe>
         <el-table-column prop="createTime" label="发布时间" />
         <el-table-column prop="title" label="标题" />
-        <el-table-column prop="object" label="对象" />
         <el-table-column prop="category" label="类型" />
+        <el-table-column prop="shopJson" label="对象">
+          <template slot-scope="scope">
+            <el-dropdown trigger="click">
+              <el-button type="warning" size="mini">
+                查看<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="item in scope.row.shopJson" :key="item.id" :value="item.name">{{ item.name }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
         <el-table-column prop="operate" label="操作" width="220px">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="handleDetail(scope.row)">查看详情</el-button>
@@ -48,8 +59,8 @@
       </div>
     </div>
     <!-- 删除确认弹框 -->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="上架商品" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否上架该商品？</div>
+    <el-dialog :visible.sync="showDelete" center width="380px" title="删除消息" style="border-ra">
+      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该消息？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="deleteNews">确定</el-button>
@@ -142,7 +153,9 @@ export default {
       obj.category = this.category
       getNews(obj).then(res => {
         this.total = res.info.totalrecord
+        // const array = []
         res.info.records.forEach(e => {
+          e.shopJson = JSON.parse(e.shopJson)
           e.category = e.category === 1 ? '资讯' : '通知'
           this.newsTable.push(e)
         })

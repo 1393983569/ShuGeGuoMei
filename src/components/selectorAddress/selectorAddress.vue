@@ -54,7 +54,7 @@ export default {
           if (res.info.length > 0) {
             this.cityList = res.info
           } else {
-            this.$message.error('暂无城市')
+            // this.$message.error('暂无城市')
           }
         }).catch(err => {
           console.log(err)
@@ -73,7 +73,7 @@ export default {
             console.log('ddddddd')
             this.countyList = res.info
           } else {
-            this.$message.error('暂无区县！')
+            // this.$message.error('暂无区县！')
           }
         }).catch(err => {
           console.log(err)
@@ -110,10 +110,10 @@ export default {
   methods: {
     getProvinceList() {
       getProvince().then(res => {
-        if (res.status === 1) {
+        if (res.info.length > 0) {
           this.provinceList = res.info
         } else {
-          this.$message.error('查询省份失败！')
+          this.$message.error('暂无省份！')
         }
       }).catch(err => {
         console.log(err)

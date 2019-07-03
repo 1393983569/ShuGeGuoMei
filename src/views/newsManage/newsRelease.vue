@@ -44,7 +44,8 @@ export default {
         title: '',
         shopArray: [],
         category: '',
-        content: ''
+        content: '',
+        deleteStatus: 0
         // shopJson: [],
       },
       rules: {
@@ -70,7 +71,7 @@ export default {
     }
   },
   watch: {
-    'content'(e) {
+    'newsForm'(e) {
       console.log(e, 'eeeee')
     },
     'object.shopId'(e) {
@@ -89,27 +90,33 @@ export default {
   },
   methods: {
     addNewsHandle() {
-      console.log(this.newsForm.shopArray, '$$$$$$$$$$$')
+      console.log(this.newsForm.category, '$$$$$$$$$$$')
+      this.addDArray = []
+      const temp = []
       if (this.newsForm.shopArray) {
         this.newsForm.shopArray.map(e => {
           const obj = {}
           obj.id = e.split(':')[0]
           obj.name = e.split(':')[1]
-          this.newsForm.shopArray.push(obj)
+          temp.push(obj)
         })
-        const array = []
-        array.title = this.newsForm.title
-        array.category = this.newsForm.category
-        array.content = this.newsForm.content
-        array.shopJson = JSON.stringify(this.newsForm.shopArray)
+        this.addDArray = []
+        this.addDArray.title = this.newsForm.title
+        this.addDArray.category = this.newsForm.category + ''
+        this.addDArray.content = this.newsForm.content
+        this.addDArray.deleteStatus = this.newsForm.deleteStatus + ''
+        this.addDArray.shopJson = JSON.stringify(temp)
       } else {
         this.$message.error('请选择对象')
         return
       }
-      addNews(this.newsForm).then(res => {
+      console.log(this.addDArray, 'ggggggg')
+      // return
+      addNews(this.addDArray).then(res => {
         if (res.status === 1) {
-          this.shopList = []
-          this.$parent.getNewsList()
+          this.shopArray = []
+          this.newsForm = {}
+          this.$message.success('添加消息成功')
         }
       }).catch(err => {
         console.log(err)

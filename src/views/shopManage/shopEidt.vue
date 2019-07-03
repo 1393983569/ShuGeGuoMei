@@ -429,7 +429,7 @@ export default {
       this.shopForm.categoryJson = JSON.stringify(this.finalArray)
       // this.editObject.image = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
       addShop(this.shopForm).then(res => {
-        this.$message.info('操作成功')
+        this.$message.success('操作成功')
         this.handleClose()
         this.provinceId = ''
         this.finalArray = []
