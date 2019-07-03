@@ -76,3 +76,13 @@ export const shelfGoods = (id, isShelf) => {
     data: params
   })
 }
+/**
+ * 查询商品详情
+ * @param {Integer} id 商品id
+ */
+export const seeDetailsGoods = (id) => {
+  return request({
+    url: `/admin/seeDetailsGoods?id=${id}`,
+    method: 'get'
+  })
+}

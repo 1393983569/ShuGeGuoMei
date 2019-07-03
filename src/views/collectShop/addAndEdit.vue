@@ -100,7 +100,7 @@
         />
       </el-select>
       <div v-if="ruleForm.countryId === 999999" />
-      <selectorAddress v-else :province1id="ruleForm.provinceId+''" :city1id="ruleForm.cityId+''" :county1id="ruleForm.areaId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
+      <selectorAddress v-else :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
     </el-form-item>
     <el-form-item label="状态：" prop="state">
       <el-select v-model="ruleForm.state" clearable placeholder="请选择" style="width: 500px">
@@ -127,14 +127,14 @@
       </el-table>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+      <el-button type="primary" :loading="addLoading" @click="submitForm('ruleForm')">立即创建</el-button>
       <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-import { getFirstCategory, getSecondCategory } from '@/api/category.js'
+import { getFirstCategory, getSecondCategory, seeDetailsGoods } from '@/api/category.js'
 import { addGoods } from '@/api/collectShop.js'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 export default {
@@ -161,6 +161,7 @@ export default {
         }
       ],
       imageUrl: '',
+      addLoading: false,
       stateList: [
         {
           id: 0,
@@ -259,7 +260,8 @@ export default {
           if (res.info.length > 0) {
             this.secondList = res.info
           } else {
-            this.$message.info('此以及品类下暂无二级品类！')
+            this.$message.info('此一级品类下暂无二级品类！')
+            this.secondList = []
           }
         }).catch(err => {
           console.log(err)
@@ -304,6 +306,7 @@ export default {
     },
     // 添加商品
     addGoods() {
+      this.addLoading = true
       this.goodsObject = JSON.parse(JSON.stringify(this.ruleForm))
       if (this.goodsObject.tab.length > 0) {
         this.goodsObject.tab = this.goodsObject.tab.toString()
@@ -313,6 +316,8 @@ export default {
       this.goodsObject.state = this.goodsObject.state + ''
       addGoods(this.goodsObject).then(res => {
         this.$message.success('添加商品成功')
+        this.addLoading = false
+        window.history.go(-1)
       }).catch(err => {
         console.log(err)
         this.$message.error('添加商品失败！')

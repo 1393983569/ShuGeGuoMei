@@ -1,5 +1,8 @@
 <template>
   <div class="body-margin">
+    <breadcrumb>
+      <el-button type="primary" @click="handleAdd">新建</el-button>
+    </breadcrumb>
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
       <span class="item">经营模式:</span>
@@ -13,7 +16,6 @@
       <div style="float:right;">
         <el-button type="primary" @click="handleSearch">筛选</el-button>
         <el-button type="danger" @click="handleClearCondition">清空</el-button>
-        <el-button type="primary" @click="handleAdd">新建</el-button>
       </div>
     </div>
     <div>
@@ -86,6 +88,7 @@
 </template>
 <script>
 // import { Message } from 'element-ui'
+import Breadcrumb from '@/components/Breadcrumb'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import shopEdit from './shopEidt.vue'
 import shopDetail from './shopDetail.vue'
@@ -93,7 +96,7 @@ import { getShopList, deleteShop, startShop } from '@/api/shop.js'
 // import { sync } from 'glob'
 export default {
   components: {
-    selectorAddress, shopEdit, shopDetail
+    selectorAddress, shopEdit, shopDetail, Breadcrumb
   },
   data() {
     return {
