@@ -372,7 +372,7 @@ export const asyncRoutes = [
         name: 'orderDetails',
         hidden: true,
         meta: {
-          roles: ['orderDetails'],
+          // roles: ['orderDetails'],
           icon: 'dashboard',
           title: '订单详情',
           breadcrumb: false
@@ -384,7 +384,7 @@ export const asyncRoutes = [
         name: 'particulars',
         hidden: true,
         meta: {
-          roles: ['particulars'],
+          // roles: ['particulars'],
           icon: 'dashboard',
           title: '商品详情',
           breadcrumb: false
@@ -396,7 +396,7 @@ export const asyncRoutes = [
         name: 'childOrdersDetails',
         hidden: true,
         meta: {
-          roles: ['childOrdersDetails'],
+          // roles: ['childOrdersDetails'],
           icon: 'dashboard',
           title: '子订单详情',
           breadcrumb: false
@@ -408,7 +408,7 @@ export const asyncRoutes = [
         name: 'addAndEdit',
         hidden: true,
         meta: {
-          roles: ['addAndEdit'],
+          // roles: ['addAndEdit'],
           icon: 'dashboard',
           title: '修改添加',
           breadcrumb: false
@@ -474,7 +474,7 @@ export const asyncRoutes = [
         name: 'membershipDetails',
         hidden: true,
         meta: {
-          roles: ['membershipDetails'],
+          // roles: ['membershipDetails'],
           icon: 'dashboard',
           title: '会员详情'
         },
