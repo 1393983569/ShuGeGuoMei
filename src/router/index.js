@@ -584,6 +584,16 @@ export const asyncRoutes = [
           title: '品类基础数据'
         },
         component: () => import('@/views/category/categoryList')
+      },
+      {
+        path: 'cityList',
+        name: 'cityList',
+        meta: {
+          // roles: ['cityList'],
+          icon: 'dashboard',
+          title: '开通城市'
+        },
+        component: () => import('@/views/category/cityList')
       }
     ]
   },

@@ -53,7 +53,8 @@ module.exports = {
     resolve: {
       alias: {
         '@': resolve('src'),
-        '_u': resolve('src/utils/')
+        '_u': resolve('src/utils/'),
+        '_c': resolve('src/components/')
       }
     }
   },

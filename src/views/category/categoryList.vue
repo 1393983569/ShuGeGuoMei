@@ -1,35 +1,67 @@
 <template>
   <div>
+    <breadcrumb>
+      <el-button type="primary" @click="dialogStair = true, stairInput = [{value: ''}]">添加一级品类</el-button>
+      <el-button type="primary" @click="dialogChildren = true, childrenInput = [{value: ''}], optionValue = ''">添加二级品类</el-button>
+    </breadcrumb>
     <el-dialog
       title="编辑一级品类"
       :visible.sync="stair"
       width="50%">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
-        <p>一级品类ID：01</p>
-        <el-form-item label="一级品类名称" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-      </el-form>
+      <p>一级品类ID：{{showStairData.stairId}}</p>
+      <div style="display: flex; line-height: 36px">
+        <div style="display: inline-block; width: 30%;">一级品类名称：</div>
+        <el-input v-model="showStairData.stairName" style="display: inline-block;"></el-input>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="stair = false">取 消</el-button>
-        <el-button type="primary" @click="stair = false">确 定</el-button>
+        <el-button type="primary" @click="editStair">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
       title="编辑二级品类"
       :visible.sync="second"
       width="50%">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
-        <p>一级品类ID：01</p>
-        <p>一级品类：瓜</p>
-        <p>二级品类ID：01</p>
-        <el-form-item label="一级品类名称" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-      </el-form>
+      <p>一级品类ID：{{showSecondData.stairId}}</p>
+      <p>一级品类：{{showSecondData.stairName}}</p>
+      <p>二级品类ID：{{showSecondData.childrenId}}</p>
+      <div style="display: flex; line-height: 36px">
+        <div style="display: inline-block; width: 30%;">二级品类名称：</div>
+        <el-input v-model="showSecondData.childrenName"></el-input>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="second = false">取 消</el-button>
-        <el-button type="primary" @click="second = false">确 定</el-button>
+        <el-button type="primary" @click="editSecond">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="添加一级品类"
+      :visible.sync="dialogStair"
+      width="40%">
+      <el-input style="margin-bottom: 5px" v-for="(item, index) in stairInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类"></el-input>
+      <el-button @click="addStairInput">+</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogStair = false">取 消</el-button>
+        <el-button type="primary" @click="addStair">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="添加二级品类"
+      :visible.sync="dialogChildren"
+      width="40%">
+      <el-select v-model="optionValue" placeholder="请选择一级品类" style="margin-bottom: 5px; width: 100%">
+        <el-option
+          v-for="item in optionsStair"
+          :key="`${item.id}_o`"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <el-input style="margin-bottom: 5px" v-for="(item, index) in childrenInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类"></el-input>
+      <el-button @click="addChildrenInput">+</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogChildren = false">取 消</el-button>
+        <el-button type="primary" @click="addChildren">确 定</el-button>
       </span>
     </el-dialog>
     <hint v-model="hintState" :title="'删除'" :text="'是否删除该数据?'" @confirm="deleteUser" />
@@ -49,7 +81,7 @@
           <el-button
             size="mini"
             type="primary"
-            @click="editStair(scope.$index, scope.row)"
+            @click="edit(scope.$index, scope.row, '一级')"
           >编辑</el-button>
           <el-button
             size="mini"
@@ -86,11 +118,11 @@
         label="操作"
         width="280"
       >
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="scope.row.childrenId">
           <el-button
             size="mini"
             type="primary"
-            @click="editData(scope.$index, scope.row)"
+            @click="edit(scope.$index, scope.row, '二级')"
           >编辑</el-button>
           <el-button
             size="mini"
@@ -105,12 +137,14 @@
 
 <script>
   import hint from '@/components/Hint'
-  import { getSecondCategory, deleteCategoryOne, delCategoryTwo } from '@/api/category/categoryList'
+  import { getSecondCategory, deleteCategoryOne, delCategoryTwo, addCategoryOne, selectAll, addCategoryTwo, editCategoryTwo, updateCategoryOne } from '@/api/category/categoryList'
   import clonedeep from 'clonedeep'
+  import Breadcrumb from '@/components/Breadcrumb'
   export default {
     name: 'categoryList',
     components: {
-      hint
+      hint,
+      Breadcrumb
     },
     props: {
       row: {
@@ -133,11 +167,32 @@
         spanArr: [],
         selectIndex: '',
         selectRow: {},
-        removeState: ''
+        removeState: '',
+        dialogStair: false,
+        dialogChildren: false,
+        // 品类输入框数组
+        stairInput: [{value: ''}],
+        childrenInput: [{value: ''}],
+        optionsStair: [],
+        optionValue: '',
+        indexSecond: '',
+        rowSecond: '',
+        editState: '',
+        showStairData: {
+          stairName: '',
+          stairId: ''
+        },
+        showSecondData: {
+          stairName: '',
+          stairId: '',
+          childrenId: '',
+          childrenName: ''
+        }
       }
     },
     mounted() {
       this.getList()
+      this.getStair()
     },
     methods: {
       getList() {
@@ -170,10 +225,6 @@
             this.dataList.push(data)
           }
         })
-      },
-      // 编辑
-      editData(index, row) {
-        this.stair = true
       },
       // 删除一级品类
       removeStair(row) {
@@ -258,8 +309,156 @@
         return listRule
       },
       // 编辑一级品类
-      editStair(index, row) {
-        console.log(index, row)
+      edit(index, row, state) {
+        this.indexSecond = index
+        this.rowSecond = row
+        this.editState = state
+        if (state === '一级') {
+          console.log(row)
+          this.stair = true
+          this.showStairData.stairId = row.stairId
+          this.showStairData.stairName = row.stairName
+        } else {
+          console.log(row)
+          this.second = true
+          this.showSecondData.stairId = row.stairId
+          this.showSecondData.stairName = row.stairName
+          this.showSecondData.childrenId = row.childrenId
+          this.showSecondData.childrenName = row.childrenName
+        }
+      },
+      // ID补位
+      addId(data, i) {
+        let intData = parseInt(data)
+        let value = ''
+        if (intData < 9) {
+         value = `0${intData + i}`
+        } else {
+          value = intData + i + ''
+        }
+        return value
+      },
+      addStair() {
+        let arr = this.dataList
+        let id = ''
+        let stairList = []
+        let addId = ''
+        // 排序一级品类
+        for (let i = arr.length -1, tmp; i > 0; i--) {
+          for (let j = 0; j < i; j++) {
+            tmp = this.dataList[j]
+            if (parseInt(tmp.stairId) > parseInt(this.dataList[j+1].stairId)) {
+              arr[j] = arr[j + 1]
+              arr[j + 1] = tmp
+            }
+          }
+        }
+        id = arr[arr.length - 1].stairId
+        this.stairInput.forEach((item, index) => {
+          stairList.push({
+            id: this.addId(id, index + 1),
+            name: item.value
+          })
+        })
+        addCategoryOne(stairList).then(res => {
+          this.dialogStair = false
+          this.getList()
+        }).catch(err => {
+          console.log(err)
+        })
+      },
+      // 添加二级品类
+      addChildren() {
+        // childrenInput
+        let arr = []
+        let id = ''
+        let listChildren = []
+        arr = this.dataList.filter(item => {
+          if (item.childrenId) return item
+        })
+        let quickSort = (list) => {
+         let len = list.length
+          if (len < 2) {
+            return list
+          } else {
+            let flag = list[0]
+            let left = []
+            let right = []
+            for (let i = 1; len > i; i++) {
+              let tmp = list[i]
+              if (flag.childrenId > tmp.childrenId) {
+                left.push(tmp)
+              } else {
+                right.push(tmp)
+              }
+            }
+            return quickSort(left).concat(flag, quickSort(right))
+          }
+        }
+        id = quickSort(arr)[arr.length - 1].childrenId
+        this.childrenInput.forEach((item, index) => {
+          let data = {
+            id: this.addId(id, index + 1),
+            categoryOneId : this.optionValue,
+            name: item.value
+          }
+          listChildren.push(data)
+        })
+        addCategoryTwo(listChildren).then(res => {
+          this.dialogChildren = false
+          this.getList()
+        }).catch(err => {
+          console.log(err)
+        })
+      },
+      // 添加一级品类input数组
+      addStairInput() {
+        this.stairInput.push({
+          value: ''
+        })
+      },
+      // 添加二级品类input数组
+      addChildrenInput() {
+        this.childrenInput.push({
+          value: ''
+        })
+      },
+      // 获取一级品类
+      getStair() {
+        selectAll().then(res => {
+          this.optionsStair.push(...res.info)
+        }).catch(err => {
+          console.log(err)
+        })
+      },
+      // 编辑二级
+      editSecond() {
+        let data = {
+          name: this.showSecondData.childrenName,
+          id: this.showSecondData.childrenId,
+          categoryOneId: this.showSecondData.stairId
+        }
+        editCategoryTwo(data).then(res => {
+          console.log(res)
+          this.second = false
+          this.getList()
+        }).catch(err => {
+
+        })
+      },
+      // 编辑一级
+      editStair() {
+        let data = {
+          id: this.showStairData.stairId,
+          name: this.showStairData.stairName,
+        }
+        console.log(data)
+        updateCategoryOne(data).then(res => {
+          this.stair = false
+          this.getList()
+        }).catch(err => {
+
+        })
       }
     }
 }
