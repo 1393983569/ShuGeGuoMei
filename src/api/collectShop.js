@@ -52,12 +52,14 @@ export const editGoods = (data) => {
  */
 export const getGoodsList = (pageNum, pageSize, state, categoryOneId, categoryTwoId) => {
   const params = new URLSearchParams()
-  // for (const key in data) {
-  //   if (data[key]) params.append(key, data[key])
-  // }
+  if(pageNum) params.append('pageNum', pageNum)
+  if(pageSize) params.append('pageSize', pageSize)
+  if(state+'') params.append('state', state)
+  if(categoryOneId) params.append('categoryOneId', categoryOneId)
+  if(categoryTwoId) params.append('categoryTwoId', categoryTwoId)
   return request({
-    url: `/admin/getAllGoods?pageNum=${pageNum}&pageSize=${pageSize}&state=${state}&categoryOneId=${categoryOneId}&categoryTwoId=${categoryTwoId}`,
-    method: 'get',
+    url: '/admin/getAllGoods',
+    method: 'post',
     data: params
   })
 }
@@ -74,5 +76,15 @@ export const shelfGoods = (id, isShelf) => {
     url: '/admin/isShelfGoods',
     method: 'post',
     data: params
+  })
+}
+/**
+ * 查询商品详情
+ * @param {Integer} id 商品id
+ */
+export const seeDetailsGoods = (id) => {
+  return request({
+    url: `/admin/seeDetailsGoods?id=${id}`,
+    method: 'get'
   })
 }

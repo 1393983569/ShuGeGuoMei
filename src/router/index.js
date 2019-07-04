@@ -260,7 +260,7 @@ export const asyncRoutes = [
         name: 'newsRelease',
         hidden: true,
         meta: {
-          roles: ['newsRelease'],
+          // roles: ['newsRelease'],
           icon: 'dashboard',
           title: '消息发布'
         },

@@ -94,12 +94,12 @@
         <!-- 新建 -->
         <el-form-item v-if="showState">
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button type="primary" @click="addShopHandle('shopForm')">保存</el-button>
+          <el-button type="primary" :loading="loadingState" @click="addShopHandle('shopForm')">保存</el-button>
         </el-form-item>
         <!-- 编辑 -->
         <el-form-item v-else>
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button type="primary" @click="editShopHandle('shopForm')">保存</el-button>
+          <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
         </el-form-item>
       </el-form>
       <!-- <div slot="footer">
@@ -143,6 +143,7 @@ export default {
       isIndeterminate: true,
       checkAll: [],
       checkedCategory: [],
+      loadingState: false,
       // 确定不能为空
       shopForm: {
         provinceId: '',
@@ -417,6 +418,7 @@ export default {
     },
     // 添加店铺
     addShopHandles() {
+      this.loadingState = true
       // 添加多个category
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
@@ -430,12 +432,14 @@ export default {
       // this.editObject.image = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
       addShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
+        this.loadingState = false
         this.handleClose()
         this.provinceId = ''
         this.finalArray = []
         this.checkAll = []
         this.checkedCategory = []
         this.management = ''
+        window.history.go(-1)
         this.$parent.getShopList()
       }).catch(error => {
         this.$message.error('添加商铺失败！')
@@ -444,6 +448,7 @@ export default {
     },
     // 编辑店铺
     editShopHandle() {
+      this.loadingState = true
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
@@ -463,6 +468,8 @@ export default {
       }
       editShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
+        this.loadingState = false
+        window.history.go(-1)
         this.$parent.getShopList()
       }).catch(error => {
         console.log(error)

@@ -1,6 +1,9 @@
 <template>
   <div class="body-margin" style="display:float;">
-    <el-button style="float:right;margin-bottom:10px;" type="primary" @click="handleRelease">广告发布</el-button>
+    <breadcrumb>
+      <el-button type="primary" size="mini" @click="handleRelease">广告发布</el-button>
+    </breadcrumb>
+
     <el-table :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
       <el-table-column prop="tile" label="标题" />
@@ -58,10 +61,11 @@
 </template>
 <script>
 import AdDetail from './ADDetail.vue'
+import Breadcrumb from '@/components/Breadcrumb'
 import AdEdit from './AdEdit.vue'
 import { getAdvertisement, shelfAdvertisement, deleteAdvertisement } from '@/api/advertisement.js'
 export default {
-  components: { AdDetail, AdEdit },
+  components: { AdDetail, AdEdit, Breadcrumb },
   data() {
     return {
       ADTable: [],

@@ -117,6 +117,7 @@ export default {
           this.shopArray = []
           this.newsForm = {}
           this.$message.success('添加消息成功')
+          window.history.go(-1)
         }
       }).catch(err => {
         console.log(err)

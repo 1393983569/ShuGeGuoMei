@@ -100,10 +100,10 @@
         />
       </el-select>
       <div v-if="ruleForm.countryId === 999999" />
-      <selectorAddress v-else :province1id="ruleForm.provinceId+''" :city1id="ruleForm.cityId+''" :county1id="ruleForm.areaId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
+      <selectorAddress v-else :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
     </el-form-item>
     <el-form-item label="状态：" prop="state">
-      <el-select v-model="ruleForm.state" clearable placeholder="请选择" style="width: 500px">
+      <el-select v-model="ruleForm.state" clearable placeholder="请选择" style="width: 300px">
         <el-option
           v-for="item in stateList"
           :key="item.id"
@@ -127,15 +127,21 @@
       </el-table>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
+      <div v-if="addEditState">
+        <el-button type="primary" :loading="addLoading" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+      </div>
+      <div v-else>
+        <el-button type="primary" :loading="addLoading" @click="submitEditForm('ruleForm')">修改</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+      </div>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
 import { getFirstCategory, getSecondCategory } from '@/api/category.js'
-import { addGoods } from '@/api/collectShop.js'
+import { addGoods, seeDetailsGoods, editGoods } from '@/api/collectShop.js'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 export default {
   name: 'AddAndEdit',
@@ -161,6 +167,7 @@ export default {
         }
       ],
       imageUrl: '',
+      addLoading: false,
       stateList: [
         {
           id: 0,
@@ -197,6 +204,7 @@ export default {
       ],
       firstList: [],
       secondList: [],
+      // provinceId:''
       ruleForm: {
         provinceId: '',
         cityId: '',
@@ -247,7 +255,9 @@ export default {
       // dynamicTags: ['标签一', '标签二', '标签三'],
       inputVisible: false,
       inputValue: '',
-      goodsObject: []
+      goodsObject: [],
+      addEditState: true,
+      goodsId: ''
     }
   },
   watch: {
@@ -259,7 +269,8 @@ export default {
           if (res.info.length > 0) {
             this.secondList = res.info
           } else {
-            this.$message.info('此以及品类下暂无二级品类！')
+            this.$message.info('此一级品类下暂无二级品类！')
+            this.secondList = []
           }
         }).catch(err => {
           console.log(err)
@@ -269,6 +280,15 @@ export default {
     }
   },
   mounted() {
+    if(this.$route.params) {
+      console.log(this.$route.params,'&&&&&&&&&&')
+      this.addEditState = false
+      this.goodsId = this.$route.params.row.id
+      this.getDetailsGoods()
+    } else {
+      this.addEditState = true
+      // this.ruleForm.provinceId = ''
+    }
     this.getFirstCategory()
   },
   methods: {
@@ -302,20 +322,95 @@ export default {
     beforeAvatarUpload(file) {
 
     },
+    // 查询详情
+    getDetailsGoods() {
+      seeDetailsGoods(this.goodsId).then(res => {
+        // console.log(res)
+        // if(res.status === 1) {
+          let obj = {}
+          obj = res.info
+          this.ruleForm.provinceId = obj.provinceId+''
+          this.ruleForm.cityId = obj.cityId+''
+          this.ruleForm.areaId = obj.areaId+''
+          this.ruleForm.name = obj.goodName
+          if(obj.categoryTwo){
+            this.ruleForm.categoryTwoId = obj.categoryTwo.id
+          }else{
+            this.ruleForm.categoryTwoId = ''
+          }
+          this.ruleForm.categoryOneId = obj.categoryOne.id
+          this.ruleForm.standards = obj.goodStandard
+          this.ruleForm.unit = obj.goodUnit
+          this.ruleForm.remark = obj.goodRmark
+          this.ruleForm.qualityDate = obj.goodQualityDate
+          this.ruleForm.freshDate = obj.goodFreshDate
+          this.ruleForm.state = obj.goodState
+          this.ruleForm.purchasePrice = obj.goodPurchasePrice/100
+          this.ruleForm.sellPrice = obj.goodSellPrice/100
+          this.ruleForm.price = obj.goodPrice/100
+          this.ruleForm.countryId = obj.countryId
+          this.ruleForm.smallImg = obj.goodSmallImg
+          this.ruleForm.bigImg = obj.goodBigImg
+          this.ruleForm.tab = obj.goodTab.split(',')
+        // }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询详情出错')
+      })
+    },
     // 添加商品
     addGoods() {
+      this.addLoading = true
       this.goodsObject = JSON.parse(JSON.stringify(this.ruleForm))
       if (this.goodsObject.tab.length > 0) {
         this.goodsObject.tab = this.goodsObject.tab.toString()
       } else {
         this.goodsObject.tab = ''
       }
+      this.goodsObject.purchasePrice = this.goodsObject.purchasePrice*100
+      this.goodsObject.sellPrice = this.goodsObject.sellPrice*100
+      this.goodsObject.price = this.goodsObject.price*100
       this.goodsObject.state = this.goodsObject.state + ''
       addGoods(this.goodsObject).then(res => {
         this.$message.success('添加商品成功')
+        this.addLoading = false
+        window.history.go(-1)
       }).catch(err => {
         console.log(err)
         this.$message.error('添加商品失败！')
+      })
+    },
+    // 编辑商品
+    handleGoodsEdit() {
+      this.addLoading = true
+      this.goodsObject = JSON.parse(JSON.stringify(this.ruleForm))
+      if (this.goodsObject.tab.length > 0) {
+        this.goodsObject.tab = this.goodsObject.tab.toString()
+      } else {
+        this.goodsObject.tab = ''
+      }
+      this.goodsObject.id = this.goodsId
+      this.goodsObject.purchasePrice = this.goodsObject.purchasePrice*100
+      this.goodsObject.sellPrice = this.goodsObject.sellPrice*100
+      this.goodsObject.price = this.goodsObject.price*100
+      this.goodsObject.state = this.goodsObject.state + ''
+      editGoods(this.goodsObject).then(res => {
+        this.$message.success('编辑商品成功')
+        this.addLoading = false
+        window.history.go(-1)
+      }).catch(err => {
+        console.log(err)
+        this.$message.error("编辑商品失败！")
+      })
+    },
+    submitEditForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.handleGoodsEdit()
+        } else {
+          // console.log('error submit!!');
+          return false
+        }
       })
     },
     // 提交
