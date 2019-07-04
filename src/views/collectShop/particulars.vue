@@ -1,10 +1,11 @@
 <template>
   <div>
-    <breadcrumb><el-button>编辑</el-button></breadcrumb>
+    <breadcrumb><el-button @click="handleEdit">编辑</el-button></breadcrumb>
     <p>商品ID：{{ row.goodId }}</p>
-    <p>一级品类：{{ row.categoryOne.name }}</p>
-    <!-- <p>二级品类：{{row.categoryTwo }}</p> -->
-    <p>商品名称：{{ row.goodName }}</p>
+    <p>一级品类：{{ row.categoryOne.name}} (ID: {{ row.categoryOne.id }})</p>
+    <p v-if="row.categoryTwo">二级品类：{{ row.categoryTwo.name }} (ID: {{ row.categoryTwo.id }})</p>
+    <p v-else>二级品类：暂无数据</p>
+    <p>商品名称：{{ row.goodName}}</p>
     <div>
       <div style="display: inline-block; vertical-align: top">缩略图： </div>
       <el-image
@@ -27,16 +28,15 @@
     <p>备注：{{ row.goodRmark }}</p>
     <p>保质期：{{ row.goodQualityDate }}</p>
     <p>保鲜期：{{ row.goodFreshDate }}</p>
-    <p>产地：{{ row.province.name+ ' '+ row.city.name+ ' '+ row.area.name }}</p>
+    <p>产地：{{ row.countryId === 999999 ? '国外':'国内'+ '-' +row.province.name+ ' '+row.city.name+ ' '+row.area.name }}</p>
     <p>状态：{{ row.goodState=== 0 ? '有货': '缺货' }}</p>
     <p>进价：{{ row.goodPurchasePrice }}</p>
     <p>出价：{{ row.goodSellPrice }}</p>
     <p>零售价：{{ row.goodPrice }}</p>
   </div>
 </template>
-
 <script>
-// import { seeDetailsGoods } from '@/api/collectShop.js'
+import { seeDetailsGoods } from '@/api/collectShop.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'Particulars',
@@ -44,29 +44,55 @@ export default {
   data() {
     return {
       row: {},
+      categoryOne: {},
+      categoryTwo: {},
+      province: {},
+      city: {},
+      area: {},
+      goodSmallImg: '',
+      goodBigImg: '',
       img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       fit: 'fit',
       id: ''
     }
   },
-  beforeRouteEnter(to, form, next) {
-    next(mv => {
-      mv.row = to.params.row
-      // console.log(mv.row, 'ssssssssssssssssssss')
-    })
-  },
+  // beforeRouteEnter(to, form, next) {
+  //   next(mv => {
+  //     mv.row = to.params.row
+  //     // console.log(mv.row, 'ssssssssssssssssssss')
+  //   })
+  // },
   mounted() {
-    if (this.$route.params) {
-      this.row = this.$route.params.row
-      console.log(this.row, '^^^^^^^^^')
-    }
-    // console.log(this.$route.params.row.id, '参数')
-    this.showRow()
+    if (this.$route.params.row) {
+      this.goodId = this.$route.params.row.id
+      this.getDetailsGoods()
+    } else (
+      window.history.go(-1)
+    )
+    // this.showRow()
   },
   methods: {
-    showRow() {
-      console.log(this.row)
+    handleEdit() {
+      if(this.row) {
+        console.log(this.row, 'jjjjjj')
+        this.row.id = this.row.goodId
+        this.$router.push({
+          name: 'addAndEdit',
+          params: {
+            row: this.row
+          }
+        })
+      }
+    },
+    getDetailsGoods() {
+      seeDetailsGoods(this.goodId).then(res => {
+        console.log(res, '#######')
+        this.row = res.info
+      }).catch(err => {})
     }
+    // showRow() {
+    //   console.log(this.row)
+    // }
   }
 }
 </script>

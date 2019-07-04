@@ -1,8 +1,41 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button @click="addGoods">添加商品</el-button>
+      <el-button @click="addGoods" type="primary">添加商品</el-button>
     </breadcrumb>
+    <div style="margin:10px;display:float;">
+      状态：
+      <el-select v-model="state" clearable placeholder="请选择" style="width: 120px" size="mini">
+        <el-option
+          v-for="item in stateList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+      一级品类：
+      <el-select v-model="categoryOneId" clearable placeholder="请选择" style="width: 120px" size="mini">
+        <el-option
+          v-for="item in firstList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+      二级品类：
+      <el-select v-model="categoryTwoId" clearable placeholder="请选择" style="width: 120px" size="mini">
+        <el-option
+          v-for="item in secondList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+      <div style="display:float;float:right;">
+        <el-button @click="searchHandle" size="mini">筛选</el-button>
+        <el-button size="mini" @click="clearHandle">清空</el-button>
+      </div>
+    </div>
     <el-table
       :data="tableData"
       :header-cell-style="{background:'#f0f2f3', }"
@@ -35,7 +68,7 @@
           <el-button
             size="mini"
             type="primary"
-            @click="handleEdit(scope.$index, scope.row)"
+            @click="handleEdit(scope.row)"
           >编辑</el-button>
           <el-button
             size="mini"
@@ -50,14 +83,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      :page-sizes="[10, 15]"
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+    <div>
+      <el-pagination
+        :page-sizes="[10, 15]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
     <!--删除商品-->
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
@@ -79,7 +114,8 @@
 
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
-import { getGoodsList, deleteGoods, shelfGoods, seeDetailsGoods } from '@/api/collectShop.js'
+import { getFirstCategory, getSecondCategory } from '@/api/category.js'
+import { getGoodsList, deleteGoods, shelfGoods } from '@/api/collectShop.js'
 export default {
   name: 'CollectShop',
   components: { Breadcrumb },
@@ -96,11 +132,44 @@ export default {
       showShelf: false,
       id: '',
       titleShelf: '',
-      detailObj: {}
+      detailObj: {},
+      firstList: [],
+      secondList: [],
+      stateList: [
+        {
+          id: 0,
+          name: '有货'
+        },
+        {
+          id: 1,
+          name: '缺货'
+        }
+      ]
+    }
+  },
+  watch: {
+    // 查询一级品类下的二级品类
+    'categoryOneId'(e) {
+      if (e) {
+        getSecondCategory(e).then(res => {
+          console.log(res)
+          if (res.info.length > 0) {
+            this.secondList = res.info
+          } else {
+            this.$message.info('此一级品类下暂无二级品类！')
+            this.secondList = []
+            this.categoryTwoId = ''
+          }
+        }).catch(err => {
+          console.log(err)
+          this.$message.warning('暂无二级品类')
+        })
+      }
     }
   },
   mounted() {
     this.getGoodsList()
+    this.getFirstCategory()
   },
   methods: {
     // 查询商品列表
@@ -112,6 +181,9 @@ export default {
           this.total = res.info.totalrecord
           res.info.records.forEach(e => {
             e.state = e.state === 0 ? '有货' : '缺货'
+            e.purchasePrice = e.purchasePrice/100
+            e.sellPrice = e.sellPrice/100
+            e.price = e.price/100
             this.tableData.push(e)
           })
         } else {
@@ -121,6 +193,16 @@ export default {
         console.log(err)
         this.$message.error('查询商品出错')
       })
+    },
+    // 条件查询
+    searchHandle() {
+      this.getGoodsList()
+    },
+    clearHandle(){
+      this.state = ''
+      this.categoryOneId = ''
+      this.categoryTwoId = ''
+      this.getGoodsList()
     },
     // 删除商品
     handleDelete(row) {
@@ -170,23 +252,29 @@ export default {
     },
     // 查看详情
     viewDetails(row) {
-      // const obj = {}
-      const _this = this
-      seeDetailsGoods(row.id).then(res => {
-        _this.detailObj = res.info
-        _this.$router.push({
-          name: 'particulars',
-          params: {
-            row: _this.detailObj
-          }
-        })
+      this.$router.push({
+        name: 'particulars',
+        params: {
+          row: row
+        }
+      })
+    },
+    // 查询一级品类
+    getFirstCategory() {
+      getFirstCategory().then(res => {
+        // console.log(res, 'kkkkkkkkkk')
+        if (res.info.length > 0) {
+          this.firstList = res.info
+        } else {
+          this.$message.warning('暂无一级品类')
+        }
       }).catch(err => {
         console.log(err)
-        this.$message.error('查询详情失败！')
+        this.$message.error('查询一级品类出错！')
       })
     },
     // 修改
-    handleEdit(index, row) {
+    handleEdit(row) {
       this.$router.push({
         name: 'addAndEdit',
         params: {

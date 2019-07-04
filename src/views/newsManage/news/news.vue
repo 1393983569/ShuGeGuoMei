@@ -1,36 +1,28 @@
 <template>
-  <div style="margin:20px;">
+  <div>
+    <breadcrumb>
+      <el-button type="primary" @click="handleReleaseNews" size="mini">发布消息</el-button>
+    </breadcrumb>
     <!-- 头部查询 -->
     <div style="display:float;">
-      <!-- 查询类型：<el-select v-model="dateType">
-        <el-option v-for="item in dateTypeList" :key="item.id" :value="item.id" :label="item.name" />
-      </el-select>
-      <div v-if="dateState === 2">整年：<el-date-picker v-model="year" type="year" placeholder="选择年" /></div>
-      <div v-else-if="dateState === 3">整月：<el-date-picker v-model="month" type="month" placeholder="选择月" /></div>
-      <div v-else>日期：<el-date-picker v-model="datePick" type="date" placeholder="选择日期" /></div> -->
-      消息类别：<el-select v-model="newsType">
+      消息类别：
+      <el-select v-model="newsType" size="mini" style="width:120px;">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      <div style="float:right;">
-        <el-button type="primary" @click="handleReleaseNews">发布消息</el-button>
-        <el-dropdown split-button>
-          个人设置
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>修改密码</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+      <div style="display:float;float:right;">
+        <el-button size="mini">筛选</el-button>
+        <el-button size="mini">清空</el-button>
       </div>
     </div>
     <!-- 列表 -->
-    <div class="size-color table-margin-top">
+    <div class="size-color">
       <el-table :data="newsTable" center stripe>
         <el-table-column prop="createTime" label="发布时间" />
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="category" label="类型" />
         <el-table-column prop="shopJson" label="对象">
           <template slot-scope="scope">
-            <el-dropdown trigger="click">
+            <el-dropdown>
               <el-button type="warning" size="mini">
                 查看<i class="el-icon-arrow-down el-icon--right" />
               </el-button>
@@ -47,7 +39,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin:10px;">
+      <div>
         <el-pagination
           :page-sizes="[10, 15]"
           background
@@ -72,9 +64,10 @@
 </template>
 <script>
 import newsDetail from './newsDetail.vue'
+import Breadcrumb from '@/components/Breadcrumb'
 import { getNews, deleteNews } from '@/api/news.js'
 export default {
-  components: { newsDetail },
+  components: { newsDetail, Breadcrumb },
   data() {
     return {
       // 日期选择

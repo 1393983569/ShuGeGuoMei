@@ -6,16 +6,16 @@
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
       <span class="item">经营模式:</span>
-      <el-select v-model="management" style="width:100px;">
+      <el-select v-model="management" style="width:100px;" size="mini">
         <el-option v-for="item in managementList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <span class="item">排序:</span>
-      <el-select v-model="orderId" style="width:100px;">
+      <el-select v-model="orderId" style="width:100px;" size="mini">
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
-        <el-button type="primary" @click="handleSearch">筛选</el-button>
-        <el-button type="danger" @click="handleClearCondition">清空</el-button>
+        <el-button type="primary" @click="handleSearch" size="mini">筛选</el-button>
+        <el-button type="danger" @click="handleClearCondition"  size="mini">清空</el-button>
       </div>
     </div>
     <div>

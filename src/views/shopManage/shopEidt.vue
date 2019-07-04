@@ -439,6 +439,7 @@ export default {
         this.checkAll = []
         this.checkedCategory = []
         this.management = ''
+        window.history.go(-1)
         this.$parent.getShopList()
       }).catch(error => {
         this.$message.error('添加商铺失败！')
@@ -468,6 +469,7 @@ export default {
       editShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
+        window.history.go(-1)
         this.$parent.getShopList()
       }).catch(error => {
         console.log(error)
