@@ -372,7 +372,7 @@ export const asyncRoutes = [
         name: 'orderDetails',
         hidden: true,
         meta: {
-          roles: ['orderDetails'],
+          // roles: ['orderDetails'],
           icon: 'dashboard',
           title: '订单详情',
           breadcrumb: false
@@ -396,7 +396,7 @@ export const asyncRoutes = [
         name: 'childOrdersDetails',
         hidden: true,
         meta: {
-          roles: ['childOrdersDetails'],
+          // roles: ['childOrdersDetails'],
           icon: 'dashboard',
           title: '子订单详情',
           breadcrumb: false
@@ -474,7 +474,7 @@ export const asyncRoutes = [
         name: 'membershipDetails',
         hidden: true,
         meta: {
-          roles: ['membershipDetails'],
+          // roles: ['membershipDetails'],
           icon: 'dashboard',
           title: '会员详情'
         },
@@ -584,6 +584,16 @@ export const asyncRoutes = [
           title: '品类基础数据'
         },
         component: () => import('@/views/category/categoryList')
+      },
+      {
+        path: 'cityList',
+        name: 'cityList',
+        meta: {
+          // roles: ['cityList'],
+          icon: 'dashboard',
+          title: '开通城市'
+        },
+        component: () => import('@/views/category/cityList')
       }
     ]
   },
