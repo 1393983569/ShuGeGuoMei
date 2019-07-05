@@ -284,7 +284,10 @@ export default {
     },
     addGoods() {
       this.$router.push({
-        name: 'addAndEdit'
+        name: 'addAndEdit',
+        params: {
+          row: '添加'
+        }
       })
     }
   }

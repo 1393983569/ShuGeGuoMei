@@ -63,7 +63,8 @@ export default {
   //   })
   // },
   mounted() {
-    if (this.$route.params.row) {
+    if (JSON.stringify(this.$route.params.row) !== '{}') {
+      console.log(this.$route.params)
       this.goodId = this.$route.params.row.id
       this.getDetailsGoods()
     } else (

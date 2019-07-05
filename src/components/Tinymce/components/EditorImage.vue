@@ -12,7 +12,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action="http://192.168.31.51:8083//basics/upload"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -63,6 +63,7 @@ export default {
       this.dialogVisible = false
     },
     handleSuccess(response, file) {
+      console.log(file.response.info, 'fffff')
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {

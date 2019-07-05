@@ -32,6 +32,9 @@ export default {
       content: ''
     }
   },
+  mounted() {
+
+  },
   methods: {
     hadleClose() {
       this.$emit('closeEdit', false)

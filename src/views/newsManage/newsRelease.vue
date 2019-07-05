@@ -7,9 +7,9 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="newsForm.title" style="width:400px;" />
         </el-form-item>
-        <el-form-item label="对象" prop="shopIdList">
-          <el-select v-model="newsForm.shopArray" clearable multiple style="width:300px;">
-            <el-option v-for="(item, index) in objectList" :key="index" :value="`${item.id}:${item.name}`" :label="item.name" />
+        <el-form-item label="对象" prop="shopIds">
+          <el-select v-model="newsForm.shopIds" clearable multiple style="width:300px;">
+            <el-option v-for="(item, index) in objectList" :key="index" :value="item.id" :label="item.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="类别" prop="category">
@@ -24,7 +24,7 @@
       <!-- <el-form-item style="float:right;"> -->
       <el-form-item>
         <el-button type="warning" @click="resetForm('newsForm')">取消</el-button>
-        <el-button type="primary" @click="submitForm('newsForm')">确定</el-button>
+        <el-button type="primary" @click="submitForm('newsForm')" :loading="loadingState">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -42,7 +42,7 @@ export default {
     return {
       newsForm: {
         title: '',
-        shopArray: [],
+        shopIds: [],
         category: '',
         content: '',
         deleteStatus: 0
@@ -50,7 +50,7 @@ export default {
       },
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        shopArray: [{ required: true, message: '请输入对象', trigger: 'blur' }],
+        shopIds: [{ required: true, message: '请输入对象', trigger: 'blur' }],
         category: [{ required: true, message: '请输入类别', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
       },
@@ -67,7 +67,8 @@ export default {
       ],
       objectList: [],
       // shopArray: [],
-      shopIdList: []
+      shopIdList: [],
+      loadingState: false
     }
   },
   watch: {
@@ -90,36 +91,26 @@ export default {
   },
   methods: {
     addNewsHandle() {
+      this.loadingState = true
       console.log(this.newsForm.category, '$$$$$$$$$$$')
-      this.addDArray = []
-      const temp = []
-      if (this.newsForm.shopArray) {
-        this.newsForm.shopArray.map(e => {
-          const obj = {}
-          obj.id = e.split(':')[0]
-          obj.name = e.split(':')[1]
-          temp.push(obj)
-        })
-        this.addDArray = []
-        this.addDArray.title = this.newsForm.title
-        this.addDArray.category = this.newsForm.category + ''
-        this.addDArray.content = this.newsForm.content
-        this.addDArray.deleteStatus = this.newsForm.deleteStatus + ''
-        this.addDArray.shopJson = JSON.stringify(temp)
-      } else {
-        this.$message.error('请选择对象')
-        return
-      }
-      console.log(this.addDArray, 'ggggggg')
+        const addArray = {}
+        addArray.title = this.newsForm.title
+        addArray.category = this.newsForm.category + ''
+        addArray.content = this.newsForm.content
+        addArray.deleteStatus = this.newsForm.deleteStatus + ''
+        addArray.shopIds = this.newsForm.shopIds.toString()
+      console.log(this.addArray, 'ggggggg')
       // return
-      addNews(this.addDArray).then(res => {
+      addNews(addArray).then(res => {
         if (res.status === 1) {
-          this.shopArray = []
+          this.loadingState = false
+          this.shopIds = []
           this.newsForm = {}
           this.$message.success('添加消息成功')
           window.history.go(-1)
         }
       }).catch(err => {
+        this.loadingState = false
         console.log(err)
         this.$message.error('添加消息失败')
       })

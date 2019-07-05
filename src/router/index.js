@@ -294,7 +294,7 @@ export const asyncRoutes = [
         name: 'ADRelease',
         hidden: true,
         meta: {
-          roles: ['ADRelease'],
+          // roles: ['ADRelease'],
           icon: 'dashboard',
           title: '广告发布'
         },

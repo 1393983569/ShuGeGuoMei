@@ -23,12 +23,15 @@
     <el-form-item label="商品名称：" prop="name">
       <el-input v-model="ruleForm.name" placeholder="请输入内容" style="width: 500px" />
     </el-form-item>
+    <el-form-item label="商品条码：">
+      <el-input v-model="ruleForm.barCode" placeholder="请输入内容" style="width: 500px" />
+    </el-form-item>
     <el-form-item label="缩略图：" prop="name">
       <el-upload
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action="http://192.168.31.51:8083//basics/upload"
         :show-file-list="false"
-        :on-success="handleAvatarSuccess"
+        :on-success="handleAvatarSuccessSmall"
         :before-upload="beforeAvatarUpload"
       >
         <img v-if="ruleForm.smallImg" :src="ruleForm.smallImg" class="avatar">
@@ -38,9 +41,9 @@
     <el-form-item label="展示图：" prop="name">
       <el-upload
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action="http://192.168.31.51:8083//basics/upload"
         :show-file-list="false"
-        :on-success="handleAvatarSuccess"
+        :on-success="handleAvatarSuccessBig"
         :before-upload="beforeAvatarUpload"
       >
         <img v-if="ruleForm.bigImg" :src="ruleForm.bigImg" class="avatar">
@@ -87,7 +90,7 @@
         value-format="yyyy-MM-dd"
       />
     </el-form-item>
-    <el-form-item label="保鲜期：" prop="freshDate">
+    <el-form-item label="保鲜期：">
       <el-input v-model="ruleForm.freshDate" placeholder="请输入保鲜期" style="width:200px;" /> 小时
     </el-form-item>
     <el-form-item label="产地：" prop="provinceId">
@@ -142,7 +145,7 @@
 <script>
 import { getFirstCategory, getSecondCategory } from '@/api/category.js'
 import { addGoods, seeDetailsGoods, editGoods } from '@/api/collectShop.js'
-import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
+import selectorAddress from '@/components/selectorAddress/selectAll.vue'
 export default {
   name: 'AddAndEdit',
   components: { selectorAddress },
@@ -226,8 +229,9 @@ export default {
         price: '',
         tab: [],
         countryId: 888888,
-        smallImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg',
-        bigImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
+        smallImg: '',
+        bigImg: '',
+        barCode: ''
       },
       rules: {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
@@ -244,7 +248,7 @@ export default {
         unit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
         // remark: [{ required: true, message: '请输入备注', trigger: 'blur' }],
         qualityDate: [{ required: true, message: '请选择保质期', trigger: 'blur' }],
-        freshDate: [{ required: true, message: '请选择保鲜期', trigger: 'blur' }],
+        // freshDate: [{ required: true, message: '请选择保鲜期', trigger: 'blur' }],
         // areaId: [{ required: true, message: '请输入', trigger: 'blur' }],
         // provinceId: [{ required: true, message: '请输入', trigger: 'blur' }],
         state: [{ required: true, message: '请选择状态', trigger: 'blur' }],
@@ -280,14 +284,16 @@ export default {
     }
   },
   mounted() {
-    if(this.$route.params) {
-      console.log(this.$route.params,'&&&&&&&&&&')
-      this.addEditState = false
-      this.goodsId = this.$route.params.row.id
-      this.getDetailsGoods()
+    if(JSON.stringify(this.$route.params) !=="{}") {
+      if(this.$route.params.row === '添加') {
+        this.addEditState = true
+      }else {
+        this.addEditState = false
+        this.goodsId = this.$route.params.row.id
+        this.getDetailsGoods()
+      }
     } else {
-      this.addEditState = true
-      // this.ruleForm.provinceId = ''
+      window.history.go(-2)
     }
     this.getFirstCategory()
   },
@@ -316,11 +322,14 @@ export default {
       })
     },
     // 上传图片
-    handleAvatarSuccess(file) {
-
+    handleAvatarSuccessSmall(res) {
+      this.ruleForm.smallImg = res.info
+    },
+    handleAvatarSuccessBig(res) {
+      this.ruleForm.bigImg = res.info
     },
     beforeAvatarUpload(file) {
-
+      console.log(file, 'file')
     },
     // 查询详情
     getDetailsGoods() {
@@ -350,6 +359,7 @@ export default {
           this.ruleForm.price = obj.goodPrice/100
           this.ruleForm.countryId = obj.countryId
           this.ruleForm.smallImg = obj.goodSmallImg
+          this.ruleForm.barCode = obj.barCode
           this.ruleForm.bigImg = obj.goodBigImg
           this.ruleForm.tab = obj.goodTab.split(',')
         // }
@@ -376,6 +386,7 @@ export default {
         this.addLoading = false
         window.history.go(-1)
       }).catch(err => {
+        this.addLoading = false
         console.log(err)
         this.$message.error('添加商品失败！')
       })
@@ -399,6 +410,7 @@ export default {
         this.addLoading = false
         window.history.go(-1)
       }).catch(err => {
+        this.addLoading = false
         console.log(err)
         this.$message.error("编辑商品失败！")
       })

@@ -7,13 +7,9 @@
     <el-table :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
       <el-table-column prop="tile" label="标题" />
-      <el-table-column prop="picture" label="轮播图" width="300px">
-        <template>
-          <el-carousel height="150px" style="background-color:red;">
-            <el-carousel-item v-for="item in 3" :key="item">
-              <h3>{{ item }}</h3>
-            </el-carousel-item>
-          </el-carousel>
+      <el-table-column prop="picture" label="轮播图">
+        <template slot-scope="scope">
+          <img v-if="scope.row.imge" :src="scope.row.imge" class="avatar" style="width:100px;height:100px;">
         </template>
       </el-table-column>
       <el-table-column prop="status" label="上下架状态" />
@@ -130,6 +126,7 @@ export default {
     // 编辑广告
     handleEdit(row) {
       this.showAdEdit = true
+      this.showAdEdit = row
     },
     // 关闭编辑
     closeEdit(e) {
