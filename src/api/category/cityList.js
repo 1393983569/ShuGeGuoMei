@@ -31,3 +31,15 @@ export const selectSysArea = (cityId) => {
     method: 'get'
   })
 }
+
+/**
+ * 添加城市基础数据
+ * @param data
+ */
+export const addSysArea = (data) => {
+  return request({
+    url: '/basics/addSysArea',
+    method: 'post',
+    data
+  })
+}

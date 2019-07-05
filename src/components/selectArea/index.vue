@@ -1,10 +1,13 @@
 <template>
+  <!-- props 接收已选的数组 组件自身触发一个selectList事件返回已选值 -->
   <div>
     <div class="block">
       <el-cascader
-        @expand-change="expandData"
-        v-model="value"
+        v-if="options.length !== 0"
+        @change="expandData"
+        v-model="valueData"
         :props="areaList"
+        :options="options"
       ></el-cascader>
     </div>
   </div>
@@ -48,7 +51,21 @@
                     value: item.id,
                     label: item.name,
                     children: [],
-                    state: 1
+                    state: 2
+                  })
+                })
+                resolve(provinceList)
+              }).catch(err => {
+
+              })
+            } else if (state === 2) {
+              selectSysArea(node.value).then(res => {
+                res.info.forEach((item, index) => {
+                  provinceList.push({
+                    value: item.id,
+                    label: item.name,
+                    state: 3,
+                    leaf: true
                   })
                 })
                 resolve(provinceList)
@@ -57,35 +74,80 @@
               })
             }
           }
-        }
+        },
+        valueData: [],
+        options: []
+      }
+    },
+    props: {
+      idList: {
+        type: Array,
+        default: () => []
+      }
+    },
+    watch: {
+      idList(e) {
+        this.valueData = e
+        this.getArea(e[0], e[1])
       }
     },
     mounted() {
-      this.getProvince()
+
     },
     methods: {
-      // 获取省
-      getProvince() {
-
-      },
-      // 获取市
-      getCity() {
-        selectSysCity().then(res => {
-
-        }).catch(err => {
-
+      async getArea(provinceId, sysCityId) {
+        this.options = []
+        let provinceList = await selectSysProvince()
+        let sysCityList = await selectSysCity(provinceId)
+        let sysAreaList = await selectSysArea(sysCityId)
+        let islt1 = []
+        let islt2 = []
+        let islt3 = []
+        provinceList.info.forEach((item, index) => {
+          islt1.push({
+            value: item.id,
+            label: item.name,
+            children: [],
+            state: 1
+          })
         })
-      },
-      // 获取区 县
-      getArea() {
-        selectSysArea().then(res => {
-
-        }).catch(err => {
-
+        sysCityList.info.forEach((item, index) => {
+          islt2.push({
+            value: item.id,
+            label: item.name,
+            children: [],
+            state: 2
+          })
         })
+        sysAreaList.info.forEach((item, index) => {
+          islt3.push({
+            value: item.id,
+            label: item.name,
+            leaf: true,
+            state: 3
+          })
+        })
+        // 递归拼合数据
+        const getList = (arr) => {
+          arr.forEach(item => {
+            if (item.children) {
+              // 一级的时候放入二级
+              if (item.state === 1 && item.value === provinceId) {
+                item.children = islt2
+              }
+              // 二级的时候放入三级
+              if (item.state === 2 && item.value === sysCityId) {
+                item.children = islt3
+              }
+              item.children = getList(item.children)
+            }
+          })
+          return arr
+        }
+        this.options = getList(islt1)
       },
       expandData(e) {
-        console.log(e)
+        this.$emit('selectList', e)
       }
     }
   }
