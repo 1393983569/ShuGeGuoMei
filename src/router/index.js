@@ -436,6 +436,16 @@ export const asyncRoutes = [
           title: '供应商管理'
         },
         component: () => import('@/views/providerManage/providerList.vue')
+      },
+      {
+        path: 'addAndEdit',
+        name: 'addAndEdit',
+        meta: {
+          // roles: ['providerList'],
+          icon: 'dashboard',
+          title: '修改添加'
+        },
+        component: () => import('@/views/providerManage/addAndEdit.vue')
       }
     ]
   },

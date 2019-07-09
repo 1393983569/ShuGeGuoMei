@@ -10,7 +10,7 @@ export const addProvider = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/provider/add',
+    url: '/admin/addProvider',
     method: 'post',
     data: params
   })
@@ -26,7 +26,7 @@ export const deleteProvider = (id) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: `/admin/provider/delete?id=${id}`,
+    url: `/admin/delProvider?id=${id}`,
     method: 'get'
     // data: params
   })
@@ -41,7 +41,7 @@ export const editProvider = (data) => {
     if (data[key]) params.append(key, data[key])
   }
   return request({
-    url: '/admin/provider/edit',
+    url: '/admin/editProvider',
     method: 'post',
     data: params
   })
@@ -51,14 +51,14 @@ export const editProvider = (data) => {
  * @param {int} pageNum 当前页
  * @param {int} pageSize 每页记录数
  */
-export const getProvider = (pageNum, pageSize) => {
-  // const params = new URLSearchParams()
-  // for (const key in data) {
-  //   if (data[key]) params.append(key, data[key])
-  // }
+export const getProvider = (data) => {
+  const params = new URLSearchParams()
+  for (const key in data) {
+    if (data[key]) params.append(key, data[key])
+  }
   return request({
-    url: `/admin/provider/selectAll?pageNum=${pageNum}&pageSize= ${pageSize}`,
-    method: 'get'
-    // data: params
+    url: '/admin/selectAll',
+    method: 'post',
+    data: params
   })
 }
