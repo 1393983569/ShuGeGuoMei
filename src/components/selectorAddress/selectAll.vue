@@ -1,5 +1,5 @@
 <template>
-  <div style="margin:10px;display:inline;">
+  <div style="display:inline;">
     <!-- <p>{{province1Id, city1Id, county1Id}}</p> -->
     <span class="font-weight">省:</span>
     <el-select v-model="provinceId" style="width:90px;" size="mini">

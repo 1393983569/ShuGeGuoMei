@@ -95,7 +95,29 @@ export default {
       this.dialogVisible = true
       this.ADForm.imge = file.response.info
     },
-    beforeAvatarUpload() {},
+    beforeAvatarUpload(file) {
+      const isLt20M = file.size / 1024 / 1024 < 1;
+      if (!isLt20M) {
+              this.$message.error('上传图片的大小不能超过 1M!');
+      }
+//       const isSize = new Promise(function(resolve, reject) {
+//               let width = 300;
+//               let height = 100;
+//               let _URL = window.URL || window.webkitURL;
+//               let img = new Image();
+//               img.onload = function() {
+//                       let valid = img.width == width && img.height == height;
+//                       valid ? resolve() : reject();
+//               }
+//               img.src = _URL.createObjectURL(file);
+//       }).then(() => {
+//               return file;
+//       }, () => {
+//               this.$message.error('上传的图片宽高必须是300*100!');
+//               return Promise.reject();
+//       });
+//       return isPNG && isJPG && isSize && isLt20M;
+    },
     handleAvatarSuccess(res) {
       console.log(res, 'gggggg')
       this.ADForm.imge = res.info

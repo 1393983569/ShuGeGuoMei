@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" @click="handleReleaseNews" size="mini">发布消息</el-button>
+      <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleReleaseNews" size="mini">发布消息</el-button>
+      <el-button type="primary" v-else disabled @click="handleReleaseNews" size="mini">发布消息</el-button>
     </breadcrumb>
     <!-- 头部查询 -->
     <div style="display:float;">
@@ -10,8 +11,10 @@
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="display:float;float:right;">
-        <el-button size="mini">筛选</el-button>
-        <el-button size="mini">清空</el-button>
+        <el-button size="mini" v-if="buttonList.includes('操作')" type="primary">筛选</el-button>
+        <el-button size="mini" v-else disabled type="primary">筛选</el-button>
+        <el-button size="mini" v-if="buttonList.includes('操作')" type="danger">清空</el-button>
+        <el-button size="mini" v-else disabled type="danger">清空</el-button>
       </div>
     </div>
     <!-- 列表 -->
@@ -27,8 +30,10 @@
         </el-table-column>
         <el-table-column prop="operate" label="操作" width="220px">
           <template slot-scope="scope">
-            <el-button type="warning" size="mini" @click="handleDetail(scope.row)">查看详情</el-button>
-            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="warning" size="mini" v-if="buttonList.includes('查看'||'操作')" @click="handleDetail(scope.row)">查看详情</el-button>
+            <el-button type="warning" size="mini" v-else disabled>查看详情</el-button>
+            <el-button type="danger" size="mini" v-if="buttonList.includes('操作')" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="danger" size="mini" v-else disabled>删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -106,8 +111,14 @@ export default {
       // 删除确认
       showDelete: false,
       // 消息详情
-      showDetail: false
+      showDetail: false,
+      buttonList: [],
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+    })
   },
   watch: {
     'dateType'(e) {
@@ -118,6 +129,13 @@ export default {
     this.getNewsList()
   },
   methods: {
+    getButton(list, name) {
+      list.forEach(item => {
+        if(item.name === name){
+          this.buttonList = item.checkList
+        }
+      })
+    },
     // 分页方法
     handleSizeChange(e) {
       this.sizePage = e

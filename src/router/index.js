@@ -185,7 +185,7 @@ export const asyncRoutes = [
         meta: {
           roles: ['shop'],
           icon: 'dashboard',
-          title: '店铺'
+          title: '店铺管理'
         },
         component: () => import('@/views/shopManage/shop.vue')
       }
@@ -360,7 +360,7 @@ export const asyncRoutes = [
         name: 'separateBill',
         hidden: true,
         meta: {
-          roles: ['separateBill'],
+          // roles: ['separateBill'],
           icon: 'dashboard',
           title: '拆单',
           breadcrumb: false
@@ -414,6 +414,28 @@ export const asyncRoutes = [
           breadcrumb: false
         },
         component: () => import('@/views/collectShop/addAndEdit.vue')
+      }
+    ]
+  },
+  {
+    path: '/providerManage',
+    name: 'providerManage',
+    component: Layout,
+    meta: {
+      // roles: ['providerManage'],
+      icon: 'dashboard',
+      title: '供应商管理'
+    },
+    children: [
+      {
+        path: 'providerList',
+        name: 'providerList',
+        meta: {
+          // roles: ['providerList'],
+          icon: 'dashboard',
+          title: '供应商管理'
+        },
+        component: () => import('@/views/providerManage/providerList.vue')
       }
     ]
   },

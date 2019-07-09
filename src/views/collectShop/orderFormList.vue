@@ -1,4 +1,37 @@
 <template>
+<div>
+  <div style="display: flex; flex-direction: row">
+    <div>
+      类型：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
+        <el-option
+          v-for="item in optionsType"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      订单状态：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
+        <el-option
+          v-for="item in optionsType"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+    </div>
+    <div style="position: absolute; right: 5px;">
+      <el-button size="mini">筛选</el-button>
+      <el-button size="mini">清空</el-button>
+    </div>
+  </div>
+  <div style="margin-top:5px;margin-bottom:20px;">
+    <el-input
+      placeholder="请输入关键词进行搜索"
+      prefix-icon="el-icon-search"
+      v-model="input2" style="width:400px;" size="mini">
+    </el-input>
+    <el-button size="mini">搜索</el-button>
+  </div>
   <el-table
     :data="tableData"
     :header-cell-style="{   }"
@@ -84,6 +117,7 @@
       </template>
     </el-table-column>
   </el-table>
+</div>
 </template>
 
 <script>
@@ -107,7 +141,19 @@ export default {
         date: '2016-05-03',
         name: '王小虎',
         address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      }],
+      optionsType:[
+        {
+          id: 0,
+          name:'采购'
+        },
+        {
+          id: 1,
+          name:'调拨'
+        }
+      ],
+      type: '',
+      input2: ''
     }
   },
   mounted() {

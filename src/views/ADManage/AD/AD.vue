@@ -1,7 +1,8 @@
 <template>
   <div class="body-margin" style="display:float;">
     <breadcrumb>
-      <el-button type="primary" size="mini" @click="handleRelease">广告发布</el-button>
+      <el-button type="primary" size="mini" v-if="bottonList.includes('操作')" @click="handleRelease">广告发布</el-button>
+      <el-button type="primary" size="mini" v-else disabled @click="handleRelease">广告发布</el-button>
     </breadcrumb>
 
     <el-table :data="ADTable" center stripe>
@@ -15,11 +16,12 @@
       <el-table-column prop="status" label="上下架状态" />
       <el-table-column prop="operate" :width="460" label="操作">
         <template slot-scope="scope">
-          <el-button type="warning" size="mini" v-if="bottonList.includes('查看')" @click="handleDetail(scope.row)">查看详情</el-button>
+          <el-button type="warning" size="mini" v-if="bottonList.includes('查看'||'操作')" @click="handleDetail(scope.row)">查看详情</el-button>
           <el-button type="warning" size="mini" v-else disabled>查看详情</el-button>
           <el-button size="mini" type="success" v-if="bottonList.includes('操作')" @click="handleStick(scope.$index, scope.row)">置顶</el-button>
           <el-button size="mini" type="success" v-else disabled>置顶</el-button>
-          <el-button type="primary" size="mini" v-if="bottonList.includes('操作')" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" v-if="bottonList.includes('操作')&&scope.row.status === '下架'" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" v-else-if="bottonList.includes('操作')&&scope.row.status === '上架'" @click="handleEditShelf">编辑</el-button>
           <el-button type="primary" size="mini" v-else disabled>编辑</el-button>
           <el-button type="success" size="mini" v-if="bottonList.includes('操作')" @click="putawayHandle(scope.row)">{{ state = scope.row.status === "上架" ? '下架': '上架' }}</el-button>
           <el-button type="success" size="mini" v-else disabled>{{ state = scope.row.status === "上架" ? '下架': '上架' }}</el-button>
@@ -56,8 +58,6 @@
     </el-dialog>
     <!-- 广告详情 -->
     <ad-detail :show-ad-detail="showAdDetail" :ad-object="adObject" @handleClose="handleClose" />
-    <!-- 广告编辑 -->
-    <ad-edit :show-ad-edit="showAdEdit" @closeEdit="closeEdit" :edit-object="editObject" />
   </div>
 </template>
 <script>
@@ -197,6 +197,13 @@ export default {
         }
       })
       console.log(this.bottonList)
+    },
+    // 上架广告不可编辑提示
+    handleEditShelf() {
+      this.$alert('该广告已上架，不可编辑!', '提示', {
+        type: 'warning',
+        // center: true
+      })
     }
   }
 }

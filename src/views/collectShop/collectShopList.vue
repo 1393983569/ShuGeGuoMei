@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button @click="addGoods" type="primary">添加商品</el-button>
+      <el-button @click="addGoods" type="primary" size="mini" v-if="buttonList.includes('操作')">添加商品</el-button>
+      <el-button type="primary" size="mini" v-else disabled>添加商品</el-button>
     </breadcrumb>
     <div style="margin:10px;display:float;">
       状态：
@@ -32,8 +33,10 @@
         />
       </el-select>
       <div style="display:float;float:right;">
-        <el-button @click="searchHandle" size="mini">筛选</el-button>
-        <el-button size="mini" @click="clearHandle">清空</el-button>
+        <el-button @click="searchHandle" size="mini" type="primary" v-if="buttonList.includes('操作')">筛选</el-button>
+        <el-button v-else size="mini" type="primary" disabled>筛选</el-button>
+        <el-button size="mini" @click="clearHandle" type="danger" v-if="buttonList.includes('操作')">清空</el-button>
+        <el-button size="mini" v-else type="danger" disabled>清空</el-button>
       </div>
     </div>
     <el-table
@@ -61,31 +64,59 @@
       >
         <template slot-scope="scope">
           <el-button
+            v-if="buttonList.includes('操作'||'查看')"
             size="mini"
             type="warning"
             @click="viewDetails(scope.row)"
           >查看详情</el-button>
           <el-button
+            v-else
+            disabled
+            size="mini"
+            type="warning"
+          >查看详情</el-button>
+          <el-button
+            v-if="buttonList.includes('操作')"
             size="mini"
             type="primary"
             @click="handleEdit(scope.row)"
           >编辑</el-button>
           <el-button
+            v-else
+            disabled
+            size="mini"
+            type="primary"
+          >编辑</el-button>
+          <el-button
+            v-if="buttonList.includes('操作')"
             size="mini"
             type="success"
             @click="handleShelf(scope.row)"
           >{{ titleShelf = scope.row.is_shelf === 1? '上架':'下架' }}</el-button>
           <el-button
+            v-else
+            disabled
+            size="mini"
+            type="success"
+          >{{ titleShelf = scope.row.is_shelf === 1? '上架':'下架' }}</el-button>
+          <el-button
+            v-if="buttonList.includes('操作')"
             size="mini"
             type="danger"
             @click="handleDelete(scope.row)"
+          >删除</el-button>
+          <el-button
+            v-else
+            disabled
+            size="mini"
+            type="danger"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div>
       <el-pagination
-        :page-sizes="[10, 15]"
+        :page-sizes="[6, 10]"
         background
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -124,7 +155,7 @@ export default {
       tableData: [],
       total: 0,
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 6,
       state: '',
       categoryOneId: '',
       categoryTwoId: '',
@@ -144,8 +175,15 @@ export default {
           id: 1,
           name: '缺货'
         }
-      ]
+      ],
+      buttonList: []
     }
+  },
+  beforeRouteEnter(to, form, next) {
+    next(mv => {
+      console.log('hhhhhh')
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+    })
   },
   watch: {
     // 查询一级品类下的二级品类
@@ -172,6 +210,13 @@ export default {
     this.getFirstCategory()
   },
   methods: {
+    getButton(list, name){
+      list.forEach(item => {
+        if(item.name === name){
+          this.buttonList = item.checkList
+        }
+      })
+    },
     // 查询商品列表
     getGoodsList() {
       this.tableData = []

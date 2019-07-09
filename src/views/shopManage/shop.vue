@@ -1,7 +1,8 @@
 <template>
   <div class="body-margin">
     <breadcrumb>
-      <el-button type="primary" @click="handleAdd">新建</el-button>
+      <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleAdd">新建</el-button>
+      <el-button type="primary" v-else disabled @click="handleAdd">新建</el-button>
     </breadcrumb>
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
@@ -14,8 +15,10 @@
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
-        <el-button type="primary" @click="handleSearch" size="mini">筛选</el-button>
-        <el-button type="danger" @click="handleClearCondition"  size="mini">清空</el-button>
+        <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleSearch" size="mini">筛选</el-button>
+        <el-button type="primary" v-else disabled @click="handleSearch" size="mini">筛选</el-button>
+        <el-button type="danger" v-if="buttonList.includes('操作')" @click="handleClearCondition"  size="mini">清空</el-button>
+        <el-button type="danger" v-else disabled  @click="handleClearCondition"  size="mini">清空</el-button>
       </div>
     </div>
     <div>
@@ -38,11 +41,15 @@
         <!-- <el-table-column prop="employeeNum" label="职员人数" /> -->
         <el-table-column prop="operate" label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button type="success" size="mini" @click="handleStart(scope.row)">{{ scope.row.status=== 1? '启用': '停用' }}</el-button>
+            <el-button type="primary" size="mini" v-if="buttonList.includes('操作')" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="primary" size="mini" v-else disabled >编辑</el-button>
+            <el-button type="success" size="mini" v-if="buttonList.includes('操作')" @click="handleStart(scope.row)">{{ scope.row.status=== 1? '启用': '停用' }}</el-button>
+            <el-button type="success" size="mini" v-else disabled>{{ scope.row.status=== 1? '启用': '停用' }}</el-button>
 
-            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-            <el-button type="warning" size="mini" @click="handleDetail(scope.row)">详情</el-button>
+            <el-button type="danger" size="mini" v-if="buttonList.includes('操作')" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="danger" size="mini" v-else disabled >删除</el-button>
+            <el-button type="warning" size="mini" v-if="buttonList.includes('操作'||'查看')" @click="handleDetail(scope.row)">详情</el-button>
+            <el-button type="warning" size="mini" v-else disabled>详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -146,8 +153,16 @@ export default {
       provinceId: '',
       cityId: '',
       countyId: '',
-      tableAttribute: {}
+      tableAttribute: {},
+      buttonList: []
     }
+  },
+  beforeRouteEnter(to, from, next){
+    next(mv => {
+      console.log(mv, '&&&&&&&')
+      console.log(to,'*****')
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+    })
   },
   watch: {
     orderId(newValue, oldValue) {
@@ -173,6 +188,15 @@ export default {
     this.getShopList()
   },
   methods: {
+    // 按钮权限控制
+    getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.buttonList = item.checkList
+        }
+      })
+      console.log(this.bottonList)
+    },
     // 分页查询
     handleSizeChange(e) {
       this.pageSize = e
