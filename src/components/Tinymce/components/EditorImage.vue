@@ -1,6 +1,6 @@
 <template>
   <div class="upload-container">
-    <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">
+    <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click="dialogVisible = true">
       图片
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
@@ -12,7 +12,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="http://192.168.31.51:8083//basics/upload"
+        :action="`${apiUrl}/basics/upload`"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -31,7 +31,6 @@
 
 <script>
 // import { getToken } from 'api/qiniu'
-
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -44,8 +43,12 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      apiUrl: '',
     }
+  },
+  mounted() {
+    this.apiUrl = process.env.VUE_APP_BASE_API
   },
   methods: {
     checkAllSuccess() {
@@ -53,6 +56,7 @@ export default {
     },
     handleSubmit() {
       const arr = Object.keys(this.listObj).map(v => this.listObj[v])
+      console.log(this.checkAllSuccess(), )
       if (!this.checkAllSuccess()) {
         this.$message('请等待所有图片上传成功。如果有网络问题，请刷新页面并重新上传!')
         return
@@ -63,12 +67,11 @@ export default {
       this.dialogVisible = false
     },
     handleSuccess(response, file) {
-      console.log(file.response.info, 'fffff')
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file
+          this.listObj[objKeyArr[i]].url = response.info
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }
@@ -85,18 +88,28 @@ export default {
       }
     },
     beforeUpload(file) {
-      const _self = this
-      const _URL = window.URL || window.webkitURL
-      const fileName = file.uid
-      this.listObj[fileName] = {}
-      return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.src = _URL.createObjectURL(file)
-        img.onload = function() {
-          _self.listObj[fileName] = { hasSuccess: false, uid: file.uid, width: this.width, height: this.height }
-        }
-        resolve(true)
-      })
+      // const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 1;
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!');
+      // }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 1MB!')
+        return
+      } else {
+        const _self = this
+        const _URL = window.URL || window.webkitURL
+        const fileName = file.uid
+        this.listObj[fileName] = {}
+        return new Promise((resolve, reject) => {
+          const img = new Image()
+          img.src = _URL.createObjectURL(file)
+          img.onload = function() {
+            _self.listObj[fileName] = { hasSuccess: false, uid: file.uid, width: this.width, height: this.height }
+          }
+          resolve(true)
+        })
+      }
     }
   }
 }

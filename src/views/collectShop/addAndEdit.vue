@@ -29,7 +29,7 @@
     <el-form-item label="缩略图：" prop="name">
       <el-upload
         class="avatar-uploader"
-        action="http://192.168.31.51:8083//basics/upload"
+        :action="`${apiUrl}/basics/upload`"
         :show-file-list="false"
         :on-success="handleAvatarSuccessSmall"
         :before-upload="beforeAvatarUpload"
@@ -41,7 +41,7 @@
     <el-form-item label="展示图：" prop="name">
       <el-upload
         class="avatar-uploader"
-        action="http://192.168.31.51:8083//basics/upload"
+        :action="`${apiUrl}/basics/upload`"
         :show-file-list="false"
         :on-success="handleAvatarSuccessBig"
         :before-upload="beforeAvatarUpload"
@@ -261,7 +261,8 @@ export default {
       inputValue: '',
       goodsObject: [],
       addEditState: true,
-      goodsId: ''
+      goodsId: '',
+      apiUrl: ''
     }
   },
   watch: {
@@ -284,6 +285,7 @@ export default {
     }
   },
   mounted() {
+    this.apiUrl = process.env.VUE_APP_BASE_API
     if(JSON.stringify(this.$route.params) !=="{}") {
       if(this.$route.params.row === '添加') {
         this.addEditState = true
@@ -329,7 +331,16 @@ export default {
       this.ruleForm.bigImg = res.info
     },
     beforeAvatarUpload(file) {
-      console.log(file, 'file')
+      // const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 1;
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!');
+      // }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      // return isJPG && isLt2M;
+      return isLt2M;
     },
     // 查询详情
     getDetailsGoods() {

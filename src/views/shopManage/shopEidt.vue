@@ -17,7 +17,7 @@
         <el-form-item label="店铺图片：" prop="picture">
           <div v-if="showState" class="size-color div-margin font-weight">
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              :action="`${apiUrl}/basics/upload`"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
@@ -198,7 +198,8 @@ export default {
       mergeList: [],
       position: 0,
       // shop: {}
-      categoryArray: []
+      categoryArray: [],
+      apiUrl: ''
     }
   },
   watch: {
@@ -253,6 +254,7 @@ export default {
     }
   },
   mounted() {
+    this.apiUrl = process.env.VUE_APP_BASE_API
     this.getCategoryList()
   },
   methods: {

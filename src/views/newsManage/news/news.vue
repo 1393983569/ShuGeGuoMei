@@ -22,14 +22,7 @@
         <el-table-column prop="category" label="类型" />
         <el-table-column prop="shopJson" label="对象">
           <template slot-scope="scope">
-            <el-dropdown>
-              <el-button type="warning" size="mini">
-                查看<i class="el-icon-arrow-down el-icon--right" />
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="item in scope.row.shopJson" :key="item.id" :value="item.name">{{ item.name }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+
           </template>
         </el-table-column>
         <el-table-column prop="operate" label="操作" width="220px">
