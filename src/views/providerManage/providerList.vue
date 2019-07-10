@@ -1,13 +1,13 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" size="mini">新建</el-button>
+      <el-button type="primary" size="mini" @click="addProvider">新建</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
       <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
       <div style="position:absolute; right:10px;">
-        <el-button size="mini" type="primary">筛选</el-button>
-        <el-button size="mini" type="danger">清空</el-button>
+        <el-button size="mini" type="primary" @click="searchProvider" :loading="loadingSearch">筛选</el-button>
+        <el-button size="mini" type="danger" @click="clearSearch" :loading="loadingClear">清空</el-button>
       </div>
     </div>
     <div style="margin-top:5px;margin-bottom:20px;">
@@ -25,9 +25,9 @@
       <el-table-column prop="" label="评分" />
       <el-table-column prop="" label="操作" width= "260px">
         <template slot-scope="scope">
-          <el-button size="mini" type="warning">查看详情</el-button>
-          <el-button size="mini" type="primary">编辑</el-button>
-          <el-button size="mini" type="danger">删除</el-button>
+          <el-button size="mini" type="warning" @click="detailProvider(scope.row)">查看详情</el-button>
+          <el-button size="mini" type="primary" @click="editProvider(scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="deleteProvider(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -41,6 +41,14 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <!-- 删除 -->
+    <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
+      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该条广告？</div>
+      <div slot="footer" style="boeder:1px solid black">
+        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
+        <el-button style="width:160px;border:none;font-size:18px;" @click="deleteAdConfirm">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -58,7 +66,10 @@ export default {
       cityId: '',
       provinceId: '',
       areaId: '',
-      tableData:[]
+      tableData:[],
+      loadingSearch: false,
+      loadingClear: false,
+      showDelete: false,
     }
   },
   watch: {},
@@ -66,6 +77,7 @@ export default {
     this.getProviderList()
   },
   methods: {
+    // 查询供应商列表
     getProviderList(){
       let data= {}
       data.pageSize = this.pagesize
@@ -75,11 +87,39 @@ export default {
       data.areaId = this.areaId
       getProvider(data).then(res => {
         if(res.info.records.length > 0){
+          this.total = res.info.totalrecord
           this.tableData = res.info.records
+          this.loadingSearch = false
+          this.loadingClear = false
+        }else{
+          this.$message.info('暂无数据')
+          this.total = res.info.totalrecord
+          this.tableData = res.info.records
+          this.loadingSearch = false
+          this.loadingClear = false
         }
       }).catch(err => {
-
+        console.log(err)
+        this.$message.error('查询供应商出错')
       })
+    },
+    // 条件查询
+    searchProvider() {
+      this.loadingSearch = true
+      if(this.provinceId||this.cityId||this.areaId) {
+        this.getProviderList()
+      }else{
+        this.$message.info('请选择筛选条件')
+        this.loadingSearch = false
+      }
+    },
+    // 清空查询条件
+    clearSearch() {
+      this.loadingClear = true
+      this.provinceId = ''
+      this.cityId = ''
+      this.areaId = ''
+      this.getProviderList()
     },
     getProvince(id) {
       this.provinceId = id
@@ -95,6 +135,22 @@ export default {
     },
     handleCurrentChange(e) {
       this.pageNum = e
+    },
+    addProvider() {
+      this.$router.push({name: 'providerAddEdit'})
+    },
+    editProvider(row) {
+      console.log(row,'888888888')
+      this.$router.push({name: 'providerAddEdit', params: row })
+    },
+    detailProvider(row) {
+      this.$router.push({name: 'providerDetail', params: row })
+    },
+    deleteProvider(row) {
+      this.showDelete = true
+    },
+    deleteAdConfirm() {
+      this.showDelete = false
     }
   }
 }

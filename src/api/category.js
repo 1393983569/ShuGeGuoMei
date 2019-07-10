@@ -21,9 +21,9 @@ export const getFirstCategory = () => {
  * 查询一级品类下的二级品类
  * @param {int} id 一级品类id
  */
-export const getSecondCategory = () => {
+export const getSecondCategory = (id) => {
   return request({
-    url: `/basics/selectList`,
+    url: `/basics/selectGetOne?id=${id}`,
     method: 'get'
   })
 }

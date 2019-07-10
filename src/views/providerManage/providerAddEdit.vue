@@ -1,0 +1,314 @@
+<template>
+  <div>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="right" label-width="150px">
+      <el-form-item v-if="editState" label="供应商ID：" prop="">
+        {{id}}
+      </el-form-item>
+      <el-form-item label="供应商名称：" prop="name">
+        <el-input v-model="ruleForm.name" placeholder="请输入供应商名称" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="门头照片：" prop="headerPic">
+        <el-upload
+          class="avatar-uploader"
+          :action="`${apiUrl}/basics/upload`"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="ruleForm.headerPic" :src="ruleForm.headerPic" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="联系人：" prop="contactName">
+        <el-input v-model="ruleForm.contactName" placeholder="请输入联系人" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="手机号：" prop="mobile">
+        <el-input v-model="ruleForm.mobile" placeholder="请输入手机号" style="width:400px;"/>
+      </el-form-item>
+       <el-form-item label="座机号：" prop="phone">
+        <el-input v-model="ruleForm.phone" placeholder="请输入座机号" style="width:400px;"/>
+      </el-form-item>
+       <el-form-item label="微信：" prop="wechat">
+        <el-input v-model="ruleForm.wechat" placeholder="请输入微信" style="width:400px;"/>
+      </el-form-item>
+       <el-form-item label="QQ：" prop="qq">
+        <el-input v-model="ruleForm.qq" placeholder="请输入QQ" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="邮箱：" prop="email">
+        <el-input v-model="ruleForm.email" placeholder="请输入邮箱" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="仓库地址：" prop="areaId">
+        <selector-address :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
+      </el-form-item>
+      <el-form-item label=" " prop="addressDetail">
+        <el-input v-model="ruleForm.addressDetail" placeholder="请输入详细地址" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="仓库面积：" prop="area">
+        <el-input v-model="ruleForm.area" placeholder="请输入仓库面积" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="备注：" prop="remark">
+        <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
+      </el-form-item>
+      <el-form-item label="可配送的店铺列表：" prop="shops">
+        <el-select v-model="ruleForm.shops" placeholder="请选择" multiple>
+          <el-option
+            v-for="item in shopList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="供应商品(还未做)：" prop=""></el-form-item>
+      <el-form-item v-if="editState" label="资质照片(还未做)：" prop="">
+        <el-upload
+          class="avatar-uploader"
+          :action="`${apiUrl}/basics/upload`"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="ruleForm.qualificationPics" :src="ruleForm.qualificationPics" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
+      </el-form-item>
+      <el-form-item v-if="editState" label="评分(还未做)：" prop="">
+        <div>
+          <div>
+            <span class="font-weight font-size">资质：{{ruleForm.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span><el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible = true">去评分</el-button>
+          </div>
+          <div>
+            <span class="font-weight">价格分：{{ruleForm.priceScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+          </div>
+          <div>
+            <span class="font-weight">品质分：{{ruleForm.qualityScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+          </div>
+          <div>
+            <span class="font-weight">服务分：{{ruleForm.serviceScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+          </div>
+          <div>
+            <span class="font-weight">配送店铺数量分：{{ruleForm.deliverShopScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item>
+        <div v-if="editState">
+          <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
+          <el-button @click="resetForm('ruleForm')" type="danger">取消</el-button>
+        </div>
+        <div v-else>
+          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+          <el-button @click="resetForm('ruleForm')" type="danger">取消</el-button>
+        </div>
+      </el-form-item>
+    </el-form>
+    <!-- 评分弹框 -->
+    <el-dialog
+      title="评分"
+      :visible.sync="dialogVisible"
+      width="30%"
+      center>
+      <el-form label-position="right" label-width="130px" :model="grade">
+        <el-form-item label="资质:">
+          <el-input v-model="grade.qualificationScore" placeholder="请输入分数" />
+        </el-form-item>
+        <el-form-item label="价格分:">
+          <el-input v-model="grade.priceScore"  placeholder="请输入分数"/>
+        </el-form-item>
+        <el-form-item label="品质分:">
+          <el-input v-model="grade.qualityScore"  placeholder="请输入分数"/>
+        </el-form-item>
+        <el-form-item label="服务分:">
+          <el-input v-model="grade.serviceScore"  placeholder="请输入分数"/>
+        </el-form-item>
+        <el-form-item label="配送店铺数量分:">
+          <el-input v-model="grade.deliverShopScore"  placeholder="请输入分数"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" type="danger">取 消</el-button>
+        <el-button type="primary" @click="adddGrade">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+<script>
+import { getAllShop } from '@/api/shop.js'
+import selectorAddress from '@/components/selectorAddress/selectAll.vue'
+import { getProviderDetail } from '@/api/provider.js'
+export default {
+  components: { selectorAddress },
+  name: 'providerAddEdit',
+  data() {
+    return {
+      grade: {
+        qualificationScore: '',
+        priceScore: '',
+        qualityScore: '',
+        serviceScore: '',
+        deliverShopScore: '',
+      },
+      ruleForm:{
+        name: '',
+        headerPic: '',
+        contactName: '',
+        mobile: '',
+        phone: '',
+        wechat: '',
+        qq: '',
+        email: '',
+        provinceId:'',
+        cityId: '',
+        areaId: '',
+        addressDetail: '',
+        area: '',
+        remark: '',
+        shops: [],
+        // shops: '',
+        qualificationPics: '',
+        qualificationScore: '',
+        priceScore: '',
+        qualityScore: '',
+        serviceScore: '',
+        deliverShopScore: '',
+      },
+      dialogVisible: false,
+      shopList: [],
+      editState: false,
+      rules: {
+        name: [
+          { required: true, message: '请输入供应商名称', trigger: 'blur' },
+        ],
+        contactName:[
+          { required: true, message: '请输入联系人', trigger: 'blur' },
+        ],
+        mobile: [
+          { required: true, message: '请输入座机号', trigger: 'blur' },
+        ],
+        phone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+        ],
+        addressDetail: [
+          { required: true, message: '请输入详细地址', trigger: 'blur' },
+        ],
+        areaId: [
+          { required: true, message: '请选择仓库地址', trigger: 'blur' },
+        ],
+        area: [
+          { required: true, message: '请输入面积', trigger: 'blur' },
+        ],
+        shops: [
+          { required: true, message: '请输入面积', trigger: 'blur' },
+        ],
+      },
+      apiUrl: '',
+      id: '',
+    }
+  },
+  watch: {
+    'ruleForm.shops'(e) {
+      console.log(e, '^^^^^^^^^^^^^')
+    }
+  },
+  mounted() {
+    this.apiUrl = process.env.VUE_APP_BASE_API
+    console.log(this.$route.params, '9999999')
+    if(JSON.stringify(this.$route.params) !== '{}'){
+      this.editState = true
+      this.id = this.$route.params.id
+      // this.getProviderDetail()
+    }
+    this.getShopOption()
+  },
+  methods: {
+    // 查询所有店铺
+    getShopOption() {
+      getAllShop().then(res => {
+        if(res.info.length > 0) {
+          console.log(res, '$$$$$$$$$')
+          this.shopList = res.info
+        }else{
+          this.$message.info('暂无店铺数据')
+        }
+        // console.log(res, '*******')
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询店铺出错')
+      })
+    },
+    // 查询供应商详情
+    getProviderDetail() {
+      getProviderDetail(this.id).then(res => {
+        console.log(res, '77777777')
+      }).catch(err => {})
+    },
+    // 评分确定
+    adddGrade(){
+      this.ruleForm.qualificationScore = this.grade.qualificationScore
+      this.ruleForm.priceScore = this.grade.priceScore
+      this.ruleForm.qualityScore = this.grade.qualityScore
+      this.ruleForm.serviceScore = this.grade.serviceScore
+      this.ruleForm.deliverShopScore = this.grade.deliverShopScore
+      this.dialogVisible = false
+      this.grade = {}
+    },
+    handleAvatarSuccess(file) {
+      console.log(file, 'hhhh')
+      this.ruleForm.headerPic = file.info
+    },
+    beforeAvatarUpload(file) {
+
+    },
+    getProvince(e) {
+      this.ruleForm.provinceId = e
+    },
+    getCity(e) {
+      this.ruleForm.cityId = e
+    },
+    getCounty(e) {
+      this.ruleForm.areaId = e
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    }
+  }
+}
+</script>
+<style>
+.avatar-uploader .el-upload {
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+    border: 1px dashed #b3b3b3;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>

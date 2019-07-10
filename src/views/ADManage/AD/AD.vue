@@ -48,7 +48,7 @@
         <el-button style="width:160px;border:none;font-size:18px;" @click="shelfAdConfirm">确定</el-button>
       </div>
     </el-dialog>
-    <!-- 上架/下架 -->
+    <!-- 删除 -->
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该条广告？</div>
       <div slot="footer" style="boeder:1px solid black">

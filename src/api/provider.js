@@ -62,3 +62,18 @@ export const getProvider = (data) => {
     data: params
   })
 }
+/**
+ * 查询供应商详情
+ * @param {Integer} id 供应商id
+ */
+export const getProviderDetail = (id) => {
+  // const params = new URLSearchParams()
+  // for (const key in data) {
+  //   if (data[key]) params.append(key, data[key])
+  // }
+  return request({
+    url: `/admin/selectOne?id=${id}`,
+    method: 'get',
+    // data: params
+  })
+}

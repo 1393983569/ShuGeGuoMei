@@ -438,14 +438,26 @@ export const asyncRoutes = [
         component: () => import('@/views/providerManage/providerList.vue')
       },
       {
-        path: 'addAndEdit',
-        name: 'addAndEdit',
+        path: 'providerAddEdit',
+        name: 'providerAddEdit',
+        hidden: true,
         meta: {
           // roles: ['providerList'],
           icon: 'dashboard',
           title: '修改添加'
         },
-        component: () => import('@/views/providerManage/addAndEdit.vue')
+        component: () => import('@/views/providerManage/providerAddEdit.vue')
+      },
+      {
+        path: 'providerDetail',
+        name: 'providerDetail',
+        hidden: true,
+        meta: {
+          // roles: ['providerList'],
+          icon: 'dashboard',
+          title: '详情'
+        },
+        component: () => import('@/views/providerManage/providerDetail.vue')
       }
     ]
   },
