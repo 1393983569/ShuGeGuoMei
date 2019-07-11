@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 详情显示 -->
-    <el-dialog :visible="showDetail" width="1000px" height="700" :before-close="handleCloseDetail">
-      <div slot="title" class="title-size-color">店铺详情</div>
+    <!-- <el-dialog :visible="showDetail" width="1000px" height="700" :before-close="handleCloseDetail"> -->
+      <!-- <div slot="title" class="title-size-color">店铺详情</div> -->
       <div class="size-color div-margin">
         <span class="font-weight">店铺ID：</span>{{ shopObject.id }}
       </div>
@@ -33,17 +33,40 @@
       <div class="size-color div-margin">
         <span class="font-weight">经营品类：</span>
         <!-- <el-table :data="categoryTable" :header-cell-style="tableHeaderColor" :span-method="objectSpanMethod"> -->
-        <el-table :data="categoryTable">
-          <el-table-column prop="first" label="一级品类" />
-          <el-table-column prop="firstId" label="一级品类ID" />
-          <el-table-column prop="second" label="二级品类" />
-          <el-table-column prop="secondId" label="二级品类ID" />
-          <el-table-column prop="operate" label="选择">
-            <template>
-              <el-checkbox />
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-table
+            :data="categoryTable"
+            center
+            border
+            :span-method="arraySpanMethod"
+          >
+            <el-table-column prop="id" label="一级品类">
+              <template slot-scope="scope">
+                {{ scope.row.childrenName }}
+                <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange(scope.row)">{{ scope.row.childrenName }}</el-checkbox>
+                <el-checkbox-group>
+                  <el-checkbox :label="scope.row">{{ scope.row.childrenName }}</el-checkbox>
+                </el-checkbox-group> -->
+              </template>
+            </el-table-column>
+            <el-table-column prop="id" label="一级品类ID">
+              <template slot-scope="scope">
+                <p>{{ scope.row.childrenId }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column prop="id" label="二级品类">
+              <template slot-scope="scope">
+                <p>{{ scope.row.name }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column prop="ids" label="二级品类ID">
+              <template slot-scope="scope">
+                {{ scope.row.id }}
+                <!-- <el-checkbox-group v-show="scope.row.id">
+                  <el-checkbox :label="scope.row">{{ scope.row.id }}</el-checkbox>
+                </el-checkbox-group> -->
+              </template>
+            </el-table-column>
+          </el-table>
       </div>
       <!-- <div class="" style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;"> -->
       <!-- <div>
@@ -63,25 +86,41 @@
       <!-- <div class="size-color">
         会员人数(人)： 3000
       </div> -->
-    </el-dialog>
+    <!-- </el-dialog> -->
   </div>
 </template>
 <script>
 export default {
-  props: {
-    showDetail: {
-      type: Boolean,
-      default: false
-    },
-    shopObject: {
-      type: Object,
-      default: Array
-    }
-  },
+  name: 'shopDetail',
+  // props: {
+  //   shopObject: {
+  //     type: Object,
+  //     default: Array
+  //   }
+  // },
   data() {
     return {
       employeeTable: [],
-      categoryTable: []
+      categoryTable: [],
+      mergeList: [],
+      shopObject: {}
+    }
+  },
+  watch: {
+   'shopObject'(e) {
+     console.log(this.shopObject, 'jjjjj')
+      let arr = JSON.parse(this.shopObject.categoryJson)
+      this.recursionTableData(arr)
+      this.getMergeList()
+   }
+  },
+  mounted() {
+    if(this.$route.params){
+      this.shopObject = this.$route.params
+      console.log(this.shopObject, 'uuuuuu')
+      let arr = JSON.parse(this.shopObject.categoryJson)
+      this.categoryTable = this.recursionTableData(arr)
+      this.getMergeList()
     }
   },
   methods: {
@@ -93,8 +132,74 @@ export default {
         return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei; '
       }
     },
-    // 合并列
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {}
+    // 合并单元格
+    arraySpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const rowData = this.mergeList[rowIndex]
+        const colData = rowData > 0 ? 1 : 0
+        return {
+          rowspan: rowData,
+          colspan: colData
+        }
+      }
+      if (columnIndex === 1) {
+        const rowData = this.mergeList[rowIndex]
+        const colData = rowData > 0 ? 1 : 0
+        return {
+          rowspan: rowData,
+          colspan: colData
+        }
+      }
+    },
+    // 递归单元格
+    recursionTableData(arr) {
+      const res = []
+      arr.forEach((item, index) => {
+        let data = {}
+        if (item.seconds && item.seconds.length) {
+          for (const secondsItem of item.seconds) {
+            data = {
+              childrenId: item.id,
+              childrenName: item.name,
+              id: secondsItem.id,
+              name: secondsItem.name,
+              categoryOneId: secondsItem.categoryOneId
+            }
+            res.push(data)
+          }
+          this.recursionTableData(item.seconds)
+        } else {
+          data = {
+            childrenId: item.id,
+            childrenName: item.name
+          }
+          res.push(data)
+        }
+      })
+      return res
+    },
+    // 生成合并数组
+    getMergeList() {
+      this.mergeList = []
+      console.log(this.categoryTable, '4444444')
+      this.categoryTable.forEach((item, index) => {
+        console.log(index, '6666666')
+        if (index === 0) {
+          this.mergeList.push(1)
+          this.position = index
+        } else {
+          if (item.childrenId === this.categoryTable[index - 1].childrenId) {
+            // console.log(this.mergeList[], '8888888')
+            this.mergeList[this.position] += 1
+            console.log(this.mergeList, '8888888')
+            this.mergeList.push(0)
+          } else {
+            this.mergeList.push(1)
+            this.position = index
+          }
+        }
+      })
+    },
   }
 }
 </script>

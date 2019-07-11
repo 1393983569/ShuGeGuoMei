@@ -63,9 +63,9 @@ export default {
   //   })
   // },
   mounted() {
-    if (JSON.stringify(this.$route.params.row) !== '{}') {
-      console.log(this.$route.params)
-      this.goodId = this.$route.params.row.id
+    if (JSON.stringify(this.$route.params)) {
+      console.log(this.$route.params, 'kkkkkk')
+      this.goodId = this.$route.params.id
       this.getDetailsGoods()
     } else (
       window.history.go(-1)
@@ -88,7 +88,11 @@ export default {
     getDetailsGoods() {
       seeDetailsGoods(this.goodId).then(res => {
         console.log(res, '#######')
-        this.row = res.info
+        if(res.info) {
+          this.row = res.info
+        }else{
+          this.$message.error('查询详情失败!')
+        }
       }).catch(err => {})
     }
     // showRow() {

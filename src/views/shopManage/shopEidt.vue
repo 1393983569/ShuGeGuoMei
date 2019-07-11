@@ -100,6 +100,7 @@
         <el-form-item v-else>
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
           <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
+          <el-button type="primary" @click="aaaaa">ssss</el-button>
         </el-form-item>
       </el-form>
       <!-- <div slot="footer">
@@ -225,32 +226,34 @@ export default {
       // console.log(this.categoryArray, '*********')
     },
     'firstLevel'(e) {
-      console.log(e, '==========')
+      // console.log(e, '==========')
     },
     'editObject.management'(e) {
-      console.log(e, 'jjjjjj')
+      // console.log(e, 'jjjjjj')
     },
     'editObject'(e) {
+      // console.log(e, '$$$$$$$$$$')
       this.shopForm = e
-      // if(e) {
-      //   if(e.categoryJson) {
-      //     let arr = []
-      //     let tempArr = []
-      //     arr = JSON.parse(e.categoryJson)
-      //     arr.map(e => {
-      //       let a = {}
-      //       a.childrenId = e.id
-      //       a.childrenName = e.name
-      //       tempArr.push(a)
-      //     })
-      //     console.log(tempArr, '**************')
-      //     // this.isIndeterminate = false
-      //     this.checkAll = tempArr
-      //   }
-      // }
-      // console.log(JSON.parse(e.categoryJson),  '^^^^^^^^^^^')
+      if(e) {
+        // this.checkedCategory = []
+        // this.checkedCategory.push(obj)
+        // let editArray = []
+        // editArray = JSON.parse(e.categoryJson)
+        // // console.log(editArray, 'ggggggggg')
+        // editArray.forEach(item => {
+        //   let obj = {}
+        //   obj.categoryOneId = item.id
+        //   obj.childrenId = item.id
+        //   obj.childrenName = item.name
+        //   item.seconds.forEach(e => {
+        //     obj.id = e.id
+        //     obj.name = e.name
+        //     this.checkedCategory.push(obj)
+        //      console.log(obj, '&&&&&&&&')
+        //   });
+        // })
+      }
 
-      // this.checkAll = JSON.parse(e.categoryJson)
     }
   },
   mounted() {
@@ -258,6 +261,20 @@ export default {
     this.getCategoryList()
   },
   methods: {
+    aaaaa() {
+      console.log('99999999')
+      let cateList = []
+      let obj = {}
+      obj.categoryOneId = '01'
+      obj.childrenId = '01  '
+      obj.childrenName = '水果'
+      obj.id = '01'
+      obj.name = '香蕉'
+      cateList.push(obj)
+      this.handleCheckedCategoryChange(cateList)
+      // this.checkedCategory = cateList
+      // console.log(this.checkedCategory, 'hhhh')
+    },
     // 处理品类数据格式
     getFirstCategory() {
       this.finalArray = []
@@ -292,17 +309,17 @@ export default {
     },
     // 品类选择处理
     handleCheckAllChange(row) {
-      console.log(this.checkAll)
+      // console.log(this.checkAll, 'jjjjjjj')
       this.checkedCategory = []
-      // console.log(this.checkAll, 'jjjjj')
       this.checkAll.forEach(e => {
-        // console.log(this.checkAll, '&&&&&&&&')
         if (e.id) {
           const categoryOneId = e.categoryOneId
           // 返回两次
+          // console.log(this.categoryTable, 'kkkkk')
           const tem = this.categoryTable.filter(function(item) {
-            return item.categoryOneId === categoryOneId
+            return parseInt(item.categoryOneId) === parseInt(categoryOneId)
           })
+          // console.log(tem, 'gggggg')
           this.checkedCategory = this.checkedCategory.concat(tem)
         } else {
           const obj = {}
@@ -311,6 +328,7 @@ export default {
           this.checkedCategory.push(obj)
         }
       })
+      console.log(this.checkedCategory, '$$$$$$$')
       this.isIndeterminate = false
       this.getFirstCategory()
     },
@@ -327,6 +345,8 @@ export default {
     //   this.editObject.categoryOneId = row.id
     //   this.editObject.categoryTwoId = row.ids
     // },
+
+
     // 合并单元格
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -395,6 +415,7 @@ export default {
     getCategoryList() {
       this.categoryTable = []
       getCategory().then(res => {
+        console.log(res.info, '9999')
         this.firstcategory = res.info
         this.temp = res.info
         this.categoryTable = this.recursionTableData(res.info)
@@ -403,6 +424,7 @@ export default {
         this.$message.error(err)
       })
     },
+
     // 修改table header的背景色
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {

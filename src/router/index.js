@@ -188,17 +188,18 @@ export const asyncRoutes = [
           title: '店铺管理'
         },
         component: () => import('@/views/shopManage/shop.vue')
+      },
+      {
+        hidden: true,
+        path: 'shopDetail',
+        name: 'shopDetail',
+        meta: {
+          // roles: ['admin'],
+          icon: 'dashboard',
+          title: '详情'
+        },
+        component: () => import('@/views/shopManage/shopDetail.vue')
       }
-      // {
-      //   path: 'category',
-      //   name: 'category',
-      //   meta: {
-      //     roles: ['admin'],
-      //     icon: 'dashboard',
-      //     title: '品类'
-      //   },
-      //   component: () => import('@/views/shopManage/category.vue')
-      // }
     ]
   },
   // {
@@ -485,7 +486,7 @@ export const asyncRoutes = [
         path: 'pricing',
         name: 'pricing',
         meta: {
-          roles: ['pricing'],
+          // roles: ['pricing'],
           icon: 'dashboard',
           title: '商品定价表'
         },

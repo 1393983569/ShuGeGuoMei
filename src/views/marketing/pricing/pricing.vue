@@ -1,91 +1,110 @@
 <template>
-  <el-table
-    :data="dataList"
-    :header-cell-style="{   }"
-    center
-    stripe
-  >
-    <el-table-column
-      prop="date"
-      label="一级品类"
+  <div>
+    <div>
+      <div style="float:right;margin:10px;">
+        <el-button size="mini" type="primary">筛选</el-button>
+        <el-button size="mini" type="danger">清除</el-button>
+      </div>
+    </div>
+    <el-table
+      :data="dataList"
+      :header-cell-style="{   }"
+      center
+      stripe
     >
-      <template slot-scope="scope">
-        <p>{{ scope.row.date }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="二级品类"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="商品ID"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="商品名称"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="规格"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="单位"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="库存"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="零售价"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="折扣率"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="折扣价"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column
+        prop="date"
+        label="一级品类"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.date }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="二级品类"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="商品ID"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="商品名称"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="规格"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="单位"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="库存"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="零售价"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="折扣率"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="折扣价"
+      >
+        <template slot-scope="scope">
+          <p>{{ scope.row.name }}</p>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="margin-top:5px;">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :page-sizes="[10, 15]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -115,7 +134,10 @@ export default {
         date: '2016-05-03',
         name: '王小虎',
         address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      }],
+      total: 0,
+      pageSize: 10,
+      pageNum: 1,
     }
   },
   mounted() {
@@ -143,7 +165,13 @@ export default {
     // 删除
     removeOrder(index, row) {
 
-    }
+    },
+    handleSizeChange(e) {
+      this.pageSize = e
+    },
+    handleCurrentChange(e) {
+      this.pageNum = e
+    },
   }
 }
 </script>

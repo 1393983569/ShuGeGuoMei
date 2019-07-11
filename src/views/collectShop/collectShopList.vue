@@ -155,7 +155,7 @@ export default {
       tableData: [],
       total: 0,
       pageNum: 1,
-      pageSize: 6,
+      pageSize: 10,
       state: '',
       categoryOneId: '',
       categoryTwoId: '',
@@ -299,9 +299,7 @@ export default {
     viewDetails(row) {
       this.$router.push({
         name: 'particulars',
-        params: {
-          row: row
-        }
+        params: row
       })
     },
     // 查询一级品类

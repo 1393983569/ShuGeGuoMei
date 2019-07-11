@@ -66,15 +66,6 @@
     </div>
     <!-- 店铺编辑 -->
     <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
-    <!-- 店铺详情 -->
-    <shop-detail :show-detail="showDetail" :shop-object="shopObject" @isCloseDetail="isCloseDetail" />
-    <!-- <el-dialog :visible.sync="showDelete" center width="380px" title="店铺详情" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;">确定</el-button>
-      </div>
-    </el-dialog> -->
     <!-- 删除弹框 -->
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除店铺" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该店铺？</div>
@@ -98,12 +89,12 @@
 import Breadcrumb from '@/components/Breadcrumb'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import shopEdit from './shopEidt.vue'
-import shopDetail from './shopDetail.vue'
+// import shopDetail from './shopDetail.vue'
 import { getShopList, deleteShop, startShop } from '@/api/shop.js'
 // import { sync } from 'glob'
 export default {
   components: {
-    selectorAddress, shopEdit, shopDetail, Breadcrumb
+    selectorAddress, shopEdit, Breadcrumb
   },
   data() {
     return {
@@ -321,9 +312,7 @@ export default {
       // this.$router.push({ path:'/'})
     },
     handleDetail(row) {
-      this.showDetail = true
-      console.log(row, 'row...')
-      this.shopObject = row
+      this.$router.push({name: 'shopDetail', params: row})
     },
     isCloseDetail() {
       this.showDetail = false
