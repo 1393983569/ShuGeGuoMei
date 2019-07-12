@@ -15,12 +15,13 @@
           <el-input v-model="shopForm.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
         </el-form-item>
         <el-form-item label="店铺图片：" prop="picture">
-          <div v-if="showState" class="size-color div-margin font-weight">
+          <div class="size-color div-margin font-weight">
             <el-upload
               :action="`${apiUrl}/basics/upload`"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
+              :on-success="uploadSuccess"
             >
               <i class="el-icon-plus" />
             </el-upload>
@@ -28,9 +29,9 @@
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
           </div>
-          <div v-else class="size-color div-margin font-weight">
+          <!-- <div v-else class="size-color div-margin font-weight">
             <img :src="editObject.imge">
-          </div>
+          </div> -->
         </el-form-item>
         <el-form-item label="掌柜姓名：" prop="adminName">
           <el-input v-model="shopForm.adminName" style="width:300px;" placeholder="请输入掌柜姓名" />
@@ -100,7 +101,7 @@
         <el-form-item v-else>
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
           <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
-          <el-button type="primary" @click="aaaaa">ssss</el-button>
+          <!-- <el-button type="primary" @click="aaaaa">ssss</el-button> -->
         </el-form-item>
       </el-form>
       <!-- <div slot="footer">
@@ -200,7 +201,8 @@ export default {
       position: 0,
       // shop: {}
       categoryArray: [],
-      apiUrl: ''
+      apiUrl: '',
+      shopImg: ''
     }
   },
   watch: {
@@ -261,20 +263,6 @@ export default {
     this.getCategoryList()
   },
   methods: {
-    aaaaa() {
-      console.log('99999999')
-      let cateList = []
-      let obj = {}
-      obj.categoryOneId = '01'
-      obj.childrenId = '01  '
-      obj.childrenName = '水果'
-      obj.id = '01'
-      obj.name = '香蕉'
-      cateList.push(obj)
-      this.handleCheckedCategoryChange(cateList)
-      // this.checkedCategory = cateList
-      // console.log(this.checkedCategory, 'hhhh')
-    },
     // 处理品类数据格式
     getFirstCategory() {
       this.finalArray = []
@@ -433,12 +421,17 @@ export default {
     },
     //  上传图片
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      console.log(file, fileList, 'jjjj')
     },
     handlePictureCardPreview(file) {
+      console.log(file, this.dialogImageUrl,'gggg')
       this.dialogImageUrl = file.url
       this.dialogVisible = true
       // this.showEdit =  false
+    },
+    uploadSuccess(file){
+      this.shopImg += file.info+','
+      // console.log(this.shopImg.substring(0, this.shopImg.length-1), 'kkkkk')
     },
     // 添加店铺
     addShopHandles() {
@@ -453,7 +446,7 @@ export default {
       this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
       this.shopForm.categoryJson = JSON.stringify(this.finalArray)
-      // this.editObject.image = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555915007260&di=16a2e0ba1a7ab1e77c9d4cf59328e98c&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-01-05%2F5a4f43d14f85a.jpg'
+      this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
       addShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
@@ -490,6 +483,7 @@ export default {
       } else {
         this.shopForm.management = 2
       }
+      this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
       editShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false

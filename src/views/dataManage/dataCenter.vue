@@ -104,7 +104,7 @@ export default {
 <style>
 .asideClass {
   color: #333;
-  background-color: #CCCCCC;
+  /* background-color: #CCCCCC; */
   text-align: center;
   line-height:200px;
   margin:0px;

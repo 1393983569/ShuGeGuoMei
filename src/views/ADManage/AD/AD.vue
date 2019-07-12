@@ -20,11 +20,11 @@
           <el-button type="warning" size="mini" v-else disabled>查看详情</el-button>
           <el-button size="mini" type="success" v-if="bottonList.includes('操作')" @click="handleStick(scope.$index, scope.row)">置顶</el-button>
           <el-button size="mini" type="success" v-else disabled>置顶</el-button>
-          <el-button type="primary" size="mini" v-if="bottonList.includes('操作')&&scope.row.status === '下架'" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" v-if="bottonList.includes('操作')&&scope.row.status === '已下架'" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button type="primary" size="mini" v-else-if="bottonList.includes('操作')&&scope.row.status === '上架'" @click="handleEditShelf">编辑</el-button>
           <el-button type="primary" size="mini" v-else disabled>编辑</el-button>
-          <el-button type="success" size="mini" v-if="bottonList.includes('操作')" @click="putawayHandle(scope.row)">{{ state = scope.row.status === "上架" ? '下架': '上架' }}</el-button>
-          <el-button type="success" size="mini" v-else disabled>{{ state = scope.row.status === "上架" ? '下架': '上架' }}</el-button>
+          <el-button type="success" size="mini" v-if="bottonList.includes('操作')" @click="putawayHandle(scope.row)">{{ state = scope.row.status === "已上架" ? '下架': '上架' }}</el-button>
+          <el-button type="success" size="mini" v-else disabled>{{ state = scope.row.status === "已上架" ? '下架': '上架' }}</el-button>
           <el-button type="danger" size="mini" v-if="bottonList.includes('操作')" @click="deleteHandle(scope.row)">删除</el-button>
           <el-button type="danger" size="mini" v-else disabled>删除</el-button>
         </template>
@@ -118,7 +118,7 @@ export default {
       getAdvertisement(this.pageNum, this.pageSize).then(res => {
         this.total = res.info.totalrecord
         res.info.records.forEach(e => {
-          e.status = e.status === 0 ? '上架' : '下架'
+          e.status = e.status === 0 ? '已上架' : '已下架'
           this.ADTable.push(e)
         })
       }).catch(err => {
