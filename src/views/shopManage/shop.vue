@@ -65,7 +65,7 @@
       </div>
     </div>
     <!-- 店铺编辑 -->
-    <shop-edit :show-edit="showEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
+    <shop-edit :show-edit="showEdit" @closeHandle="closeEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
     <!-- 删除弹框 -->
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除店铺" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该店铺？</div>
@@ -342,6 +342,10 @@ export default {
     // 条件查询
     handleSearch() {
       this.getShopList()
+    },
+    closeEdit(e){
+      console.log(e, 'ggggg')
+      this.showEdit = e
     }
   }
 }

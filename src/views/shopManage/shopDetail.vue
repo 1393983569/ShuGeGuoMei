@@ -12,8 +12,8 @@
       <div class="size-color div-margin">
         <span class="font-weight">店铺简称：</span>{{ shopObject.simpleName }}
       </div>
-      <div class="size-color div-margin">
-        <span class="font-weight">店铺图片：</span><img :src="shopObject.image">
+      <div class="size-color div-margin" style="display:flex;flex-direction:row;align-items: flex-start;">
+        <span class="font-weight">店铺图片：</span> <div style="margin-left:4px;"  v-for="url in urlList"><img :src="url" style="width:100px;height:100px;"></div>
       </div>
       <div class="size-color div-margin">
         <span class="font-weight">掌柜姓名：</span>{{ shopObject.adminName }}
@@ -103,12 +103,14 @@ export default {
       employeeTable: [],
       categoryTable: [],
       mergeList: [],
-      shopObject: {}
+      shopObject: {},
+      urlList: []
     }
   },
   watch: {
    'shopObject'(e) {
-     console.log(this.shopObject, 'jjjjj')
+     console.log(this.shopObject.imge, 'jjjjj')
+
       let arr = JSON.parse(this.shopObject.categoryJson)
       this.recursionTableData(arr)
       this.getMergeList()
@@ -116,8 +118,8 @@ export default {
   },
   mounted() {
     if(this.$route.params){
+      this.urlList= this.$route.params.imge.split(',')
       this.shopObject = this.$route.params
-      console.log(this.shopObject, 'uuuuuu')
       let arr = JSON.parse(this.shopObject.categoryJson)
       this.categoryTable = this.recursionTableData(arr)
       this.getMergeList()
@@ -181,9 +183,9 @@ export default {
     // 生成合并数组
     getMergeList() {
       this.mergeList = []
-      console.log(this.categoryTable, '4444444')
+      // console.log(this.categoryTable, '4444444')
       this.categoryTable.forEach((item, index) => {
-        console.log(index, '6666666')
+        // console.log(index, '6666666')
         if (index === 0) {
           this.mergeList.push(1)
           this.position = index
@@ -191,7 +193,7 @@ export default {
           if (item.childrenId === this.categoryTable[index - 1].childrenId) {
             // console.log(this.mergeList[], '8888888')
             this.mergeList[this.position] += 1
-            console.log(this.mergeList, '8888888')
+            // console.log(this.mergeList, '8888888')
             this.mergeList.push(0)
           } else {
             this.mergeList.push(1)

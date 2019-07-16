@@ -132,6 +132,7 @@ export default {
     getButton(list, name) {
       list.forEach(item => {
         if(item.name === name){
+          console.log(item.checkList, 'jjjjj')
           this.buttonList = item.checkList
         }
       })

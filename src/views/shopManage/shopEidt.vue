@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 编辑/新建 -->
-    <el-dialog :visible="showEdit" :before-close="handleClose" width="1200px" height="700">
+    <el-dialog :visible="showEdit" @close="closeEdit" :before-close="handleClose" width="1200px" height="700">
       <div class="title-size-color">{{ dialogTitle }}</div><br>
       <div v-if="showState" />
       <div v-else class=" div-margin font-weight">
@@ -15,23 +15,35 @@
           <el-input v-model="shopForm.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
         </el-form-item>
         <el-form-item label="店铺图片：" prop="picture">
-          <div class="size-color div-margin font-weight">
+          <div class="size-color div-margin font-weight " v-if="showState">
             <el-upload
+              :limit= "5"
+              :on-exceed="outNumMax"
               :action="`${apiUrl}/basics/upload`"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :on-success="uploadSuccess"
             >
+              <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
               <i class="el-icon-plus" />
             </el-upload>
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
           </div>
-          <!-- <div v-else class="size-color div-margin font-weight">
-            <img :src="editObject.imge">
-          </div> -->
+          <div v-else style="display:flex;flex-direction:row;">
+            <el-upload
+              class="avatar-uploader"
+              :action="`${apiUrl}/basics/upload`"
+              :show-file-list="false"
+              :on-success="uploadSuccessEdit"
+              v-for="item in imgelist"
+              >
+              <img v-if="item" :src="item" class="avatar" @click="clickImg(item)">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </div>
         </el-form-item>
         <el-form-item label="掌柜姓名：" prop="adminName">
           <el-input v-model="shopForm.adminName" style="width:300px;" placeholder="请输入掌柜姓名" />
@@ -202,10 +214,24 @@ export default {
       // shop: {}
       categoryArray: [],
       apiUrl: '',
-      shopImg: ''
+      shopImg: '',
+      imgelist: [],
+      imageUrl: '',
+      key:0,
+      reFresh:true,
     }
   },
   watch: {
+    // menuTree() {
+    //   this.reFresh = false
+    //   console.log('ggggggg')
+    //   this.$nextTick(() => {
+    //     this.reFresh = true
+    //   })
+    // },
+    // 'files'(e){
+    //   console.log(e, 'list;;;;;;;;;')
+    // },
     'list'(list) {
       console.log(list, 'eeeeeeee')
       // let index= 0
@@ -234,7 +260,11 @@ export default {
       // console.log(e, 'jjjjjj')
     },
     'editObject'(e) {
-      // console.log(e, '$$$$$$$$$$')
+      console.log(e, '$$$$$$$$$$')
+      if(e.imge){
+        this.imgelist = e.imge.split(',')
+        // this.shopImg = e.imge
+      }
       this.shopForm = e
       if(e) {
         // this.checkedCategory = []
@@ -256,13 +286,27 @@ export default {
         // })
       }
 
+    },
+    'dialogImageUrl'(e) {
+      console.log(e, 'ggggggg')
     }
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getCategoryList()
+    this.handleClose()
   },
   methods: {
+    clickImg(e) {
+      // console.log(e.index, '%%%%%%')
+      // console.log(this.imgelist, 'hhhh')
+      this.imgelist.forEach((el, key) => {
+        console.log(key, el, '&&&&&&')
+        if(el === e) {
+          this.key = key
+        }
+      })
+    },
     // 处理品类数据格式
     getFirstCategory() {
       this.finalArray = []
@@ -326,7 +370,7 @@ export default {
       this.getFirstCategory()
     },
     checkedFunction(row) {
-      console.log(row, 'hhhhhhhhhhhhhh')
+      // console.log(row, 'hhhhhhhhhhhhhh')
     },
     // handlecheck(row) {
     //   // console.log(row, 'lllll')
@@ -421,17 +465,24 @@ export default {
     },
     //  上传图片
     handleRemove(file, fileList) {
-      console.log(file, fileList, 'jjjj')
+      // console.log(file, fileList, 'jjjj')
     },
     handlePictureCardPreview(file) {
-      console.log(file, this.dialogImageUrl,'gggg')
       this.dialogImageUrl = file.url
       this.dialogVisible = true
-      // this.showEdit =  false
     },
     uploadSuccess(file){
+      // console.log(fileList, 'hhhhhh')
       this.shopImg += file.info+','
-      // console.log(this.shopImg.substring(0, this.shopImg.length-1), 'kkkkk')
+    },
+    uploadSuccessEdit(file) {
+      console.log(this.key, 'eeeeee')
+      this.imgelist[this.key] = file.info
+      this.$forceUpdate()
+      console.log(this.imgelist, 'jjjjjjj')
+    },
+    handleEditPreview(e){
+      console.log(e, 'fffffff')
     },
     // 添加店铺
     addShopHandles() {
@@ -440,7 +491,7 @@ export default {
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
-      console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
+      // console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
       // return
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
       this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
@@ -450,13 +501,15 @@ export default {
       addShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
+        this.showEdit = false
         this.handleClose()
         this.provinceId = ''
         this.finalArray = []
         this.checkAll = []
         this.checkedCategory = []
         this.management = ''
-        window.history.go(-1)
+        this.shopImg = ''
+        // window.history.go(-1)
         this.$parent.getShopList()
       }).catch(error => {
         this.$message.error('添加商铺失败！')
@@ -483,11 +536,14 @@ export default {
       } else {
         this.shopForm.management = 2
       }
-      this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
+      // this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
+      // console.log(this.imgelist.toString(),'kkkkkkkkkk')
+      this.shopForm.imge = this.imgelist.toString()
       editShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
-        window.history.go(-1)
+        // this.showEdit =  false
+        this.handleClose()
         this.$parent.getShopList()
       }).catch(error => {
         console.log(error)
@@ -511,6 +567,7 @@ export default {
       this.$refs[formName].resetFields()
     },
     getProvince(id) {
+      // console.log(id, 'hhhhhh')
       this.shopForm.provinceId = id
     },
     getCity(id) {
@@ -518,10 +575,38 @@ export default {
     },
     getCounty(id) {
       this.shopForm.countyId = id
-    }
+    },
+    outNumMax() {
+      this.$message.info('只能上传5张图片！')
+    },
+    closeEdit() {
+      this.$emit('closeHandle', false)
+    },
   }
 }
 </script>
 <style>
-
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
