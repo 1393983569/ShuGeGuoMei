@@ -113,7 +113,7 @@
         <el-form-item v-else>
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
           <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
-          <!-- <el-button type="primary" @click="aaaaa">ssss</el-button> -->
+          <!-- <el-button type="primary" @click="cccccc">ssss</el-button> -->
         </el-form-item>
       </el-form>
       <!-- <div slot="footer">
@@ -151,6 +151,7 @@ export default {
   },
   data() {
     return {
+      indeterminate: false,
       finalArray: [],
       addCategoryObj: {},
       firstcategory: [],
@@ -222,16 +223,9 @@ export default {
     }
   },
   watch: {
-    // menuTree() {
-    //   this.reFresh = false
-    //   console.log('ggggggg')
-    //   this.$nextTick(() => {
-    //     this.reFresh = true
-    //   })
-    // },
-    // 'files'(e){
-    //   console.log(e, 'list;;;;;;;;;')
-    // },
+    'checkedCategory'(e) {
+      console.log(e, '@@@@@@@')
+    },
     'list'(list) {
       console.log(list, 'eeeeeeee')
       // let index= 0
@@ -267,7 +261,15 @@ export default {
       }
       this.shopForm = e
       if(e) {
-        // this.checkedCategory = []
+        this.checkedCategory = []
+        let aaaa = {
+          categoryOneId: "02",
+          childrenId: "02",
+          childrenName: "蔬菜",
+          id: "010",
+          name: "胡萝卜"
+        }
+        this.checkedCategory.push(aaaa)
         // this.checkedCategory.push(obj)
         // let editArray = []
         // editArray = JSON.parse(e.categoryJson)
@@ -277,12 +279,14 @@ export default {
         //   obj.categoryOneId = item.id
         //   obj.childrenId = item.id
         //   obj.childrenName = item.name
-        //   item.seconds.forEach(e => {
+        //   if(item.seconds) {
+        //     item.seconds.forEach(e => {
         //     obj.id = e.id
         //     obj.name = e.name
         //     this.checkedCategory.push(obj)
-        //      console.log(obj, '&&&&&&&&')
+        //     // this.$forceUpdate()
         //   });
+        //   }
         // })
       }
 
@@ -295,13 +299,20 @@ export default {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getCategoryList()
     this.handleClose()
+    // this.checkedCategory = []
+    //   let aaaa = {
+    //     categoryOneId: "02",
+    //     childrenId: "02",
+    //     childrenName: "蔬菜",
+    //     id: "010",
+    //     name: "胡萝卜"
+    //   }
+    // this.handleCheckedCategoryChange(aaaa)
+    // this.checkedCategory.push(aaaa)
   },
   methods: {
     clickImg(e) {
-      // console.log(e.index, '%%%%%%')
-      // console.log(this.imgelist, 'hhhh')
       this.imgelist.forEach((el, key) => {
-        console.log(key, el, '&&&&&&')
         if(el === e) {
           this.key = key
         }
@@ -476,10 +487,10 @@ export default {
       this.shopImg += file.info+','
     },
     uploadSuccessEdit(file) {
-      console.log(this.key, 'eeeeee')
+      // console.log(this.key, 'eeeeee')
       this.imgelist[this.key] = file.info
       this.$forceUpdate()
-      console.log(this.imgelist, 'jjjjjjj')
+      // console.log(this.imgelist, 'jjjjjjj')
     },
     handleEditPreview(e){
       console.log(e, 'fffffff')
