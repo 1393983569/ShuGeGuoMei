@@ -93,7 +93,7 @@
       </el-form-item>
       <el-form-item>
         <div v-if="editState">
-          <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
+          <el-button type="primary" @click="submitFormEdit('ruleForm')">修改</el-button>
           <el-button @click="resetForm('ruleForm')" type="danger">取消</el-button>
         </div>
         <div v-else>
@@ -228,12 +228,11 @@ export default {
     getShopOption() {
       getAllShop().then(res => {
         if(res.info.length > 0) {
-          console.log(res, '$$$$$$$$$')
+          // console.log(res, '$$$$$$$$$')
           this.shopList = res.info
         }else{
           this.$message.info('暂无店铺数据')
         }
-        // console.log(res, '*******')
       }).catch(err => {
         console.log(err)
         this.$message.error('查询店铺出错')
@@ -271,10 +270,44 @@ export default {
     getCounty(e) {
       this.ruleForm.areaId = e
     },
+    // 添加供应商
+    submitFormEdit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log(this.ruleForm, 'gggggggg')
+          return
+          addProvider().then(res => {
+            if(res.status === 1){
+              this.$message.success('添加供应商失败！')
+            }else {
+              this.$message.warning('添加供应商出错！')
+            }
+          }).catch(err => {
+            console.log(err)
+            this.$message.error('添加供应商失败！')
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    // 编辑供应商
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          console.log(this.ruleForm, 'gggggggg')
+          return
+          addProvider().then(res => {
+            if(res.status === 1){
+              this.$message.success('添加供应商失败！')
+            }else {
+              this.$message.warning('添加供应商出错！')
+            }
+          }).catch(err => {
+            console.log(err)
+            this.$message.error('添加供应商失败！')
+          })
         } else {
           console.log('error submit!!');
           return false;

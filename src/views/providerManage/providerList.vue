@@ -27,7 +27,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="warning" @click="detailProvider(scope.row)">查看详情</el-button>
           <el-button size="mini" type="primary" @click="editProvider(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="deleteProvider(scope.row)">删除</el-button>
+          <el-button size="mini" type="danger" @click="deleteProviderHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -43,7 +43,7 @@
     </div>
     <!-- 删除 -->
     <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该条广告？</div>
+      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该供应商？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="deleteAdConfirm">确定</el-button>
@@ -54,7 +54,7 @@
 <script>
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
 import Breadcrumb from '@/components/Breadcrumb'
-import { getProvider } from '@/api/provider.js'
+import { getProvider, deleteProvider } from '@/api/provider.js'
 export default {
   components: { selectorAddress, Breadcrumb },
   data() {
@@ -70,6 +70,7 @@ export default {
       loadingSearch: false,
       loadingClear: false,
       showDelete: false,
+      id: ''
     }
   },
   watch: {},
@@ -146,11 +147,24 @@ export default {
     detailProvider(row) {
       this.$router.push({name: 'providerDetail', params: row })
     },
-    deleteProvider(row) {
+    deleteProviderHandle(row) {
       this.showDelete = true
+      console.log(row, '4444444')
+      this.id = row.id
     },
     deleteAdConfirm() {
-      this.showDelete = false
+      deleteProvider(this.id).then(res => {
+        if(res.status === 1){
+          this.$message.success('删除供应商成功！')
+          this.showDelete = false
+          this.getProviderList()
+        }else{
+          this.$message.warning('删除供应商出错')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('删除供应商失败！')
+      })
     }
   }
 }

@@ -126,7 +126,6 @@
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { addShop, editShop } from '@/api/shop.js'
 import { getCategory } from '@/api/category.js'
-// import { filter } from 'minimatch';
 export default {
   components: {
     selectorAddress
@@ -224,7 +223,7 @@ export default {
   },
   watch: {
     'checkedCategory'(e) {
-      console.log(e, '@@@@@@@')
+      // console.log(e, '@@@@@@@')
     },
     'list'(list) {
       console.log(list, 'eeeeeeee')
@@ -261,35 +260,33 @@ export default {
       }
       this.shopForm = e
       if(e) {
-        this.checkedCategory = []
-        let aaaa = {
-          categoryOneId: "02",
-          childrenId: "02",
-          childrenName: "蔬菜",
-          id: "010",
-          name: "胡萝卜"
-        }
-        this.checkedCategory.push(aaaa)
-        // this.checkedCategory.push(obj)
-        // let editArray = []
-        // editArray = JSON.parse(e.categoryJson)
-        // // console.log(editArray, 'ggggggggg')
-        // editArray.forEach(item => {
-        //   let obj = {}
-        //   obj.categoryOneId = item.id
-        //   obj.childrenId = item.id
-        //   obj.childrenName = item.name
-        //   if(item.seconds) {
-        //     item.seconds.forEach(e => {
-        //     obj.id = e.id
-        //     obj.name = e.name
-        //     this.checkedCategory.push(obj)
-        //     // this.$forceUpdate()
-        //   });
-        //   }
-        // })
+        // this.checkedCategory = []
+        // let aaaa = {
+        //   categoryOneId: "02",
+        //   childrenId: "02",
+        //   childrenName: "蔬菜",
+        //   id: "010",
+        //   name: "胡萝卜"
+        // }
+        // this.checkedCategory.push(aaaa)
+        let editArray = []
+        editArray = JSON.parse(e.categoryJson)
+        editArray.forEach(item => {
+          let obj = {}
+          obj.categoryOneId = item.id
+          obj.childrenId = item.id
+          obj.childrenName = item.name
+          if(item.seconds) {
+            item.seconds.forEach(e => {
+            obj.id = e.id
+            obj.name = e.name
+            this.checkedCategory.push(obj)
+            // this.$forceUpdate()
+            console.log(this.checkedCategory, '品类')
+          });
+          }
+        })
       }
-
     },
     'dialogImageUrl'(e) {
       console.log(e, 'ggggggg')
@@ -371,13 +368,14 @@ export default {
           this.checkedCategory.push(obj)
         }
       })
-      console.log(this.checkedCategory, '$$$$$$$')
+      // console.log(this.checkedCategory, '$$$$$$$')
       this.isIndeterminate = false
       this.getFirstCategory()
     },
     handleCheckedCategoryChange(value) {
+      console.log(value, 'jjjjjjj')
       this.checkedCategory = value
-      console.log(value, 'ggggggggg')
+      // console.log(value, 'ggggggggg')
       this.getFirstCategory()
     },
     checkedFunction(row) {
@@ -388,7 +386,6 @@ export default {
     //   this.editObject.categoryOneId = row.id
     //   this.editObject.categoryTwoId = row.ids
     // },
-
 
     // 合并单元格
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
