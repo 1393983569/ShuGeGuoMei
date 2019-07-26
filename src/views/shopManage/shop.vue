@@ -67,25 +67,28 @@
     <!-- 店铺编辑 -->
     <shop-edit :show-edit="showEdit" @closeHandle="closeEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
     <!-- 删除弹框 -->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除店铺" style="border-ra">
+    <!-- <el-dialog :visible.sync="showDelete" center width="380px" title="删除店铺" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该店铺？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="confirmDelete">确定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <hint v-model="showDelete" title="删除店铺" text="是否删除该店铺？" @confirm="confirmDelete" />
     <!-- 启用弹框 -->
-    <el-dialog :visible.sync="showStart" center width="380px" :title="`${startShopTitle}店铺`" style="border-ra">
+    <!-- <el-dialog :visible.sync="showStart" center width="380px" :title="`${startShopTitle}店铺`" style="border-ra">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否{{ startShopTitle }}该店铺？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showStart = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="confirmStart">确定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <hint v-model="showStart" :title="`${startShopTitle}店铺`" :text="`是否${startShopTitle}该店铺？`" @confirm="confirmStart" />
   </div>
 </template>
 <script>
 // import { Message } from 'element-ui'
+import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import shopEdit from './shopEidt.vue'
@@ -93,8 +96,9 @@ import shopEdit from './shopEidt.vue'
 import { getShopList, deleteShop, startShop } from '@/api/shop.js'
 // import { sync } from 'glob'
 export default {
+  name: 'shop',
   components: {
-    selectorAddress, shopEdit, Breadcrumb
+    selectorAddress, shopEdit, Breadcrumb, hint
   },
   data() {
     return {

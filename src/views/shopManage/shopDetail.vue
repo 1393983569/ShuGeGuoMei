@@ -117,12 +117,16 @@ export default {
    }
   },
   mounted() {
-    if(this.$route.params){
+    // console.log(JSON.stringify(this.$route.params) == '{}', 'canshuooooooo')
+    if(JSON.stringify(this.$route.params) !== '{}'){
       this.urlList= this.$route.params.imge.split(',')
       this.shopObject = this.$route.params
       let arr = JSON.parse(this.shopObject.categoryJson)
       this.categoryTable = this.recursionTableData(arr)
       this.getMergeList()
+    }else{
+      // this.$router.push({name: 'shop'})
+      window.history.go(-1)
     }
   },
   methods: {

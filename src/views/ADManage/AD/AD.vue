@@ -41,31 +41,27 @@
       />
     </div>
     <!-- 上架/下架 -->
-    <el-dialog :visible.sync="showShelf" center width="380px" :title="`${shelfTitle}`+`广告`">
+    <!-- <el-dialog :visible.sync="showShelf" center width="380px" :title="`${shelfTitle}`+`广告`">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否{{ shelfTitle }}该条广告？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showShelf = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="shelfAdConfirm">确定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <hint v-model="showShelf" :title="`${shelfTitle}`+`广告`" :text="`是否${shelfTitle}该条广告？`" @confirm="shelfAdConfirm" />
     <!-- 删除 -->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该条广告？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="deleteAdConfirm">确定</el-button>
-      </div>
-    </el-dialog>
+    <hint v-model="showDelete" title="删除广告" text="是否删除该条广告？" @confirm="deleteAdConfirm" />
     <!-- 广告详情 -->
     <ad-detail :show-ad-detail="showAdDetail" :ad-object="adObject" @handleClose="handleClose" />
   </div>
 </template>
 <script>
+import hint from '@/components/Hint'
 import AdDetail from './ADDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getAdvertisement, shelfAdvertisement, deleteAdvertisement } from '@/api/advertisement.js'
 export default {
-  components: { AdDetail, Breadcrumb },
+  components: { AdDetail, Breadcrumb, hint },
   data() {
     return {
       ADTable: [],
@@ -149,9 +145,10 @@ export default {
     },
     // 上架/下架
     putawayHandle(row) {
+      // console.log(row, 'kkkkkk')
       this.showShelf = true
-      this.shelfTitle = row.status === '下架' ? '上架' : '下架'
-      this.shelfStatus = row.status === '下架' ? 0 : 1
+      this.shelfTitle = row.status === '已下架' ? '上架' : '下架'
+      this.shelfStatus = row.status === '已下架' ? 0 : 1
       this.id = row.id
     },
     shelfAdConfirm() {

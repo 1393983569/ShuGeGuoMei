@@ -528,8 +528,9 @@ export const asyncRoutes = [
       {
         path: 'rechargeRecord',
         name: 'rechargeRecord',
+        hidden:true,
         meta: {
-          roles: ['rechargeRecord'],
+          // roles: ['rechargeRecord'],
           icon: 'dashboard',
           title: '充值记录'
         },
@@ -538,8 +539,9 @@ export const asyncRoutes = [
       {
         path: 'expenseCalendar',
         name: 'expenseCalendar',
+        hidden:true,
         meta: {
-          roles: ['expenseCalendar'],
+          // roles: ['expenseCalendar'],
           icon: 'dashboard',
           title: '消费记录'
         },
@@ -548,8 +550,9 @@ export const asyncRoutes = [
       {
         path: 'integralDetails',
         name: 'integralDetails',
+        hidden:true,
         meta: {
-          roles: ['integralDetails'],
+          // roles: ['integralDetails'],
           icon: 'dashboard',
           title: '积分详情'
         },
@@ -639,6 +642,38 @@ export const asyncRoutes = [
           title: '开通城市'
         },
         component: () => import('@/views/category/cityList')
+      }
+    ]
+  },
+  {
+    path: '/accountCheck',
+    name: 'accountCheck',
+    component: Layout,
+    meta: {
+      // roles: ['accountCheck'],
+      icon: 'dashboard',
+      title: '对账'
+    },
+    children: [
+      {
+        path: 'shopCheck',
+        name: 'shopCheck',
+        meta: {
+          // roles: ['accountCheck'],
+          icon: 'dashboard',
+          title: '店铺对账单'
+        },
+        component: () => import('@/views/accountCheck/shopCheck.vue')
+      },
+      {
+        path: 'backstageCheck',
+        name: 'backstageCheck',
+        meta: {
+          // roles: ['accountCheck'],
+          icon: 'dashboard',
+          title: '后台对账单'
+        },
+        component: () => import('@/views/accountCheck/backstageCheck.vue')
       }
     ]
   },

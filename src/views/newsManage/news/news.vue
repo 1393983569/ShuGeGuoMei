@@ -49,23 +49,18 @@
       </div>
     </div>
     <!-- 删除确认弹框 -->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除消息" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该消息？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="deleteNews">确定</el-button>
-      </div>
-    </el-dialog>
+    <hint v-model="showDelete" title="删除消息" text="是否删除该消息？" @confirm="deleteNews" />
     <!-- 消息详情 -->
     <news-detail :show-detail="showDetail" :detailt-object="detailtObject" @isCloseDetail="isCloseDetail" />
   </div>
 </template>
 <script>
+import hint from '@/components/Hint'
 import newsDetail from './newsDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getNews, deleteNews } from '@/api/news.js'
 export default {
-  components: { newsDetail, Breadcrumb },
+  components: { newsDetail, Breadcrumb, hint },
   data() {
     return {
       // 日期选择

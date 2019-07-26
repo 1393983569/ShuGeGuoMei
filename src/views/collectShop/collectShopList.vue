@@ -125,31 +125,20 @@
       />
     </div>
     <!--删除商品-->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除商品" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该商品？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="confirmDelete">确定</el-button>
-      </div>
-    </el-dialog>
+    <hint v-model="showDelete" title="删除商品" text="是否删除该商品？" @confirm="confirmDelete" />
     <!--上下架商品-->
-    <el-dialog :visible.sync="showShelf" center width="380px" :title="`${titleShelf}商品`" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否{{ titleShelf }}该商品？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showShelf = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="confirmShelf">确定</el-button>
-      </div>
-    </el-dialog>
+    <hint v-model="showShelf" :title="`${titleShelf}商品`" :text="`是否${titleShelf}该商品？`" @confirm="confirmShelf" />
   </div>
 </template>
 
 <script>
+import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getFirstCategory, getSecondCategory } from '@/api/category.js'
 import { getGoodsList, deleteGoods, shelfGoods } from '@/api/collectShop.js'
 export default {
   name: 'CollectShop',
-  components: { Breadcrumb },
+  components: { Breadcrumb, hint },
   data() {
     return {
       tableData: [],

@@ -1,9 +1,12 @@
 <template>
     <div>
       <el-dialog
+        :show-close="false"
+        :close-on-click-modal="false"
         :title="title"
         :visible.sync="value"
-        width="50%"
+        width="30%"
+        center
         class="dialogCustom"
       >
         <div class="dialogBorder">

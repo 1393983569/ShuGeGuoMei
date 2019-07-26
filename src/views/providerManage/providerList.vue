@@ -42,21 +42,23 @@
       />
     </div>
     <!-- 删除 -->
-    <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
+    <!-- <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
       <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该供应商？</div>
       <div slot="footer" style="boeder:1px solid black">
         <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
         <el-button style="width:160px;border:none;font-size:18px;" @click="deleteAdConfirm">确定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <hint title="删除供应商" v-model="showDelete" text="是否删除供应商？" @confirm="deleteAdConfirm" />
   </div>
 </template>
 <script>
+import hint from '@/components/Hint'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getProvider, deleteProvider } from '@/api/provider.js'
 export default {
-  components: { selectorAddress, Breadcrumb },
+  components: { selectorAddress, Breadcrumb, hint },
   data() {
     return {
       searchInput: '',
@@ -75,6 +77,7 @@ export default {
   },
   watch: {},
   mounted() {
+    // console.log(this.$router, '%%%%%%')
     this.getProviderList()
   },
   methods: {

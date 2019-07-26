@@ -107,28 +107,32 @@
       title="评分"
       :visible.sync="dialogVisible"
       width="30%"
+      class="dialogCustom"
+      :show-close="false"
       center>
-      <el-form label-position="right" label-width="130px" :model="grade">
-        <el-form-item label="资质:">
-          <el-input v-model="grade.qualificationScore" placeholder="请输入分数" />
-        </el-form-item>
-        <el-form-item label="价格分:">
-          <el-input v-model="grade.priceScore"  placeholder="请输入分数"/>
-        </el-form-item>
-        <el-form-item label="品质分:">
-          <el-input v-model="grade.qualityScore"  placeholder="请输入分数"/>
-        </el-form-item>
-        <el-form-item label="服务分:">
-          <el-input v-model="grade.serviceScore"  placeholder="请输入分数"/>
-        </el-form-item>
-        <el-form-item label="配送店铺数量分:">
-          <el-input v-model="grade.deliverShopScore"  placeholder="请输入分数"/>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" type="danger">取 消</el-button>
-        <el-button type="primary" @click="adddGrade">确 定</el-button>
-      </span>
+      <div class="dialogBorder">
+        <el-form label-position="right" label-width="130px" :model="grade">
+          <el-form-item label="资质:">
+            <el-input v-model="grade.qualificationScore" placeholder="请输入分数" />
+          </el-form-item>
+          <el-form-item label="价格分:">
+            <el-input v-model="grade.priceScore"  placeholder="请输入分数"/>
+          </el-form-item>
+          <el-form-item label="品质分:">
+            <el-input v-model="grade.qualityScore"  placeholder="请输入分数"/>
+          </el-form-item>
+          <el-form-item label="服务分:">
+            <el-input v-model="grade.serviceScore"  placeholder="请输入分数"/>
+          </el-form-item>
+          <el-form-item label="配送店铺数量分:">
+            <el-input v-model="grade.deliverShopScore"  placeholder="请输入分数"/>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer botton" style="margin:0px;padding:0px;">
+        <div @click="dialogVisible = false" style="border-right: 1px #DDDDDD solid">取消</div>
+        <div @click="adddGrade">确定</div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -320,7 +324,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss" scoped>
 .avatar-uploader .el-upload {
     border-radius: 6px;
     cursor: pointer;
@@ -343,5 +347,29 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .botton {
+    display: flex;
+    > div{
+      flex: 1;
+      display: inline-block;
+      text-align: center;
+      height: 60px;
+      line-height: 60px;
+      cursor: pointer;
+      &:active{
+        background-color: #DDDDDD;
+      }
+    }
+  }
+  .dialog-footer {
+    margin:0px;
+    padding:0px;
+  }
+  .dialogBorder{
+    text-align: center;
+    border-top: 1px #DDDDDD solid;
+    border-bottom: 1px #DDDDDD solid;
+    padding: 40px 30px;
   }
 </style>
