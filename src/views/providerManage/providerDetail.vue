@@ -32,7 +32,10 @@ export default {
   name: 'providerDetail',
   data() {
     return {}
-  }
+  },
+  mounted(){
+    this.$route.params
+  },
 }
 </script>
 <style>

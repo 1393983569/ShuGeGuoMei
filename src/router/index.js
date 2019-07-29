@@ -663,7 +663,18 @@ export const asyncRoutes = [
           icon: 'dashboard',
           title: '店铺对账单'
         },
-        component: () => import('@/views/accountCheck/shopCheck.vue')
+        component: () => import('@/views/accountCheck/shopCheck/shopCheck.vue')
+      },
+      {
+        path: 'shopCheckDetail',
+        name: 'shopCheckDetail',
+        hidden:true,
+        meta: {
+          // roles: ['accountCheck'],
+          icon: 'dashboard',
+          title: '店铺对账单详情'
+        },
+        component: () => import('@/views/accountCheck/shopCheck/shopCheckDetail.vue')
       },
       {
         path: 'backstageCheck',
@@ -673,7 +684,18 @@ export const asyncRoutes = [
           icon: 'dashboard',
           title: '后台对账单'
         },
-        component: () => import('@/views/accountCheck/backstageCheck.vue')
+        component: () => import('@/views/accountCheck/backstageCheck/backstageCheck.vue')
+      },
+      {
+        path: 'backstageCheckDetail',
+        name: 'backstageCheckDetail',
+        hidden:true,
+        meta: {
+          // roles: ['accountCheck'],
+          icon: 'dashboard',
+          title: '后台对账单详情'
+        },
+        component: () => import('@/views/accountCheck/backstageCheck/backstageCheckDetail.vue')
       }
     ]
   },
