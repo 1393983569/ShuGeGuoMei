@@ -202,39 +202,6 @@ export const asyncRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/goodsManage',
-  //   name: 'goodsManage',
-  //   component: Layout,
-  //   meta: {
-  //     roles: ['admin'],
-  //     icon: 'dashboard',
-  //     title: '集采平台'
-  //   },
-  //   // component: Main,
-  //   children: [
-  //     {
-  //       path: 'goods',
-  //       name: 'goods',
-  //       meta: {
-  //         roles: ['admin'],
-  //         icon: 'dashboard',
-  //         title: '商品库'
-  //       },
-  //       component: () => import('@/views/goodsManage/goods/goods.vue')
-  //     },
-  //     {
-  //       path: 'orders',
-  //       name: 'orders',
-  //       meta: {
-  //         roles: ['admin'],
-  //         icon: 'dashboard',
-  //         title: '订单'
-  //       },
-  //       component: () => import('@/views/goodsManage/orders/orders.vue')
-  //     }
-  //   ]
-  // },
   {
     path: '/newsManage',
     name: 'newsManage',
@@ -650,7 +617,7 @@ export const asyncRoutes = [
     name: 'accountCheck',
     component: Layout,
     meta: {
-      // roles: ['accountCheck'],
+      roles: ['accountCheck'],
       icon: 'dashboard',
       title: '对账'
     },
@@ -659,7 +626,7 @@ export const asyncRoutes = [
         path: 'shopCheck',
         name: 'shopCheck',
         meta: {
-          // roles: ['accountCheck'],
+          roles: ['shopCheck'],
           icon: 'dashboard',
           title: '店铺对账单'
         },

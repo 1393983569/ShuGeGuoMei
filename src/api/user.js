@@ -19,9 +19,9 @@ export function getInfo(roleId) {
   })
 }
 
-export function logout() {
+export function logout(id) {
   return request({
-    url: '/basics/logout',
+    url: `/basics/logout?adminId=${id}`,
     method: 'get'
   })
 }

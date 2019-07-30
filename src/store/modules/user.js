@@ -47,7 +47,7 @@ const actions = {
         const data = response
         commit('SET_TOKEN', 'chengGong')
         commit('SET_NAME', data.info.name)
-        commit('SET_ROLEID', data.info.role.id)
+        // commit('SET_ROLEID', data.info.role.id)
         setUserId(data.info.role.id)
         setToken(data.info.token)
         resolve()
@@ -64,7 +64,7 @@ const actions = {
         try {
           let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
           let roleList = getRole(JSON.parse(response.info.menu))
-          console.log(roleList, '@@@@@@@@@@@@@@@@@@@')
+          commit('SET_ROLEID', response.info.roleId)
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)
           commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
@@ -95,7 +95,7 @@ const actions = {
   // 用户退出
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      logout(getUserId()).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken()

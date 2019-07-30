@@ -65,11 +65,13 @@
     },
     methods: {
       getUserListRole() {
-        getAllMenu(this.userId).then(res => {
+        // getAllMenu(this.userId).then(res => {
+        getAllMenu(this.$store.state.user.roleId).then(res => {
           if (res.info === null) {
             this.tableData = this.recursionList(asyncRoutes)
             this.operationState = 'add'
           } else {
+            console.log(JSON.parse(res.info.menu), '0000000')
             this.tableData = JSON.parse(res.info.menu)
             this.id = res.info.id
             this.operationState = 'edit'
