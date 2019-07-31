@@ -30,9 +30,9 @@
     <p>保鲜期：{{ row.goodFreshDate }}</p>
     <p>产地：{{ row.countryId === 999999 ? '国外':'国内'+ '-' +row.province.name+ ' '+row.city.name+ ' '+row.area.name }}</p>
     <p>状态：{{ row.goodState=== 0 ? '有货': '缺货' }}</p>
-    <p>进价：{{ row.goodPurchasePrice }}</p>
-    <p>出价：{{ row.goodSellPrice }}</p>
-    <p>零售价：{{ row.goodPrice }}</p>
+    <p>进价：{{ row.goodPurchasePrice/100 }}</p>
+    <p>出价：{{ row.goodSellPrice/100 }}</p>
+    <p>零售价：{{ row.goodPrice/100 }}</p>
   </div>
 </template>
 <script>

@@ -1,6 +1,8 @@
 <template>
+
   <div :class="{'has-logo':showLogo}">
     <logo v-if="showLogo" :collapse="isCollapse" />
+    <hr style="background-color:#DCDFE6;height:2px;width:90%;border:none;" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"

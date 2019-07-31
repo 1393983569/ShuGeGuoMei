@@ -85,19 +85,68 @@
 }
 
 .el-button--warning:hover, .el-button--warning:focus{
-  background-color: #ff9749;
-  border-color: #ff9749;
+  background-color: #eb985e;
+  border-color: #eb985e;
+}
+// info
+.el-button--info{
+  background-color: #f4f4f5;
+  border-color: #d3d4d6;
+  color:#909399;
 }
 
+.el-button--info:hover, .el-button--info:focus{
+  background-color: #d7dcde;
+  border-color: #d7dcde;
+  color:#909399;
+}
+// 下架按钮
+.el-button--down{
+  background-color: #fdf6ec;
+  border-color: #fecd5d;
+  color:#fecd5d;
+}
+
+.el-button--down:hover, .el-button--down:focus{
+  background-color: #fdf6ec;
+  border-color: #e8bb51;
+  color:#e8bb51;
+}
+// 上架按钮
+.el-button--up{
+  background-color: #fecd5d;
+  border-color: #fecd5d;
+  color:#fdf6ec;
+}
+
+.el-button--up:hover, .el-button--up:focus{
+  background-color: #e8bb51;
+  border-color: #e8bb51;
+  color:#fdf6ec;
+}
+// 筛选按钮
+.el-button--primaryX{
+  background-color: #418bff;
+  border-color: #418bff;
+  color:#fff;
+}
+
+.el-button--primaryX:hover, .el-button--primaryX:focus{
+  background-color: #2674f0;
+  border-color: #2674f0;
+  color:#fff;
+}
 // 删除按钮 danger
 .el-button--danger{
-  background-color: #ff6a6a;
-  border-color: #ff6a6a;
+  background-color: #fef0f0;
+  border-color: #fbc4c4;
+  color:#e6787a;
 }
 
 .el-button--danger:hover, .el-button--danger:focus{
-  background-color: #ff4941;
-  border-color: #ff4941;
+  background-color: #fef0f0;
+  border-color: #eb5e5e;
+  color:#eb5e5e;
 }
 
 // 编辑 主要按钮 primary
@@ -107,8 +156,8 @@
 }
 
 .el-button--primary:hover, .el-button--primary:focus{
-  background-color: #5fa2ff;
-  border-color: #5fa2ff;
+  background-color: #679ceb;
+  border-color: #679ceb;
 }
 
 // 上下架 启用 停用按钮success
@@ -118,8 +167,8 @@
 }
 
 .el-button--success:hover, .el-button--success:focus{
-  background-color: #00c6b4;
-  border-color: #00c6b4;
+  background-color: #1ebdaf;
+  border-color: #1ebdaf;
 }
 
 // 列表斑马线深色

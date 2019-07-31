@@ -6,8 +6,8 @@
     <div style="display:flex;flex-direction:row;">
       <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
       <div style="position:absolute; right:10px;">
-        <el-button size="mini" type="primary" @click="searchProvider" :loading="loadingSearch">筛选</el-button>
-        <el-button size="mini" type="danger" @click="clearSearch" :loading="loadingClear">清空</el-button>
+        <el-button size="mini" type="primaryX" @click="searchProvider" :loading="loadingSearch">筛选</el-button>
+        <el-button size="mini" type="info" @click="clearSearch" :loading="loadingClear">清空</el-button>
       </div>
     </div>
     <div style="margin-top:5px;margin-bottom:20px;">

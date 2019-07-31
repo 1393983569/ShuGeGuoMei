@@ -28,6 +28,7 @@ export default {
 body{
   font-size:18px;
   color:#6e7b99;
+  background-color:#f8fbfc;
   /* font-weight:bold; */
   font-family:Microsoft YaHei;
 }

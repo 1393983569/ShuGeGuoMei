@@ -11,10 +11,10 @@
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="display:float;float:right;">
-        <el-button size="mini" v-if="buttonList.includes('操作')" type="primary">筛选</el-button>
-        <el-button size="mini" v-else disabled type="primary">筛选</el-button>
-        <el-button size="mini" v-if="buttonList.includes('操作')" type="danger">清空</el-button>
-        <el-button size="mini" v-else disabled type="danger">清空</el-button>
+        <el-button size="mini" v-if="buttonList.includes('操作')" type="primaryX">筛选</el-button>
+        <el-button size="mini" v-else disabled type="primaryX">筛选</el-button>
+        <el-button size="mini" v-if="buttonList.includes('操作')" type="info">清空</el-button>
+        <el-button size="mini" v-else disabled type="info">清空</el-button>
       </div>
     </div>
     <!-- 列表 -->

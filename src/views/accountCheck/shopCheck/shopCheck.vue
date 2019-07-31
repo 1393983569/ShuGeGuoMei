@@ -16,8 +16,8 @@
         </el-select>
       </div>
       <div style="position:absolute;right:10px;">
-        <el-button type="primary" size="mini">筛选</el-button>
-        <el-button type="danger" size="mini">清空</el-button>
+        <el-button type="primaryX" size="mini">筛选</el-button>
+        <el-button type="info" size="mini">清空</el-button>
       </div>
     </div>
     <div style="display:flex;flex-direction:row;">

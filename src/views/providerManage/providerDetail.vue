@@ -9,8 +9,8 @@
     <p>微信：{{providerObj.wechat}}</p>
     <p>QQ：{{providerObj.qq}}</p>
     <p>邮箱：{{providerObj.email}}</p>
-    <p>仓库地址：{{providerObj.id}}</p>
-    <p>仓库面积：{{providerObj.area}}</p>
+    仓库地址：<span v-if="providerObj.province">{{providerObj.province[0].name}}省</span><span v-if="providerObj.city">{{providerObj.city[0].name}}市</span><span v-if="providerObj.area">{{providerObj.area[0].name}}区/县</span>
+    <p>仓库面积：{{providerObj.area}}m<sup>2</sup></p>
     <p>备注：{{providerObj.remark}}</p>
     <p>可配送店铺列表：{{}}</p>
     <p>供应商品：</p>

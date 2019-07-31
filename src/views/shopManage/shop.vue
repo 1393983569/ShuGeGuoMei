@@ -15,10 +15,10 @@
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
-        <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleSearch" size="mini">筛选</el-button>
-        <el-button type="primary" v-else disabled @click="handleSearch" size="mini">筛选</el-button>
-        <el-button type="danger" v-if="buttonList.includes('操作')" @click="handleClearCondition"  size="mini">清空</el-button>
-        <el-button type="danger" v-else disabled  @click="handleClearCondition"  size="mini">清空</el-button>
+        <el-button type="primaryX" v-if="buttonList.includes('操作')" @click="handleSearch" size="mini">筛选</el-button>
+        <el-button type="primaryX" v-else disabled @click="handleSearch" size="mini">筛选</el-button>
+        <el-button type="info" v-if="buttonList.includes('操作')" @click="handleClearCondition"  size="mini">清空</el-button>
+        <el-button type="info" v-else disabled  @click="handleClearCondition"  size="mini">清空</el-button>
       </div>
     </div>
     <div>

@@ -33,10 +33,10 @@
         />
       </el-select>
       <div style="display:float;float:right;">
-        <el-button @click="searchHandle" size="mini" type="primary" v-if="buttonList.includes('操作')">筛选</el-button>
-        <el-button v-else size="mini" type="primary" disabled>筛选</el-button>
-        <el-button size="mini" @click="clearHandle" type="danger" v-if="buttonList.includes('操作')">清空</el-button>
-        <el-button size="mini" v-else type="danger" disabled>清空</el-button>
+        <el-button @click="searchHandle" size="mini" type="primaryX" v-if="buttonList.includes('操作')">筛选</el-button>
+        <el-button v-else size="mini" type="primaryX" disabled>筛选</el-button>
+        <el-button size="mini" @click="clearHandle" type="info" v-if="buttonList.includes('操作')">清空</el-button>
+        <el-button size="mini" v-else type="info" disabled>清空</el-button>
       </div>
     </div>
     <el-table
@@ -88,17 +88,23 @@
             type="primary"
           >编辑</el-button>
           <el-button
-            v-if="buttonList.includes('操作')"
+            v-if="buttonList.includes('操作')&&scope.row.isShelf === 1"
             size="mini"
-            type="success"
+            type="up"
             @click="handleShelf(scope.row)"
-          >{{ titleShelf = scope.row.is_shelf === 1? '上架':'下架' }}</el-button>
+          >上架</el-button>
+          <el-button
+            v-else-if="buttonList.includes('操作')&&(scope.row.isShelf === 0||!scope.row.isShelf)"
+            size="mini"
+            type="down"
+            @click="handleShelf(scope.row)"
+          >下架</el-button>
           <el-button
             v-else
             disabled
             size="mini"
             type="success"
-          >{{ titleShelf = scope.row.is_shelf === 1? '上架':'下架' }}</el-button>
+          >{{ titleShelf = scope.row.isShelf === 1? '上架':'下架' }}</el-button>
           <el-button
             v-if="buttonList.includes('操作')"
             size="mini"

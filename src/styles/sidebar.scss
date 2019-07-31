@@ -68,20 +68,30 @@
     .el-submenu__title {
       &:hover {
         background-color: $menuHover !important;
+
       }
     }
-
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
+      background-color: $menuActive !important;
     }
-
+    .el-submenu__title{
+      font-size:20px;
+      font-family: "微软雅黑";
+    }
+    .el-menu-item{
+      font-size:20px;
+      font-family: "微软雅黑";
+    }
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
       background-color: $subMenuBg !important;
-
       &:hover {
-        background-color: $subMenuHover !important;
+        // background-color: $subMenuHover !important;
+      }
+      &:active{
+        background-color: red;
       }
     }
   }
