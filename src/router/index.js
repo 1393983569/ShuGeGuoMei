@@ -79,7 +79,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '首页图表', icon: 'dashboard', affix: true }
+        meta: { title: '首页图表', icon: 'Cameramanagement_default', affix: true }
       }
     ]
   },
@@ -174,7 +174,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['shopManage'],
-      icon: 'dashboard',
+      icon: 'shopmanagement_default',
       title: '店铺管理'
     },
     // component: Main,
@@ -184,7 +184,7 @@ export const asyncRoutes = [
         name: 'shop',
         meta: {
           roles: ['shop'],
-          icon: 'dashboard',
+          icon: 'shopmanagement_default',
           title: '店铺管理'
         },
         component: () => import('@/views/shopManage/shop.vue')
@@ -208,7 +208,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['newsManage'],
-      icon: 'dashboard',
+      icon: 'messagecenter_default',
       title: '消息管理'
     },
     // component: Main,
@@ -218,7 +218,7 @@ export const asyncRoutes = [
         name: 'news',
         meta: {
           roles: ['news'],
-          icon: 'dashboard',
+          icon: 'messagecenter_default',
           title: '消息中心'
         },
         component: () => import('@/views/newsManage/news/news.vue')
@@ -242,7 +242,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['ADManage'],
-      icon: 'dashboard',
+      icon: 'Advertisingcenter_default',
       title: '广告管理'
     },
     // component: Main,
@@ -252,7 +252,7 @@ export const asyncRoutes = [
         name: 'AD',
         meta: {
           roles: ['AD'],
-          icon: 'dashboard',
+          icon: 'Advertisingcenter_default',
           title: '广告中心'
         },
         component: () => import('@/views/ADManage/AD/AD.vue')
@@ -276,7 +276,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['dataManage'],
-      icon: 'dashboard',
+      icon: 'Datacenter_default',
       title: '数据中心'
     },
     children: [
@@ -285,7 +285,7 @@ export const asyncRoutes = [
         name: 'dataCenter',
         meta: {
           roles: ['dataCenter'],
-          icon: 'dashboard',
+          icon: 'Datacenter_default',
           title: '数据中心'
         },
         component: () => import('@/views/dataManage/dataCenter.vue')
@@ -298,7 +298,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['collectShop'],
-      icon: 'dashboard',
+      icon: 'Commoditybank_default',
       title: '采集平台'
     },
     // component: Main,
@@ -391,7 +391,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       // roles: ['providerManage'],
-      icon: 'dashboard',
+      icon: 'Suppliermanagement_default',
       title: '供应商管理'
     },
     children: [
@@ -400,7 +400,7 @@ export const asyncRoutes = [
         name: 'providerList',
         meta: {
           // roles: ['providerList'],
-          icon: 'dashboard',
+          icon: 'Suppliermanagement_default',
           title: '供应商管理'
         },
         component: () => import('@/views/providerManage/providerList.vue')
@@ -435,7 +435,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['marketing'],
-      icon: 'dashboard',
+      icon: 'Marketingcenter_default',
       title: '营销包管理'
     },
     children: [
@@ -467,7 +467,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['memberManagement'],
-      icon: 'dashboard',
+      icon: 'Membercenter_default',
       title: '会员管理'
     },
     children: [
@@ -543,7 +543,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       // roles: ['admin'],
-      icon: 'dashboard',
+      icon: 'backgroundsystem_default',
       title: '后台用户'
     },
     children: [
@@ -585,7 +585,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['category'],
-      icon: 'dashboard',
+      icon: 'Basicdatasettings_default',
       title: '基础数据设置'
     },
     // component: Main,
@@ -618,7 +618,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['accountCheck'],
-      icon: 'dashboard',
+      icon: 'Marketingcenter_default',
       title: '对账'
     },
     children: [
@@ -667,7 +667,7 @@ export const asyncRoutes = [
     ]
   },
   // /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+  // componentsRouter,
   // chartsRouter,
   // nestedRouter,
   // tableRouter,

@@ -68,7 +68,6 @@
     .el-submenu__title {
       &:hover {
         background-color: $menuHover !important;
-
       }
     }
     .is-active>.el-submenu__title {
@@ -88,10 +87,7 @@
       min-width: $sideBarWidth !important;
       background-color: $subMenuBg !important;
       &:hover {
-        // background-color: $subMenuHover !important;
-      }
-      &:active{
-        background-color: red;
+        background-color: $subMenuHover !important;
       }
     }
   }

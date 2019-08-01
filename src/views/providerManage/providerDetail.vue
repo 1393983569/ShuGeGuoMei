@@ -1,5 +1,5 @@
 <template>
-  <div v-if="providerObj.id">
+  <div>
     <p>供应商ID：{{providerObj.id}}</p>
     <p>供应商名称：{{providerObj.name}}</p>
     <div style="display:flex;flex-direction:row;align-items: flex-start;">门头照片：<img :src="providerObj.headerPic" style="width: 200px;height:200px;"/></div>
@@ -9,10 +9,13 @@
     <p>微信：{{providerObj.wechat}}</p>
     <p>QQ：{{providerObj.qq}}</p>
     <p>邮箱：{{providerObj.email}}</p>
-    仓库地址：<span v-if="providerObj.province">{{providerObj.province[0].name}}省</span><span v-if="providerObj.city">{{providerObj.city[0].name}}市</span><span v-if="providerObj.area">{{providerObj.area[0].name}}区/县</span>
+    仓库地址：<span v-if="providerObj.province[0]!==null">{{providerObj.province[0].name}}</span>
+    <span v-if="providerObj.city[0]!==null">{{providerObj.city[0].name}}</span>
+    <span v-if="providerObj.areaList.length[0]!==null">{{providerObj.area[0].name}}</span>
+    <p>详细地址：{{providerObj.addressDetail}}</p>
     <p>仓库面积：{{providerObj.area}}m<sup>2</sup></p>
     <p>备注：{{providerObj.remark}}</p>
-    <p>可配送店铺列表：{{}}</p>
+    <p>可配送店铺列表：</p>
     <p>供应商品：</p>
     <p>资质照片：<img v-for="url in imgList" :src="url" /></p>
     <div>
@@ -43,6 +46,7 @@ export default {
       getProviderDetail(this.$route.params.id).then(res => {
         if(res.status === 1){
           this.providerObj = res.info
+          console.log(this.providerObj, 'res.info')
           this.imgList = this.providerObj.qualificationPics.split(',')
         }else{
           this.$message.error('查询供应商详情出错！')
