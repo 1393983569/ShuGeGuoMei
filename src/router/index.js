@@ -618,7 +618,7 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       roles: ['accountCheck'],
-      icon: 'Marketingcenter_default',
+      icon: 'icon_checkaccounts_unselected',
       title: '对账'
     },
     children: [

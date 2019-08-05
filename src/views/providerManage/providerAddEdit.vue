@@ -59,7 +59,30 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商品(还未做)：" prop=""></el-form-item>
+      <el-form-item label="供应商品：" prop="">
+       <div>
+          <div>
+            <div class="categoryHeader">品类</div>
+            <div style="width:20%;">
+              <el-tree
+                :data="dataTree"
+                show-checkbox
+                node-key="id"
+                :props="defaultProps">
+              </el-tree>
+            </div>
+          </div>
+          <div>
+            <el-table :data="goodsList">
+              <el-table-column prop="" label=""/>
+              <el-table-column prop="" label=""/>
+              <el-table-column prop="" label=""/>
+              <el-table-column prop="" label=""/>
+              <el-table-column prop="" label=""></el-table-column>
+            </el-table>
+          </div>
+       </div>
+      </el-form-item>
       <el-form-item v-if="editState" label="资质照片(还未做)：" prop="">
         <el-upload
           class="avatar-uploader"
@@ -140,11 +163,14 @@
 import { getAllShop } from '@/api/shop.js'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
 import { getProviderDetail } from '@/api/provider.js'
+import { getSecondCategory } from '@/api/category/categoryList.js'
+import { getGoods } from '@/api/collectShop.js'
 export default {
   components: { selectorAddress },
   name: 'providerAddEdit',
   data() {
     return {
+      dataTree:[],
       grade: {
         qualificationScore: '',
         priceScore: '',
@@ -210,6 +236,7 @@ export default {
       },
       apiUrl: '',
       id: '',
+      goodsList:[],
     }
   },
   watch: {
@@ -219,13 +246,13 @@ export default {
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
-    console.log(this.$route.params, '9999999')
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
       this.id = this.$route.params.id
       // this.getProviderDetail()
     }
     this.getShopOption()
+    this.getaAllCategory()
   },
   methods: {
     // 查询所有店铺
@@ -320,6 +347,26 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    getaAllCategory(){
+      getSecondCategory().then(res => {
+        res.info.forEach(item => {
+          let arr = {}
+          arr.id = item.id
+          arr.label = item.name
+          arr.children = []
+          item.seconds.forEach(a => {
+            let obj = {}
+            obj.id = a.id
+            obj.label = a.name
+            arr.children.push(obj)
+          })
+          this.dataTree.push(arr)
+        });
+      }).catch()
+    },
+    getGoods(){
+      getGoods().then().catch()
     }
   }
 }
@@ -371,5 +418,11 @@ export default {
     border-top: 1px #DDDDDD solid;
     border-bottom: 1px #DDDDDD solid;
     padding: 40px 30px;
+  }
+  .categoryHeader{
+    width: 20%;
+    height:30px;
+    background-color: red;
+    text-align: center;
   }
 </style>

@@ -88,3 +88,18 @@ export const seeDetailsGoods = (id) => {
     method: 'get'
   })
 }
+/**
+ * 根据品类查询商品
+ * @param {Integer} categoryOneId
+ * @param {Integer} categoryTwoId
+ */
+export const getGoods = (categoryOneId, categoryTwoId) => {
+  const params = new URLSearchParams()
+  params.append('categoryOneId', categoryOneId)
+  params.append('categoryTwoId', categoryTwoId)
+  return request({
+    url: '/admin/getAllGoodsNoPage',
+    method: 'post',
+    data: params
+  })
+}
