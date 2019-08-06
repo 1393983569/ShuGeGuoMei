@@ -60,27 +60,37 @@
         </el-select>
       </el-form-item>
       <el-form-item label="供应商品：" prop="">
-       <div>
+       <div class="goodsContainer">
           <div>
             <div class="categoryHeader">品类</div>
-            <div style="width:20%;">
+            <div class="categoryBody">
               <el-tree
                 :data="dataTree"
                 show-checkbox
                 node-key="id"
-                :props="defaultProps">
+                @current-change="changeHandle"
+                :default-checked-keys="defaultCheckedKeys"
+                @check ="handleCheckGoods"
+                >
+                <template slot-scope="{ node, data }">
+                  {{data.label}}({{data.id}})
+                </template>
               </el-tree>
             </div>
           </div>
-          <div>
-            <el-table :data="goodsList">
-              <el-table-column prop="" label=""/>
-              <el-table-column prop="" label=""/>
-              <el-table-column prop="" label=""/>
-              <el-table-column prop="" label=""/>
-              <el-table-column prop="" label=""></el-table-column>
+            <el-table :data="goodsList" :height="800">
+              <el-table-column prop="goodsName" label="商品名称"/>
+              <el-table-column prop="goodsId" label="商品ID"/>
+              <el-table-column prop="standards" label="规格"/>
+              <el-table-column prop="unit" label="单位"/>
+              <el-table-column prop="operate" label="操作">
+                <template slot-scope="scope">
+                  <el-checkbox-group v-model="checkGoodsList" @change="handleChecked(scope.row)">
+                    <el-checkbox :label="scope.row.goodsId">{{''}}</el-checkbox>
+                  </el-checkbox-group>
+                </template>
+              </el-table-column>
             </el-table>
-          </div>
        </div>
       </el-form-item>
       <el-form-item v-if="editState" label="资质照片(还未做)：" prop="">
@@ -170,7 +180,10 @@ export default {
   name: 'providerAddEdit',
   data() {
     return {
+      state:false,
+      defaultChecked:[],
       dataTree:[],
+      checkList:[],
       grade: {
         qualificationScore: '',
         priceScore: '',
@@ -237,6 +250,10 @@ export default {
       apiUrl: '',
       id: '',
       goodsList:[],
+      categoryOneId:'',
+      categoryTwoId:'',
+      defaultCheckedKeys:[1],
+      checkGoodsList:[],
     }
   },
   watch: {
@@ -255,6 +272,9 @@ export default {
     this.getaAllCategory()
   },
   methods: {
+    handleCheckGoods(a, b){
+      console.log(a, b, 'check...')
+    },
     // 查询所有店铺
     getShopOption() {
       getAllShop().then(res => {
@@ -350,10 +370,14 @@ export default {
     },
     getaAllCategory(){
       getSecondCategory().then(res => {
+        this.categoryOneId = res.info[0].id
+        this.categoryTwoId = res.info[0].seconds[0].id
+        this.getGoods()
         res.info.forEach(item => {
           let arr = {}
           arr.id = item.id
           arr.label = item.name
+          arr.children = item.seconds
           arr.children = []
           item.seconds.forEach(a => {
             let obj = {}
@@ -363,16 +387,44 @@ export default {
           })
           this.dataTree.push(arr)
         });
-      }).catch()
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询品类出错！')
+      })
+    },
+    changeHandle(e){
+      console.log(this.keyArray, 'jjjjjjjj')
+        this.categoryOneId = ''
+        this.categoryTwoId = ''
+      if(e.children){
+        this.categoryOneId = e.id
+        this.getGoods()
+      }else{
+        this.categoryTwoId = e.id
+        this.getGoods()
+      }
     },
     getGoods(){
-      getGoods().then().catch()
+      getGoods(this.categoryOneId, this.categoryTwoId).then(res => {
+        console.log(res, 'hhhhhhhhhh')
+        if(res.status === 1){
+          this.goodsList = res.info
+        }else{
+          this.$message.error('查询商品失败！')
+        }
+      }).catch(err=> {
+        console.log(err)
+        this.$message.error('查询商品出错！')
+      })
+    },
+    handleChecked(row){
+      console.log(this.checkGoodsList, 'gods...')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.avatar-uploader .el-upload {
+  .avatar-uploader .el-upload {
     border-radius: 6px;
     cursor: pointer;
     position: relative;
@@ -420,9 +472,28 @@ export default {
     padding: 40px 30px;
   }
   .categoryHeader{
-    width: 20%;
-    height:30px;
-    background-color: red;
+    width: 260px;
+    height:55px;
+    background-color: #f0f2f3;
     text-align: center;
+    line-height: 60px;
+    color:#909399;
+    font-weight: 700;
+  }
+  .goodsContainer{
+    display:flex;
+    flex-direction: row;
+    width:100%;
+  }
+  .categoryBody{
+    width:260px;
+    height:745px;
+    border:1px solid #f0f2f3;
+    background-color:#FFFFFF;
+  }
+  el-tree{
+    // width:200px;
+    height:746px;
+    border:1px solid #f0f2f3;
   }
 </style>

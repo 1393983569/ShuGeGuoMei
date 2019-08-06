@@ -95,8 +95,8 @@ export const seeDetailsGoods = (id) => {
  */
 export const getGoods = (categoryOneId, categoryTwoId) => {
   const params = new URLSearchParams()
-  params.append('categoryOneId', categoryOneId)
-  params.append('categoryTwoId', categoryTwoId)
+  if(categoryOneId)params.append('categoryOneId', categoryOneId)
+  if(categoryTwoId)params.append('categoryTwoId', categoryTwoId)
   return request({
     url: '/admin/getAllGoodsNoPage',
     method: 'post',
