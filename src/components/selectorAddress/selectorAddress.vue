@@ -115,7 +115,7 @@ export default {
           console.log(res.info,'province......')
           this.provinceList = res.info
         } else {
-          this.$message.error('暂无省份！')
+          this.$message.info('暂无省份！')
         }
       }).catch(err => {
         console.log(err)

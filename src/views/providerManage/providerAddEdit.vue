@@ -66,11 +66,9 @@
             <div class="categoryBody">
               <el-tree
                 :data="dataTree"
-                show-checkbox
                 node-key="id"
+                ref="multipleTable"
                 @current-change="changeHandle"
-                :default-checked-keys="defaultCheckedKeys"
-                @check ="handleCheckGoods"
                 >
                 <template slot-scope="{ node, data }">
                   {{data.label}}({{data.id}})
@@ -78,18 +76,12 @@
               </el-tree>
             </div>
           </div>
-            <el-table :data="goodsList" :height="800">
+            <el-table :data="goodsList" :height="800" @select="selectGoods" @select-all="selectGoodsAll">
               <el-table-column prop="goodsName" label="商品名称"/>
               <el-table-column prop="goodsId" label="商品ID"/>
               <el-table-column prop="standards" label="规格"/>
               <el-table-column prop="unit" label="单位"/>
-              <el-table-column prop="operate" label="操作">
-                <template slot-scope="scope">
-                  <el-checkbox-group v-model="checkGoodsList" @change="handleChecked(scope.row)">
-                    <el-checkbox :label="scope.row.goodsId">{{''}}</el-checkbox>
-                  </el-checkbox-group>
-                </template>
-              </el-table-column>
+              <el-table-column type="selection"></el-table-column>
             </el-table>
        </div>
       </el-form-item>
@@ -175,12 +167,16 @@ import selectorAddress from '@/components/selectorAddress/selectAll.vue'
 import { getProviderDetail } from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
+import { constants } from 'fs';
 export default {
   components: { selectorAddress },
   name: 'providerAddEdit',
   data() {
     return {
-      state:false,
+      getRowKeys(row) {
+          return row.id;
+      },
+      stateCheck:true,
       defaultChecked:[],
       dataTree:[],
       checkList:[],
@@ -252,8 +248,10 @@ export default {
       goodsList:[],
       categoryOneId:'',
       categoryTwoId:'',
-      defaultCheckedKeys:[1],
+      // defaultCheckedKeys:[1],
       checkGoodsList:[],
+      goodsTempList:[],
+      toggleSelectionList:[],
     }
   },
   watch: {
@@ -266,14 +264,39 @@ export default {
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
       this.id = this.$route.params.id
-      // this.getProviderDetail()
     }
     this.getShopOption()
     this.getaAllCategory()
   },
   methods: {
-    handleCheckGoods(a, b){
-      console.log(a, b, 'check...')
+    // 商品单选
+    selectGoods(a, row){
+      console.log(this.checkGoodsList, this.checkGoodsList.includes(row))
+      if(this.checkGoodsList.includes(row)) {
+        let index = this.checkGoodsList.indexOf(row)
+        this.checkGoodsList.splice(index, 1)
+      }else{
+        this.checkGoodsList.push(row)
+      }
+      console.log(this.checkGoodsList,row, 'danxuan ')
+    },
+    // 商品全选
+    selectGoodsAll(all){
+      console.log(all, 'all')
+      if(this.checkGoodsList.length) {
+        let arr = all.filter(res => {
+          return this.checkGoodsList.every(item => {
+            return res.goodsId !== item.goodsId
+          })
+        })
+        // console.log(arr)
+        this.checkGoodsList = this.checkGoodsList.concat(arr)
+      }else{
+        all.forEach(temp => {
+          this.checkGoodsList.push(temp)
+        })
+      }
+      console.log(this.checkGoodsList, 'quanxuan ')
     },
     // 查询所有店铺
     getShopOption() {
@@ -392,8 +415,8 @@ export default {
         this.$message.error('查询品类出错！')
       })
     },
+    // 品类树形选择变化处理
     changeHandle(e){
-      console.log(this.keyArray, 'jjjjjjjj')
         this.categoryOneId = ''
         this.categoryTwoId = ''
       if(e.children){
@@ -406,20 +429,35 @@ export default {
     },
     getGoods(){
       getGoods(this.categoryOneId, this.categoryTwoId).then(res => {
-        console.log(res, 'hhhhhhhhhh')
         if(res.status === 1){
           this.goodsList = res.info
+          this.goodsList.forEach(item => {
+            console.log(this.checkGoodsList,'//////', item, '//////',this.checkGoodsList.includes(item))
+            if(this.checkGoodsList.includes(item)){
+              let index = this.goodsList.indexOf(item)
+              this.toggleSelectionList.push(goodsList[index])
+              this.toggleSelection(this.toggleSelectionList)
+            }else{
+
+            }
+          })
         }else{
-          this.$message.error('查询商品失败！')
+          this.$message.info('此品类下暂无商品！')
         }
       }).catch(err=> {
         console.log(err)
         this.$message.error('查询商品出错！')
       })
     },
-    handleChecked(row){
-      console.log(this.checkGoodsList, 'gods...')
-    }
+    toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
   }
 }
 </script>
@@ -483,7 +521,7 @@ export default {
   .goodsContainer{
     display:flex;
     flex-direction: row;
-    width:100%;
+    width:90%;
   }
   .categoryBody{
     width:260px;
