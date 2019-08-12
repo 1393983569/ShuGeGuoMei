@@ -38,67 +38,13 @@
     center
     stripe
   >
-    <el-table-column
-      label="订单时间"
-    >
-      <template slot-scope="scope">
-        <p>{{ scope.row.date }}</p>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="订单编号"
-    >
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="订单店铺"
-    >
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="订单金额(元)"
-    >
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="订单类型"
-    >
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="订单状态"
-    >
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="子订单数"
-    >
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.name }}</p>
-        </el-popover>
-      </template>
-    </el-table-column>
+    <el-table-column label="订单时间"  prop="create_time" ></el-table-column>
+    <el-table-column label="订单编号" prop="orderNo"> </el-table-column>
+    <el-table-column label="订单店铺" prop="name"></el-table-column>
+    <el-table-column label="订单金额(元)" prop="total_money"> </el-table-column>
+    <el-table-column label="订单类型" prop="type"> </el-table-column>
+    <el-table-column label="订单状态" prop="states"> </el-table-column>
+    <el-table-column label="子订单数" prop=""></el-table-column>
     <el-table-column
       label="操作"
       width="180"
@@ -117,31 +63,27 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+    background
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    :current-page="pageNum"
+    :page-sizes="[10, 15]"
+    :page-size="pageSize"
+    layout="total, sizes, prev, pager, next, jumper"
+    :total="total">
+</el-pagination>
 </div>
 </template>
 
 <script>
+import {getOrder, orderDetail} from '@/api/collectShop/order.js'
+import { get } from 'http';
 export default {
   name: 'OrderFormList',
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      tableData: [],
       optionsType:[
         {
           id: 0,
@@ -153,13 +95,42 @@ export default {
         }
       ],
       type: '',
-      input2: ''
+      input2: '',
+      total: 0,
+      pageSize:10,
+      pageNum: 1,
+      orderNo:'',
+      states: '',
+      type: ''
     }
   },
   mounted() {
-
+    this.getOrderList()
   },
   methods: {
+    handleSizeChange(e){
+      this.pageSize = e
+      this.getOrderList()
+    },
+    handleCurrentChange(e) {
+      this.pageNum = e
+      this.getOrderList()
+    },
+    getOrderList() {
+      let data = {}
+      data.orderNo = this.orderNo
+      data.pageNum = this.pageNum
+      data.pageSize = this.pageSize
+      data.states = this.states
+      data.type = this.type
+      getOrder(data).then(res => {
+        console.log(res, 'res.....')
+        if(res.status === 1){
+          this.tableData = res.info.records
+          this.total = res.info.totalrecord
+        }
+      }).catch(err => {})
+    },
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({
