@@ -38,7 +38,7 @@
               :action="`${apiUrl}/basics/upload`"
               :show-file-list="false"
               :on-success="uploadSuccessEdit"
-              v-for="item in imgelist"
+              v-for="item in imgelist" :key="item"
               >
               <img v-if="item" :src="item" class="avatar" @click="clickImg(item)">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -259,7 +259,7 @@ export default {
         // this.shopImg = e.imge
       }
       this.shopForm = e
-      if(e) {
+      if(e.id) {
         // this.checkedCategory = []
         // let aaaa = {
         //   categoryOneId: "02",

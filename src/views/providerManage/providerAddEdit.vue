@@ -67,7 +67,6 @@
               <el-tree
                 :data="dataTree"
                 node-key="id"
-                ref="multipleTable"
                 @current-change="changeHandle"
                 >
                 <template slot-scope="{ node, data }">
@@ -76,13 +75,14 @@
               </el-tree>
             </div>
           </div>
-            <el-table :data="goodsList" :height="800" @select="selectGoods" @select-all="selectGoodsAll">
+            <el-table :data="goodsList" :height="800" ref="multipleTable" @select="selectGoods" @select-all="selectGoodsAll">
               <el-table-column prop="goodsName" label="商品名称"/>
               <el-table-column prop="goodsId" label="商品ID"/>
               <el-table-column prop="standards" label="规格"/>
               <el-table-column prop="unit" label="单位"/>
               <el-table-column type="selection"></el-table-column>
             </el-table>
+            <!-- <el-button @click="handleAAAA([goodsList[1],goodsList[2]])">aaaa</el-button> -->
        </div>
       </el-form-item>
       <el-form-item v-if="editState" label="资质照片(还未做)：" prop="">
@@ -164,7 +164,7 @@
 <script>
 import { getAllShop } from '@/api/shop.js'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
-import { getProviderDetail } from '@/api/provider.js'
+import { getProviderDetail, addProvider,editProvider} from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
@@ -173,9 +173,6 @@ export default {
   name: 'providerAddEdit',
   data() {
     return {
-      getRowKeys(row) {
-          return row.id;
-      },
       stateCheck:true,
       defaultChecked:[],
       dataTree:[],
@@ -203,6 +200,7 @@ export default {
         area: '',
         remark: '',
         shops: [],
+        goodsId:'',
         // shops: '',
         qualificationPics: '',
         qualificationScore: '',
@@ -252,27 +250,30 @@ export default {
       checkGoodsList:[],
       goodsTempList:[],
       toggleSelectionList:[],
+      providerGoodsList:[],
     }
   },
   watch: {
     'ruleForm.shops'(e) {
-      console.log(e, '^^^^^^^^^^^^^')
+      console.log(e.toString(), '^^^^^^^^^^^^^')
     }
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
+    this.getaAllCategory()
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
+      this.checkGoodsList= []
       this.id = this.$route.params.id
+      this.getProviderDetail()
     }
     this.getShopOption()
-    this.getaAllCategory()
   },
   methods: {
     // 商品单选
     selectGoods(a, row){
-      console.log(this.checkGoodsList, this.checkGoodsList.includes(row))
-      if(this.checkGoodsList.includes(row)) {
+      console.log(this.checkGoodsList, row,  this.checkGoodsList.includes(row))
+      if(JSON.stringify(this.checkGoodsList).includes(JSON.stringify(row))) {
         let index = this.checkGoodsList.indexOf(row)
         this.checkGoodsList.splice(index, 1)
       }else{
@@ -315,8 +316,38 @@ export default {
     // 查询供应商详情
     getProviderDetail() {
       getProviderDetail(this.id).then(res => {
-        console.log(res, '77777777')
-      }).catch(err => {})
+        console.log(res, 'hhhhhhhh')
+        if(res.status === 1){
+          this.ruleForm = res.info
+          this.ruleForm.shops = ''
+          // this.ruleForm.shops = res.info.providerShopList
+          this.ruleForm.provinceId = res.info.province.id
+          this.ruleForm.cityId = res.info.city.id
+          this.ruleForm.areaId = res.info.areas.id
+          res.info.providerGoodsList.forEach(item => {
+            let goods = {}
+            goods.categoryOneId = item.categoryOneId
+            goods.categoryOneName = item.categoryOneName
+            goods.categoryTwoId = item.categoryTwoId
+            goods.categoryTwoName = item.categoryTwoName
+            goods.goodsId = item.id
+            goods.goodsName = item.name
+            goods.standards = item.standards
+            goods.unit = item.unit
+            this.providerGoodsList.push(goods)
+            this.checkGoodsList.push(goods)
+          })
+          setTimeout(() =>{
+            this.handleToggles(this.providerGoodsList, this.goodsList)
+          }, 2000)
+          // this.handleToggle(res.info.providerGoodsList)
+        }else{
+
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('供应商详情查询出错')
+      })
     },
     // 评分确定
     adddGrade(){
@@ -344,35 +375,28 @@ export default {
     getCounty(e) {
       this.ruleForm.areaId = e
     },
-    // 添加供应商
+    // 编辑供应商
     submitFormEdit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm, 'gggggggg')
-          return
-          addProvider().then(res => {
-            if(res.status === 1){
-              this.$message.success('添加供应商失败！')
-            }else {
-              this.$message.warning('添加供应商出错！')
-            }
-          }).catch(err => {
-            console.log(err)
-            this.$message.error('添加供应商失败！')
-          })
+
         } else {
           console.log('error submit!!');
           return false;
         }
       });
     },
-    // 编辑供应商
+    // 添加供应商
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          let arrId = []
           console.log(this.ruleForm, 'gggggggg')
-          return
-          addProvider().then(res => {
+          this.checkGoodsList.forEach(item => {
+            arrId.push(item.goodsId)
+          })
+          this.ruleForm.goodsId = arrId.toString()
+          addProvider(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加供应商失败！')
             }else {
@@ -391,6 +415,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    // 查询所有品类
     getaAllCategory(){
       getSecondCategory().then(res => {
         this.categoryOneId = res.info[0].id
@@ -415,7 +440,7 @@ export default {
         this.$message.error('查询品类出错！')
       })
     },
-    // 品类树形选择变化处理
+    // 品类树形选择处理
     changeHandle(e){
         this.categoryOneId = ''
         this.categoryTwoId = ''
@@ -427,20 +452,12 @@ export default {
         this.getGoods()
       }
     },
+    // 查询商品
     getGoods(){
       getGoods(this.categoryOneId, this.categoryTwoId).then(res => {
         if(res.status === 1){
           this.goodsList = res.info
-          this.goodsList.forEach(item => {
-            console.log(this.checkGoodsList,'//////', item, '//////',this.checkGoodsList.includes(item))
-            if(this.checkGoodsList.includes(item)){
-              let index = this.goodsList.indexOf(item)
-              this.toggleSelectionList.push(goodsList[index])
-              this.toggleSelection(this.toggleSelectionList)
-            }else{
-
-            }
-          })
+          this.handleToggle(res.info, this.checkGoodsList)
         }else{
           this.$message.info('此品类下暂无商品！')
         }
@@ -449,15 +466,44 @@ export default {
         this.$message.error('查询商品出错！')
       })
     },
+    // 生成编辑回显数据
+    handleToggles(rows,all) {
+      rows.forEach(item => {
+        if(JSON.stringify(all).includes(item.goodsId)){
+          this.goodsList.forEach(e => {
+            if(e.goodsId === item.goodsId){
+              let index = this.goodsList.indexOf(e)
+              this.toggleSelectionList.push(this.goodsList[index])
+            }
+          })
+        }
+      })
+        this.toggleSelection(this.toggleSelectionList)
+    },
+    // 生成添加回显的数组
+    handleToggle(rows,all) {
+      rows.forEach(item => {
+        if(JSON.stringify(all).includes(item.goodsId)){
+          let index = this.goodsList.indexOf(item)
+          this.toggleSelectionList.push(this.goodsList[index])
+        }
+      })
+        this.toggleSelection(this.toggleSelectionList)
+    },
+
+    // 回显数据
     toggleSelection(rows) {
+      let _this = this
+      _this.$nextTick(function() {
         if (rows) {
           rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
+            _this.$refs.multipleTable.toggleRowSelection(row)
+          })
         } else {
-          this.$refs.multipleTable.clearSelection();
+          _this.$refs.multipleTable.clearSelection()
         }
-      },
+      })
+    },
   }
 }
 </script>
