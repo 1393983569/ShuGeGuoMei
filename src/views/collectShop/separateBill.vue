@@ -1,5 +1,9 @@
 <template>
   <div class="box-margin">
+    <breadcrumb>
+      <el-button type="danger">取消</el-button>
+      <el-button type="primary">保存</el-button>
+    </breadcrumb>
     <div>子订单编号：123153123123123</div>
     <div>
       关联供应商：
@@ -23,82 +27,12 @@
         center
         stripe
       >
-        <el-table-column
-          label="订单时间"
-        >
-          <template slot-scope="scope">
-            <p>{{ scope.row.date }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="订单编号"
-        >
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.name }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="订单店铺"
-        >
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.name }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="订单金额(元)"
-        >
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.name }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="订单类型"
-        >
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.name }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="订单状态"
-        >
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.name }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="子订单数"
-        >
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.name }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="180"
-        >
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="viewDetails(scope.$index, scope.row)"
-            >查看详情</el-button>
-            <el-button
-              size="mini"
-              @click="separateBill(scope.$index, scope.row)"
-            >拆单</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column label="商品名称" prop="date" ></el-table-column>
+        <el-table-column label="商品ID" prop="" > </el-table-column>
+        <el-table-column label="规格" prop="" />
+        <el-table-column label="单价" prop="" />
+        <el-table-column label="下单数量" prop="" />
+        <el-table-column label="金额" prop="" />
         <el-table-column
           type="selection"
           width="55"
@@ -109,27 +43,15 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'SeparateBill',
+  components: {
+    Breadcrumb
+  },
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      tableData: []
     }
   },
   mounted() {

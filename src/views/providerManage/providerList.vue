@@ -22,7 +22,11 @@
       <el-table-column prop="id" label="供应商ID"/>
       <el-table-column prop="name" label="供应商名称" />
       <el-table-column prop="mobile" label="手机号" />
-      <el-table-column prop="" label="评分" />
+      <el-table-column prop="" label="评分">
+        <template slot-scope="scope">
+          {{scope.row.qualificationScore + scope.row.qualityScore + scope.row.serviceScore + scope.row.deliverShopScore + scope.row.priceScore}}
+        </template>
+      </el-table-column>
       <el-table-column prop="" label="操作" width= "260px">
         <template slot-scope="scope">
           <el-button size="mini" type="warning" @click="detailProvider(scope.row)">查看详情</el-button>
@@ -92,6 +96,12 @@ export default {
       getProvider(data).then(res => {
         if(res.info.records.length > 0){
           this.total = res.info.totalrecord
+          // res.info.records.forEach(item => {
+          //   let obj = {}
+          //   obj = item
+          //   obj.grade = item.qualificationScore + item.qualityScore + item.serviceScore + item.deliverShopScore + item.priceScore
+          //   this.tableData.push(obj)
+          // });
           this.tableData = res.info.records
           this.loadingSearch = false
           this.loadingClear = false

@@ -97,22 +97,22 @@
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
-      <el-form-item v-if="editState" label="评分(还未做)：" prop="">
+      <el-form-item v-if="editState" label="评分：" prop="">
         <div>
           <div>
-            <span class="font-weight font-size">资质：{{ruleForm.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span><el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible = true">去评分</el-button>
+            <span class="font-weight font-size">资质：{{grade.qualification}}</span>&nbsp;&nbsp;<span>满分=5</span><el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible = true">去评分</el-button>
           </div>
           <div>
-            <span class="font-weight">价格分：{{ruleForm.priceScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+            <span class="font-weight">价格分：{{grade.price}}</span>&nbsp;&nbsp;<span>满分=5</span>
           </div>
           <div>
-            <span class="font-weight">品质分：{{ruleForm.qualityScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+            <span class="font-weight">品质分：{{grade.quality}}</span>&nbsp;&nbsp;<span>满分=5</span>
           </div>
           <div>
-            <span class="font-weight">服务分：{{ruleForm.serviceScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+            <span class="font-weight">服务分：{{grade.service}}</span>&nbsp;&nbsp;<span>满分=5</span>
           </div>
           <div>
-            <span class="font-weight">配送店铺数量分：{{ruleForm.deliverShopScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+            <span class="font-weight">配送店铺数量分：{{grade.amount}}</span>&nbsp;&nbsp;<span>满分=5</span>
           </div>
         </div>
       </el-form-item>
@@ -138,25 +138,25 @@
       <div class="dialogBorder">
         <el-form label-position="right" label-width="130px" :model="grade">
           <el-form-item label="资质:">
-            <el-input v-model="grade.qualificationScore" placeholder="请输入分数" />
+            <el-input v-model="grade.qualification" placeholder="请输入分数" />
           </el-form-item>
           <el-form-item label="价格分:">
-            <el-input v-model="grade.priceScore"  placeholder="请输入分数"/>
+            <el-input v-model="grade.price"  placeholder="请输入分数"/>
           </el-form-item>
           <el-form-item label="品质分:">
-            <el-input v-model="grade.qualityScore"  placeholder="请输入分数"/>
+            <el-input v-model="grade.quality"  placeholder="请输入分数"/>
           </el-form-item>
           <el-form-item label="服务分:">
-            <el-input v-model="grade.serviceScore"  placeholder="请输入分数"/>
+            <el-input v-model="grade.service"  placeholder="请输入分数"/>
           </el-form-item>
           <el-form-item label="配送店铺数量分:">
-            <el-input v-model="grade.deliverShopScore"  placeholder="请输入分数"/>
+            <el-input v-model="grade.amount"  placeholder="请输入分数"/>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer botton" style="margin:0px;padding:0px;">
         <div @click="dialogVisible = false" style="border-right: 1px #DDDDDD solid">取消</div>
-        <div @click="adddGrade">确定</div>
+        <div @click="addGrade">确定</div>
       </div>
     </el-dialog>
   </div>
@@ -168,6 +168,7 @@ import { getProviderDetail, addProvider,editProvider} from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
+import {addGrade, getGrade} from '@/api/providerGrade.js'
 export default {
   components: { selectorAddress },
   name: 'providerAddEdit',
@@ -178,11 +179,13 @@ export default {
       dataTree:[],
       checkList:[],
       grade: {
-        qualificationScore: '',
-        priceScore: '',
-        qualityScore: '',
-        serviceScore: '',
-        deliverShopScore: '',
+        adminId: '',
+        qualification: '',
+        price: '',
+        quality: '',
+        service: '',
+        amount: '',
+        providerId: ''
       },
       ruleForm:{
         name: '',
@@ -200,7 +203,7 @@ export default {
         area: '',
         remark: '',
         shops: [],
-        goodsId:'',
+        goodsId:[],
         // shops: '',
         qualificationPics: '',
         qualificationScore: '',
@@ -261,10 +264,13 @@ export default {
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getaAllCategory()
+    this.grade.adminId = this.$store.state.user.roleId
+    // console.log(this.$store, 'hhhhhhhh')
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
       this.checkGoodsList= []
       this.id = this.$route.params.id
+      this.grade.providerId = this.$route.params.id
       this.getProviderDetail()
     }
     this.getShopOption()
@@ -350,14 +356,18 @@ export default {
       })
     },
     // 评分确定
-    adddGrade(){
-      this.ruleForm.qualificationScore = this.grade.qualificationScore
-      this.ruleForm.priceScore = this.grade.priceScore
-      this.ruleForm.qualityScore = this.grade.qualityScore
-      this.ruleForm.serviceScore = this.grade.serviceScore
-      this.ruleForm.deliverShopScore = this.grade.deliverShopScore
-      this.dialogVisible = false
-      this.grade = {}
+    addGrade(){
+      addGrade(this.grade).then(res => {
+        if(res.status === 1){
+          this.$message.success('评分添加成功！')
+          this.dialogVisible = false
+        }else{
+          this.$message.error('评分添加出错！')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('评分添加失败！')
+      })
     },
     handleAvatarSuccess(file) {
       console.log(file, 'hhhh')
@@ -391,11 +401,13 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let arrId = []
-          console.log(this.ruleForm, 'gggggggg')
           this.checkGoodsList.forEach(item => {
             arrId.push(item.goodsId)
           })
-          this.ruleForm.goodsId = arrId.toString()
+          // this.ruleForm.goodsId = arrId.toString()
+          this.ruleForm.goodsId = arrId
+          console.log(arrId, 'zifuchuan.....')
+          // return
           addProvider(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加供应商失败！')

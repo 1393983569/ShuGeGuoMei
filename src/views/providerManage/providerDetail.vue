@@ -167,17 +167,13 @@ export default {
     // 生成合并数组
     getMergeList() {
       this.mergeList = []
-      // console.log(this.categoryTable, '4444444')
       this.categoryTable.forEach((item, index) => {
-        // console.log(index, '6666666')
         if (index === 0) {
           this.mergeList.push(1)
           this.position = index
         } else {
           if (item.childrenId === this.categoryTable[index - 1].childrenId) {
-            // console.log(this.mergeList[], '8888888')
             this.mergeList[this.position] += 1
-            // console.log(this.mergeList, '8888888')
             this.mergeList.push(0)
           } else {
             this.mergeList.push(1)

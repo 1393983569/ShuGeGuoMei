@@ -4,7 +4,7 @@
     <div>
       类型：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
         <el-option
-          v-for="item in optionsType"
+          v-for="item in type"
           :key="item.id"
           :label="item.name"
           :value="item.id">
@@ -12,7 +12,7 @@
       </el-select>
       订单状态：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
         <el-option
-          v-for="item in optionsType"
+          v-for="item in status"
           :key="item.id"
           :label="item.name"
           :value="item.id">
@@ -42,8 +42,22 @@
     <el-table-column label="订单编号" prop="orderNo"> </el-table-column>
     <el-table-column label="订单店铺" prop="name"></el-table-column>
     <el-table-column label="订单金额(元)" prop="total_money"> </el-table-column>
-    <el-table-column label="订单类型" prop="type"> </el-table-column>
-    <el-table-column label="订单状态" prop="states"> </el-table-column>
+    <el-table-column label="订单类型" prop="type">
+      <template slot-scope="scope">
+        <p v-if="scope.row.type ===1">销售</p>
+        <p v-else-if="scope.row.type===2">退货</p>
+        <p v-else-if="scope.row.type===3">采购</p>
+        <p v-else>调拨</p>
+      </template>
+    </el-table-column>
+    <el-table-column label="订单状态" prop="states">
+      <template slot-scope="scope">
+        <p v-if="scope.row.status ===0">未拆单</p>
+        <p v-else-if="scope.row.status===1">已拆单</p>
+        <p v-else-if="scope.row.status===2">已派单</p>
+        <p v-else>已入库</p>
+      </template>
+    </el-table-column>
     <el-table-column label="子订单数" prop=""></el-table-column>
     <el-table-column
       label="操作"
@@ -86,21 +100,38 @@ export default {
       tableData: [],
       optionsType:[
         {
-          id: 0,
+          id: 1,
+          name:'销售'
+        },
+        {
+          id: 2,
+          name:'退货'
+        },
+        {
+          id: 3,
           name:'采购'
         },
         {
-          id: 1,
+          id: 4,
           name:'调拨'
         }
       ],
-      type: '',
+      optionsStatus:[
+        {
+          id: 2,
+          name:'已派单'
+        },
+        {
+          id: 3,
+          name:'已入库'
+        }
+      ],
       input2: '',
       total: 0,
       pageSize:10,
       pageNum: 1,
       orderNo:'',
-      states: '',
+      status: '',
       type: ''
     }
   },
@@ -127,6 +158,7 @@ export default {
         console.log(res, 'res.....')
         if(res.status === 1){
           this.tableData = res.info.records
+          console.log(this.tableData, 'kkkkkkk')
           this.total = res.info.totalrecord
         }
       }).catch(err => {})
