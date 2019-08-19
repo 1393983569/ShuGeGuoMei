@@ -7,12 +7,12 @@
     <div>子订单编号：123153123123123</div>
     <div>
       关联供应商：
-      <el-select v-model="value" placeholder="请选择" style="width: 280px">
+      <el-select v-model="provider" placeholder="请选择" style="width: 280px">
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in optionsProvider"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
         />
       </el-select>
     </div>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { getAllProvider } from '@/api/provider.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'SeparateBill',
@@ -51,11 +52,13 @@ export default {
   },
   data() {
     return {
-      tableData: []
+      tableData: [],
+      optionsProvider:[],
+      provider:''
     }
   },
   mounted() {
-
+    this.getProviders()
   },
   methods: {
     // 查看详情
@@ -65,6 +68,15 @@ export default {
         params: {
           row: row
         }
+      })
+    },
+    getProviders() {
+      getAllProvider().then(res => {
+        if(res.status === 1) {
+          this.optionsProvider = res.info
+        }
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
     // 拆单

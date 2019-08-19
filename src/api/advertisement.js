@@ -75,3 +75,13 @@ export const shelfAdvertisement = (status, id) => {
     // data: params
   })
 }
+/**
+ * 广告置顶
+ * @param {Integer} id 广告id
+ */
+export const topAdvertisement =(id) => {
+ return request({
+   url: `/admin/istop?id=${id}`,
+   method:'get'
+ })
+}

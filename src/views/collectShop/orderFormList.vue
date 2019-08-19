@@ -38,7 +38,7 @@
     center
     stripe
   >
-    <el-table-column label="订单时间"  prop="create_time" ></el-table-column>
+    <el-table-column label="订单时间"  prop="createTime" ></el-table-column>
     <el-table-column label="订单编号" prop="orderNo"> </el-table-column>
     <el-table-column label="订单店铺" prop="name"></el-table-column>
     <el-table-column label="订单金额(元)" prop="total_money"> </el-table-column>

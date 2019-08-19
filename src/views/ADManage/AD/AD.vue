@@ -18,7 +18,7 @@
         <template slot-scope="scope">
           <el-button type="warning" size="mini" v-if="bottonList.includes('查看'||'操作')" @click="handleDetail(scope.row)">查看详情</el-button>
           <el-button type="warning" size="mini" v-else disabled>查看详情</el-button>
-          <el-button size="mini" type="success" v-if="bottonList.includes('操作')" @click="handleStick(scope.$index, scope.row)">置顶</el-button>
+          <el-button size="mini" type="success" v-if="bottonList.includes('操作')&&scope.row.status === '已上架'" @click="handleStick(scope.$index, scope.row)">置顶</el-button>
           <el-button size="mini" type="success" v-else disabled>置顶</el-button>
           <el-button type="primary" size="mini" v-if="bottonList.includes('操作')&&scope.row.status === '已下架'" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button type="primary" size="mini" v-else-if="bottonList.includes('操作')&&scope.row.status === '上架'" @click="handleEditShelf">编辑</el-button>

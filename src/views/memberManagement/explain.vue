@@ -14,7 +14,7 @@
 import tinymce from '@/components/Tinymce'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
-  name: 'Explain',
+  name: 'explain',
   components: {
     tinymce,
     Breadcrumb

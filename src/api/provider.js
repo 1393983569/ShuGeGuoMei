@@ -77,3 +77,12 @@ export const getProviderDetail = (id) => {
     // data: params
   })
 }
+/**
+ * 查询所有供应商
+ */
+export const getAllProvider = () => {
+  return request({
+    url: '/admin/getAllProvider',
+    method: 'get'
+  })
+}

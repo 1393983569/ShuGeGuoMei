@@ -476,7 +476,7 @@ export const asyncRoutes = [
         name: 'memberList',
         meta: {
           roles: ['memberList'],
-          icon: 'dashboard',
+          icon: 'Membercenter_default',
           title: '会员管理'
         },
         component: () => import('@/views/memberManagement/memberList.vue')
@@ -517,7 +517,7 @@ export const asyncRoutes = [
       {
         path: 'integralDetails',
         name: 'integralDetails',
-        hidden:true,
+        hidden: true,
         meta: {
           // roles: ['integralDetails'],
           icon: 'dashboard',
@@ -528,6 +528,7 @@ export const asyncRoutes = [
       {
         path: 'explain',
         name: 'explain',
+        hidden: true,
         meta: {
           roles: ['explain'],
           icon: 'dashboard',

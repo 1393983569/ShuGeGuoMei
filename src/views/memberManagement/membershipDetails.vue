@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p>会员ID：</p>
-    <p>手机号：</p>
-    <p>注册时间：</p>
+    <p>会员ID：{{vipObject.id}}</p>
+    <p>手机号：{{vipObject.mobile}}</p>
+    <p>注册时间：{{vipObject.registerTime}}</p>
     <div>
       <div style="display: inline-block; vertical-align: top">头像： </div>
       <el-image
@@ -17,13 +17,21 @@
     <div class="div_margin">
       <span>积分：</span><el-button type="success" @click="integralDetails">查询详情</el-button>
     </div>
-    <p>性别：</p>
-    <p>年龄：</p>
-    <p>职业：</p>
-    <p>常住小区：</p>
-    <p>身份：</p>
-    <p>折扣能力：</p>
-    <p>级别：</p>
+    <p>性别：{{vipObject.sex}}</p>
+    <p>年龄：{{vipObject.age}}</p>
+    <p>职业：{{vipObject.id}}</p>
+    <p>常住小区：{{vipObject.provinceDomain.name}}{{vipObject.cityDomain.name}}{{vipObject.areaDomain.name}}</p>
+    <p>身份：
+      <span v-if="vipObject.identity===1">家庭会员</span>
+      <span v-else>VIP会员</span>
+    </p>
+    <p>折扣能力：{{vipObject.discountAbility}}</p>
+    <p>级别：
+      <span v-if="vipObject.level===1">普通会员</span>
+      <span v-else-if="vipObject.level===2">银牌会员</span>
+      <span v-else-if="vipObject.level===3">金牌会员</span>
+      <span v-else>钻石会员</span>
+    </p>
     <div>
       <div style="display: inline-block; vertical-align: top;">
         会员分析：
@@ -54,6 +62,7 @@
 </template>
 
 <script>
+import { vipDetail } from '@/api/member.js'
 export default {
   name: 'MembershipDetails',
   data() {
@@ -120,16 +129,21 @@ export default {
                   ]
               }
           ]
-      }
+      },
+      vipObject:{}
     }
   },
   beforeRouteEnter(to, form, next) {
     next(mv => {
       mv.row = to.params.row
-      console.log(mv.row, 'ssssssssssssssssssss')
+      // console.log(mv.row, 'ssssssssssssssssssss')
     })
   },
   mounted() {
+    if(JSON.stringify(this.$route.params !== '{}')){
+      this.vipId = this.$route.params.id
+      this.getVipDetail()
+    }
     this.showRow()
     this.goodsChartHandle()
   },
@@ -149,6 +163,17 @@ export default {
     goodsChartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart)
       myChart.setOption(this.option)
+    },
+    // 查询详情
+    getVipDetail(){
+      vipDetail(this.vipId).then(res => {
+        console.log(res, 'jjjjjjj')
+        if(res.status === 1){
+          this.vipObject = res.info
+        }
+      }).catch(err => {
+        this.$message.error('查询会员详情出错！')
+      })
     }
   }
 }
