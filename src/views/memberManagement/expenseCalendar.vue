@@ -2,8 +2,8 @@
   <div>
     <breadcrumb>
       <div style="display:flex;flex-direction:row;">
-        <div>会员ID：021AH135617926</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div>手机号：13619390363</div>
+        <div>会员ID：{{vipId}}</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>手机号：{{mobile}}</div>
       </div>
       </breadcrumb>
       <el-table
@@ -12,28 +12,15 @@
         center
         stripe
       >
+        <el-table-column prop="createTime" label="消费时间" ></el-table-column>
+        <el-table-column prop="shopName" label="消费店铺" ></el-table-column>
         <el-table-column
-          prop="date"
-          label="消费时间"
-        >
-          <template slot-scope="scope">
-            <p>{{ scope.row.date }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="消费店铺"
-        >
-          <template slot-scope="scope">
-            <p>{{ scope.row.name }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="num"
+          prop="orderNo"
           label="订单编号"
+          width="300"
         >
           <template slot-scope="scope">
-            <div style="display: inline-block">{{ scope.row.num }}</div>
+            <div style="display: inline-block">{{ scope.row.orderNo }}</div>
             <el-button
               style="display: inline-block"
               size="mini"
@@ -42,12 +29,9 @@
             >查看详情</el-button>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="money"
-          label="支付金额"
-        >
+        <el-table-column prop="finalMoney" label="支付金额">
           <template slot-scope="scope">
-            <p>{{ scope.row.money }}</p>
+            {{scope.row.finalMoney/100}}
           </template>
         </el-table-column>
       </el-table>
@@ -68,6 +52,7 @@
 </template>
 
 <script>
+import { getVipRecords } from '@/api/member.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'expenseCalendar',
@@ -85,35 +70,22 @@ export default {
       pageNum:1,
       pageSize:10,
       total:0,
-      dataList: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          num: '620101200119022610001',
-          money: '￥140.00'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          num: '620101200119022610001',
-          money: '￥140.00'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          num: '620101200119022610001',
-          money: '￥140.00'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          num: '620101200119022610001',
-          money: '￥140.00'
-        }
-      ]
+      dataList: [],
+      mobile:'',
+      vipId: '',
+      vipObject:{}
     }
   },
   mounted() {
+    if(JSON.stringify(this.$route.params) === '{}') {
+      console.log(this.$route.params, 'kkkkkkkk')
+
+    }else{
+      this.vipObject = this.$route.params
+      this.mobile = this.$route.params.mobile
+      this.vipId = this.$route.params.id
+      this.getVipRecords()
+    }
 
   },
   methods: {
@@ -124,6 +96,17 @@ export default {
         params: {
           row: row
         }
+      })
+    },
+    getVipRecords() {
+      getVipRecords(this.vipId,this.pageNum, this.pageSize).then(res => {
+        if(res.status === 1){
+          this.dataList = res.info.records
+          this.total = res.info.totalrecord
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('记录查询出错！')
       })
     },
     // 派单

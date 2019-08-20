@@ -14,7 +14,7 @@
         </el-option>
       </el-select>
       身份：
-      <el-select v-model="identityId" placeholder="请选择" size="mini" style="width:140px;">
+      <el-select v-model="identity" placeholder="请选择" size="mini" style="width:140px;">
         <el-option
           v-for="item in identityList"
           :key="item.id"
@@ -37,11 +37,12 @@
       </div>
       <div style="margin-top:5px;margin-bottom:10px;">
         <el-input
+          clearable
           placeholder="请输入关键词进行搜索"
           prefix-icon="el-icon-search"
-          v-model="input2" style="width:400px;" size="mini">
+          v-model="param" style="width:400px;" size="mini">
         </el-input>
-        <el-button size="mini">搜索</el-button>
+        <el-button size="mini" @click="handleFind">搜索</el-button>
       </div>
     </div>
     <el-table
@@ -68,7 +69,11 @@
       </el-table-column>
       <el-table-column prop="shopName" label="注册店铺" ></el-table-column>
       <el-table-column prop="registerTime" label="注册时间"></el-table-column>
-      <el-table-column prop="balance" label="余额（元）"></el-table-column>
+      <el-table-column prop="balance" label="余额（元）">
+        <template slot-scope="scope">
+          {{scope.row.balance/100}}
+        </template>
+      </el-table-column>
       <el-table-column prop="score" label="积分"></el-table-column>
       <el-table-column
         label="操作"
@@ -109,7 +114,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import { getAllShop } from '@/api/shop.js'
 import { deleteVip, getVipList, vipDetail} from '@/api/member.js'
 export default {
-  name: 'MemberList',
+  name: 'memberList',
   components:{
     hint,Breadcrumb
   },
@@ -126,18 +131,18 @@ export default {
       shopId: '',
       identityList: [
         {
-          id: 0,
+          id: 1,
           name:'家庭会员'
         },
         {
-          id: 1,
+          id: 2,
           name:'VIP会员'
         }
       ],
       identityId: '',
       rankList: [
         {
-          id: 0,
+          id: 1,
           name:'普通会员'
         },
         {
@@ -158,10 +163,23 @@ export default {
       total: 0,
       pageSize: 10,
       pageNum: 1,
-      input2: '',
-      identityId:'',
+      param: '',
+      identity:'',
       level: '',
-      vipId:''
+      vipId:'',
+      condition:''
+    }
+  },
+  watch:{
+    'param'(e){
+      if(e){
+        this.condition = e*100
+        this.getVipList()
+      }else{
+        this.condition = ''
+        this.getVipList()
+      }
+
     }
   },
   mounted() {
@@ -176,12 +194,16 @@ export default {
         params: row
       })
     },
+    handleFind(){
+      this.getVipList()
+    },
     searchVip(){
       this.getVipList()
     },
     clearVip(){
-      this.identityId = ''
+      this.identity = ''
       this.level= ''
+      this.shopId=''
       this.getVipList()
     },
     // 确认删除会员
@@ -205,7 +227,7 @@ export default {
     },
     // 查询会员列表
     getVipList(){
-      getVipList(this.identityId, this.level, this.pageNum, this.pageSize).then(res => {
+      getVipList(this.identity, this.level,this.shopId, this.pageNum, this.pageSize,this.condition).then(res => {
         if(res.status === 1){
           this.dataList = res.info.records
           this.total = res.info.totalrecord

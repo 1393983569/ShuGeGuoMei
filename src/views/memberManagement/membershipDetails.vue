@@ -8,7 +8,7 @@
       <el-image
         style="width: 50px; height: 50px; display: inline-block"
         :fit="fit"
-        :src="img"
+        :src="vipObject.avatar"
       />
     </div>
     <div class="div_margin">
@@ -19,8 +19,9 @@
     </div>
     <p>性别：{{vipObject.sex}}</p>
     <p>年龄：{{vipObject.age}}</p>
-    <p>职业：{{vipObject.id}}</p>
-    <p>常住小区：{{vipObject.provinceDomain.name}}{{vipObject.cityDomain.name}}{{vipObject.areaDomain.name}}</p>
+    <p>职业：{{vipObject.career}}</p>
+    <!-- <p>常住小区：{{vipObject.provinceDomain.name}}{{vipObject.cityDomain.name}}{{vipObject.areaDomain.name}}</p> -->
+    <p>常住小区：{{province}}{{city}}{{area}}</p>
     <p>身份：
       <span v-if="vipObject.identity===1">家庭会员</span>
       <span v-else>VIP会员</span>
@@ -68,7 +69,6 @@ export default {
   data() {
     return {
       row: {},
-      img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       fit: 'fit',
       option:{
           tooltip : {
@@ -130,7 +130,10 @@ export default {
               }
           ]
       },
-      vipObject:{}
+      vipObject:{},
+      province:'',
+      city:'',
+      area:'',
     }
   },
   beforeRouteEnter(to, form, next) {
@@ -140,7 +143,9 @@ export default {
     })
   },
   mounted() {
-    if(JSON.stringify(this.$route.params !== '{}')){
+    if(JSON.stringify(this.$route.params)=== '{}'){
+      this.$router.push({name:'memberList'})
+    }else{
       this.vipId = this.$route.params.id
       this.getVipDetail()
     }
@@ -155,7 +160,8 @@ export default {
       this.$router.push({name: 'integralDetails'})
     },
     sellRecords() {
-      this.$router.push({name:'expenseCalendar'})
+      // console.log(this.vipObject, 'gggggggg')
+      this.$router.push({name:'expenseCalendar', params:this.vipObject})
     },
     rechargeRecords(){
       this.$router.push({name:'rechargeRecord'})
@@ -167,9 +173,13 @@ export default {
     // 查询详情
     getVipDetail(){
       vipDetail(this.vipId).then(res => {
-        console.log(res, 'jjjjjjj')
+        // console.log(res, 'jjjjjjj')
         if(res.status === 1){
           this.vipObject = res.info
+          // {{vipObject.provinceDomain.name}}{{vipObject.cityDomain.name}}{{vipObject.areaDomain.name}}
+          this.province = res.info.provinceDomain.name
+          this.city = res.info.cityDomain.name
+          this.area = res.info.areaDomain.name
         }
       }).catch(err => {
         this.$message.error('查询会员详情出错！')
