@@ -54,19 +54,29 @@
     }
 
     .svg-icon {
-      margin-right: 16px;
+      margin-right: 10px;
     }
-
     .el-menu {
       border: none;
       height: 100%;
       width: 100% !important;
+      background-color: #fff;
+      background-color: transparent;
     }
 
     // menu hover
     .submenu-title-noDropdown,
     .el-submenu__title {
       &:hover {
+        color: #fff !important;
+        background-color: $menuHover !important;
+      }
+      &:active {
+        color: #fff !important;
+        background-color: $menuHover !important;
+      }
+      &.is-active {
+        color: #fff !important;
         background-color: $menuHover !important;
       }
     }
@@ -78,6 +88,9 @@
       font-size:20px;
       font-family: "微软雅黑";
     }
+    .el-submenu__title.is-active{
+      background-color: #2467E4;
+    }
     .el-menu-item{
       font-size:20px;
       font-family: "微软雅黑";
@@ -85,9 +98,18 @@
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
-      background-color: $subMenuBg !important;
+      // background-color: $subMenuBg !important;
       &:hover {
-        background-color: $subMenuHover !important;
+        color: #fff !important;
+        background-color: #409EFF !important;
+      }
+      &:active{
+        color: #fff !important;
+        background-color: #409EFF !important;
+      }
+      &.is-active{
+        color: #fff !important;
+        background-color: #409EFF !important;
       }
     }
   }

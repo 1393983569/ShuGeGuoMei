@@ -450,6 +450,56 @@ export const asyncRoutes = [
         component: () => import('@/views/marketing/marketPrice/marketPrice.vue')
       },
       {
+        path: 'discount',
+        name: 'discount',
+        meta: {
+          // roles: ['discount'],
+          icon: 'dashboard',
+          title: '折扣包'
+        },
+        component: () => import('@/views/marketing/discount/discount.vue')
+      },
+      {
+        path: 'discountDetail',
+        name: 'discountDetail',
+        meta: {
+          // roles: ['discountDetail'],
+          icon: 'dashboard',
+          title: '折扣包详情'
+        },
+        component: () => import('@/views/marketing/discount/discountDetail.vue')
+      },
+      {
+        path: 'discountEditAdd',
+        name: 'discountEditAdd',
+        meta: {
+          // roles: ['discountEditAdd'],
+          icon: 'dashboard',
+          title: '折扣包编辑'
+        },
+        component: () => import('@/views/marketing/discount/discountEditAdd.vue')
+      },
+      {
+        path: 'buygift',
+        name: 'buygift',
+        meta: {
+          // roles: ['buygift'],
+          icon: 'dashboard',
+          title: '买赠包'
+        },
+        component: () => import('@/views/marketing/buygift/buygift.vue')
+      },
+      {
+        path: 'integrationRule',
+        name: 'integrationRule',
+        meta: {
+          // roles: ['integrationRule'],
+          icon: 'dashboard',
+          title: '积分规则'
+        },
+        component: () => import('@/views/marketing/integrationRule/integrationRule.vue')
+      },
+      {
         path: 'pricing',
         name: 'pricing',
         meta: {
@@ -513,6 +563,17 @@ export const asyncRoutes = [
           title: '消费记录'
         },
         component: () => import('@/views/memberManagement/expenseCalendar.vue')
+      },
+      {
+        path: 'expenseCalendarDetail',
+        name: 'expenseCalendarDetail',
+        hidden:true,
+        meta: {
+          // roles: ['expenseCalendar'],
+          icon: 'dashboard',
+          title: '消费记录详情'
+        },
+        component: () => import('@/views/memberManagement/expenseCalendarDetail.vue')
       },
       {
         path: 'integralDetails',

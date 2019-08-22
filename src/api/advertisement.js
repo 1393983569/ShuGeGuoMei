@@ -79,9 +79,9 @@ export const shelfAdvertisement = (status, id) => {
  * 广告置顶
  * @param {Integer} id 广告id
  */
-export const topAdvertisement =(id) => {
+export const topAdvertisement =(id,istop) => {
  return request({
-   url: `/admin/istop?id=${id}`,
+   url: `/admin/istop?id=${id}&istop=${istop}`,
    method:'get'
  })
 }

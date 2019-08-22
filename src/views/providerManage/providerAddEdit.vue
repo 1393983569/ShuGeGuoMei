@@ -321,15 +321,20 @@ export default {
     },
     // 查询供应商详情
     getProviderDetail() {
-      getProviderDetail(this.id).then(res => {
+      getProviderDetail(this.id.toString()).then(res => {
         console.log(res, 'hhhhhhhh')
         if(res.status === 1){
           this.ruleForm = res.info
           this.ruleForm.shops = ''
-          // this.ruleForm.shops = res.info.providerShopList
-          this.ruleForm.provinceId = res.info.province.id
-          this.ruleForm.cityId = res.info.city.id
-          this.ruleForm.areaId = res.info.areas.id
+          if(res.info.provinceDomain){
+            this.ruleForm.provinceId = res.info.provinceDomain.id
+          }
+          if(res.info.cityDomain) {
+            this.ruleForm.cityId = res.info.cityDomain.id
+          }
+          if(res.info.areaDomain) {
+            this.ruleForm.areaId = res.info.areaDomain.id
+          }
           res.info.providerGoodsList.forEach(item => {
             let goods = {}
             goods.categoryOneId = item.categoryOneId

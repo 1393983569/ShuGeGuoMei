@@ -59,7 +59,7 @@
 import hint from '@/components/Hint'
 import AdDetail from './ADDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'
-import { getAdvertisement, shelfAdvertisement, deleteAdvertisement } from '@/api/advertisement.js'
+import { getAdvertisement, shelfAdvertisement, deleteAdvertisement, topAdvertisement } from '@/api/advertisement.js'
 export default {
   components: { AdDetail, Breadcrumb, hint },
   data() {
@@ -74,6 +74,7 @@ export default {
       shelfTitle: '',
       showShelf: false,
       id: '',
+      istop:0,
       shelfStatus: '',
       showDelete: false,
       editObject: {},
@@ -165,6 +166,24 @@ export default {
         this.$message.error(this.shelfTitle + '广告失败！')
       })
     },
+    // 置顶广告
+    handleStick(index, row) {
+      this.id = row.id
+      this.topAdvertisement()
+    },
+    // 置顶广告
+    topAdvertisement(){
+      this.istop = 1
+      topAdvertisement(this.id, this.istop).then(res => {
+        if(res.status === 1){
+          this.$message.success('置顶成功！')
+          this.getAdvertiseList()
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('置顶失败！')
+      })
+    },
     // 删除广告
     deleteHandle(row) {
       this.showDelete = true
@@ -184,9 +203,7 @@ export default {
         this.$message.error('删除广告失败！')
       })
     },
-    handleStick(index, row) {
-      console.log(index, row)
-    },
+
     getButton(list, name) {
       list.forEach(item => {
         if (item.name === name) {

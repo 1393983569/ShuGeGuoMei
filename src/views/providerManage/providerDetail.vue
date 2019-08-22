@@ -9,9 +9,9 @@
     <p>微信：{{providerObj.wechat}}</p>
     <p>QQ：{{providerObj.qq}}</p>
     <p>邮箱：{{providerObj.email}}</p>
-    仓库地址：<span v-if="providerObj">{{providerObj.province.name}}</span>
-    <!-- <span v-if="providerObj.city">{{providerObj.city}}</span>
-    <span v-if="providerObj.areaList">{{providerObj.areaList}}</span> -->
+    仓库地址：<span>{{province}}</span>
+    <span>{{city}}</span>
+    <span>{{area}}</span>
     <p>详细地址：{{providerObj.addressDetail}}</p>
     <p>仓库面积：{{providerObj.area}}m<sup>2</sup></p>
     <p>备注：{{providerObj.remark}}</p>
@@ -79,6 +79,9 @@ export default {
       imgList:[],
       mergeList:[],
       categoryTable: [],
+      city:'',
+      province:'',
+      area:''
     }
   },
   mounted(){
@@ -87,6 +90,15 @@ export default {
       getProviderDetail(this.$route.params.id).then(res => {
         if(res.status === 1){
           this.providerObj = res.info
+          if(res.info.provinceDomain){
+            this.province = res.info.provinceDomain.name
+          }
+          if(res.info.cityDomain){
+            this.city = res.info.cityDomain.name
+          }
+          if(res.info.areaDomain){
+            this.area = res.info.areaDomain.name
+          }
           this.categoryTable =this.recursionTableData(this.providerObj.providerGoodsList)
           this.getMergeList()
           // console.log(this.providerObj, 'res.info')

@@ -76,3 +76,16 @@ export const getVipRecords = (memberId,pageNum, pageSize) => {
     data: params,
   })
 }
+/**
+ * 订单消费记录详情
+ * @param {Integer} id 记录id
+ */
+export const getRecordsDetail = (id) => {
+  const params = new URLSearchParams()
+  params.append('id', id)
+  return request({
+    url: '/admin/selectOrder',
+    data: params,
+    method: 'post'
+  })
+}

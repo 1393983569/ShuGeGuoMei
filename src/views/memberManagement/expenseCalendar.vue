@@ -79,6 +79,9 @@ export default {
   mounted() {
     if(JSON.stringify(this.$route.params) === '{}') {
       console.log(this.$route.params, 'kkkkkkkk')
+      this.$router.push({
+        name:'memberList'
+      })
 
     }else{
       this.vipObject = this.$route.params
@@ -92,10 +95,8 @@ export default {
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({
-        name: 'membershipDetails',
-        params: {
-          row: row
-        }
+        name: 'expenseCalendarDetail',
+        params: row
       })
     },
     getVipRecords() {
