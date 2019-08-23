@@ -11,8 +11,11 @@ export const addProvider = (data) => {
   }
   return request({
     url: '/admin/addProvider',
+    // headers: {
+    //   'content-Type': 'application/json;charset=UTF-8'
+    // },
     method: 'post',
-    data: params
+    data: data
   })
 }
 /**

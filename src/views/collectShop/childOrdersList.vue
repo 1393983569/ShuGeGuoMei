@@ -6,43 +6,46 @@
     stripe
   >
     <el-table-column
-      prop="date"
+      prop="suborder_no"
       label="子订单编号"
     >
       <template slot-scope="scope">
-        <p>{{ scope.row.date }}</p>
+        <p>{{ scope.row.suborder_no }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="订单编号"
+      prop="create_time"
+      label="子订单时间"
     >
       <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
+        <p>{{ scope.row.create_time }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="订单店铺"
+      prop="providerName"
+      label="供应商"
     >
       <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
+        <p>{{ scope.row.providerName }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="订单金额(元)"
+      prop="money"
+      label="子订单金额(元)"
     >
       <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
+        <p>{{ scope.row.money }}</p>
       </template>
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="订单类型"
+      prop="status"
+      label="状态"
     >
       <template slot-scope="scope">
-        <p>{{ scope.row.name }}</p>
+        <p v-if="scope.row.status === 0">未拆单</p>
+        <p v-else-if="scope.row.status === 1">已拆单</p>
+        <p v-else-if="scope.row.status === 2">已派单</p>
+        <p v-else>已入库</p>
       </template>
     </el-table-column>
     <el-table-column

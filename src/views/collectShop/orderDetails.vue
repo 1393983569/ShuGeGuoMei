@@ -1,26 +1,27 @@
 <template>
   <div class="box-margin">
-    <div>订单编号：</div>
+    <div>订单编号：{{orderNo}}</div>
     <div>
-      订单时间：
+      订单时间：{{orderDate}}
     </div>
     <div>
-      订单店铺：
+      订单店铺：{{shopName}}
     </div>
     <div>
       类型：
+      <span v-if="type ===1">销售</span>
+      <span v-else-if="type===2">退货</span>
+      <span v-else-if="type===3">采购</span>
+      <span v-else>调拨</span>
     </div>
     <div>
-      商品数量：
+      商品数量：{{amount}}
     </div>
     <!-- 循环体 -->
     <div>
       <div style="margin-bottom: 10px">
         <span>
           子订单明细：
-        </span>
-        <span style="text-align: left">
-          一级品类
         </span>
       </div>
       <el-row>
@@ -30,64 +31,25 @@
           </div>
         </el-col>
         <el-col :span="20">
-          <div>
+          <div v-for="item in orderDetailCateList">
+            <span style="text-align: left">
+              {{item[0].categoryOneName}}
+            </span>
             <el-table
               style="display: inline-block;"
-              :data="tableData"
+              :data="item"
               :header-cell-style="{   }"
               show-summary
               :summary-method="getSummaries"
               center
               stripe
             >
-              <el-table-column
-                prop="date"
-                label="商品名称"
-              >
-                <template slot-scope="scope">
-                  <p>{{ scope.row.date }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="商品ID"
-              >
-                <template slot-scope="scope">
-                  <p>{{ scope.row.name }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="规格"
-              >
-                <template slot-scope="scope">
-                  <p>{{ scope.row.name }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="单价"
-              >
-                <template slot-scope="scope">
-                  <p>{{ scope.row.name }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="数量"
-              >
-                <template slot-scope="scope">
-                  <p>{{ scope.row.name }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="money"
-                label="金额"
-              >
-                <template slot-scope="scope">
-                  <p>{{ scope.row.money }}</p>
-                </template>
-              </el-table-column>
+              <el-table-column prop="goodsName" label="商品名称"/>
+              <el-table-column prop="id " label="商品ID"/>
+              <el-table-column prop="" label="规格"/>
+              <el-table-column prop="" label="单价"/>
+              <el-table-column prop="" label="下单数量"/>
+              <el-table-column prop="" label="金额"/>
             </el-table>
           </div>
         </el-col>
@@ -103,52 +65,132 @@
         </div>
       </el-col>
       <el-col :span="20">
-        <childOrdersList :row="tableData" />
+        <childOrdersList :row="childOrderData" />
       </el-col>
     </el-row>
-
   </div>
 </template>
 
 <script>
 import { sumList } from '_u/logic'
+import { orderDetail } from '@/api/collectShop/order.js'
 import childOrdersList from './childOrdersList'
+import { filter } from 'minimatch';
 export default {
   name: 'OrderDetails',
   components: {
     childOrdersList
   },
-  // 拆单
-  separateBill(index, row) {
-    this.$router.push({
-      name: 'separateBill',
-      params: {
-        row: row
-      }
-    })
+  data() {
+    return {
+      tableData:[],
+      childOrderData:[],
+      orderNo:'',
+      tempOrder:{},
+      tempOrder:{},
+      orderNo:'',
+      orderDate:'',
+      shopName:'',
+      type:'',
+      status:'',
+      orderDetailList:[],
+      amount:'',
+      orderDetailCateList:[]
+      // subOrderList:[]
+    }
   },
-  getSummaries(param) {
-    const { columns, data } = param
-    const sums = []
-    columns.forEach((column, index) => {
-      if (index === 0) {
-        sums[index] = '小计金额'
-        return
+  mounted(){
+    if(JSON.stringify(this.$route.params) === '{}'){
+
+    }else{
+      console.log(this.$route.params, 'kkaksksjsskk')
+      let obj = this.$route.params
+      this.orderNo = obj.orderNo
+      this.getOrderDetail()
+    }
+  },
+  methods:{
+    // 拆单
+    separateBill(index, row) {
+      this.$router.push({
+        name: 'separateBill',
+        params: row
+      })
+    },
+    // 订单详情
+    getOrderDetail(){
+      orderDetail(this.orderNo).then(res => {
+        if(res.status === 1){
+          let arr = {}
+          this.tempOrder = res.info[0]
+          arr= res.info[0]
+          this.orderNo = arr.orderNo
+          this.orderDate = arr.createTime
+          this.shopName = arr.shopDomain.name
+          this.type = arr.type
+          this.status = arr.status
+          this.amount = arr.amount
+          this.orderDetailList = arr.orderDetailList
+          this.childOrderData = arr.subOrderList
+          this.orderDetailCateList = this.handleClassify(this.orderDetailList)
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询订单详情出错！')
+      })
+    },
+    // 根据品类分类
+    handleClassify(goodsList){
+      let cateOneList = []
+      goodsList.forEach(item => {
+        cateOneList.push(item.category_one_id)
+      })
+      let uniqueList = this.unique(cateOneList)
+      let finalObject = []
+      for(let i=0; i<uniqueList.length; i++){
+        let arr =[]
+        for(let j=0; j<goodsList.length; j++) {
+          if(uniqueList[i] === goodsList[j].category_one_id){
+            arr.push(goodsList[j])
+          }
+        }
+        finalObject.push(arr)
       }
-      const values = data.map(item => {
-        if (column.property === 'money' && item[column.property]) {
-          return Number(item[column.property])
+      return finalObject
+    },
+    // 去重处理
+    unique(arr) {
+        var newArr = []
+        for (var i = 0; i < arr.length; i++) {
+            if (newArr.indexOf(arr[i])===-1) {
+                newArr.push(arr[i])
+            }
+        }
+        return newArr
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '小计金额'
+          return
+        }
+        const values = data.map(item => {
+          if (column.property === 'money' && item[column.property]) {
+            return Number(item[column.property])
+          }
+        })
+        if (!values.every(value => isNaN(value))) {
+          const sun = sumList(values)
+          sums[index] = `￥${sun}`
+        } else {
+          sums[index] = ''
         }
       })
-      if (!values.every(value => isNaN(value))) {
-        const sun = sumList(values)
-        sums[index] = `￥${sun}`
-      } else {
-        sums[index] = ''
-      }
-    })
-    console.log(sums)
-    return sums
+      console.log(sums)
+      return sums
+    }
   }
 }
 

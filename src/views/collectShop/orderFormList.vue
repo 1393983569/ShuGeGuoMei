@@ -167,9 +167,7 @@ export default {
     viewDetails(index, row) {
       this.$router.push({
         name: 'orderDetails',
-        params: {
-          row: row
-        }
+        params: row
       })
     },
     // 拆单

@@ -49,13 +49,13 @@
       <el-form-item label="备注：" prop="remark">
         <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
       </el-form-item>
-      <el-form-item label="可配送的店铺列表：" prop="shops">
-        <el-select v-model="ruleForm.shops" placeholder="请选择" multiple>
+      <el-form-item label="可配送的店铺列表：" prop="shopObject">
+        <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple>
           <el-option
             v-for="item in shopList"
             :key="item.id"
             :label="item.name"
-            :value="item.id">
+            :value='`${item.id}:${item.name}`'>
           </el-option>
         </el-select>
       </el-form-item>
@@ -202,9 +202,9 @@ export default {
         addressDetail: '',
         area: '',
         remark: '',
-        shops: [],
+        shopObject: [],
         goodsId:[],
-        // shops: '',
+        shops: [],
         qualificationPics: '',
         qualificationScore: '',
         priceScore: '',
@@ -240,7 +240,7 @@ export default {
         area: [
           { required: true, message: '请输入面积', trigger: 'blur' },
         ],
-        shops: [
+        shopObject: [
           { required: true, message: '请输入面积', trigger: 'blur' },
         ],
       },
@@ -257,8 +257,9 @@ export default {
     }
   },
   watch: {
-    'ruleForm.shops'(e) {
-      console.log(e.toString(), '^^^^^^^^^^^^^')
+    'ruleForm.shopObject'(e) {
+      // console.log(e.toString(), '^^^^^^^^^^^^^')
+
     }
   },
   mounted() {
@@ -274,6 +275,7 @@ export default {
       this.getProviderDetail()
     }
     this.getShopOption()
+    this.ruleForm.shops = []
   },
   methods: {
     // 商品单选
@@ -403,16 +405,31 @@ export default {
     },
     // 添加供应商
     submitForm(formName) {
+      this.ruleForm.shops = []
+      // console.log(this.ruleForm.shops, 'shops.....')
+       if(this.ruleForm.shopObject.length>0) {
+        this.ruleForm.shopObject.forEach(item => {
+          // console.log(item, 'jjjjjj')
+          let array = item.split(':')
+          let shopobj = {}
+          shopobj.id = array[0]
+          shopobj.name= array[1]
+          this.ruleForm.shops.push(shopobj)
+        })
+      }
+      console.log(this.ruleForm.shops, 'this.ruleForm.shops')
+      this.ruleForm.shops = JSON.stringify(this.ruleForm.shops)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let arrId = []
-          this.checkGoodsList.forEach(item => {
-            arrId.push(item.goodsId)
-          })
+          // let arrId = []
+          // this.checkGoodsList.forEach(item => {
+          //   arrId.push(item.goodsId)
+          // })
           // this.ruleForm.goodsId = arrId.toString()
-          this.ruleForm.goodsId = arrId
-          console.log(arrId, 'zifuchuan.....')
-          // return
+          // this.ruleForm.goodsId = arrId
+          // this.ruleForm.goodsId = this.checkGoodsList
+          // console.log(this.ruleForm.shops, 'shops.....')
+          this.ruleForm = JSON.stringify(this.ruleForm)
           addProvider(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加供应商失败！')

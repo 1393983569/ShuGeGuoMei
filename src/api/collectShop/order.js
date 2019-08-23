@@ -16,11 +16,11 @@ export const getOrder= (data) => {
 }
 /**
  * 查询订单详情
- * @param {Integer} orderId 订单id
+ * @param {Integer} orderNo 订单编号
  */
-export const orderDetail = (orderId) => {
+export const orderDetail = (orderNo) => {
   const params = new URLSearchParams()
-  params.append('orderId', orderId)
+  params.append('orderNo', orderNo)
   return request({
     url: '/admin/selectOrderDetail',
     data:params,
