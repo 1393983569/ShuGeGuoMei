@@ -31,10 +31,10 @@
           </div>
         </el-col>
         <el-col :span="20">
-          <div v-for="item in orderDetailCateList">
-            <span style="text-align: left">
+          <div v-for="item in orderDetailCateList" style="margin:0px;">
+            <p style="text-align: left;font-weight: bold;margin-top:20px;">
               {{item[0].categoryOneName}}
-            </span>
+            </p>
             <el-table
               style="display: inline-block;"
               :data="item"
@@ -42,18 +42,31 @@
               show-summary
               :summary-method="getSummaries"
               center
-              stripe
             >
               <el-table-column prop="goodsName" label="商品名称"/>
-              <el-table-column prop="id " label="商品ID"/>
-              <el-table-column prop="" label="规格"/>
-              <el-table-column prop="" label="单价"/>
-              <el-table-column prop="" label="下单数量"/>
-              <el-table-column prop="" label="金额"/>
+              <el-table-column prop="id" label="商品ID"/>
+              <el-table-column prop="standards" label="规格"/>
+              <el-table-column prop="unit" label="单价"/>
+              <el-table-column prop="detailAmount" label="下单数量"/>
+              <el-table-column prop="money" label="金额">
+                <template slot-scope="scope">
+                  {{scope.row.money/100}}
+                </template>
+              </el-table-column>
             </el-table>
+          </div>
+          <div class="total">
+            <div>订单总金额：</div>
+            <div class="rightItem">￥{{temNum}}</div>
           </div>
         </el-col>
       </el-row>
+    </div>
+    <div>订单状态：
+      <span v-if="type ===0">未拆单</span>
+      <span v-else-if="type===1">已拆单</span>
+      <span v-else-if="type===2">已派单</span>
+      <span v-else>已入库</span>
     </div>
     <div>
       子订单列表：
@@ -95,8 +108,9 @@ export default {
       status:'',
       orderDetailList:[],
       amount:'',
-      orderDetailCateList:[]
-      // subOrderList:[]
+      orderDetailCateList:[],
+      orderTotalMoney:'',
+      temNum:0,
     }
   },
   mounted(){
@@ -131,6 +145,11 @@ export default {
           this.status = arr.status
           this.amount = arr.amount
           this.orderDetailList = arr.orderDetailList
+          let sum = 0
+          this.orderDetailList.forEach(item => {
+            sum += item.money
+          })
+          this.temNum = sum/100
           this.childOrderData = arr.subOrderList
           this.orderDetailCateList = this.handleClassify(this.orderDetailList)
         }
@@ -168,12 +187,13 @@ export default {
         }
         return newArr
     },
+    // 小计金额
     getSummaries(param) {
       const { columns, data } = param
       const sums = []
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '小计金额'
+          sums[index] = '小计金额:'
           return
         }
         const values = data.map(item => {
@@ -183,12 +203,12 @@ export default {
         })
         if (!values.every(value => isNaN(value))) {
           const sun = sumList(values)
-          sums[index] = `￥${sun}`
+          sums[index] = `￥${sun/100}`
         } else {
           sums[index] = ''
         }
       })
-      console.log(sums)
+      // console.log(sums, 'sums....')
       return sums
     }
   }
@@ -199,5 +219,24 @@ export default {
 <style scoped>
   .box-margin > div{
     margin-bottom: 20px;
+  }
+  .total{
+    height: 39px;
+    width: 100%;
+    background-color: rgba(204, 204, 204, 1);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0);
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    padding:10px;
+    justify-content:space-between;
+    color: rgba(16, 16, 16, 1);
+    font-size: 14px;
+    font-family: SourceHanSansSC-regular;
+    font-weight:bold;
+  }
+  .rightItem{
+    margin-right:11%;
   }
 </style>

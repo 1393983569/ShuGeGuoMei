@@ -95,9 +95,7 @@ export default {
     viewDetails(index, row) {
       this.$router.push({
         name: 'childOrdersDetails',
-        params: {
-          row: row
-        }
+        params: row
       })
     },
     // 派单
