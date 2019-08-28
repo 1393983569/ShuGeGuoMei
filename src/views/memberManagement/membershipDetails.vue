@@ -58,7 +58,7 @@
       </div>
     </div>
    <div class="div_margin">消费记录<el-button type="success" @click="sellRecords">消费记录</el-button></div>
-   <div class="div_margin">充值记录：<el-button type="success" @click="rechargeRecords">充值记录</el-button></div>
+   <!-- <div class="div_margin">充值记录：<el-button type="success" @click="rechargeRecords">充值记录</el-button></div> -->
   </div>
 </template>
 

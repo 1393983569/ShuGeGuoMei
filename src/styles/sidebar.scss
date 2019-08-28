@@ -70,19 +70,23 @@
       &:hover {
         color: #fff !important;
         background-color: $menuHover !important;
+        border-radius: 5px;
       }
       &:active {
         color: #fff !important;
         background-color: $menuHover !important;
+        border-radius: 5px;
       }
       &.is-active {
         color: #fff !important;
         background-color: $menuHover !important;
+        border-radius: 5px;
       }
     }
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
       background-color: $menuActive !important;
+      border-radius: 5px;
     }
     .el-submenu__title{
       font-size:20px;
@@ -101,15 +105,18 @@
       // background-color: $subMenuBg !important;
       &:hover {
         color: #fff !important;
-        background-color: #409EFF !important;
+        background-color: rgb(118, 185, 252) !important;
+        // border-radius: 5px;
       }
       &:active{
         color: #fff !important;
-        background-color: #409EFF !important;
+        background-color: rgb(118, 185, 252) !important;
+        // border-radius: 5px;
       }
       &.is-active{
         color: #fff !important;
-        background-color: #409EFF !important;
+        background-color: rgb(118, 185, 252) !important;
+        // border-radius: 5px;
       }
     }
   }

@@ -147,6 +147,7 @@ export default {
       this.pageNum = e
       this.getOrderList()
     },
+    // 查询订单列表
     getOrderList() {
       let data = {}
       data.orderNo = this.orderNo
@@ -155,13 +156,14 @@ export default {
       data.states = this.states
       data.type = this.type
       getOrder(data).then(res => {
-        console.log(res, 'res.....')
         if(res.status === 1){
           this.tableData = res.info.records
-          console.log(this.tableData, 'kkkkkkk')
           this.total = res.info.totalrecord
         }
-      }).catch(err => {})
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询订单出错！')
+      })
     },
     // 查看详情
     viewDetails(index, row) {
@@ -174,9 +176,7 @@ export default {
     separateBill(index, row) {
       this.$router.push({
         name: 'separateBill',
-        params: {
-          row: row
-        }
+        params: row
       })
     }
   }

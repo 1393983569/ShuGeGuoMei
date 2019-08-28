@@ -61,6 +61,11 @@
         <el-form-item label="店铺面积：" prop="area">
           <el-input v-model="shopForm.area" style="width:200px;" placeholder="请输入店铺面积" /> m&sup2;
         </el-form-item>
+        <el-form-item label="经营模式：" prop="management">
+          <el-select v-model="shopForm.management" style="width:400px;">
+            <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="经营品类：" prop="category">
           <el-table
             :data="categoryTable"
@@ -68,37 +73,29 @@
             border
             :span-method="arraySpanMethod"
           >
-            <el-table-column prop="id" label="一级品类">
+            <el-table-column prop="childrenName" label="一级品类">
               <template slot-scope="scope">
-                <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange(scope.row)">{{ scope.row.childrenName }}</el-checkbox> -->
                 <el-checkbox-group v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange(scope.row)">
-                  <el-checkbox :label="scope.row">{{ scope.row.childrenName }}</el-checkbox>
+                  <el-checkbox :label="scope.row.childrenId">{{ scope.row.childrenName }}</el-checkbox>
                 </el-checkbox-group>
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="一级品类ID">
+            <el-table-column prop="childrenId" label="一级品类ID">
               <template slot-scope="scope">
                 <p>{{ scope.row.childrenId }}</p>
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="二级品类">
+            <el-table-column prop="name" label="二级品类">
               <template slot-scope="scope">
                 <p>{{ scope.row.name }}</p>
               </template>
             </el-table-column>
-            <el-table-column prop="ids" label="二级品类ID">
+            <el-table-column prop="id" label="二级品类ID">
               <template slot-scope="scope">
-                <el-checkbox-group v-show="scope.row.id" v-model="checkedCategory" @change="handleCheckedCategoryChange">
-                  <el-checkbox :label="scope.row">{{ scope.row.id }}</el-checkbox>
-                </el-checkbox-group>
+                <el-checkbox v-if="scope.row.id!==''" v-model="scope.row.state" :label="scope.row" @change="changeTowCate(scope.row)">{{ scope.row.id }}</el-checkbox>
               </template>
             </el-table-column>
           </el-table>
-        </el-form-item>
-        <el-form-item label="经营模式：" prop="management">
-          <el-select v-model="shopForm.management" style="width:400px;">
-            <el-option v-for="item in modelList" :key="item.id" :value="item.id" :label="item.name" />
-          </el-select>
         </el-form-item>
         <div v-if="showState" />
         <div v-else class="div-margin font-weight">成本结构：</div>
@@ -112,13 +109,9 @@
         <!-- 编辑 -->
         <el-form-item v-else>
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
-          <!-- <el-button type="primary" @click="cccccc">ssss</el-button> -->
+          <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">修改</el-button>
         </el-form-item>
       </el-form>
-      <!-- <div slot="footer">
-        <el-button type="danger" @click="handleClose">关闭弹框</el-button>
-      </div> -->
     </el-dialog>
   </div>
 </template>
@@ -150,7 +143,9 @@ export default {
   },
   data() {
     return {
-      indeterminate: false,
+      oneState:false,
+      twoState:false,
+      indeterminate: true,
       finalArray: [],
       addCategoryObj: {},
       firstcategory: [],
@@ -186,8 +181,6 @@ export default {
         detailsAddress: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         area: [{ required: true, message: '请输入店铺面积', trigger: 'blur' }],
         // category: [{ required: true, message: '请输经营品类', trigger: 'blur' }],
-        // cost: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        // vipnum: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         management: [{ required: true, message: '请输入标题', trigger: 'blur' }]
       },
 
@@ -226,25 +219,7 @@ export default {
       // console.log(e, '@@@@@@@')
     },
     'list'(list) {
-      console.log(list, 'eeeeeeee')
-      // let index= 0
-      // let obj = {}
-      // obj.arr = []
-      // for(let i = 0;i<list.length; i++) {
-      //   if(list[index].id === list[i].id) {
-      //     obj.id = list[index].id
-      //     obj.name = list[index].name
-      //     let item = {}
-      //     item.ids = list[i].ids
-      //     item.names = list[i].names
-      //     obj.arr.push(item)
-      //     console.log(item)
-      //   }else{
-      //     index= i
-      //   }
-      // }
-      // this.categoryArray.push(obj)
-      // console.log(this.categoryArray, '*********')
+
     },
     'firstLevel'(e) {
       // console.log(e, '==========')
@@ -253,39 +228,36 @@ export default {
       // console.log(e, 'jjjjjj')
     },
     'editObject'(e) {
-      console.log(e, '$$$$$$$$$$')
       if(e.imge){
         this.imgelist = e.imge.split(',')
-        // this.shopImg = e.imge
       }
+      // 品类的回显
       this.shopForm = e
-      if(e.id) {
-        // this.checkedCategory = []
-        // let aaaa = {
-        //   categoryOneId: "02",
-        //   childrenId: "02",
-        //   childrenName: "蔬菜",
-        //   id: "010",
-        //   name: "胡萝卜"
-        // }
-        // this.checkedCategory.push(aaaa)
-        let editArray = []
-        editArray = JSON.parse(e.categoryJson)
-        editArray.forEach(item => {
-          let obj = {}
-          obj.categoryOneId = item.id
-          obj.childrenId = item.id
-          obj.childrenName = item.name
-          if(item.seconds) {
-            item.seconds.forEach(e => {
-            obj.id = e.id
-            obj.name = e.name
-            this.checkedCategory.push(obj)
-            // this.$forceUpdate()
-            console.log(this.checkedCategory, '品类')
-          });
+      this.checkAll = []
+      if(this.showState){
+       for(let n=0; n<this.categoryTable.length;n++){
+         this.categoryTable[n].state = false
+       }
+       return
+      }
+      if(e.categoryJson){
+        let arr = []
+        let cateArr = []
+        cateArr = JSON.parse(e.categoryJson)
+        // 一级类别数组
+        for(let j=0; j<cateArr.length; j++){
+          arr.push(cateArr[j].id)
+        }
+        // 回显二级品类
+        for(let i=0; i<this.categoryTable.length; i++){
+          if(arr.includes(this.categoryTable[i].id)){
+            this.categoryTable[i].state = true
           }
-        })
+        }
+        // 回显一级品类
+        for(let j=0; j<cateArr.length; j++){
+          this.changeTowCate(cateArr[j])
+        }
       }
     },
     'dialogImageUrl'(e) {
@@ -296,18 +268,12 @@ export default {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getCategoryList()
     this.handleClose()
-    // this.checkedCategory = []
-    //   let aaaa = {
-    //     categoryOneId: "02",
-    //     childrenId: "02",
-    //     childrenName: "蔬菜",
-    //     id: "010",
-    //     name: "胡萝卜"
-    //   }
-    // this.handleCheckedCategoryChange(aaaa)
-    // this.checkedCategory.push(aaaa)
   },
   methods: {
+    // 回显数据处理
+    handleReturnEdit(item){
+
+    },
     clickImg(e) {
       this.imgelist.forEach((el, key) => {
         if(el === e) {
@@ -315,78 +281,50 @@ export default {
         }
       })
     },
-    // 处理品类数据格式
-    getFirstCategory() {
-      this.finalArray = []
-      this.firstcategory.forEach((e, index) => {
-        const array = this.checkedCategory.filter(a => {
-          return e.id === a.childrenId
-        })
-        const secondCategory = []
-        if (array.length > 1) {
-          // 有子类
-          array.forEach(item => {
-            const cateItem = {}
-            cateItem.id = item.id
-            cateItem.name = item.name
-            secondCategory.push(cateItem)
-          })
-          const addCategoryObj1 = {}
-          addCategoryObj1.id = array[0].childrenId
-          addCategoryObj1.name = array[0].childrenName
-          addCategoryObj1.seconds = secondCategory
-          this.finalArray.push(addCategoryObj1)
-        } else if (array.length === 1) {
-          // 无子类
-          const addCategoryObj2 = {}
-          addCategoryObj2.id = array[0].childrenId
-          addCategoryObj2.name = array[0].childrenName
-          addCategoryObj2.seconds = []
-          this.finalArray.push(addCategoryObj2)
-        }
-      })
-      // console.log(this.finalArray, JSON.stringify(this.finalArray), 'hhhhhhh')
-    },
     // 品类选择处理
     handleCheckAllChange(row) {
-      // console.log(this.checkAll, 'jjjjjjj')
-      this.checkedCategory = []
-      this.checkAll.forEach(e => {
-        if (e.id) {
-          const categoryOneId = e.categoryOneId
-          // 返回两次
-          // console.log(this.categoryTable, 'kkkkk')
-          const tem = this.categoryTable.filter(function(item) {
-            return parseInt(item.categoryOneId) === parseInt(categoryOneId)
-          })
-          // console.log(tem, 'gggggg')
-          this.checkedCategory = this.checkedCategory.concat(tem)
-        } else {
-          const obj = {}
-          obj.childrenId = e.childrenId
-          obj.childrenName = e.childrenName
-          this.checkedCategory.push(obj)
+      if(row.id ===''){
+        // 无二级品类
+        for(let j=0; j<this.categoryTable.length;j++){
+          if(this.categoryTable[j].childrenId === row.childrenId){
+            if(this.categoryTable[j].state){
+              this.categoryTable[j].state = false
+            }else{
+              this.categoryTable[j].state = true
+            }
+          }
         }
-      })
-      // console.log(this.checkedCategory, '$$$$$$$')
-      this.isIndeterminate = false
-      this.getFirstCategory()
-    },
-    handleCheckedCategoryChange(value) {
-      console.log(value, 'jjjjjjj')
-      this.checkedCategory = value
-      // console.log(value, 'ggggggggg')
-      this.getFirstCategory()
-    },
-    checkedFunction(row) {
-      // console.log(row, 'hhhhhhhhhhhhhh')
-    },
-    // handlecheck(row) {
-    //   // console.log(row, 'lllll')
-    //   this.editObject.categoryOneId = row.id
-    //   this.editObject.categoryTwoId = row.ids
-    // },
+      }else{
+        // 有二级品类
+        for(let i=0; i<this.categoryTable.length;i++){
+          if(this.checkAll.includes(this.categoryTable[i].categoryOneId)){
+            this.categoryTable[i].state = true
+          }else{
+            this.categoryTable[i].state = false
+          }
+        }
+      }
 
+    },
+    // 二级品类勾选
+    changeTowCate(row){
+      if(row.state){ // 添加二类
+        if(!this.checkAll.includes(row.categoryOneId)){
+          this.checkAll.push(row.childrenId)
+        }
+      }else{ // 取消二类
+        var  count = 0
+        for(let i=0; i<this.categoryTable.length; i++){
+          if(this.categoryTable[i].childrenId === row.childrenId && (this.categoryTable[i].state)){
+            count++
+          }else{}
+        }
+        if(count === 0){
+          let index = this.checkAll.indexOf(row.categoryOneId)
+          this.checkAll.splice(index, 1)
+        }
+      }
+    },
     // 合并单元格
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -418,7 +356,8 @@ export default {
               childrenName: item.name,
               id: secondsItem.id,
               name: secondsItem.name,
-              categoryOneId: secondsItem.categoryOneId
+              categoryOneId: secondsItem.categoryOneId,
+              state: false
             }
             res.push(data)
           }
@@ -426,7 +365,11 @@ export default {
         } else {
           data = {
             childrenId: item.id,
-            childrenName: item.name
+            childrenName: item.name,
+            id: '',
+            name: '',
+            categoryOneId: '',
+            state: false
           }
           res.push(data)
         }
@@ -494,6 +437,13 @@ export default {
     },
     // 添加店铺
     addShopHandles() {
+      this.finalArray = []
+      console.log(this.categoryTable, 'catetable.....')
+      this.categoryTable.forEach(item => {
+        if(item.state){
+          this.finalArray.push(item)
+        }
+      })
       this.loadingState = true
       // 添加多个category
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
@@ -522,10 +472,18 @@ export default {
       }).catch(error => {
         this.$message.error('添加商铺失败！')
         console.log(error)
+        this.loadingState = false
       })
     },
     // 编辑店铺
     editShopHandle() {
+      this.finalArray=[]
+      console.log(this.categoryTable, 'catetable.....')
+      this.categoryTable.forEach(item => {
+        if(item.state){
+          this.finalArray.push(item)
+        }
+      })
       this.loadingState = true
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)

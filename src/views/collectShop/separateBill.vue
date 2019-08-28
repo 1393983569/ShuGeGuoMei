@@ -22,21 +22,27 @@
       </div>
       <el-table
         style="display: inline-block;"
-        :data="tableData"
+        :data="goodsList"
         :header-cell-style="{   }"
+        @selection-change="handleSelectionChange"
         center
         stripe
       >
-        <el-table-column label="商品名称" prop="date" ></el-table-column>
-        <el-table-column label="商品ID" prop="" > </el-table-column>
-        <el-table-column label="规格" prop="" />
-        <el-table-column label="单价" prop="" />
-        <el-table-column label="下单数量" prop="" />
-        <el-table-column label="金额" prop="" />
-        <el-table-column
-          type="selection"
-          width="55"
-        />
+        <el-table-column label="商品名称" prop="goodsName" ></el-table-column>
+        <el-table-column label="商品ID" prop="id" > </el-table-column>
+        <el-table-column label="规格" prop="standards" />
+        <el-table-column label="单价" prop="price">
+          <template slot-scope="scope">
+            {{scope.row.price/100}}
+          </template>
+        </el-table-column>
+        <el-table-column label="下单数量" prop="detailAmount" />
+        <el-table-column label="金额" prop="money">
+          <template slot-scope="scope">
+            {{scope.row.money/100}}
+          </template>
+        </el-table-column>
+        <el-table-column type="selection" width="55" />
       </el-table>
     </div>
   </div>
@@ -44,20 +50,27 @@
 
 <script>
 import { getAllProvider } from '@/api/provider.js'
+import { orderDetail } from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
-  name: 'SeparateBill',
+  name: 'separateBill',
   components: {
     Breadcrumb
   },
   data() {
     return {
-      tableData: [],
+      goodsList: [],
       optionsProvider:[],
-      provider:''
+      provider:'',
+      temObject:{}
     }
   },
   mounted() {
+    console.log(this.$route.params, 'pppppp')
+    if(JSON.stringify(this.$route.params)!== '{}'){
+      this.temObject = this.$route.params
+      this.getOrderList(this.temObject.orderNo)
+    }
     this.getProviders()
   },
   methods: {
@@ -70,6 +83,15 @@ export default {
         }
       })
     },
+    // 查询订单商品
+    getOrderList(orderNo){
+      orderDetail(orderNo).then(res => {
+        this.goodsList = res.info[0].orderDetailList
+      }).catch(err => {
+        this.$message.error('查询订单商品出错！')
+      })
+    },
+    // 查询供应商
     getProviders() {
       getAllProvider().then(res => {
         if(res.status === 1) {
@@ -79,15 +101,9 @@ export default {
         this.$message.error(err)
       })
     },
-    // 拆单
-    separateBill(index, row) {
-      this.$router.push({
-        name: 'separateBill',
-        params: {
-          row: row
-        }
-      })
-    }
+    handleSelectionChange(val){
+      console.log(val, '**************val*******')
+    },
   }
 }
 </script>
