@@ -75,9 +75,7 @@
           >
             <el-table-column prop="childrenName" label="一级品类">
               <template slot-scope="scope">
-                <el-checkbox-group v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange(scope.row)">
-                  <el-checkbox :label="scope.row.childrenId">{{ scope.row.childrenName }}</el-checkbox>
-                </el-checkbox-group>
+                  <el-checkbox v-model="scope.row.status" :label="scope.row.childrenId" @change="changeOneCate(scope.row)">{{ scope.row.childrenName }}</el-checkbox>
               </template>
             </el-table-column>
             <el-table-column prop="childrenId" label="一级品类ID">
@@ -215,54 +213,44 @@ export default {
     }
   },
   watch: {
-    'checkedCategory'(e) {
-      // console.log(e, '@@@@@@@')
-    },
-    'list'(list) {
-
-    },
-    'firstLevel'(e) {
-      // console.log(e, '==========')
-    },
-    'editObject.management'(e) {
-      // console.log(e, 'jjjjjj')
-    },
     'editObject'(e) {
       if(e.imge){
         this.imgelist = e.imge.split(',')
       }
       // 品类的回显
       this.shopForm = e
-      this.checkAll = []
-      if(this.showState){
+      // if(this.showState){
        for(let n=0; n<this.categoryTable.length;n++){
          this.categoryTable[n].state = false
+         this.categoryTable[n].status = false
        }
-       return
-      }
+      //  return
+      // }
       if(e.categoryJson){
-        let arr = []
         let cateArr = []
         cateArr = JSON.parse(e.categoryJson)
-        // 一级类别数组
-        for(let j=0; j<cateArr.length; j++){
-          arr.push(cateArr[j].id)
-        }
-        // 回显二级品类
-        for(let i=0; i<this.categoryTable.length; i++){
-          if(arr.includes(this.categoryTable[i].id)){
-            this.categoryTable[i].state = true
+        console.log(cateArr, 'kkkkkkkkk')
+        let idArr= []
+        let childrenIdArr = []
+        cateArr.map(e => {
+          idArr.push(e.id)
+          childrenIdArr.push(e.childrenId)
+        })
+        for(let i=0;i<this.categoryTable.length;i++){
+          if(this.categoryTable[i].id){
+            if(idArr.includes(this.categoryTable[i].id)){
+              this.categoryTable[i].status = true
+              this.categoryTable[i].state = true
+            }
+          }else{
+            if(childrenIdArr.includes(this.categoryTable[i].childrenId)){
+              this.categoryTable[i].status = true
+              this.categoryTable[i].state = true
+            }
           }
-        }
-        // 回显一级品类
-        for(let j=0; j<cateArr.length; j++){
-          this.changeTowCate(cateArr[j])
         }
       }
     },
-    'dialogImageUrl'(e) {
-      console.log(e, 'ggggggg')
-    }
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
@@ -270,10 +258,6 @@ export default {
     this.handleClose()
   },
   methods: {
-    // 回显数据处理
-    handleReturnEdit(item){
-
-    },
     clickImg(e) {
       this.imgelist.forEach((el, key) => {
         if(el === e) {
@@ -281,47 +265,29 @@ export default {
         }
       })
     },
-    // 品类选择处理
-    handleCheckAllChange(row) {
-      if(row.id ===''){
-        // 无二级品类
-        for(let j=0; j<this.categoryTable.length;j++){
-          if(this.categoryTable[j].childrenId === row.childrenId){
-            if(this.categoryTable[j].state){
-              this.categoryTable[j].state = false
-            }else{
-              this.categoryTable[j].state = true
-            }
-          }
-        }
-      }else{
-        // 有二级品类
-        for(let i=0; i<this.categoryTable.length;i++){
-          if(this.checkAll.includes(this.categoryTable[i].categoryOneId)){
-            this.categoryTable[i].state = true
-          }else{
-            this.categoryTable[i].state = false
-          }
+    changeOneCate(row){
+      for(let i=0;i<this.categoryTable.length;i++){
+        if(this.categoryTable[i].childrenId === row.childrenId&&(row.status)){
+          this.categoryTable[i].state = true
+        }else if(this.categoryTable[i].childrenId === row.childrenId&&(!row.status)){
+          this.categoryTable[i].state = false
         }
       }
-
     },
     // 二级品类勾选
     changeTowCate(row){
-      if(row.state){ // 添加二类
-        if(!this.checkAll.includes(row.categoryOneId)){
-          this.checkAll.push(row.childrenId)
+      if(row.state){
+        for(let i=0;i<this.categoryTable.length;i++){
+          if(this.categoryTable[i].childrenId === row.childrenId){
+            this.categoryTable[i].status = true
+          }
         }
-      }else{ // 取消二类
-        var  count = 0
-        for(let i=0; i<this.categoryTable.length; i++){
-          if(this.categoryTable[i].childrenId === row.childrenId && (this.categoryTable[i].state)){
-            count++
-          }else{}
-        }
-        if(count === 0){
-          let index = this.checkAll.indexOf(row.categoryOneId)
-          this.checkAll.splice(index, 1)
+      }else{
+        for(let i=0;i<this.categoryTable.length;i++){
+          this.categoryTable[i].status = false
+          if(this.categoryTable[i].state) {
+            this.categoryTable[i].status = true
+          }
         }
       }
     },
@@ -357,7 +323,8 @@ export default {
               id: secondsItem.id,
               name: secondsItem.name,
               categoryOneId: secondsItem.categoryOneId,
-              state: false
+              state: false,
+              status:false
             }
             res.push(data)
           }
@@ -369,7 +336,8 @@ export default {
             id: '',
             name: '',
             categoryOneId: '',
-            state: false
+            state: false,
+            status:false
           }
           res.push(data)
         }
@@ -407,30 +375,19 @@ export default {
         this.$message.error(err)
       })
     },
-
-    // 修改table header的背景色
-    tableHeaderColor({ row, column, rowIndex, columnIndex }) {
-      if (rowIndex === 0) {
-        return ' font-size:18px;color:#6e7b99;font-family:Microsoft YaHei; '
-      }
-    },
     //  上传图片
     handleRemove(file, fileList) {
-      // console.log(file, fileList, 'jjjj')
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
     uploadSuccess(file){
-      // console.log(fileList, 'hhhhhh')
       this.shopImg += file.info+','
     },
     uploadSuccessEdit(file) {
-      // console.log(this.key, 'eeeeee')
       this.imgelist[this.key] = file.info
       this.$forceUpdate()
-      // console.log(this.imgelist, 'jjjjjjj')
     },
     handleEditPreview(e){
       console.log(e, 'fffffff')
@@ -449,13 +406,13 @@ export default {
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
-      // console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
-      // return
+
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
       this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
       this.shopForm.categoryJson = JSON.stringify(this.finalArray)
       this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
+
       addShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
@@ -467,7 +424,6 @@ export default {
         this.checkedCategory = []
         this.management = ''
         this.shopImg = ''
-        // window.history.go(-1)
         this.$parent.getShopList()
       }).catch(error => {
         this.$message.error('添加商铺失败！')
@@ -478,7 +434,6 @@ export default {
     // 编辑店铺
     editShopHandle() {
       this.finalArray=[]
-      console.log(this.categoryTable, 'catetable.....')
       this.categoryTable.forEach(item => {
         if(item.state){
           this.finalArray.push(item)
@@ -488,8 +443,6 @@ export default {
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
-      console.log(this.shopForm.provinceId, this.shopForm.cityId, this.shopForm.countyId, '#######')
-      // return
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
       this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
@@ -498,17 +451,13 @@ export default {
       }
       if (this.shopForm.management === '直营') {
         this.shopForm.management = 1
-        // this.editObject = row
       } else {
         this.shopForm.management = 2
       }
-      // this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
-      // console.log(this.imgelist.toString(),'kkkkkkkkkk')
       this.shopForm.imge = this.imgelist.toString()
       editShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
-        // this.showEdit =  false
         this.handleClose()
         this.$parent.getShopList()
       }).catch(error => {
@@ -533,7 +482,6 @@ export default {
       this.$refs[formName].resetFields()
     },
     getProvince(id) {
-      // console.log(id, 'hhhhhh')
       this.shopForm.provinceId = id
     },
     getCity(id) {
@@ -576,3 +524,5 @@ export default {
     display: block;
   }
 </style>
+
+

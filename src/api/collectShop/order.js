@@ -27,3 +27,13 @@ export const orderDetail = (orderNo) => {
     method: 'post'
   })
 }
+// 拆单-获取子订单编号
+export const getSubOrderNo = (orderNo) => {
+  const params = new URLSearchParams()
+  params.append('orderNo', orderNo)
+  return request({
+    url:'/admin/dismantling',
+    method:'post',
+    data: params
+  })
+}

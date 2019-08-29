@@ -6,19 +6,14 @@ import request from '../utils/request'
  */
 export const addShop = (data) => {
   const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key]) {
-      params.append(key, data[key])
-    }
-  }
+  params.append('categoryJson', data.categoryJson)
   return request({
-    url: '/admin/addShop',
+    url: `/admin/addShop?name=${data.name}&simpleName=${data.simpleName}&adminName=${data.adminName}&adminPhone=${data.adminPhone}&adminPassword=${data.adminPassword}&provinceId=${data.provinceId}&cityId=${data.cityId}&countyId=${data.countyId}&area=${data.area}&management=${data.management}&imge=${data.imge}&detailsAddress=${data.detailsAddress}`,
     // headers: {
     //   'content-Type': 'application/json;charset=UTF-8'
     // },
     method: 'post',
     data: params
-    // data: { 'name': name, 'simpleName': simpleName, 'shopownerName': shopownerName, 'shopownerPhone': shopownerPhone, 'shopownerPassword': shopownerPassword, 'provinceId': provinceId, 'cityId': cityId, 'countyId': countyId, 'detailsAddress': detailsAddress, 'area': area, 'categoryJson': categoryJson, 'management': management }
   })
 }
 /**
@@ -26,14 +21,11 @@ export const addShop = (data) => {
  * @param {Object} data 店铺信息对象
  */
 export const editShop = (data) => {
+  console.log(data, 'data....')
   const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key]) {
-      params.append(key, data[key])
-    }
-  }
+  params.append('categoryJson', data.categoryJson)
   return request({
-    url: '/admin/updateShop',
+    url: `/admin/updateShop?id=${data.id}&name=${data.name}&simpleName=${data.simpleName}&adminName=${data.adminName}&adminPhone=${data.adminPhone}&adminPassword=${data.adminPassword}&provinceId=${data.provinceId}&cityId=${data.cityId}&countyId=${data.countyId}&area=${data.area}&management=${data.management}&imge=${data.imge}&detailsAddress=${data.detailsAddress}`,
     method: 'post',
     data: params
   })
