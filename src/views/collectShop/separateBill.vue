@@ -1,12 +1,12 @@
 <template>
   <div class="box-margin">
     <breadcrumb>
-      <el-button type="danger">取消</el-button>
-      <el-button type="primary">保存</el-button>
+      <el-button type="danger" @click="handleCancel">取消</el-button>
+      <el-button type="primary" @click="handleSeparateBill">保存</el-button>
     </breadcrumb>
     <div>
       关联供应商：
-      <el-select v-model="provider" placeholder="请选择" style="width: 280px">
+      <el-select v-model="providerId" placeholder="请选择" style="width: 280px">
         <el-option
           v-for="item in optionsProvider"
           :key="item.id"
@@ -51,7 +51,7 @@
 
 <script>
 import { getAllProvider } from '@/api/provider.js'
-import { orderDetail, getSubOrderNo } from '@/api/collectShop/order.js'
+import { orderDetail, separateBill } from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'separateBill',
@@ -62,18 +62,26 @@ export default {
     return {
       goodsList: [],
       optionsProvider:[],
-      provider:'',
+      providerId:'',
+      goodsList:[],
       temObject:{},
       subOrderNo:'',
       subMoney:0,
+      orderNo:'',
+      goodsArray:[],
+      shopId:0,
     }
   },
   mounted() {
     console.log(this.$route.params, 'pppppp')
+    this.shopId = this.$route.params.shopId
     if(JSON.stringify(this.$route.params)!== '{}'){
       this.temObject = this.$route.params
+      this.orderNo = this.temObject.orderNo
+      this.orderId = this.temObject.id
+      this.shopId = this.temObject.shopId
+      console.log(this.shopId, 'id......')
       this.getOrderList(this.temObject.orderNo)
-      // this.getSubOrderNo(this.temObject.orderNo)
     }
     this.getProviders()
   },
@@ -82,9 +90,7 @@ export default {
     viewDetails(index, row) {
       this.$router.push({
         name: 'orderDetails',
-        params: {
-          row: row
-        }
+        params: row
       })
     },
     // 查询订单商品
@@ -93,14 +99,6 @@ export default {
         this.goodsList = res.info[0].orderDetailList
       }).catch(err => {
         this.$message.error('查询订单商品出错！')
-      })
-    },
-    // 拆单-获取子订单编号
-    getSubOrderNo(ouderNo){
-      getSubOrderNo(ouderNo).then(res => {
-        this.subOrderNo = res.info.suborderNo
-      }).catch(err => {
-        this.$message.error('获取子订单编号出错！')
       })
     },
     // 查询供应商
@@ -113,13 +111,48 @@ export default {
         this.$message.error(err)
       })
     },
+    // 分拣派单商品
     handleSelectionChange(val){
-      console.log(val, '**************val*******')
       this.subMoney = 0
+      this.goodsArray = []
       val.map(item => {
         this.subMoney += item.money
+        item.state = true
+        this.goodsArray.push(item)
       })
     },
+    // 拆单
+    handleSeparateBill(){
+      let arr = []
+      this.goodsArray.map(item => {
+        let obj = {}
+        obj.standards = item.standards
+        obj.unit = item.unit
+        obj.categoryOneId = item.category_one_id
+        obj.money = item.money
+        obj.price = item.price
+        obj.goodsId = item.id
+        obj.goodsName = item.goodsName
+        obj.amount = item.detailAmount
+        arr.push(obj)
+      })
+      let list = JSON.stringify(arr)
+      separateBill(this.providerId, list, this.orderId, this.orderNo, this.subMoney, this.shopId).then(res => {
+        this.$message.success('拆单成功！')
+      }).catch(err => {
+        this.$message.error('拆单失败！')
+      })
+    },
+    handleCancel(){
+      this.providerId = '',
+      this.orderNo =''
+      this.subMoney = 0
+      this.goodsArray = []
+      this.$router.push({
+        name: 'orderFormList',
+        params:''
+      })
+    }
   }
 }
 </script>

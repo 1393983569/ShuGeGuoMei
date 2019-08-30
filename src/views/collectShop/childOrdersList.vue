@@ -34,7 +34,7 @@
       label="子订单金额(元)"
     >
       <template slot-scope="scope">
-        <p>{{ scope.row.money }}</p>
+        <p>{{ scope.row.money/100 }}</p>
       </template>
     </el-table-column>
     <el-table-column

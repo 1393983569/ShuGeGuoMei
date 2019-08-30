@@ -94,7 +94,7 @@
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import { get } from 'http';
 export default {
-  name: 'OrderFormList',
+  name: 'orderFormList',
   data() {
     return {
       tableData: [],

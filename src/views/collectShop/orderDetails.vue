@@ -36,7 +36,7 @@
               {{item[0].categoryOneName}}
             </p>
             <el-table
-              style="display: inline-block;"
+              style="display: inline-block;width:70%;"
               :data="item"
               :header-cell-style="{   }"
               show-summary
@@ -78,7 +78,7 @@
         </div>
       </el-col>
       <el-col :span="20">
-        <childOrdersList :row="childOrderData" />
+        <childOrdersList :row="childOrderData" style="width:70%;" />
       </el-col>
     </el-row>
   </div>
@@ -222,7 +222,7 @@ export default {
   }
   .total{
     height: 39px;
-    width: 100%;
+    width: 70%;
     background-color: rgba(204, 204, 204, 1);
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0);

@@ -27,13 +27,16 @@ export const orderDetail = (orderNo) => {
     method: 'post'
   })
 }
-// 拆单-获取子订单编号
-export const getSubOrderNo = (orderNo) => {
-  const params = new URLSearchParams()
-  params.append('orderNo', orderNo)
+// 拆单
+export const separateBill = (providerId, list,orderId, orderNo, money) => {
+  // const params = new URLSearchParams()
+  // params.append('list', list)
   return request({
-    url:'/admin/dismantling',
+    url:`/admin/dismantling?providerId=${providerId}&orderId=${orderId}&orderNo=${orderNo}&money=${money}`,
     method:'post',
-    data: params
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    },
+    data: list
   })
 }

@@ -202,6 +202,7 @@ export default {
         addressDetail: '',
         area: '',
         remark: '',
+
         shopObject: [],
         goodsId:[],
         shops: [],
@@ -249,7 +250,6 @@ export default {
       goodsList:[],
       categoryOneId:'',
       categoryTwoId:'',
-      // defaultCheckedKeys:[1],
       checkGoodsList:[],
       goodsTempList:[],
       toggleSelectionList:[],

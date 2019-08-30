@@ -210,6 +210,7 @@ export default {
       imageUrl: '',
       key:0,
       reFresh:true,
+      // categoryJsonList:[],
     }
   },
   watch: {
@@ -219,17 +220,15 @@ export default {
       }
       // 品类的回显
       this.shopForm = e
-      // if(this.showState){
+
        for(let n=0; n<this.categoryTable.length;n++){
          this.categoryTable[n].state = false
          this.categoryTable[n].status = false
        }
-      //  return
-      // }
+
       if(e.categoryJson){
         let cateArr = []
-        cateArr = JSON.parse(e.categoryJson)
-        console.log(cateArr, 'kkkkkkkkk')
+        cateArr = this.recursionTableData(JSON.parse(e.categoryJson))
         let idArr= []
         let childrenIdArr = []
         cateArr.map(e => {
@@ -366,7 +365,6 @@ export default {
     getCategoryList() {
       this.categoryTable = []
       getCategory().then(res => {
-        console.log(res.info, '9999')
         this.firstcategory = res.info
         this.temp = res.info
         this.categoryTable = this.recursionTableData(res.info)
@@ -390,12 +388,50 @@ export default {
       this.$forceUpdate()
     },
     handleEditPreview(e){
-      console.log(e, 'fffffff')
+      // console.log(e, 'fffffff')
+    },
+    // 编辑添加 品类Json处理
+    handleJson(row){
+      let categoryJsonList = []
+      let temp = []
+      row.map(item => {
+        temp.push(item.childrenId)
+      })
+      let uniqueArr = this.unique(temp)
+      for(let i=0; i<uniqueArr.length; i++){
+        let cateOne = {}
+        cateOne.seconds = []
+        for(let j=0; j<row.length; j++){
+          if(uniqueArr[i]===row[j].childrenId){
+            cateOne.id = row[j].childrenId
+            cateOne.name = row[j].childrenName
+            if(row[j].id !==''){
+              let two = {}
+              two.id = row[j].id
+              two.name = row[j].name
+              cateOne.seconds.push(two)
+            }else{
+              cateOne.seconds = []
+            }
+          }
+        }
+        categoryJsonList.push(cateOne)
+      }
+      return categoryJsonList
+    },
+    // 去重处理
+    unique(arr) {
+        var newArr = []
+        for (var i = 0; i < arr.length; i++) {
+            if (newArr.indexOf(arr[i])===-1) {
+                newArr.push(arr[i])
+            }
+        }
+        return newArr
     },
     // 添加店铺
     addShopHandles() {
       this.finalArray = []
-      console.log(this.categoryTable, 'catetable.....')
       this.categoryTable.forEach(item => {
         if(item.state){
           this.finalArray.push(item)
@@ -406,13 +442,12 @@ export default {
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
-
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
       this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
-      this.shopForm.categoryJson = JSON.stringify(this.finalArray)
+      let arr = this.handleJson(this.finalArray)
+      this.shopForm.categoryJson = JSON.stringify(arr)
       this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
-
       addShop(this.shopForm).then(res => {
         this.$message.success('操作成功')
         this.loadingState = false
@@ -439,6 +474,7 @@ export default {
           this.finalArray.push(item)
         }
       })
+      let cateArray = this.handleJson(this.finalArray)
       this.loadingState = true
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
@@ -446,8 +482,8 @@ export default {
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
       this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
       this.shopForm.area = parseInt(this.shopForm.area)
-      if (this.finalArray.length > 0) {
-        this.shopForm.categoryJson = JSON.stringify(this.finalArray)
+      if (cateArray.length > 0) {
+        this.shopForm.categoryJson = JSON.stringify(cateArray)
       }
       if (this.shopForm.management === '直营') {
         this.shopForm.management = 1
