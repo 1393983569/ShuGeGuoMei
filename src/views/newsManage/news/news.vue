@@ -6,6 +6,7 @@
     </breadcrumb>
     <!-- 头部查询 -->
     <div style="display:float;">
+      <pickDate @getPickDate="handlePickDate"></pickDate>
       消息类别：
       <el-select v-model="newsType" size="mini" style="width:120px;">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
@@ -58,9 +59,10 @@
 import hint from '@/components/Hint'
 import newsDetail from './newsDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'
+import pickDate from '@/components/pickDate'
 import { getNews, deleteNews } from '@/api/news.js'
 export default {
-  components: { newsDetail, Breadcrumb, hint },
+  components: { newsDetail, Breadcrumb, hint, pickDate },
   data() {
     return {
       // 日期选择
@@ -199,6 +201,10 @@ export default {
     // 关闭详情页
     isCloseDetail(e) {
       this.showDetail = e
+    },
+    // 筛选条件-时间
+    handlePickDate(date){
+
     }
   }
 }
