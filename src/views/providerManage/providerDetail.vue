@@ -53,10 +53,10 @@
             <el-table-column prop="goodsName" label="商品名称"/>
             <el-table-column prop="goodsId" label="商品ID"/>
             <el-table-column prop="standards" label="规格"/>
-            <el-table-column prop="price" label="单价"/>
+            <el-table-column prop="unit" label="单位"/>
           </el-table>
     </p>
-    <p>资质照片：<img v-for="url in imgList" :src="url" /></p>
+    <!-- <p>资质照片：<img v-for="url in imgList" :src="url" /></p> -->
     <div>
       评分：
       <div style="margin-left:50px;">
@@ -87,8 +87,8 @@ export default {
   mounted(){
     console.log(this.$route.params,'HHHHHH')
     if(JSON.stringify(this.$route.params)!== '{}') {
+      console.log(this.$route.params.id,'kkkkkkkkkkk')
       getProviderDetail(this.$route.params.id).then(res => {
-        if(res.status === 1){
           this.providerObj = res.info
           if(res.info.provinceDomain){
             this.province = res.info.provinceDomain.name
@@ -101,12 +101,6 @@ export default {
           }
           this.categoryTable =this.recursionTableData(this.providerObj.providerGoodsList)
           this.getMergeList()
-          // console.log(this.providerObj, 'res.info')
-          this.imgList = this.providerObj.qualificationPics.split(',')
-        }else{
-          this.$message.error('查询供应商详情出错！')
-          window.history.go(-1)
-        }
       }).catch(err => {
         console.log(err)
         window.history.go(-1)
@@ -161,16 +155,17 @@ export default {
       //     res.push(data)
       //   }
       // })
+      console.log(item , 'item.........')
         data = {
           childrenId: item.categoryOneId,
           childrenName: item.categoryOneName,
           id: item.categoryTwoId,
           name: item.categoryTwoName,
           categoryOneId: item.categoryOneId,
-          goodsName:item.name,
+          goodsName:item.goodsName,
           standards:item.standards,
-          goodsId:item.id,
-          price:item.price/100,
+          goodsId:item.goodsId,
+          unit:item.unit,
         }
         res.push(data)
       })

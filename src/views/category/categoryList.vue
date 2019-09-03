@@ -339,21 +339,36 @@
         return value
       },
       addStair() {
+        console.log(this.stairInput, 'kkkkkkk')
         let arr = this.dataList
         let id = ''
         let stairList = []
         let addId = ''
-        // 排序一级品类
-        for (let i = arr.length -1, tmp; i > 0; i--) {
-          for (let j = 0; j < i; j++) {
-            tmp = this.dataList[j]
-            if (parseInt(tmp.stairId) > parseInt(this.dataList[j+1].stairId)) {
-              arr[j] = arr[j + 1]
-              arr[j + 1] = tmp
+        if(this.dataList.length>0){
+          for (let i = arr.length -1, tmp; i > 0; i--) {
+            for (let j = 0; j < i; j++) {
+              tmp = this.dataList[j]
+              if (parseInt(tmp.stairId) > parseInt(this.dataList[j+1].stairId)) {
+                arr[j] = arr[j + 1]
+                arr[j + 1] = tmp
+              }
             }
           }
+          id = arr[arr.length - 1].stairId
+        }else{
+          id = '01'
         }
-        id = arr[arr.length - 1].stairId
+        // 排序一级品类
+        // for (let i = arr.length -1, tmp; i > 0; i--) {
+        //   for (let j = 0; j < i; j++) {
+        //     tmp = this.dataList[j]
+        //     if (parseInt(tmp.stairId) > parseInt(this.dataList[j+1].stairId)) {
+        //       arr[j] = arr[j + 1]
+        //       arr[j + 1] = tmp
+        //     }
+        //   }
+        // }
+        // id = arr[arr.length - 1].stairId
         this.stairInput.forEach((item, index) => {
           stairList.push({
             id: this.addId(id, index + 1),
@@ -370,32 +385,38 @@
       // 添加二级品类
       addChildren() {
         // childrenInput
+        console.log()
         let arr = []
         let id = ''
         let listChildren = []
+
         arr = this.dataList.filter(item => {
           if (item.childrenId) return item
         })
-        let quickSort = (list) => {
-         let len = list.length
-          if (len < 2) {
-            return list
-          } else {
-            let flag = list[0]
-            let left = []
-            let right = []
-            for (let i = 1; len > i; i++) {
-              let tmp = list[i]
-              if (flag.childrenId > tmp.childrenId) {
-                left.push(tmp)
-              } else {
-                right.push(tmp)
+        if(arr.length>0){
+          let quickSort = (list) => {
+           let len = list.length
+            if (len < 2) {
+              return list
+            } else {
+              let flag = list[0]
+              let left = []
+              let right = []
+              for (let i = 1; len > i; i++) {
+                let tmp = list[i]
+                if (flag.childrenId > tmp.childrenId) {
+                  left.push(tmp)
+                } else {
+                  right.push(tmp)
+                }
               }
+              return quickSort(left).concat(flag, quickSort(right))
             }
-            return quickSort(left).concat(flag, quickSort(right))
           }
+          id = quickSort(arr)[arr.length - 1].childrenId
+        }else{
+          id='01'
         }
-        id = quickSort(arr)[arr.length - 1].childrenId
         this.childrenInput.forEach((item, index) => {
           let data = {
             id: this.addId(id, index + 1),

@@ -5,13 +5,13 @@
       <el-button type="primary" v-else disabled @click="handleReleaseNews" size="mini">发布消息</el-button>
     </breadcrumb>
     <!-- 头部查询 -->
-    <div style="display:float;">
-      <pickDate @getPickDate="handlePickDate"></pickDate>
+    <div style="display:flex;flex-direction:row;">
+      <pickDate @getPickDate="handlePickDate"></pickDate>&nbsp;
       消息类别：
       <el-select v-model="newsType" size="mini" style="width:120px;">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      <div style="display:float;float:right;">
+      <div style="position:absolute;right:4px;">
         <el-button size="mini" v-if="buttonList.includes('操作')" type="primaryX">筛选</el-button>
         <el-button size="mini" v-else disabled type="primaryX">筛选</el-button>
         <el-button size="mini" v-if="buttonList.includes('操作')" type="info">清空</el-button>
@@ -24,12 +24,12 @@
         <el-table-column prop="createTime" label="发布时间" />
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="category" label="类型" />
-        <el-table-column prop="shopJson" label="对象">
+        <el-table-column prop="shopJson" label="对象" :width="500">
           <template slot-scope="scope">
-
+            <span v-for="item in scope.row.shopJson">{{item.name}}&nbsp;|&nbsp;</span>
           </template>
         </el-table-column>
-        <el-table-column prop="operate" label="操作" width="220px">
+        <el-table-column prop="operate" label="操作" :width="300">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" v-if="buttonList.includes('查看'||'操作')" @click="handleDetail(scope.row)">查看详情</el-button>
             <el-button type="warning" size="mini" v-else disabled>查看详情</el-button>
@@ -62,6 +62,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import pickDate from '@/components/pickDate'
 import { getNews, deleteNews } from '@/api/news.js'
 export default {
+  name:'news',
   components: { newsDetail, Breadcrumb, hint, pickDate },
   data() {
     return {

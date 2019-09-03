@@ -37,6 +37,7 @@ export const getSummaries = (param, prop) => {
 export const getButtonRole = (role) => {
   let list = []
   const recursion = (listValue) => {
+    // console.log(listValue, 'lololo........')
     listValue.forEach((item, index) => {
       let data = {}
       if (!item.children) {
@@ -59,8 +60,10 @@ export const getButtonRole = (role) => {
 export const getRole = (role) => {
   let list = []
   const recursion = (listValue) => {
+    // console.log(listValue, 'list.....')
     listValue.forEach((item, index) => {
       if (item.checkList.length !== 0) {
+        // if (item.checkList) {
         if (item.roles) {
           item.roles.forEach(itemx => {
             if (!list.includes(itemx)) {

@@ -4,13 +4,18 @@ import request from '../utils/request'
  */
 export const addNews = (data) => {
   const params = new URLSearchParams()
-  for (const key in data) {
-    // console.log(key, 'key....')
-    if (data[key]) params.append(key, data[key])
-  }
+  // for (const key in data) {
+  //   // console.log(key, 'key....')
+  //   if (data[key]) params.append(key, data[key])
+  // }
+  params.append('shopJson', data.shopJson)
   return request({
-    url: '/admin/addMess',
+    url: `/admin/addMess?title=${data.title}&category=${data.category}&content=${data.content}&deleteStatus=${data.deleteStatus}&shopIds=${data.shopIds}`,
+    // url: '/admin/addMess',
     method: 'post',
+    //  headers: {
+    //   'content-Type': 'application/json;charset=UTF-8'
+    // },
     data: params
   })
 }
@@ -25,6 +30,7 @@ export const getNews = (data) => {
   return request({
     url: '/admin/getAllMess',
     method: 'post',
+
     data: params
   })
 }

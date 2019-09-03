@@ -57,7 +57,9 @@
         label="角色"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p v-if="scope.row.role.name">{{scope.row.role.name}}</p>
+          <p v-else></p>
+          <!-- <p>{{ scope.row.role.name }}</p> -->
         </template>
       </el-table-column>
       <el-table-column
@@ -94,6 +96,7 @@ import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
 import { addAdmin, selectPageAdmin, editAdmin } from '@/api/admin/adminList'
 import { selectAfter } from '@/api/role'
+import { constants } from 'fs';
 export default {
   name: 'AdminList',
   components: {
@@ -128,7 +131,17 @@ export default {
     getAdminList() {
       this.dataList = []
       selectPageAdmin(1).then(res => {
-        this.dataList.push(...res.info.records)
+        this.dataList = []
+        res.info.records.map(item => {
+          // console.log(item.role)
+          if(item.role){
+            this.dataList.push(item)
+          }else{
+            item.role = {}
+            this.dataList.push(item)
+          }
+
+        })
       }).catch(err => {
         console.log(err)
       })

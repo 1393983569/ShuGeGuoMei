@@ -62,6 +62,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(getUserId()).then(response => {
         try {
+          console.log(JSON.parse(response.info.menu), 'json.....')
+          // return
           let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
           let roleList = getRole(JSON.parse(response.info.menu))
           commit('SET_ROLEID', response.info.roleId)

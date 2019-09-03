@@ -265,10 +265,10 @@ export default {
       this.showShelf = true
       if (row.is_shelf) {
         this.titleShelf = '上架'
-        this.isShelf = '0'
+        this.isShelf = 1
       } else {
         this.titleShelf = '下架'
-        this.isShelf = 1
+        this.isShelf = '0'
       }
       console.log(row, 'ggggg')
     },

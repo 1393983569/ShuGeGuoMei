@@ -55,7 +55,7 @@
             v-for="item in shopList"
             :key="item.id"
             :label="item.name"
-            :value='`${item.id}:${item.name}`'>
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -82,7 +82,6 @@
               <el-table-column prop="unit" label="单位"/>
               <el-table-column type="selection"></el-table-column>
             </el-table>
-            <!-- <el-button @click="handleAAAA([goodsList[1],goodsList[2]])">aaaa</el-button> -->
        </div>
       </el-form-item>
       <el-form-item v-if="editState" label="资质照片(还未做)：" prop="">
@@ -205,13 +204,16 @@ export default {
 
         shopObject: [],
         goodsId:[],
-        shops: [],
+        shops: '',
         qualificationPics: '',
         qualificationScore: '',
         priceScore: '',
         qualityScore: '',
         serviceScore: '',
         deliverShopScore: '',
+        providerShops:'',
+        providerGoods:[],
+        status: 0,
       },
       dialogVisible: false,
       shopList: [],
@@ -258,7 +260,6 @@ export default {
   },
   watch: {
     'ruleForm.shopObject'(e) {
-      // console.log(e.toString(), '^^^^^^^^^^^^^')
 
     }
   },
@@ -337,6 +338,10 @@ export default {
           if(res.info.areaDomain) {
             this.ruleForm.areaId = res.info.areaDomain.id
           }
+          res.info.providerShopList.map(item => {
+            this.ruleForm.shopObject.push(item)
+          })
+          // this.ruleForm.shopObject = res.info.providerShopList
           res.info.providerGoodsList.forEach(item => {
             let goods = {}
             goods.categoryOneId = item.categoryOneId
@@ -405,34 +410,25 @@ export default {
     },
     // 添加供应商
     submitForm(formName) {
-      this.ruleForm.shops = []
-      // console.log(this.ruleForm.shops, 'shops.....')
-       if(this.ruleForm.shopObject.length>0) {
-        this.ruleForm.shopObject.forEach(item => {
-          // console.log(item, 'jjjjjj')
-          let array = item.split(':')
-          let shopobj = {}
-          shopobj.id = array[0]
-          shopobj.name= array[1]
-          this.ruleForm.shops.push(shopobj)
-        })
-      }
-      console.log(this.ruleForm.shops, 'this.ruleForm.shops')
-      this.ruleForm.shops = JSON.stringify(this.ruleForm.shops)
+      this.ruleForm.providerShops = this.ruleForm.shopObject.toString()
+      console.log(this.checkGoodsList,'list;;;;;;')
+      let array = []
+      this.checkGoodsList.map(item => {
+        let ob = {}
+        ob.categoryOneId = item.categoryOneId
+        ob.categoryTwoId = item.categoryTwoId
+        ob.goodsId = item.goodsId
+        ob.goodsName = item.goodsName
+        ob.standards = item.standards
+        ob.unit = item.unit
+        array.push(ob)
+      })
+      this.ruleForm.providerGoods = JSON.stringify(array)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // let arrId = []
-          // this.checkGoodsList.forEach(item => {
-          //   arrId.push(item.goodsId)
-          // })
-          // this.ruleForm.goodsId = arrId.toString()
-          // this.ruleForm.goodsId = arrId
-          // this.ruleForm.goodsId = this.checkGoodsList
-          // console.log(this.ruleForm.shops, 'shops.....')
-          this.ruleForm = JSON.stringify(this.ruleForm)
           addProvider(this.ruleForm).then(res => {
             if(res.status === 1){
-              this.$message.success('添加供应商失败！')
+              this.$message.success('添加供应商成功！')
             }else {
               this.$message.warning('添加供应商出错！')
             }

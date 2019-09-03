@@ -9,7 +9,7 @@
         </el-form-item>
         <el-form-item label="对象" prop="shopIds">
           <el-select v-model="newsForm.shopIds" clearable multiple style="width:300px;">
-            <el-option v-for="(item, index) in objectList" :key="index" :value="item.id" :label="item.name" />
+            <el-option v-for="(item, index) in objectList" :key="index" :value="`${item.id}:${item.name}`" :label="item.name" />
           </el-select>
         </el-form-item>
         <el-form-item label="类别" prop="category">
@@ -92,22 +92,32 @@ export default {
   methods: {
     addNewsHandle() {
       this.loadingState = true
-      console.log(this.newsForm.category, '$$$$$$$$$$$')
         const addArray = {}
         addArray.title = this.newsForm.title
         addArray.category = this.newsForm.category + ''
         addArray.content = this.newsForm.content
         addArray.deleteStatus = this.newsForm.deleteStatus + ''
-        addArray.shopIds = this.newsForm.shopIds.toString()
-      console.log(this.addArray, 'ggggggg')
-      // return
+        console.log(this.newsForm.shopIds, 'lhdhdufugfhngnguhih')
+        let shopIdList = []
+        let shopJson = []
+        this.newsForm.shopIds.map(item => {
+          let arr = item.split(':')
+          shopIdList.push(arr[0])
+          let ob = {}
+          ob.id = arr[0]
+          ob.name = arr[1]
+          shopJson.push(ob)
+        })
+        // return
+        addArray.shopJson = JSON.stringify(shopJson)
+        addArray.shopIds = shopIdList.toString()
       addNews(addArray).then(res => {
         if (res.status === 1) {
           this.loadingState = false
           this.shopIds = []
           this.newsForm = {}
           this.$message.success('添加消息成功')
-          window.history.go(-1)
+          this.$router.push({name:'news'})
         }
       }).catch(err => {
         this.loadingState = false

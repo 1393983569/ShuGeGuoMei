@@ -177,7 +177,6 @@ export const asyncRoutes = [
       icon: 'shopmanagement_default',
       title: '店铺管理'
     },
-    // component: Main,
     children: [
       {
         path: 'shop',
@@ -194,7 +193,6 @@ export const asyncRoutes = [
         path: 'shopDetail',
         name: 'shopDetail',
         meta: {
-          // roles: ['admin'],
           icon: 'dashboard',
           title: '详情'
         },
@@ -211,7 +209,6 @@ export const asyncRoutes = [
       icon: 'messagecenter_default',
       title: '消息管理'
     },
-    // component: Main,
     children: [
       {
         path: 'news',
@@ -245,7 +242,6 @@ export const asyncRoutes = [
       icon: 'Advertisingcenter_default',
       title: '广告管理'
     },
-    // component: Main,
     children: [
       {
         path: 'AD',
@@ -262,7 +258,6 @@ export const asyncRoutes = [
         name: 'ADRelease',
         hidden: true,
         meta: {
-          // roles: ['ADRelease'],
           icon: 'dashboard',
           title: '广告发布'
         },
@@ -301,7 +296,6 @@ export const asyncRoutes = [
       icon: 'Commoditybank_default',
       title: '采集平台'
     },
-    // component: Main,
     children: [
       {
         path: 'collectShopList',

@@ -283,8 +283,11 @@
           })
           addSysArea(list).then(res => {
             console.log(res)
+            this.dialogCounty = false
+            this.$message.success('添加成功！')
           }).catch(err => {
-
+            console.log(err)
+            this.$message.error('添加失败！')
           })
         }
       }
