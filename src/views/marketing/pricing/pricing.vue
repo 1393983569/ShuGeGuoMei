@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <pickDate @getPickDate="getPickDate"></pickDate>
       <div style="float:right;margin:10px;">
         <el-button size="mini" type="primary">筛选</el-button>
         <el-button size="mini" type="danger">清除</el-button>
@@ -108,8 +109,10 @@
 </template>
 
 <script>
+import pickDate from '@/components/pickDate'
 export default {
   name: 'CollectShop',
+  components:{pickDate},
   props: {
     row: {
       type: Array,
@@ -144,6 +147,7 @@ export default {
 
   },
   methods: {
+    getPickDate(){},
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({

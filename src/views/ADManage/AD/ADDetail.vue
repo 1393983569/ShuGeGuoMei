@@ -2,7 +2,7 @@
   <div class="body-margin">
     <el-dialog :visible="showAdDetail" :before-close="handleClose">
       <div slot="title" class="title-size-color" style="margin:10px;">广告详情</div>
-      <div class="size-color div-margin"><span class="font-weight">标题：</span>{{ adObject.tile }}</div>
+      <div class="size-color div-margin"><span class="font-weight">标题：</span>{{ adObject.title }}</div>
       <div class="size-color div-margin font-weight" style="display:flex;flex-direction:row;align-items:flex-start;">轮播图：<img :src="adObject.imge" style="width:100px;height:100px;"/></div>
       <div class="size-color div-margin"><span class="font-weight">发布时间：</span>{{ adObject.createTime }}</div>
       <div class="size-color div-margin" style="display:flex;flex-direction:row;align-items:flex-start;"><span class="font-weight">内容：</span><span v-html="adObject.content"></span></div>

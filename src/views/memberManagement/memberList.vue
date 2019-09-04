@@ -3,7 +3,9 @@
     <breadcrumb>
       <el-button @click="explainHandle">会员系统说明</el-button>
     </breadcrumb>
-    <div style="margin:10px;">
+    <!-- <pickDate @getPickDate="getPickDate"></pickDate> -->
+    <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">
+      <pickDate @getPickDate="getPickDate"></pickDate>
       店铺：
       <el-select v-model="shopId" placeholder="请选择" size="mini" style="width:140px;">
         <el-option
@@ -31,19 +33,19 @@
           :value="item.id">
         </el-option>
       </el-select>
-      <div style="diplay:float;float:right;">
+      <div style="position:absolute;right:4px;">
         <el-button size="mini" tpe="primary" @click="searchVip">筛选</el-button>
         <el-button size="mini" type="danger" @click="clearVip">清除</el-button>
       </div>
-      <div style="margin-top:5px;margin-bottom:10px;">
-        <el-input
-          clearable
-          placeholder="请输入关键词进行搜索"
-          prefix-icon="el-icon-search"
-          v-model="param" style="width:400px;" size="mini">
-        </el-input>
-        <el-button size="mini" @click="handleFind">搜索</el-button>
-      </div>
+    </div>
+    <div style="margin-top:5px;margin-bottom:10px;">
+      <el-input
+        clearable
+        placeholder="请输入关键词进行搜索"
+        prefix-icon="el-icon-search"
+        v-model="param" style="width:400px;" size="mini">
+      </el-input>
+      <el-button size="mini" @click="handleFind">搜索</el-button>
     </div>
     <el-table
       :data="dataList"
@@ -109,6 +111,7 @@
 </template>
 
 <script>
+import pickDate from '@/components/pickDate'
 import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getAllShop } from '@/api/shop.js'
@@ -116,7 +119,7 @@ import { deleteVip, getVipList, vipDetail} from '@/api/member.js'
 export default {
   name: 'memberList',
   components:{
-    hint,Breadcrumb
+    hint,Breadcrumb, pickDate
   },
   props: {
     row: {
@@ -187,6 +190,7 @@ export default {
     this.getVipList()
   },
   methods: {
+    getPickDate(){},
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({

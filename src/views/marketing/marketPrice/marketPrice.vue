@@ -1,8 +1,9 @@
 <template>
   <div>
     <div style="display:flex;flex-direction:row;margin:10px;align-items:center;">
+      <pickDate @getPickDate="getPickDate"></pickDate>
       市场类型：
-      <el-select v-model="value1" filterable placeholder="请选择" size="mini" style="width:100px;margin-right:20px;">
+      <el-select v-model="value1" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
         <el-option
           v-for="item in typeList"
           :key="item.id"
@@ -11,7 +12,7 @@
         </el-option>
       </el-select>
       区域：
-      <el-select v-model="value2" filterable placeholder="请选择" size="mini" style="width:140px;margin-right:20px;">
+      <el-select v-model="value2" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
         <el-option
           v-for="item in areaList"
           :key="item.id"
@@ -20,7 +21,7 @@
         </el-option>
       </el-select>
       一级品类：
-      <el-select v-model="categoryOneId" filterable placeholder="蔬菜" size="mini" style="width:140px;">
+      <el-select v-model="categoryOneId" filterable placeholder="蔬菜" size="mini" style="width:10%;">
         <el-option
           v-for="item in categoryOneList"
           :key="item.id"
@@ -95,9 +96,11 @@
 </template>
 
 <script>
+import pickDate from '@/components/pickDate'
 import { getFirstCategory } from '@/api/category.js'
 export default {
   name: 'CollectShop',
+  components:{pickDate},
   props: {
     row: {
       type: Array,
@@ -164,6 +167,7 @@ export default {
     this.getCategory()
   },
   methods: {
+    getPickDate(){},
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({

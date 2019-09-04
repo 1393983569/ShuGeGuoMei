@@ -50,7 +50,7 @@
         <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
       </el-form-item>
       <el-form-item label="可配送的店铺列表：" prop="shopObject">
-        <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple>
+        <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple clearable>
           <el-option
             v-for="item in shopList"
             :key="item.id"
@@ -75,7 +75,7 @@
               </el-tree>
             </div>
           </div>
-            <el-table :data="goodsList" :height="800" ref="multipleTable" @select="selectGoods" @select-all="selectGoodsAll">
+            <el-table :data="goodsList" :height="800" ref="multipleTable" @select="selectGoods" @select-all="selectGoodsAll(goodsList)">
               <el-table-column prop="goodsName" label="商品名称"/>
               <el-table-column prop="goodsId" label="商品ID"/>
               <el-table-column prop="standards" label="规格"/>
@@ -84,13 +84,13 @@
             </el-table>
        </div>
       </el-form-item>
-      <el-form-item v-if="editState" label="资质照片(还未做)：" prop="">
+      <el-form-item label="资质照片：" prop="qualificationPics">
         <el-upload
           class="avatar-uploader"
           :action="`${apiUrl}/basics/upload`"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
+          :on-success="handleQualificationSuccess"
+          :before-upload="beforeQualificationUpload"
         >
           <img v-if="ruleForm.qualificationPics" :src="ruleForm.qualificationPics" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -163,7 +163,7 @@
 <script>
 import { getAllShop } from '@/api/shop.js'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
-import { getProviderDetail, addProvider,editProvider} from '@/api/provider.js'
+import { getProviderDetail, addProvider,editProvider,editProviderGoods} from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
@@ -187,6 +187,7 @@ export default {
         providerId: ''
       },
       ruleForm:{
+        id:'',
         name: '',
         headerPic: '',
         contactName: '',
@@ -201,7 +202,6 @@ export default {
         addressDetail: '',
         area: '',
         remark: '',
-
         shopObject: [],
         goodsId:[],
         shops: '',
@@ -246,6 +246,9 @@ export default {
         shopObject: [
           { required: true, message: '请输入面积', trigger: 'blur' },
         ],
+        // qualificationPics:[
+        //   { required: true, message: '请输入面积', trigger: 'blur' },
+        // ],
       },
       apiUrl: '',
       id: '',
@@ -260,7 +263,7 @@ export default {
   },
   watch: {
     'ruleForm.shopObject'(e) {
-
+      console.log(e, 'jjjjjjjjj')
     }
   },
   mounted() {
@@ -271,42 +274,39 @@ export default {
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
       this.checkGoodsList= []
+      this.ruleForm.id = this.$route.params.id
       this.id = this.$route.params.id
       this.grade.providerId = this.$route.params.id
       this.getProviderDetail()
     }
     this.getShopOption()
     this.ruleForm.shops = []
+    console.log(this.checkGoodsList, 'chushi/////')
   },
   methods: {
     // 商品单选
     selectGoods(a, row){
-      console.log(this.checkGoodsList, row,  this.checkGoodsList.includes(row))
-      if(JSON.stringify(this.checkGoodsList).includes(JSON.stringify(row))) {
-        let index = this.checkGoodsList.indexOf(row)
-        this.checkGoodsList.splice(index, 1)
-      }else{
-        this.checkGoodsList.push(row)
+      for(let i=0; i<this.checkGoodsList.length; i++){
+        if(this.checkGoodsList[i].goodsId === row.goodsId){
+          this.checkGoodsList.splice(i, 1)
+          return
+        }else{this.checkGoodsList.push(row)}
       }
-      console.log(this.checkGoodsList,row, 'danxuan ')
     },
     // 商品全选
     selectGoodsAll(all){
-      console.log(all, 'all')
-      if(this.checkGoodsList.length) {
-        let arr = all.filter(res => {
-          return this.checkGoodsList.every(item => {
-            return res.goodsId !== item.goodsId
-          })
-        })
-        // console.log(arr)
-        this.checkGoodsList = this.checkGoodsList.concat(arr)
-      }else{
-        all.forEach(temp => {
-          this.checkGoodsList.push(temp)
-        })
+      for(let i=0;i<this.checkGoodsList.length; i++){
+        for(let j=0;j<all; j++){
+          if(this.checkGoodsList[i].goodsId === all[j].goodsId){
+            this.checkGoodsList.splice(i, 1)
+            // all.splice(j, 1)
+            return
+          }else(
+            this.checkGoodsList.push(all[j])
+          )
+        }
       }
-      console.log(this.checkGoodsList, 'quanxuan ')
+
     },
     // 查询所有店铺
     getShopOption() {
@@ -324,7 +324,7 @@ export default {
     },
     // 查询供应商详情
     getProviderDetail() {
-      getProviderDetail(this.id.toString()).then(res => {
+      getProviderDetail(this.id).then(res => {
         console.log(res, 'hhhhhhhh')
         if(res.status === 1){
           this.ruleForm = res.info
@@ -338,20 +338,22 @@ export default {
           if(res.info.areaDomain) {
             this.ruleForm.areaId = res.info.areaDomain.id
           }
-          res.info.providerShopList.map(item => {
-            this.ruleForm.shopObject.push(item)
+          console.log(res.info.providerShopList, 'res.info.providerShopList......')
+          this.ruleForm.shopObject = []
+          res.info.providerShopList.forEach(item => {
+            this.ruleForm.shopObject.push(item.id)
           })
-          // this.ruleForm.shopObject = res.info.providerShopList
           res.info.providerGoodsList.forEach(item => {
             let goods = {}
             goods.categoryOneId = item.categoryOneId
             goods.categoryOneName = item.categoryOneName
             goods.categoryTwoId = item.categoryTwoId
             goods.categoryTwoName = item.categoryTwoName
-            goods.goodsId = item.id
-            goods.goodsName = item.name
+            goods.goodsId = item.goodsId
+            goods.goodsName = item.goodsName
             goods.standards = item.standards
             goods.unit = item.unit
+            goods.id = item.id
             this.providerGoodsList.push(goods)
             this.checkGoodsList.push(goods)
           })
@@ -381,13 +383,17 @@ export default {
         this.$message.error('评分添加失败！')
       })
     },
+    // 门头照片上传成功
     handleAvatarSuccess(file) {
       console.log(file, 'hhhh')
       this.ruleForm.headerPic = file.info
     },
-    beforeAvatarUpload(file) {
-
+    // 资质照片上传成功
+    handleQualificationSuccess(file){
+      this.ruleForm.qualificationPics = file.info
     },
+    beforeAvatarUpload(file) {},
+    beforeQualificationUpload(file) {},
     getProvince(e) {
       this.ruleForm.provinceId = e
     },
@@ -399,9 +405,37 @@ export default {
     },
     // 编辑供应商
     submitFormEdit(formName) {
+        this.ruleForm.providerShops = this.ruleForm.shopObject.toString()
+        console.log(this.checkGoodsList,'list;;;;;;')
+        let array = []
+        this.checkGoodsList.map(item => {
+          let ob = {}
+          console.log(this.ruleForm.providerId, 'this.ruleForm.providerId....')
+          ob.providerId = this.ruleForm.id
+          ob.categoryOneId = item.categoryOneId
+          ob.categoryTwoId = item.categoryTwoId
+          ob.goodsId = item.goodsId
+          ob.goodsName = item.goodsName
+          ob.standards = item.standards
+          ob.unit = item.unit
+          ob.id = item.id
+          array.push(ob)
+        })
+        // return
+        let goodsArr = []
+        goodsArr = JSON.stringify(array)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
+          editProvider(this.ruleForm).then(res => {
+            this.$message.success('编辑成功')
+          }).catch(err => {
+            this.$message.error('编辑失败')
+          })
+          editProviderGoods(this.ruleForm.id, goodsArr).then(res => {
+            //  this.$message.success('编辑成功')
+          }).catch(err=> {
+            this.$message.error('编辑商品失败！')
+          })
         } else {
           console.log('error submit!!');
           return false;
@@ -520,7 +554,6 @@ export default {
       })
         this.toggleSelection(this.toggleSelectionList)
     },
-
     // 回显数据
     toggleSelection(rows) {
       let _this = this

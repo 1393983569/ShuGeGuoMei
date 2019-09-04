@@ -5,7 +5,7 @@
       <!-- <div style="float:left;"> -->
       <div>
         <el-form-item label="标题" prop="tile">
-          <el-input v-model="ADForm.tile" style="width:400px;" />
+          <el-input v-model="ADForm.title" style="width:400px;" />
         </el-form-item>
         <el-form-item label="轮播图" prop="imge">
          <el-upload
@@ -57,12 +57,12 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       ADForm: {
-        tile: '',
+        title: '',
         imge: '',
         content: '',
       },
       rules: {
-        tile: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         imge: [{ required: true, message: '请上传轮播图', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
       },

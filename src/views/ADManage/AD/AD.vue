@@ -7,7 +7,7 @@
 
     <el-table :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
-      <el-table-column prop="tile" label="标题" />
+      <el-table-column prop="title" label="标题" />
       <el-table-column prop="picture" label="轮播图">
         <template slot-scope="scope">
           <img v-if="scope.row.imge" :src="scope.row.imge" class="avatar" style="width:100px;height:100px;">

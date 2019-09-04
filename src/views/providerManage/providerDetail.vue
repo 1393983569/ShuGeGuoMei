@@ -60,7 +60,8 @@
     <div>
       评分：
       <div style="margin-left:50px;">
-        <span>资质：{{providerObj.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span><el-button style="margin-left:20px;" size="mini" type="success">去评分</el-button><br/>
+        <span>资质：{{providerObj.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
+        <!-- <el-button style="margin-left:20px;" size="mini" type="success">去评分</el-button> -->
         <span>价格分：{{providerObj.priceScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
         <span>品质分：{{providerObj.qualityScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
         <span>服务分：{{providerObj.serviceScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>

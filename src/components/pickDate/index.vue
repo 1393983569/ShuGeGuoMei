@@ -1,5 +1,5 @@
 <template>
-  <form name='form'>
+  <form name='form' style="margin-right:10px;">
     年：<el-select v-model="year" size="mini" class="datePick" @change="getYear">
         <el-option v-for="(item, key) in yearList" :key="key" :value="item" selected>{{item}}</el-option>
     </el-select>
@@ -100,6 +100,6 @@ export default {
 </script>
 <style>
 .datePick{
-  width:110px;
+  width:90px;
 }
 </style>

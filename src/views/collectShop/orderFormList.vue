@@ -1,7 +1,9 @@
 <template>
 <div>
   <div style="display: flex; flex-direction: row">
+    <pickDate @getPickDate="getPickDate"></pickDate>&nbsp;
     <div>
+
       类型：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
         <el-option
           v-for="item in type"
@@ -91,10 +93,12 @@
 </template>
 
 <script>
+import pickDate from '@/components/pickDate'
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import { get } from 'http';
 export default {
   name: 'orderFormList',
+  components:{pickDate},
   data() {
     return {
       tableData: [],
@@ -139,6 +143,7 @@ export default {
     this.getOrderList()
   },
   methods: {
+    getPickDate(){},
     handleSizeChange(e){
       this.pageSize = e
       this.getOrderList()

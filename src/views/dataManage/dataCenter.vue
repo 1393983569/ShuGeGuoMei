@@ -1,6 +1,7 @@
 <template>
   <div style="margin:20px;">
     <div style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;align-items:center;">
+      <pickDate @getPickDate="getPickDate"></pickDate>&nbsp;
       店铺名称：
       <el-select v-model="shopId">
         <el-option v-for="item in shopList" :key="item.id" :value="item.id" :label="item.name" />
@@ -71,9 +72,10 @@ import incomTrend from './jingying/incomTrend.vue'
 import lossData from './jingying/lossData.vue'
 import goodsData from './jingying/goodsData.vue'
 import promitLoss from './promitLoss/promitLoss.vue'
+import pickDate from '@/components/pickDate'
 import vip from './vip/vipData.vue'
 export default {
-  components: { incomTrend, lossData, goodsData, promitLoss, vip },
+  components: { incomTrend, lossData, goodsData, promitLoss, vip, pickDate },
   data() {
     return {
       shopList: [],
@@ -84,6 +86,7 @@ export default {
     this.getAllShop()
   },
   methods: {
+    getPickDate(){},
     // 查询所有商铺
     getAllShop() {
       getAllShop().then(res => {

@@ -7,7 +7,7 @@ export const addProvider = (data) => {
   // const params = new URLSearchParams()
   // params.append('providerGoods', data.providerGoods)
   return request({
-    url: `/admin/addProvider?name=${data.name}&headerPic=${data.headerPic}&contactName=${data.contactName}&mobile=${data.mobile}&phone=${data.phone}&wechat=${data.wechat}&qq=${data.qq}&email=${data.email}&provinceId=${data.provinceId}&cityId=${data.cityId}&areaId=${data.areaId}&addressDetail=${data.addressDetail}&area=${data.area}&remark=${data.remark}&providerShops=${data.providerShops}&status=${data.status}`,
+    url: `/admin/addProvider?name=${data.name}&headerPic=${data.headerPic}&contactName=${data.contactName}&mobile=${data.mobile}&phone=${data.phone}&wechat=${data.wechat}&qq=${data.qq}&email=${data.email}&provinceId=${data.provinceId}&cityId=${data.cityId}&areaId=${data.areaId}&addressDetail=${data.addressDetail}&area=${data.area}&remark=${data.remark}&providerShops=${data.providerShops}&status=${data.status}&qualificationPics=${data.qualificationPics}`,
     headers: {
       'content-Type': 'application/json;charset=UTF-8'
     },
@@ -26,9 +26,8 @@ export const deleteProvider = (id) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   return request({
-    url: `/admin/delProvider?id=${id}&?name=${data.name}&headerPic=${data.headerPic}&contactName=${data.contactName}&mobile=${data.mobile}&phone=${data.phone}&wechat=${data.wechat}&qq=${data.qq}&email=${data.email}&provinceId=${data.provinceId}&cityId=${data.cityId}&areaId=${data.areaId}&addressDetail=${data.addressDetail}&area=${data.area}&remark=${data.remark}&providerShops=${data.providerShops}`,
-    method: 'get',
-    data: data.providerGoods
+    url: `/admin/delProvider?id=${id}`,
+    method: 'get'
   })
 }
 /**
@@ -36,10 +35,24 @@ export const deleteProvider = (id) => {
  * @param {Object} data 供应商对象
  */
 export const editProvider = (data) => {
-  // const params = new URLSearchParams()
-  // for (const key in data) {
-  //   if (data[key]) params.append(key, data[key])
-  // }
+  const params = new URLSearchParams()
+  params.append('id', data.id)
+  params.append('name', data.name)
+  params.append('headerPic', data.headerPic)
+  params.append('contactName', data.contactName)
+  params.append('mobile', data.mobile)
+  params.append('phone', data.phone)
+  params.append('wechat', data.wechat)
+  params.append('qq', data.qq)
+  params.append('email', data.email)
+  params.append('provinceId', data.provinceId)
+  params.append('cityId', data.cityId)
+  params.append('areaId', data.areaId)
+  params.append('addressDetail', data.addressDetail)
+  params.append('area', data.area)
+  params.append('remark', data.remark)
+  params.append('status', data.status)
+  params.append('qualificationPics', data.qualificationPics)
   return request({
     url: '/admin/editProvider',
     method: 'post',
@@ -84,5 +97,16 @@ export const getAllProvider = () => {
   return request({
     url: '/admin/getAllProvider',
     method: 'get'
+  })
+}
+// 编辑供应商商品
+export const editProviderGoods = (id,data) => {
+  return request({
+    url:  `/admin/editProviderGoods?providerId=${id}`,
+    method: 'post',
+    headers: {
+      'content-Type': 'application/json;charset=UTF-8'
+    },
+    data: data
   })
 }

@@ -585,7 +585,7 @@ export const asyncRoutes = [
         name: 'explain',
         hidden: true,
         meta: {
-          roles: ['explain'],
+          // roles: ['explain'],
           icon: 'dashboard',
           title: '会员系统说明'
         },
