@@ -15,7 +15,7 @@
       <span v-else>调拨</span>
     </div>
     <div>
-      商品数量：{{amount}}
+      商品数量：{{orderDetailList.length}}
     </div>
     <!-- 循环体 -->
     <div>
@@ -66,7 +66,7 @@
       <span v-if="type ===0">未拆单</span>
       <span v-else-if="type===1">已拆单</span>
       <span v-else-if="type===2">已派单</span>
-      <span v-else>已入库</span>
+      <span v-else-if="type===3">已入库</span>
     </div>
     <div>
       子订单列表：

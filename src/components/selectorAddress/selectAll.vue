@@ -53,6 +53,8 @@ export default {
         getAllCity(this.provinceId).then(res => {
           if (res.info.length > 0) {
             this.cityList = res.info
+            this.cityId = ''
+            this.countyId = ''
           } else {
             // this.$message.error('暂无城市')
           }
@@ -72,6 +74,7 @@ export default {
           if (res.info.length > 0) {
             console.log('ddddddd')
             this.countyList = res.info
+            this.countyId = ''
           } else {
             // this.$message.error('暂无区县！')
           }

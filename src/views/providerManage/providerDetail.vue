@@ -60,35 +60,79 @@
     <div>
       评分：
       <div style="margin-left:50px;">
-        <span>资质：{{providerObj.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
-        <!-- <el-button style="margin-left:20px;" size="mini" type="success">去评分</el-button> -->
+        <span>资质：{{providerObj.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
+        <el-button @click="addGradeOpen" style="margin-left:20px;" size="mini" type="success">去评分</el-button><br/>
         <span>价格分：{{providerObj.priceScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
         <span>品质分：{{providerObj.qualityScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
         <span>服务分：{{providerObj.serviceScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
         <span>配送店铺数量分：{{providerObj.deliverShopScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
       </div>
     </div>
+    <!-- 评分弹框 -->
+    <el-dialog
+      title="评分"
+      :visible.sync="dialogVisible"
+      width="30%"
+      class="dialogCustom"
+      :show-close="false"
+      center>
+      <div class="dialogBorder">
+        <el-form label-position="right" label-width="130px" :model="grade">
+          <el-form-item label="资质:">
+            <el-input v-model="grade.qualification" placeholder="请输入分数" />
+          </el-form-item>
+          <el-form-item label="价格分:">
+            <el-input v-model="grade.price"  placeholder="请输入分数"/>
+          </el-form-item>
+          <el-form-item label="品质分:">
+            <el-input v-model="grade.quality"  placeholder="请输入分数"/>
+          </el-form-item>
+          <el-form-item label="服务分:">
+            <el-input v-model="grade.service"  placeholder="请输入分数"/>
+          </el-form-item>
+          <el-form-item label="配送店铺数量分:">
+            <el-input v-model="grade.amount"  placeholder="请输入分数"/>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer botton" style="margin:0px;padding:0px;">
+        <div @click="dialogVisible = false" style="border-right: 1px #DDDDDD solid">取消</div>
+        <div @click="addGrade">确定</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import {getProviderDetail} from '@/api/provider.js'
+import {addGrade, getGrade} from '@/api/providerGrade.js'
 export default {
   name: 'providerDetail',
   data() {
     return {
+      dialogVisible:false,
       providerObj:{},
       imgList:[],
       mergeList:[],
       categoryTable: [],
       city:'',
       province:'',
-      area:''
+      area:'',
+      grade: {
+        adminId: '',
+        qualification: '',
+        price: '',
+        quality: '',
+        service: '',
+        amount: '',
+        providerId: ''
+      },
     }
   },
   mounted(){
     console.log(this.$route.params,'HHHHHH')
     if(JSON.stringify(this.$route.params)!== '{}') {
       console.log(this.$route.params.id,'kkkkkkkkkkk')
+      this.providerId = this.$route.params.id
       getProviderDetail(this.$route.params.id).then(res => {
           this.providerObj = res.info
           if(res.info.provinceDomain){
@@ -190,9 +234,103 @@ export default {
         }
       })
     },
+    addGradeOpen(){
+      this.dialogVisible = true
+    },
+    addGrade(){
+      this.providerObj.qualificationScore = this.grade.qualification
+      this.providerObj.priceScore =this.grade.price
+      this.providerObj.qualityScore =this.grade.quality
+      this.providerObj.serviceScore=this.grade.service
+      this.providerObj.deliverShopScore=this.grade.amount
+      this.grade.adminId = this.$store.state.user.roleId
+      this.grade.providerId = this.providerId
+      addGrade(this.grade).then(res => {
+        if(res.status === 1){
+          this.$message.success('评分添加成功！')
+          this.dialogVisible = false
+        }else{
+          this.$message.error('评分添加出错！')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('评分添加失败！')
+      })
+    }
   }
 }
 </script>
-<style>
-
+<style lang="scss" scoped>
+.avatar-uploader .el-upload {
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+    border: 1px dashed #b3b3b3;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .botton {
+    display: flex;
+    > div{
+      flex: 1;
+      display: inline-block;
+      text-align: center;
+      height: 60px;
+      line-height: 60px;
+      cursor: pointer;
+      &:active{
+        background-color: #DDDDDD;
+      }
+    }
+  }
+  .dialog-footer {
+    margin:0px;
+    padding:0px;
+  }
+  .dialogBorder{
+    text-align: center;
+    border-top: 1px #DDDDDD solid;
+    border-bottom: 1px #DDDDDD solid;
+    padding: 40px 30px;
+  }
+  .categoryHeader{
+    width: 260px;
+    height:55px;
+    background-color: #f0f2f3;
+    text-align: center;
+    line-height: 60px;
+    color:#909399;
+    font-weight: 700;
+  }
+  .goodsContainer{
+    display:flex;
+    flex-direction: row;
+    width:90%;
+  }
+  .categoryBody{
+    width:260px;
+    height:745px;
+    border:1px solid #f0f2f3;
+    background-color:#FFFFFF;
+  }
+  el-tree{
+    // width:200px;
+    height:746px;
+    border:1px solid #f0f2f3;
+  }
 </style>

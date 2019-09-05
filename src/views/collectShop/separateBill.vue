@@ -41,7 +41,7 @@
               {{scope.row.money/100}}
             </template>
           </el-table-column>
-          <el-table-column type="selection" width="55" />
+          <el-table-column type="selection" :selectable="selectable" width="55"/>
         </el-table>
       </div>
     </div>
@@ -134,6 +134,8 @@ export default {
         obj.goodsId = item.id
         obj.goodsName = item.goodsName
         obj.amount = item.detailAmount
+        obj.orderId = this.orderId
+        obj.orderNo = this.orderNo
         arr.push(obj)
       })
       let list = JSON.stringify(arr)
@@ -152,6 +154,16 @@ export default {
         name: 'orderFormList',
         params:''
       })
+    },
+    selectable(row){
+      console.log(row, 'fffffff')
+      if(row.choose === 1){
+        console.log(row, 'weixuan//////')
+        return true
+      }else{
+        console.log(row, 'yixuan////')
+        return false
+      }
     }
   }
 }

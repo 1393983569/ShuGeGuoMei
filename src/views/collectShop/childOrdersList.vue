@@ -45,7 +45,7 @@
         <p v-if="scope.row.status === 0">未拆单</p>
         <p v-else-if="scope.row.status === 1">已拆单</p>
         <p v-else-if="scope.row.status === 2">已派单</p>
-        <p v-else>已入库</p>
+        <p v-else-if="scope.row.status === 3">已入库</p>
       </template>
     </el-table-column>
     <el-table-column
@@ -56,17 +56,17 @@
         <el-button
           size="mini"
           type="warning"
-          @click="viewDetails(scope.$index, scope.row)"
+          @click="viewDetails(scope.row)"
         >查看详情</el-button>
         <el-button
           size="mini"
           type="primary"
-          @click="sendOrders(scope.$index, scope.row)"
+          @click="sendOrders(scope.row)"
         >派单</el-button>
         <el-button
           size="mini"
           type="danger"
-          @click="removeOrder(scope.$index, scope.row)"
+          @click="removeOrder(scope.row)"
         >删除</el-button>
       </template>
     </el-table-column>
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import {deleteSubOrder, updateSubOrderStatus} from '@/api/collectShop/order.js'
 export default {
   name: 'ChildOrdersList',
   props: {
@@ -88,28 +89,38 @@ export default {
     }
   },
   mounted() {
-
+    console.log(this.row, 'kkkkkkkk')
+    // if(this.row.length === 0){
+    //   this.$router.push({
+    //     name:'orderFormList'
+    //   })
+    // }
   },
   methods: {
     // 查看详情
-    viewDetails(index, row) {
+    viewDetails(row) {
+      console.log(row, 'row.....')
       this.$router.push({
         name: 'childOrdersDetails',
         params: row
       })
     },
     // 派单
-    separateBill(index, row) {
-      // this.$router.push({
-      //   name: 'separateBill',
-      //   params: {
-      //     row: row
-      //   }
-      // })
+    sendOrders(row) {
+      let status = 1
+      updateSubOrderStatus(row.suborder_no,status).then(res => {
+        this.$message.success('派单成功！')
+      }).catch(err => {
+        this.$message.error('派单失败！')
+      })
     },
     // 删除
-    removeOrder(index, row) {
-
+    removeOrder(row) {
+      deleteSubOrder(row.suborder_no).then(res => {
+        this.$message.success('删除成功！')
+      }).catch(err=> {
+        this.$message.error('删除失败！')
+      })
     }
   }
 }

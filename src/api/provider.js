@@ -110,3 +110,17 @@ export const editProviderGoods = (id,data) => {
     data: data
   })
 }
+// 编辑供应商店铺
+export const editProviderShop = (id,data) => {
+  let params = new URLSearchParams()
+  params.append('providerId', id)
+  params.append('providerShops', data)
+  return request({
+    url:  '/admin/editProviderShop',
+    method: 'post',
+    // headers: {
+    //   'content-Type': 'application/json;charset=UTF-8'
+    // },
+    data: params
+  })
+}

@@ -60,7 +60,9 @@
         <p v-else>已入库</p>
       </template>
     </el-table-column>
-    <el-table-column label="子订单数" prop=""></el-table-column>
+    <el-table-column label="子订单数" prop="">
+      <template slot-scope="scope">{{scope.row.subOrderCount[0]}}</template>
+    </el-table-column>
     <el-table-column
       label="操作"
       width="180"

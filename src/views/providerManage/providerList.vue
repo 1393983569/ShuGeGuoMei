@@ -16,7 +16,7 @@
         prefix-icon="el-icon-search"
         v-model="searchInput" style="width:400px;" size="mini">
       </el-input>
-      <el-button size="mini">搜索</el-button>
+      <el-button size="mini" @click="inputSearch">搜索</el-button>
     </div>
     <el-table :data="tableData" stripe>
       <el-table-column prop="id" label="供应商ID"/>
@@ -85,6 +85,9 @@ export default {
     this.getProviderList()
   },
   methods: {
+    inputSearch(){
+      this.getProviderList()
+    },
     // 查询供应商列表
     getProviderList(){
       let data= {}

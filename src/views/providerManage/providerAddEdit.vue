@@ -50,7 +50,7 @@
         <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
       </el-form-item>
       <el-form-item label="可配送的店铺列表：" prop="shopObject">
-        <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple clearable>
+        <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple clearable style="width:500px;">
           <el-option
             v-for="item in shopList"
             :key="item.id"
@@ -163,7 +163,7 @@
 <script>
 import { getAllShop } from '@/api/shop.js'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
-import { getProviderDetail, addProvider,editProvider,editProviderGoods} from '@/api/provider.js'
+import { getProviderDetail, addProvider,editProvider,editProviderGoods, editProviderShop} from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
@@ -281,7 +281,6 @@ export default {
     }
     this.getShopOption()
     this.ruleForm.shops = []
-    console.log(this.checkGoodsList, 'chushi/////')
   },
   methods: {
     // 商品单选
@@ -295,19 +294,23 @@ export default {
     },
     // 商品全选
     selectGoodsAll(all){
-      for(let i=0;i<this.checkGoodsList.length; i++){
-        for(let j=0;j<all; j++){
-          if(this.checkGoodsList[i].goodsId === all[j].goodsId){
-            this.checkGoodsList.splice(i, 1)
-            // all.splice(j, 1)
-            return
-          }else(
-            this.checkGoodsList.push(all[j])
-          )
+        for(let i=0;i<all.length;i++){
+          let count = 0
+          for(let j=0;j<this.checkGoodsList.length;j++){
+            if(this.checkGoodsList[j].goodsId === all[i].goodsId){
+              this.checkGoodsList.splice(j, 1)
+              break
+            }else{
+              count++
+            }
+          }
+          if(count === this.checkGoodsList.length){
+            this.checkGoodsList.push(all[i])
+          }
         }
-      }
-
+      console.log(this.checkGoodsList, 'nnnnnnnnn')
     },
+
     // 查询所有店铺
     getShopOption() {
       getAllShop().then(res => {
@@ -325,7 +328,7 @@ export default {
     // 查询供应商详情
     getProviderDetail() {
       getProviderDetail(this.id).then(res => {
-        console.log(res, 'hhhhhhhh')
+        // console.log(res, 'hhhhhhhh')
         if(res.status === 1){
           this.ruleForm = res.info
           this.ruleForm.shops = ''
@@ -338,11 +341,13 @@ export default {
           if(res.info.areaDomain) {
             this.ruleForm.areaId = res.info.areaDomain.id
           }
+          // 可配送店铺
           console.log(res.info.providerShopList, 'res.info.providerShopList......')
           this.ruleForm.shopObject = []
           res.info.providerShopList.forEach(item => {
             this.ruleForm.shopObject.push(item.id)
           })
+          // 商品
           res.info.providerGoodsList.forEach(item => {
             let goods = {}
             goods.categoryOneId = item.categoryOneId
@@ -357,6 +362,13 @@ export default {
             this.providerGoodsList.push(goods)
             this.checkGoodsList.push(goods)
           })
+          // 评分
+          this.grade.qualification=this.ruleForm.qualificationScore
+          this.grade.price=this.ruleForm.priceScore
+          this.grade.quality=this.ruleForm.qualityScore
+          this.grade.service=this.ruleForm.serviceScore
+          this.grade.amount=this.ruleForm.deliverShopScore
+          console.log(this.checkGoodsList, 'chushi.......')
           setTimeout(() =>{
             this.handleToggles(this.providerGoodsList, this.goodsList)
           }, 2000)
@@ -435,6 +447,11 @@ export default {
             //  this.$message.success('编辑成功')
           }).catch(err=> {
             this.$message.error('编辑商品失败！')
+          })
+          editProviderShop(this.ruleForm.id,this.ruleForm.providerShops).then(res => {
+
+          }).catch(err => {
+            this.$message.error('编辑店铺失败！')
           })
         } else {
           console.log('error submit!!');
