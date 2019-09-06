@@ -20,8 +20,7 @@
     <p>性别：{{vipObject.sex}}</p>
     <p>年龄：{{vipObject.age}}</p>
     <p>职业：{{vipObject.career}}</p>
-    <!-- <p>常住小区：{{vipObject.provinceDomain.name}}{{vipObject.cityDomain.name}}{{vipObject.areaDomain.name}}</p> -->
-    <p>常住小区：{{province}}{{city}}{{area}}</p>
+    <p>常住小区：{{province}},{{city}},{{area}}</p>
     <p>身份：
       <span v-if="vipObject.identity===1">家庭会员</span>
       <span v-else>VIP会员</span>
@@ -34,101 +33,125 @@
       <span v-else>钻石会员</span>
     </p>
     <div>
-      <div style="display: inline-block; vertical-align: top;">
+      <span>
         会员分析：
-      </div>
-      <div style="display: inline-block; width: 520px; height: 540px; background-color: #f3f2f2">
-        <p>平均购买能力：</p>
-        <p>最高订单额：</p>
-        <p>最低订单额：</p>
+      </span>
+      <div style="width:1000px; height: 800px; background-color: #f3f2f2;padding:10px;">
+        <p>平均购买能力：{{vipObject.avgPayMoney}}</p>
+        <p>最高订单额：{{vipObject.maxPayMoney}}</p>
+        <p>最低订单额：{{vipObject.minPayMoney}}</p>
+        <p>每周进店次数：{{vipObject.weekAmount}}</p>
+        <p>每月进店次数：{{vipObject.monthAmount}}</p>
         <div>
           <el-row>
             <el-col :span="5">
               <div>复购品类：</div>
             </el-col>
             <el-col :span="19">
-              <div style="height: 315px;">
+              <div style="height: 400px;" class="echart">
+                <span style="color:red;font-size:8px;" v-if="titleState">双击图形查看二级品类复购</span>
                 <div ref="chart" class="chartStyle" />
               </div>
             </el-col>
           </el-row>
         </div>
-        <p>每周进店次数：</p>
-        <p>每月进店次数：</p>
       </div>
     </div>
    <div class="div_margin">消费记录<el-button type="success" @click="sellRecords">消费记录</el-button></div>
-   <!-- <div class="div_margin">充值记录：<el-button type="success" @click="rechargeRecords">充值记录</el-button></div> -->
   </div>
 </template>
 
 <script>
-import { vipDetail } from '@/api/member.js'
+import { vipDetail, categoryTwoAmount } from '@/api/member.js'
 export default {
   name: 'MembershipDetails',
   data() {
     return {
+      titleState: true,
       row: {},
       fit: 'fit',
+      vipId:'',
       option:{
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-              x : 'center',
-              y : 'bottom',
-              data:['一级品类1','一级品类2','一级品类3','一级品类4','二级品类1','二级品类2','二级品类3','二级品类4']
-          },
-          toolbox: {
-              show : true,
-              feature : {
-                  mark : {show: true},
-                  dataView : {show: true, readOnly: false},
-                  magicType : {
-                      show: true,
-                      type: ['pie', 'funnel']
-                  },
-                  restore : {show: true},
-                  saveAsImage : {show: true}
-              }
-          },
-          calculable : true,
-          series : [
-              {
-                  name:'半径模式',
-                  type:'pie',
-                  radius : [14, 60],
-                  center : ['50%', '30%'],
-                  roseType : 'radius',
-                  label: {
-                      normal: {
-                          show: false
-                      },
-                      emphasis: {
-                          show: true
-                      }
-                  },
-                  lableLine: {
-                      normal: {
-                          show: false
-                      },
-                      emphasis: {
-                          show: false
-                      }
-                  },
-                  data:[
-                      {value:10, name:'一级品类1'},
-                      {value:5, name:'一级品类2'},
-                      {value:15, name:'一级品类3'},
-                      {value:25, name:'一级品类4'},
-                      {value:20, name:'二级品类1'},
-                      {value:35, name:'二级品类2'},
-                      {value:30, name:'二级品类3'},
-                      {value:40, name:'二级品类4'}
-                  ]
-              }
-          ]
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:[]
+        },
+        series: [
+            {
+                name:'一级品类',
+                type:'pie',
+                selectedMode: 'single',
+                radius: [0, '20%'],
+
+                label: {
+                    normal: {
+                        position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    // {value:335, name:'直达', selected:true},
+                    // {value:679, name:'营销广告'},
+                    // {value:1548, name:'搜索引擎'}
+                ]
+            },
+            {
+                name:'二级品类',
+                type:'pie',
+                radius: ['30%', '40%'],
+                label: {
+                    normal: {
+                        formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                        backgroundColor: '#eee',
+                        borderColor: '#aaa',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        rich: {
+                            a: {
+                                color: '#999',
+                                lineHeight: 22,
+                                align: 'center'
+                            },
+                            hr: {
+                                borderColor: '#aaa',
+                                width: '100%',
+                                borderWidth: 0.5,
+                                height: 0
+                            },
+                            b: {
+                                fontSize: 16,
+                                lineHeight: 33
+                            },
+                            per: {
+                                color: '#eee',
+                                backgroundColor: '#334455',
+                                padding: [2, 4],
+                                borderRadius: 2
+                            }
+                        }
+                    }
+                },
+                data:[
+                    // {value:335, name:'直达'},
+                    // {value:310, name:'邮件营销'},
+                    // {value:234, name:'联盟广告'},
+                    // {value:135, name:'视频广告'},
+                    // {value:1048, name:'百度'},
+                    // {value:251, name:'谷歌'},
+                    // {value:147, name:'必应'},
+                    // {value:102, name:'其他'}
+                ]
+            }
+        ]
       },
       vipObject:{},
       province:'',
@@ -157,7 +180,7 @@ export default {
       console.log(this.row)
     },
     integralDetails() {
-      this.$router.push({name: 'integralDetails'})
+      this.$router.push({name: 'integralDetails', params:this.vipObject})
     },
     sellRecords() {
       // console.log(this.vipObject, 'gggggggg')
@@ -169,22 +192,63 @@ export default {
     goodsChartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart)
       myChart.setOption(this.option)
+      let op = this.option
+      let _this = this
+      myChart.on('click',{seriesName: '一级品类'}, function (params) {
+        _this.titleState = false
+        let TwoCateArr = []
+        let TwoCateName= []
+        TwoCateName[0] = params.data.name
+       categoryTwoAmount(_this.vipId,params.data.id).then(res => {
+         res.info.map(item => {
+           let twoObj = {}
+           TwoCateName.push(item.categoryName)
+           twoObj.name = item.categoryName
+           twoObj.value = item.category
+           twoObj.id = item.categoryTwoId
+           TwoCateArr.push(twoObj)
+         })
+         op.series[1].data = TwoCateArr
+         op.legend.data = TwoCateName
+       }).catch(err => {})
+        myChart.setOption(op)
+      })
+    },
+    categoryTwoAmount(memberId, categoryOneId){
+      categoryTwoAmount(memberId,categoryOneId).then(res => {
+        return res.info
+      }).catch(err => {})
     },
     // 查询详情
     getVipDetail(){
       vipDetail(this.vipId).then(res => {
-        // console.log(res, 'jjjjjjj')
         if(res.status === 1){
           this.vipObject = res.info
-          // {{vipObject.provinceDomain.name}}{{vipObject.cityDomain.name}}{{vipObject.areaDomain.name}}
           this.province = res.info.provinceDomain.name
           this.city = res.info.cityDomain.name
           this.area = res.info.areaDomain.name
+          let cateOneArr = []
+          res.info.categoryOneAmount.map(item => {
+            let ob = {}
+            ob.name = item.categoryName
+            ob.value = item.category
+            ob.id  = item.categoryOneId
+            cateOneArr.push(ob)
+          })
+          // 饼状图
+          var myChart = this.$echarts.init(this.$refs.chart)
+          let op = this.option
+          let nameArr = cateOneArr
+          nameArr.map(item => {
+            op.legend.data.push(item.name)
+          })
+          op.series[0].data = nameArr
+          myChart.setOption(op)
         }
       }).catch(err => {
         this.$message.error('查询会员详情出错！')
       })
-    }
+    },
   }
 }
 </script>
@@ -194,13 +258,18 @@ export default {
   margin:5px;
 }
 .chartStyle {
-  height: 300px;
-  width:80%;
+  height: 500px;
+  /* width:0%; */
   box-sizing: border-box;
-  line-height: 300px;
+  line-height: 500px;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   /* margin: 5px; */
+  background-color: #FFFF;
+}
+.echart{
+  width:90%;
+  height: 100%;
   background-color: #FFFF;
 }
 </style>

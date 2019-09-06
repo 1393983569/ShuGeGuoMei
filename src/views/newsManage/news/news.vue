@@ -12,9 +12,9 @@
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="position:absolute;right:4px;">
-        <el-button size="mini" v-if="buttonList.includes('操作')" type="primaryX">筛选</el-button>
+        <el-button size="mini" v-if="buttonList.includes('操作')" type="primaryX" @click="handleSearch">筛选</el-button>
         <el-button size="mini" v-else disabled type="primaryX">筛选</el-button>
-        <el-button size="mini" v-if="buttonList.includes('操作')" type="info">清空</el-button>
+        <el-button size="mini" v-if="buttonList.includes('操作')" type="info" @click="handleClear">清空</el-button>
         <el-button size="mini" v-else disabled type="info">清空</el-button>
       </div>
     </div>
@@ -74,22 +74,9 @@ export default {
       category: '',
       id: '',
       detailtObject: {},
-      dateTypeList: [
-        {
-          id: 1,
-          name: '日期'
-        },
-        {
-          id: 2,
-          name: '整年'
-        },
-        {
-          id: 3,
-          name: '整月'
-        }
-      ],
       year: '',
       month: '',
+      day:'',
       datePick: '',
       dateState: 1,
       // 消息类别
@@ -167,6 +154,17 @@ export default {
         this.$message.error('查询失败')
       })
     },
+    handleSearch(){
+      this.getNewsList()
+    },
+    handleClear(){
+      this.year = ''
+      this.month = ''
+      this.day = ''
+      this.category = ''
+      this.newsType = ''
+      this.getNewsList()
+    },
     // 消息发布
     handleReleaseNews() {
       this.$router.push({ name: 'newsRelease' })
@@ -205,6 +203,19 @@ export default {
     },
     // 筛选条件-时间
     handlePickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.year = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.year = dateArr[0]
+        this.month = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.year = dateArr[0]
+        this.month = dateArr[1]
+        this.day = dateArr[2]
+      }
 
     }
   }

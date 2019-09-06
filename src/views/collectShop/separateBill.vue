@@ -51,7 +51,7 @@
 
 <script>
 import { getAllProvider } from '@/api/provider.js'
-import { orderDetail, separateBill } from '@/api/collectShop/order.js'
+import { orderDetail, separateBill, updateChoose } from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'separateBill',
@@ -70,6 +70,7 @@ export default {
       orderNo:'',
       goodsArray:[],
       shopId:0,
+      orderId:0,
     }
   },
   mounted() {
@@ -123,8 +124,11 @@ export default {
     },
     // 拆单
     handleSeparateBill(){
+      console.log()
       let arr = []
+      let idArr = []
       this.goodsArray.map(item => {
+        idArr.push(item.id)
         let obj = {}
         obj.standards = item.standards
         obj.unit = item.unit
@@ -139,10 +143,19 @@ export default {
         arr.push(obj)
       })
       let list = JSON.stringify(arr)
+      // 派单
       separateBill(this.providerId, list, this.orderId, this.orderNo, this.subMoney, this.shopId).then(res => {
         this.$message.success('拆单成功！')
       }).catch(err => {
         this.$message.error('拆单失败！')
+      })
+      console.log(this.orderId, 'hhhhhh')
+      // 派单商品状态修改
+      updateChoose(idArr.toString(),this.orderId).then(res => {
+
+      }).catch(err=> {
+        console.log(err)
+        this.$message.error('派单商品状态修改失败！')
       })
     },
     handleCancel(){

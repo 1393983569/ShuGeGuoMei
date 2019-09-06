@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import hint from '@/components/Hint'
 import { sumList } from '_u/logic'
 import { orderDetail } from '@/api/collectShop/order.js'
 import childOrdersList from './childOrdersList'
@@ -92,10 +93,11 @@ import { filter } from 'minimatch';
 export default {
   name: 'OrderDetails',
   components: {
-    childOrdersList
+    childOrdersList, hint
   },
   data() {
     return {
+      showDelete:false,
       tableData:[],
       childOrderData:[],
       orderNo:'',

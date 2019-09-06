@@ -1,4 +1,6 @@
 <template>
+
+<div>
   <el-table
     :data="row"
     :header-cell-style="{   }"
@@ -71,21 +73,29 @@
       </template>
     </el-table-column>
   </el-table>
+  <hint v-model="showDelete" title="删除子订单" text="是否删除该订单？" @confirm="confirmDelete" />
+  <hintSend v-model="showSend" title="派单确定" @confirm="confirmSend" />
+</div>
 </template>
-
 <script>
+import hint from '@/components/Hint'
+import hintSend from '@/views/collectShop/hintSend.vue'
 import {deleteSubOrder, updateSubOrderStatus} from '@/api/collectShop/order.js'
 export default {
   name: 'ChildOrdersList',
+  components:{hint, hintSend},
   props: {
     row: {
       type: Array,
       default: () => []
     }
   },
+
   data() {
     return {
-
+      showDelete:false,
+      subOrderNo:'',
+      showSend:false,
     }
   },
   mounted() {
@@ -107,17 +117,27 @@ export default {
     },
     // 派单
     sendOrders(row) {
+      this.showSend = true
+      this.subOrderNo = row.suborder_no
+    },
+    confirmSend(){
       let status = 1
       updateSubOrderStatus(row.suborder_no,status).then(res => {
         this.$message.success('派单成功！')
+        this.showSend = false
       }).catch(err => {
         this.$message.error('派单失败！')
       })
     },
     // 删除
     removeOrder(row) {
-      deleteSubOrder(row.suborder_no).then(res => {
+      this.subOrderNo = row.suborder_no
+      this.showDelete = true
+    },
+    confirmDelete(){
+      deleteSubOrder().then(res => {
         this.$message.success('删除成功！')
+        this.showDelete = false
       }).catch(err=> {
         this.$message.error('删除失败！')
       })

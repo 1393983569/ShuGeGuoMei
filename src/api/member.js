@@ -89,3 +89,32 @@ export const getRecordsDetail = (id) => {
     method: 'post'
   })
 }
+/**
+ * 查询会员积分详情
+ * @param {String} id 会员id
+ */
+export const getScoreDetail = (id) => {
+  const params = new URLSearchParams()
+  params.append('memberId', id)
+  return request({
+    url: '/admin/selectDetail',
+    data: params,
+    method: 'post'
+  })
+}
+/**
+ *查询会员二级品类
+ * @param {String} memberId 会员id
+ * @param {String} categoryOneId 一级品类id
+ */
+export const categoryTwoAmount  = (memberId,categoryOneId) => {
+  const params = new URLSearchParams()
+  params.append('memberId', memberId)
+  params.append('categoryOneId', categoryOneId)
+  return request({
+    url: '/admin/categoryTwoAmount ',
+    data: params,
+    method: 'post'
+  })
+}
+

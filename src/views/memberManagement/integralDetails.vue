@@ -2,8 +2,8 @@
   <div>
     <breadcrumb>
       <div style="display:flex;flex-direction:row;">
-        <div>会员ID：021AH135617926</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div>手机号：13619390363</div>
+        <div>会员ID：{{vipId}}</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>手机号：{{mobile}}</div>
       </div>
     </breadcrumb>
     <el-table
@@ -13,27 +13,27 @@
       stripe
     >
       <el-table-column
-        prop="date"
+        prop="changeTime"
         label="积分变动时间"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.date }}</p>
+          <p>{{ scope.row.changeTime }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="changeItem"
         label="积分变动项目"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.changeItem }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="address"
+        prop="integral"
         label="积分值（+/-）"
       >
         <template slot-scope="scope">
-          <div style="display: inline-block">{{ scope.row.address }}</div>
+          <div style="display: inline-block">{{ scope.row.integral }}</div>
         </template>
       </el-table-column>
     </el-table>
@@ -53,6 +53,7 @@
 </template>
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
+import { getScoreDetail } from '@/api/member.js'
 export default {
   name: 'MemberList',
   components: {Breadcrumb},
@@ -64,30 +65,23 @@ export default {
   },
   data() {
     return {
-      dataList: [
-        {
-          date: '2016-05-02',
-          name: '消费商品',
-          address: '+140'
-        },
-        {
-          date: '2016-05-02',
-          name: '消费商品',
-          address: '+140'
-        },
-        {
-          date: '2016-05-02',
-          name: '消费商品',
-          address: '+140'
-        }
-      ],
+      dataList: [],
       total:0,
       pageNum:1,
       pageSize:10,
+      vipObject:{},
+      vipId:'',
+      mobile:''
     }
   },
   mounted() {
-
+    console.log(this.$route.params, 'kkkkkkk')
+    if(JSON.stringify(this.$route.params)!=='{}'){
+      this.vipObject = this.$route.params
+      this.vipId = this.vipObject.id
+      this.mobile = this.vipObject.mobile
+    }
+    this.getScoreDetail()
   },
   methods: {
     // 查看详情
@@ -99,14 +93,14 @@ export default {
         }
       })
     },
-    // 派单
-    separateBill(index, row) {
-      // this.$router.push({
-      //   name: 'separateBill',
-      //   params: {
-      //     row: row
-      //   }
-      // })
+    getScoreDetail(){
+      getScoreDetail(this.vipId).then(res => {
+        // this.$message.success('查询积分详情成功！')
+        console.log(res, 'info.....')
+        this.dataList = res.info.records
+      }).catch(res => {
+        this.$message.error('查询积分详情失败！')
+      })
     },
     // 删除
     removeOrder(index, row) {

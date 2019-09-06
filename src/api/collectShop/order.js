@@ -82,3 +82,14 @@ export const updateSubOrderStatus = (id, status) => {
     method: 'get'
   })
 }
+/**
+ * 修改已被拆单过商品的状态
+ * @param {String} goods 商品ID字符串
+ * @param {Integer} orderId 大订单id
+ */
+export const updateChoose = (goods,orderId) => {
+  return request({
+    url: `/admin/updateChoose?goods=${goods}&orderId=${orderId}`,
+    method: 'get'
+  })
+}
