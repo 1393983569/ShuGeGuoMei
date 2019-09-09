@@ -6,7 +6,7 @@
     月：<el-select v-model="month" size="mini" class="datePick" @change="getMonth">
         <el-option v-for="(item, key) in monthList" :key="key" :value="item" selected>{{item}}</el-option>
     </el-select>
-    日：<el-select v-model="day" size="mini" class="datePick" @change="getDay">
+    日：<el-select v-model="day" size="mini" class="datePick" @change="getDay" v-if="showDay">
         <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
     </el-select>
   </form>
@@ -23,7 +23,8 @@ export default {
       yearList:[],
       dayList:[],
       tempYear:'',
-      tempMonth:''
+      tempMonth:'',
+      showDay:true,
     }
   },
   props:{
@@ -38,6 +39,10 @@ export default {
     dayPro:{
       default:'',
       type:String
+    },
+    showDayState:{
+      default:true,
+      type:Boolean
     }
   },
   watch:{
@@ -47,6 +52,9 @@ export default {
         this.month = ''
         this.day = ''
       }
+    },
+    'showDayState'(e){
+      this.showDay = e
     }
   },
   mounted(){

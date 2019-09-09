@@ -14,6 +14,7 @@
             :value="`${item.id}:${item.name}`">
           </el-option>
         </el-select>
+        <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :showDayState="showDayState"/>
       </div>
       <div style="position:absolute;right:10px;">
         <el-button type="primaryX" size="mini">筛选</el-button>
@@ -111,6 +112,7 @@
   </div>
 </template>
 <script>
+import pickDate from '@/components/pickDate'
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
@@ -118,7 +120,8 @@ import { getAllShop } from '@/api/shop.js'
 export default {
   components:{
     Breadcrumb,
-    hint
+    hint,
+    pickDate
   },
   data() {
     return{
@@ -132,6 +135,9 @@ export default {
       pageSize:10,
       pageNum:1,
       purchaseAmount:[],
+      yearPro:'',
+      monthPro:'',
+      showDayState:false,
     }
   },
   watch:{
@@ -149,6 +155,7 @@ export default {
     this.getOrderList()
   },
   methods:{
+    getPickDate(){},
     // 查询所有店铺
     getAllShopList() {
       getAllShop().then(res => {
