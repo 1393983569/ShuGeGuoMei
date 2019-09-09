@@ -1,20 +1,20 @@
 <template>
 <div>
   <div style="display: flex; flex-direction: row">
-    <pickDate @getPickDate="getPickDate"></pickDate>&nbsp;
+    <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
     <div>
 
       类型：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
         <el-option
-          v-for="item in type"
+          v-for="item in typeList"
           :key="item.id"
           :label="item.name"
           :value="item.id">
         </el-option>
       </el-select>
-      订单状态：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
+      订单状态：<el-select v-model="status" style="width:100px;" placeholder="请选择" size="mini">
         <el-option
-          v-for="item in status"
+          v-for="item in statusList"
           :key="item.id"
           :label="item.name"
           :value="item.id">
@@ -22,17 +22,17 @@
       </el-select>
     </div>
     <div style="position: absolute; right: 5px;">
-      <el-button size="mini">筛选</el-button>
-      <el-button size="mini">清空</el-button>
+      <el-button size="mini" @click="searchOrder">筛选</el-button>
+      <el-button size="mini" @click="clearOrder">清空</el-button>
     </div>
   </div>
   <div style="margin-top:5px;margin-bottom:20px;">
     <el-input
       placeholder="请输入关键词进行搜索"
       prefix-icon="el-icon-search"
-      v-model="input2" style="width:400px;" size="mini">
+      v-model="param" style="width:400px;" size="mini">
     </el-input>
-    <el-button size="mini">搜索</el-button>
+    <el-button size="mini" @click ="handleFind">搜索</el-button>
   </div>
   <el-table
     :data="tableData"
@@ -56,8 +56,8 @@
       <template slot-scope="scope">
         <p v-if="scope.row.status ===0">未拆单</p>
         <p v-else-if="scope.row.status===1">已拆单</p>
-        <p v-else-if="scope.row.status===2">已派单</p>
-        <p v-else>已入库</p>
+        <!-- <p v-else-if="scope.row.status===2">已派单</p>
+        <p v-else>已入库</p> -->
       </template>
     </el-table-column>
     <el-table-column label="子订单数" prop="">
@@ -103,49 +103,91 @@ export default {
   components:{pickDate},
   data() {
     return {
+      yearPro:'',
+      monthPro:'',
+      dayPro:'',
       tableData: [],
-      optionsType:[
-        {
-          id: 1,
-          name:'销售'
-        },
-        {
-          id: 2,
-          name:'退货'
-        },
-        {
-          id: 3,
-          name:'采购'
-        },
-        {
-          id: 4,
-          name:'调拨'
-        }
-      ],
-      optionsStatus:[
-        {
-          id: 2,
-          name:'已派单'
-        },
-        {
-          id: 3,
-          name:'已入库'
-        }
-      ],
       input2: '',
       total: 0,
       pageSize:10,
       pageNum: 1,
       orderNo:'',
       status: '',
-      type: ''
+      type: '',
+      typeList:[
+        {
+          name:'销售',
+          id:1
+        },
+         {
+          name:'退货',
+          id:2
+        },
+         {
+          name:'采购',
+          id:3
+        },
+         {
+          name:'调拨',
+          id:4
+        }
+      ],
+      statusList:[
+        {
+          name:'全部',
+          id:''
+        },
+        {
+          name:'未拆单',
+          id:0
+        },
+        {
+          name:'已拆单',
+          id:1
+        }
+      ],
+      param:'',
+    }
+  },
+  watch:{
+    'param'(e){
+      if(!e){
+        this.getOrderList()
+      }
     }
   },
   mounted() {
     this.getOrderList()
   },
   methods: {
-    getPickDate(){},
+    handleFind(){
+      this.getOrderList()
+    },
+    searchOrder(){
+      this.getOrderList()
+    },
+    clearOrder(){
+      this.orderNo = ''
+      this.status = ''
+      this.yearPro = ''
+      this.type = ''
+      this.getOrderList()
+    },
+    getPickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.yearPro = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
+      }
+    },
     handleSizeChange(e){
       this.pageSize = e
       this.getOrderList()
@@ -161,7 +203,11 @@ export default {
       data.pageNum = this.pageNum
       data.pageSize = this.pageSize
       data.states = this.states
+      data.year = this.yearPro
+      data.month= this.monthPro
+      data.day = this.dayPro
       data.type = this.type
+      data.param = this.params
       getOrder(data).then(res => {
         if(res.status === 1){
           this.tableData = res.info.records
@@ -178,6 +224,7 @@ export default {
         name: 'orderDetails',
         params: row
       })
+      this.$store.state.user.orderObject = row
     },
     // 拆单
     separateBill(index, row) {

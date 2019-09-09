@@ -1,7 +1,7 @@
 <template>
   <div style="margin:20px;">
     <div style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;align-items:center;">
-      <pickDate @getPickDate="getPickDate"></pickDate>&nbsp;
+      <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
       店铺名称：
       <el-select v-model="shopId">
         <el-option v-for="item in shopList" :key="item.id" :value="item.id" :label="item.name" />
@@ -79,14 +79,31 @@ export default {
   data() {
     return {
       shopList: [],
-      shopId: ''
+      shopId: '',
+      yearPro:'',
+      monthPro:'',
+      dayPro:'',
     }
   },
   mounted() {
     this.getAllShop()
   },
   methods: {
-    getPickDate(){},
+    getPickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.yearPro = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
+      }
+    },
     // 查询所有商铺
     getAllShop() {
       getAllShop().then(res => {

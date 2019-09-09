@@ -3,9 +3,8 @@
     <breadcrumb>
       <el-button @click="explainHandle">会员系统说明</el-button>
     </breadcrumb>
-    <!-- <pickDate @getPickDate="getPickDate"></pickDate> -->
     <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">
-      <pickDate @getPickDate="getPickDate"></pickDate>
+      <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       店铺：
       <el-select v-model="shopId" placeholder="请选择" size="mini" style="width:140px;">
         <el-option
@@ -129,6 +128,10 @@ export default {
   },
   data() {
     return {
+      // 时间选择
+      yearPro:'',
+      monthPro:'',
+      dayPro:'',
       showDelete:false,
       shopList: [],
       shopId: '',
@@ -176,45 +179,62 @@ export default {
   watch:{
     'param'(e){
       if(e){
-        this.condition = e*100
-        this.getVipList()
+        this.param = e
       }else{
-        this.condition = ''
-        this.getVipList()
+        this.param = ''
+        this.getVipLists()
       }
 
     }
   },
   mounted() {
     this.getAllShopList()
-    this.getVipList()
+    this.getVipLists()
+
   },
   methods: {
-    getPickDate(){},
+    getPickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.yearPro = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
+      }
+    },
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({
         name: 'membershipDetails',
         params: row
       })
+      this.$store.state.user.vipObject = row
     },
     handleFind(){
-      this.getVipList()
+      this.getVipLists()
     },
     searchVip(){
-      this.getVipList()
+      this.getVipLists()
+      console.log('chaxun.....')
     },
     clearVip(){
       this.identity = ''
       this.level= ''
       this.shopId=''
-      this.getVipList()
+      this.yearPro = ''
+      this.getVipLists()
     },
     // 确认删除会员
     confirmDelete(){
       deleteVip(this.vipId).then(res => {
         if(res.status === 1){
-          this.getVipList()
+          this.getVipLists()
           this.$message.success('删除成功！')
           this.showDelete = false
         }else{
@@ -230,8 +250,8 @@ export default {
       this.showDelete = true
     },
     // 查询会员列表
-    getVipList(){
-      getVipList(this.identity, this.level,this.shopId, this.pageNum, this.pageSize,this.condition).then(res => {
+    getVipLists(){
+      getVipList(this.yearPro, this.monthPro, this.dayPro,this.identity, this.level,this.shopId, this.pageNum, this.pageSize, this.param).then(res => {
         if(res.status === 1){
           this.dataList = res.info.records
           this.total = res.info.totalrecord

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <pickDate @getPickDate="getPickDate"></pickDate>
+      <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       <div style="float:right;margin:10px;">
         <el-button size="mini" type="primary">筛选</el-button>
         <el-button size="mini" type="danger">清除</el-button>
@@ -141,13 +141,30 @@ export default {
       total: 0,
       pageSize: 10,
       pageNum: 1,
+      yearPro:'',
+      monthPro:'',
+      dayPro:''
     }
   },
   mounted() {
 
   },
   methods: {
-    getPickDate(){},
+    getPickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.yearPro = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
+      }
+    },
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({

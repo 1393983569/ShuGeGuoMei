@@ -10,7 +10,9 @@ const state = {
   introduction: '',
   roles: [],
   roleId: '',
-  buttonRoleList: []
+  buttonRoleList: [],
+  vipObject:{},
+  orderObject:{}
 }
 
 const mutations = {
@@ -34,6 +36,12 @@ const mutations = {
   },
   SET_BUTTONROLELIST: (state, buttonRoleList) => {
     state.buttonRoleList = buttonRoleList
+  },
+  SET_VIPOBJECT:(state, vipObject) => {
+    state.vipObject = vipObject
+  },
+  SET_ORDEROBJECT:(state, orderObject) => {
+    state.orderObject = orderObject
   }
 }
 

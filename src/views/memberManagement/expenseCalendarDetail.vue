@@ -69,10 +69,12 @@ export default {
       zeroMoney:'',
       discountAbility :'',
       discount:'',
-      cashier: ''
+      cashier: '',
+      historyObj:{}
     }
   },
   mounted(){
+
     if(JSON.stringify(this.$route.params) === '{}'){
 
     }else{

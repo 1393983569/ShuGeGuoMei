@@ -14,7 +14,8 @@
       <el-input
         placeholder="请输入关键词进行搜索"
         prefix-icon="el-icon-search"
-        v-model="searchInput" style="width:400px;" size="mini">
+        clearable
+        v-model="param" style="width:400px;" size="mini">
       </el-input>
       <el-button size="mini" @click="inputSearch">搜索</el-button>
     </div>
@@ -22,7 +23,7 @@
       <el-table-column prop="id" label="供应商ID"/>
       <el-table-column prop="name" label="供应商名称" />
       <el-table-column prop="mobile" label="手机号" />
-      <el-table-column prop="" label="评分">
+      <el-table-column prop="average" label="评分">
         <template slot-scope="scope">
           {{scope.row.qualificationScore + scope.row.qualityScore + scope.row.serviceScore + scope.row.deliverShopScore + scope.row.priceScore}}
         </template>
@@ -76,10 +77,18 @@ export default {
       loadingSearch: false,
       loadingClear: false,
       showDelete: false,
-      id: ''
+      id: '',
+      param:''
     }
   },
-  watch: {},
+  watch: {
+    'param'(e){
+      if(!e){
+        this.params = e
+        this.getProviderList()
+      }
+    }
+  },
   mounted() {
     // console.log(this.$router, '%%%%%%')
     this.getProviderList()
@@ -96,6 +105,7 @@ export default {
       data.provinceId = this.provinceId
       data.cityId = this.cityId
       data.areaId = this.areaId
+      data.param = this.param
       getProvider(data).then(res => {
         if(res.info.records.length > 0){
           this.total = res.info.totalrecord
@@ -136,6 +146,7 @@ export default {
       this.provinceId = ''
       this.cityId = ''
       this.areaId = ''
+      // this.params
       this.getProviderList()
     },
     getProvince(id) {

@@ -27,29 +27,66 @@
       <p>当月后台成本：</p>
       <p>当月后台利润：</p>
     </div>
-    <el-table :data="TableDta">
-      <el-table-column prop="orderTime" label="订单时间"/>
-      <el-table-column prop="orderNum" label="订单编号"/>
-      <el-table-column prop="amount" label="商品数量"/>
-      <el-table-column prop="orderMoney" label="订单金额（元）"/>
-      <el-table-column prop="orderType" label="订单类型"/>
-      <el-table-column prop="orderState" label="订单状态"/>
-      <el-table-column prop="sunOrderAmount" label="子订单数"/>
-      <el-table-column prop="sunOrderAmount" label="订单成本（元）"/>
-      <el-table-column prop="sunOrderAmount" label="订单利润（元）"/>
-      <el-table-column prop="operate" label="操作">
-        <template slot-scope="scope">
-          <el-button type="warning" size="mini" @click="handleBackDetail(scope.row)">查询详情</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-        :page-sizes="[10, 15]"
+    <el-table
+        :data="tableData"
+        :header-cell-style="{   }"
+        center
+        stripe
+      >
+        <el-table-column label="订单时间"  prop="createTime" ></el-table-column>
+        <el-table-column label="订单编号" prop="orderNo"> </el-table-column>
+        <el-table-column label="订单店铺" prop="name"></el-table-column>
+        <el-table-column label="订单金额(元)" prop="">
+          <template slot-scope="scope">{{scope.row.total_money/100}}</template>
+        </el-table-column>
+        <el-table-column label="订单类型" prop="type">
+          <template slot-scope="scope">
+            <p v-if="scope.row.type ===1">销售</p>
+            <p v-else-if="scope.row.type===2">退货</p>
+            <p v-else-if="scope.row.type===3">采购</p>
+            <p v-else>调拨</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="订单状态" prop="states">
+          <template slot-scope="scope">
+            <p v-if="scope.row.status ===0">未拆单</p>
+            <p v-else-if="scope.row.status===1">已拆单</p>
+            <!-- <p v-else-if="scope.row.status===2">已派单</p>
+            <p v-else>已入库</p> -->
+          </template>
+        </el-table-column>
+        <el-table-column label="子订单数" prop="">
+          <template slot-scope="scope">{{scope.row.subOrderCount[0]}}</template>
+        </el-table-column>
+        <el-table-column label="订单成本（元）" prop="orderCost">
+          <template slot-scope="scope">{{scope.row.orderCost[0]/100}}</template>
+        </el-table-column>
+        <el-table-column label="订单利润（元）" prop="">
+          <template slot-scope="scope">{{(scope.row.total_money-scope.row.orderCost[0])/100}}</template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="180"
+        >
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="warning"
+              @click="viewDetails(scope.$index, scope.row)"
+            >查看详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
         background
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[10, 15]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+    </el-pagination>
     <div>
       <el-dialog
           :show-close="false"
@@ -79,6 +116,7 @@
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
 import { getAllShop } from '@/api/shop.js'
+import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 export default {
   components:{
     Breadcrumb,
@@ -88,35 +126,7 @@ export default {
     return{
       shopList:[],
       shopId:'',
-      TableDta:[
-        {
-          orderTime:'2019-7-29',
-          orderNum: '123456',
-          amount:'50',
-          orderMoney:'3000.00',
-          orderType:'采购',
-          orderState:'已收货',
-          sunOrderAmount:'15',
-        },
-        {
-          orderTime:'2019-7-29',
-          orderNum: '123456',
-          amount:'50',
-          orderMoney:'3000.00',
-          orderType:'采购',
-          orderState:'已收货',
-          sunOrderAmount:'15',
-        },
-        {
-          orderTime:'2019-7-29',
-          orderNum: '123456',
-          amount:'50',
-          orderMoney:'3000.00',
-          orderType:'采购',
-          orderState:'已收货',
-          sunOrderAmount:'15',
-        },
-      ],
+      tableData:[],
       exportDialog:false,
       total:0,
       pageSize:10,
@@ -125,6 +135,7 @@ export default {
   },
   mounted() {
     this.getAllShopList()
+    this.getOrderList()
   },
   methods:{
     // 查询所有店铺
@@ -134,6 +145,28 @@ export default {
       }).catch(err => {
         console.log(err)
         this.$message.error('查询店铺出错')
+      })
+    },
+    // 查询订单列表
+    getOrderList() {
+      let data = {}
+      // data.orderNo = this.orderNo
+      data.pageNum = this.pageNum
+      data.pageSize = this.pageSize
+      data.states = this.states
+      data.year = this.yearPro
+      data.month= this.monthPro
+      data.day = this.dayPro
+      data.type = this.type
+      data.param = this.params
+      getOrder(data).then(res => {
+        if(res.status === 1){
+          this.tableData = res.info.records
+          this.total = res.info.totalrecord
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询订单出错！')
       })
     },
     // 导出
@@ -149,8 +182,9 @@ export default {
     handleCurrentChange(e){
       this.pageNum = e
     },
-    handleBackDetail(row){
-      this.$router.push({name:'backstageCheckDetail'})
+    viewDetails(index, row){
+      this.$router.push({name:'backstageCheckDetail', params:row})
+      this.$store.state.user.orderObject = row
     }
   }
 }

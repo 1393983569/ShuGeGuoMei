@@ -700,6 +700,17 @@ export const asyncRoutes = [
         component: () => import('@/views/accountCheck/shopCheck/shopCheckDetail.vue')
       },
       {
+        path: 'childShopCheckDetail',
+        name: 'childShopCheckDetail',
+        hidden:true,
+        meta: {
+          // roles: ['accountCheck'],
+          icon: 'dashboard',
+          title: '店铺对账单详情'
+        },
+        component: () => import('@/views/accountCheck/shopCheck/childShopCheckDetail.vue')
+      },
+      {
         path: 'backstageCheck',
         name: 'backstageCheck',
         meta: {

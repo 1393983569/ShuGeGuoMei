@@ -31,9 +31,9 @@ export const deleteVip = (id) => {
  * @param {Integer} pageNum 页数
  * @param {Integer} pageSize 记录数
  */
-export const getVipList = (identity,level,shopId, pageNum, pageSize, param) => {
+export const getVipList = (year, month, day,identity,level,shopId, pageNum, pageSize, param) => {
   return request({
-    url:`/admin/queryMember?identity=${identity}&level=${level}&shopId=${shopId}&pageNum=${pageNum}&pageSize=${pageSize}&param=${param}`,
+    url:`/admin/queryMember?year=${year}&month=${month}&day=${day}&identity=${identity}&level=${level}&shopId=${shopId}&pageNum=${pageNum}&pageSize=${pageSize}&param=${param}`,
     method:'get'
   })
 }

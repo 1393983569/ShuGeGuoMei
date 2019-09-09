@@ -59,7 +59,7 @@
           type="warning"
           @click="viewDetails(scope.row)"
         >查看详情</el-button>
-        <el-button
+        <!-- <el-button
           size="mini"
           type="primary"
           @click="sendOrders(scope.row)"
@@ -68,16 +68,15 @@
           size="mini"
           type="danger"
           @click="removeOrder(scope.row)"
-        >删除</el-button>
+        >删除</el-button> -->
       </template>
     </el-table-column>
   </el-table>
-  <hint v-model="showDelete" title="删除子订单" text="是否删除该订单？" @confirm="confirmDelete" />
-  <hintSend v-model="showSend" title="派单确定" @confirm="confirmSend" />
 </div>
 </template>
 <script>
 import hint from '@/components/Hint'
+import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import hintSend from '@/views/collectShop/hintSend.vue'
 import {deleteSubOrder, updateSubOrderStatus} from '@/api/collectShop/order.js'
 export default {
@@ -110,7 +109,7 @@ export default {
     viewDetails(row) {
       console.log(row, 'row.....')
       this.$router.push({
-        name: 'childOrdersDetails',
+        name: 'childShopCheckDetail',
         params: row
       })
     },

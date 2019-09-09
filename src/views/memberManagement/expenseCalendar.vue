@@ -73,16 +73,17 @@ export default {
       dataList: [],
       mobile:'',
       vipId: '',
-      vipObject:{}
+      vipObject:{},
+      // historyObj:{}
     }
   },
   mounted() {
+    console.log(this.$store, 'store..')
     if(JSON.stringify(this.$route.params) === '{}') {
-      console.log(this.$route.params, 'kkkkkkkk')
-      this.$router.push({
-        name:'memberList'
-      })
-
+      this.vipObject = this.$store.state.user.vipObject
+      this.mobile = this.vipObject.mobile
+      this.vipId = this.vipObject.id
+      this.getVipRecords()
     }else{
       this.vipObject = this.$route.params
       this.mobile = this.$route.params.mobile

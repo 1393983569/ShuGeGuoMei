@@ -6,7 +6,7 @@
     </breadcrumb>
     <!-- 头部查询 -->
     <div style="display:flex;flex-direction:row;">
-      <pickDate @getPickDate="handlePickDate"></pickDate>&nbsp;
+      <pickDate @getPickDate="handlePickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
       消息类别：
       <el-select v-model="newsType" size="mini" style="width:120px;">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
@@ -66,6 +66,9 @@ export default {
   components: { newsDetail, Breadcrumb, hint, pickDate },
   data() {
     return {
+      yearPro:'',
+      monthPro:'',
+      dayPro:'',
       // 日期选择
       dateType: 1,
       currentPage: 1,
@@ -137,9 +140,9 @@ export default {
       const obj = {}
       obj.pageNum = this.currentPage
       obj.pageSize = this.sizePage
-      obj.year = this.year
-      obj.month = this.month
-      obj.day = this.day
+      obj.year = this.yearPro
+      obj.month = this.monthPro
+      obj.day = this.dayPro
       obj.category = this.category
       getNews(obj).then(res => {
         this.total = res.info.totalrecord
@@ -158,9 +161,7 @@ export default {
       this.getNewsList()
     },
     handleClear(){
-      this.year = ''
-      this.month = ''
-      this.day = ''
+      this.yearPro = ''
       this.category = ''
       this.newsType = ''
       this.getNewsList()
@@ -207,16 +208,15 @@ export default {
       let dateArr = date.split('-')
       console.log(dateArr, 'date')
       if(dateArr.length === 2){
-        this.year = dateArr[0]
+        this.yearPro = dateArr[0]
       }else if(dateArr.length === 3) {
-        this.year = dateArr[0]
-        this.month = dateArr[1]
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
       }else if(dateArr.length === 4){
-        this.year = dateArr[0]
-        this.month = dateArr[1]
-        this.day = dateArr[2]
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
       }
-
     }
   }
 }

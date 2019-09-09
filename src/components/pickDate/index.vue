@@ -26,8 +26,32 @@ export default {
       tempMonth:''
     }
   },
+  props:{
+    yearPro:{
+      default:'',
+      type:String
+    },
+    monthPro:{
+      default:'',
+      type:String
+    },
+    dayPro:{
+      default:'',
+      type:String
+    }
+  },
+  watch:{
+    'yearPro'(e){
+      if(!e){
+        this.year = e
+        this.month = ''
+        this.day = ''
+      }
+    }
+  },
   mounted(){
     this.setYear()
+    console.log(this.yearPro, this.monthPro, this.dayPro, 'hahahahahaahh')
   },
   methods:{
     // 网页加载时初始化年月

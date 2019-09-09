@@ -67,6 +67,7 @@ export default {
   name: 'MembershipDetails',
   data() {
     return {
+      historyObj:{},
       titleState: true,
       row: {},
       fit: 'fit',
@@ -167,13 +168,19 @@ export default {
   },
   mounted() {
     if(JSON.stringify(this.$route.params)=== '{}'){
-      this.$router.push({name:'memberList'})
+      this.vipId = this.$store.state.user.vipObject.id
+      this.getVipDetail()
     }else{
+      console.log(this.$route.params, 'khshdfghfh')
       this.vipId = this.$route.params.id
       this.getVipDetail()
     }
     this.showRow()
     this.goodsChartHandle()
+    window.addEventListener("popstate", function(e) {
+      // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+
+    }, false);
   },
   methods: {
     showRow() {
@@ -183,7 +190,6 @@ export default {
       this.$router.push({name: 'integralDetails', params:this.vipObject})
     },
     sellRecords() {
-      // console.log(this.vipObject, 'gggggggg')
       this.$router.push({name:'expenseCalendar', params:this.vipObject})
     },
     rechargeRecords(){
