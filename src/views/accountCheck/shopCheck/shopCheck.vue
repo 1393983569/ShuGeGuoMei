@@ -4,6 +4,7 @@
       <el-button type="primary" @click="exportHandle">导出</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
+       <yearMonthPick @getPickDate="handlePickDate" :stateShow="stateShow"/>&nbsp;&nbsp;&nbsp;
       <div>
         店铺：
         <el-select v-model="shop" placeholder="请选择" size="mini" style="width:140px;">
@@ -14,16 +15,15 @@
             :value="`${item.id}:${item.name}`">
           </el-option>
         </el-select>
-        <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :showDayState="showDayState"/>
       </div>
       <div style="position:absolute;right:10px;">
-        <el-button type="primaryX" size="mini">筛选</el-button>
-        <el-button type="info" size="mini">清空</el-button>
+        <el-button type="primaryX" size="mini" @click="search">筛选</el-button>
+        <el-button type="info" size="mini" @click="clear">清空</el-button>
       </div>
     </div>
     <div style="display:flex;flex-direction:row;">
       <p>店铺名称：{{this.shopName}}</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <p>对账时间：</p>
+      <p>对账时间：<span v-if="year">{{year}}年</span><span v-if="month">{{month}}月</span></p>
       <p style="position:absolute;right:10px;">当前采购金额：{{purchaseAmount[0]/100}}</p>
     </div>
     <el-table
@@ -112,7 +112,8 @@
   </div>
 </template>
 <script>
-import pickDate from '@/components/pickDate'
+import yearMonthPick from '../yearMonthPick.vue'
+// import yearMonthPick from '@/components/yearMonthPick'
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
@@ -121,7 +122,7 @@ export default {
   components:{
     Breadcrumb,
     hint,
-    pickDate
+    yearMonthPick
   },
   data() {
     return{
@@ -134,10 +135,13 @@ export default {
       total:0,
       pageSize:10,
       pageNum:1,
-      purchaseAmount:[],
-      yearPro:'',
-      monthPro:'',
-      showDayState:false,
+      purchaseAmount:[0],
+      // yearPro:'',
+      // monthPro:'',
+      // showDayState:false,
+      year:'',
+      month:'',
+      stateShow:false,
     }
   },
   watch:{
@@ -151,11 +155,39 @@ export default {
     },
   },
   mounted() {
+    this.stateShow=false
     this.getAllShopList()
     this.getOrderList()
   },
   methods:{
-    getPickDate(){},
+    search(){
+      this.getOrderList()
+    },
+    clear(){
+      this.stateShow= true
+      this.statePro = true
+      this.year = ''
+      this.month = ''
+      this.shop=''
+      this.shopId=1
+      this.shopName = ''
+      this.purchaseAmount = [0]
+      this.getOrderList()
+    },
+    // 时间选择器
+    handlePickDate(date){
+      this.stateShow = false
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.year = dateArr[0]
+        this.month = ''
+      }else if(dateArr.length === 3) {
+        this.year = dateArr[0]
+        this.month= dateArr[1]
+      }
+    },
     // 查询所有店铺
     getAllShopList() {
       getAllShop().then(res => {
@@ -172,16 +204,21 @@ export default {
       data.pageNum = this.pageNum
       data.pageSize = this.pageSize
       data.states = this.states
-      data.year = this.yearPro
-      data.month= this.monthPro
-      data.day = this.dayPro
+      data.year = this.year
+      data.month= this.month
+      data.shopId = this.shopId
       data.type = this.type
       data.param = this.params
       getOrder(data).then(res => {
         if(res.status === 1){
-          this.purchaseAmount = res.info.records[0].purchaseAmount
-          this.tableData = res.info.records
-          this.total = res.info.totalrecord
+          if(res.info.records.length>0){
+            this.purchaseAmount = res.info.records[0].purchaseAmount
+            this.tableData = res.info.records
+            this.total = res.info.totalrecord
+          }else{
+            this.tableData=[]
+          }
+
         }
       }).catch(err => {
         console.log(err)

@@ -1,14 +1,19 @@
 <template>
   <form name='form' style="margin-right:10px;">
-    年：<el-select v-model="year" size="mini" class="datePick" @change="getYear">
-        <el-option v-for="(item, key) in yearList" :key="key" :value="item" selected>{{item}}</el-option>
-    </el-select>
-    月：<el-select v-model="month" size="mini" class="datePick" @change="getMonth">
-        <el-option v-for="(item, key) in monthList" :key="key" :value="item" selected>{{item}}</el-option>
-    </el-select>
-    日：<el-select v-model="day" size="mini" class="datePick" @change="getDay" v-if="showDay">
-        <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
-    </el-select>
+    <div style="diaplay:flex;flex-direction:row;">
+      年：<el-select v-model="year" size="mini" class="datePick" @change="getYear">
+          <el-option v-for="(item, key) in yearList" :key="key" :value="item" selected>{{item}}</el-option>
+      </el-select>
+      月：<el-select v-model="month" size="mini" class="datePick" @change="getMonth">
+          <el-option v-for="(item, key) in monthList" :key="key" :value="item" selected>{{item}}</el-option>
+      </el-select>
+      <!-- <span v-if="showDay"> -->
+        日：<el-select v-model="day" size="mini" class="datePick" @change="getDay">
+          <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
+        </el-select>
+      <!-- </span> -->
+
+    </div>
   </form>
 </template>
 <script>
@@ -24,7 +29,7 @@ export default {
       dayList:[],
       tempYear:'',
       tempMonth:'',
-      showDay:true,
+      // showDay:false,
     }
   },
   props:{
@@ -39,10 +44,6 @@ export default {
     dayPro:{
       default:'',
       type:String
-    },
-    showDayState:{
-      default:true,
-      type:Boolean
     }
   },
   watch:{
@@ -53,13 +54,14 @@ export default {
         this.day = ''
       }
     },
-    'showDayState'(e){
-      this.showDay = e
-    }
+    // 'showDayState'(e){
+    //   console.log(e,'xianshizhuagtai')
+    //   this.showDay = e
+    // }
   },
   mounted(){
     this.setYear()
-    console.log(this.yearPro, this.monthPro, this.dayPro, 'hahahahahaahh')
+    // console.log(this.yearPro, this.monthPro, this.dayPro,this.showDayState, 'hahahahahaahh')
   },
   methods:{
     // 网页加载时初始化年月
@@ -67,7 +69,10 @@ export default {
       this.yearList = []
       var date = new Date()
       var y = date.getFullYear()
-      for (var i =(y-10); i <=y; i++){
+      this.year = y
+      this.tempYear = y
+      this.setMonth()
+      for (var i =(y-100); i <=y+100; i++){
         this.yearList.push(i)
       }
     },

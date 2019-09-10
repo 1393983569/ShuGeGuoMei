@@ -4,7 +4,6 @@
       <el-button @click="explainHandle">会员系统说明</el-button>
     </breadcrumb>
     <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">
-      <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       店铺：
       <el-select v-model="shopId" placeholder="请选择" size="mini" style="width:140px;">
         <el-option
@@ -118,7 +117,7 @@ import { deleteVip, getVipList, vipDetail} from '@/api/member.js'
 export default {
   name: 'memberList',
   components:{
-    hint,Breadcrumb, pickDate
+    hint,Breadcrumb,
   },
   props: {
     row: {

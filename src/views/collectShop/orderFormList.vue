@@ -202,7 +202,7 @@ export default {
       data.orderNo = this.orderNo
       data.pageNum = this.pageNum
       data.pageSize = this.pageSize
-      data.states = this.states
+      data.status = this.status
       data.year = this.yearPro
       data.month= this.monthPro
       data.day = this.dayPro

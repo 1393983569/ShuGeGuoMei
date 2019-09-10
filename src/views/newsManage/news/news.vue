@@ -6,7 +6,7 @@
     </breadcrumb>
     <!-- 头部查询 -->
     <div style="display:flex;flex-direction:row;">
-      <pickDate @getPickDate="handlePickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
+      <pickDate @getPickDate="handlePickDate" :showDayState="showDayState" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
       消息类别：
       <el-select v-model="newsType" size="mini" style="width:120px;">
         <el-option v-for="item in newsTypeList" :key="item.id" :value="item.id" :label="item.name" />
@@ -66,6 +66,7 @@ export default {
   components: { newsDetail, Breadcrumb, hint, pickDate },
   data() {
     return {
+      showDayState:false,
       yearPro:'',
       monthPro:'',
       dayPro:'',
@@ -114,6 +115,7 @@ export default {
     }
   },
   mounted() {
+    this.showDayState = true
     this.getNewsList()
   },
   methods: {
@@ -162,6 +164,9 @@ export default {
     },
     handleClear(){
       this.yearPro = ''
+      this.monthPro = ''
+      this.month = ''
+      this.day = ''
       this.category = ''
       this.newsType = ''
       this.getNewsList()

@@ -264,6 +264,9 @@ export default {
   watch: {
     'ruleForm.shopObject'(e) {
       console.log(e, 'jjjjjjjjj')
+    },
+    'checkGoodsList'(e){
+      console.log(e, 'list.......')
     }
   },
   mounted() {
@@ -291,6 +294,7 @@ export default {
           return
         }else{this.checkGoodsList.push(row)}
       }
+      console.log(this.checkGoodsList, 'listllllllll')
     },
     // 商品全选
     selectGoodsAll(all){

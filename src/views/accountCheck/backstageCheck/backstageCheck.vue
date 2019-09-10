@@ -4,28 +4,29 @@
       <el-button type="primary" @click="exportHandle">导出</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
+      <yearMonthPick @getPickDate="handlePickDate" :stateShow="stateShow"/>&nbsp;&nbsp;&nbsp;
       <div>
         店铺：
-        <el-select v-model="shopId" placeholder="请选择" size="mini" style="width:140px;">
+        <el-select v-model="shop" placeholder="请选择" size="mini" style="width:140px;">
           <el-option
             v-for="item in shopList"
             :key="item.id"
             :label="item.name"
-            :value="item.id">
+            :value="`${item.id}:${item.name}`">
           </el-option>
         </el-select>
       </div>
       <div style="position:absolute;right:10px;">
-        <el-button type="primaryX" size="mini">筛选</el-button>
-        <el-button type="info" size="mini">清空</el-button>
+        <el-button type="primaryX" size="mini" @click="search">筛选</el-button>
+        <el-button type="info" size="mini" @click="clear">清空</el-button>
       </div>
     </div>
     <div style="display:flex;flex-direction:row;justify-content:space-between;width:100%;">
-      <p>店铺名称：</p>
-      <p>对账时间：</p>
-      <p>当月采购金额：</p>
-      <p>当月后台成本：</p>
-      <p>当月后台利润：</p>
+      <p>店铺名称：{{shopName}}</p>
+      <p>对账时间：<span v-if="year">{{year}}年</span><span v-if="month">{{month}}月</span></p>
+      <p>当月采购金额：<span v-if="purchaseAmount[0]">{{purchaseAmount[0]/100}}</span></p>
+      <p>当月后台成本：<span v-if="cost[0]">{{cost[0]/100}}</span></p>
+      <p>当月后台利润：<span v-if="cost[0]&&purchaseAmount[0]">{{purchaseAmount[0]/100-cost[0]/100}}</span></p>
     </div>
     <el-table
         :data="tableData"
@@ -113,6 +114,7 @@
   </div>
 </template>
 <script>
+import yearMonthPick from '../yearMonthPick.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
 import { getAllShop } from '@/api/shop.js'
@@ -120,24 +122,65 @@ import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 export default {
   components:{
     Breadcrumb,
-    hint
+    hint,
+    yearMonthPick
   },
   data() {
     return{
+      // 订单成本
+      orderCost:[],
+      // 后台成本
+      cost:[],
+      // 采购金额
+      purchaseAmount:[],
+      // 店铺
       shopList:[],
-      shopId:'',
+      shop:'',
+      shopName:'',
+      shopId:1,
+      // 列表数据
       tableData:[],
       exportDialog:false,
+      // 分页
       total:0,
       pageSize:10,
       pageNum:1,
+      // 年月数据
+      stateShow:false,
+      year:'',
+      month:''
     }
+  },
+  watch:{
+    'shop'(e){
+      if(e){
+        console.log(e, 'llllll')
+       let arr = []
+       arr = e.split(':')
+       this.shopId = arr[0]
+       this.shopName = arr[1]
+      }
+    },
   },
   mounted() {
     this.getAllShopList()
     this.getOrderList()
   },
   methods:{
+    // 时间选择器
+    handlePickDate(date){
+      this.stateShow = false
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.year = dateArr[0]
+        this.month = ''
+      }else if(dateArr.length === 3) {
+        this.year = dateArr[0]
+        this.month= dateArr[1]
+      }
+    },
     // 查询所有店铺
     getAllShopList() {
       getAllShop().then(res => {
@@ -149,25 +192,48 @@ export default {
     },
     // 查询订单列表
     getOrderList() {
+      console.log(this.shopId, 'id...')
       let data = {}
       // data.orderNo = this.orderNo
       data.pageNum = this.pageNum
       data.pageSize = this.pageSize
       data.states = this.states
-      data.year = this.yearPro
-      data.month= this.monthPro
-      data.day = this.dayPro
+      data.year = this.year
+      data.month= this.month
+      data.shopId = this.shopId
       data.type = this.type
       data.param = this.params
       getOrder(data).then(res => {
         if(res.status === 1){
-          this.tableData = res.info.records
-          this.total = res.info.totalrecord
+          if(res.info.records.length>0){
+            this.tableData = res.info.records
+            this.total = res.info.totalrecord
+            this.purchaseAmount=this.tableData[0].purchaseAmount
+            this.cost=this.tableData[0].cost
+            this.orderCost=this.tableData[0].orderCost
+          }else{
+            this.tableData = []
+          }
         }
       }).catch(err => {
         console.log(err)
         this.$message.error('查询订单出错！')
       })
+    },
+    // 筛选
+    search(){
+      this.getOrderList()
+    },
+    // 清空
+    clear(){
+      this.stateShow= true
+      this.month = ''
+      this.year = ''
+      this.shop=''
+      this.shopId=1
+      this.shopName = ''
+      this.purchaseAmount = [0]
+      this.getOrderList()
     },
     // 导出
     exportHandle() {
