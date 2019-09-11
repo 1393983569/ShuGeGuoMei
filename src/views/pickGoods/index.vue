@@ -39,7 +39,7 @@ export default {
   },
   watch:{
     'checkGoodsList'(e){
-      // console.log(e, 'list....')
+      console.log(e, 'yingxiaobao')
       this.$emit('getGoodFunction', this.checkGoodsList)
     }
   },
@@ -50,26 +50,41 @@ export default {
   methods:{
     // 商品单选
     selectGoods(a, row){
+      console.log(row, 'kkkkkkk')
+      let count=0
+      let length= this.checkGoodsList.length
       for(let i=0; i<this.checkGoodsList.length; i++){
         if(this.checkGoodsList[i].goodsId === row.goodsId){
           this.checkGoodsList.splice(i, 1)
           return
-        }else{this.checkGoodsList.push(row)}
+        }else{
+          count++
+        }
       }
+      console.log(count, length, 'lenght/count.....')
+      if(count>=length){
+          console.log('changduxiangtong....')
+          this.checkGoodsList.push(row)
+        }
+      console.log(this.checkGoodsList, 'listllllllll')
     },
     // 商品全选
     selectGoodsAll(all){
+      console.log(all,'alllllll')
         for(let i=0;i<all.length;i++){
           let count = 0
+          let length = this.checkGoodsList.length
           for(let j=0;j<this.checkGoodsList.length;j++){
             if(this.checkGoodsList[j].goodsId === all[i].goodsId){
               this.checkGoodsList.splice(j, 1)
-              break
+              continue
             }else{
               count++
             }
           }
-          if(count === this.checkGoodsList.length){
+          console.log(count, length, 'length....')
+          if(count >= length){
+            console.log('length....')
             this.checkGoodsList.push(all[i])
           }
         }

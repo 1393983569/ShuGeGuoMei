@@ -50,7 +50,15 @@
         <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
       </el-form-item>
       <el-form-item label="可配送的店铺列表：" prop="shopObject">
-        <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple clearable style="width:500px;">
+        <!-- <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple clearable style="width:500px;">
+          <el-option
+            v-for="item in shopList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select> -->
+         <el-select v-model="shopObject" placeholder="请选择" multiple clearable style="width:500px;">
           <el-option
             v-for="item in shopList"
             :key="item.id"
@@ -97,23 +105,8 @@
         </el-upload>
       </el-form-item>
       <el-form-item v-if="editState" label="评分：" prop="">
-        <div>
-          <div>
-            <span class="font-weight font-size">资质：{{grade.qualification}}</span>&nbsp;&nbsp;<span>满分=5</span><el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible = true">去评分</el-button>
-          </div>
-          <div>
-            <span class="font-weight">价格分：{{grade.price}}</span>&nbsp;&nbsp;<span>满分=5</span>
-          </div>
-          <div>
-            <span class="font-weight">品质分：{{grade.quality}}</span>&nbsp;&nbsp;<span>满分=5</span>
-          </div>
-          <div>
-            <span class="font-weight">服务分：{{grade.service}}</span>&nbsp;&nbsp;<span>满分=5</span>
-          </div>
-          <div>
-            <span class="font-weight">配送店铺数量分：{{grade.amount}}</span>&nbsp;&nbsp;<span>满分=5</span>
-          </div>
-        </div>
+        <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
+        <gradeDetail :grade="grades"></gradeDetail>
       </el-form-item>
       <el-form-item>
         <div v-if="editState">
@@ -126,65 +119,39 @@
         </div>
       </el-form-item>
     </el-form>
-    <!-- 评分弹框 -->
-    <el-dialog
-      title="评分"
-      :visible.sync="dialogVisible"
-      width="30%"
-      class="dialogCustom"
-      :show-close="false"
-      center>
-      <div class="dialogBorder">
-        <el-form label-position="right" label-width="130px" :model="grade">
-          <el-form-item label="资质:">
-            <el-input v-model="grade.qualification" placeholder="请输入分数" />
-          </el-form-item>
-          <el-form-item label="价格分:">
-            <el-input v-model="grade.price"  placeholder="请输入分数"/>
-          </el-form-item>
-          <el-form-item label="品质分:">
-            <el-input v-model="grade.quality"  placeholder="请输入分数"/>
-          </el-form-item>
-          <el-form-item label="服务分:">
-            <el-input v-model="grade.service"  placeholder="请输入分数"/>
-          </el-form-item>
-          <el-form-item label="配送店铺数量分:">
-            <el-input v-model="grade.amount"  placeholder="请输入分数"/>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer botton" style="margin:0px;padding:0px;">
-        <div @click="dialogVisible = false" style="border-right: 1px #DDDDDD solid">取消</div>
-        <div @click="addGrade">确定</div>
-      </div>
-    </el-dialog>
+    <grade @getCloseState="getCloseState" @gradeObject="gradeObject" :showState ="showState" :provider-id="providerId" :admin-id="adminId"></grade>
   </div>
 </template>
 <script>
+import gradeDetail from './gradeDetail.vue'
+import grade from './grade.vue'
 import { getAllShop } from '@/api/shop.js'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'
 import { getProviderDetail, addProvider,editProvider,editProviderGoods, editProviderShop} from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
-import {addGrade, getGrade} from '@/api/providerGrade.js'
+
 export default {
-  components: { selectorAddress },
+  components: { selectorAddress,grade ,gradeDetail },
   name: 'providerAddEdit',
   data() {
     return {
+      shopObject:[],
+      providerId:0,
+      adminId:'',
+      showState:false,
       stateCheck:true,
       defaultChecked:[],
       dataTree:[],
       checkList:[],
+      grades:{},
       grade: {
-        adminId: '',
         qualification: '',
         price: '',
         quality: '',
         service: '',
         amount: '',
-        providerId: ''
       },
       ruleForm:{
         id:'',
@@ -215,7 +182,6 @@ export default {
         providerGoods:[],
         status: 0,
       },
-      dialogVisible: false,
       shopList: [],
       editState: false,
       rules: {
@@ -262,53 +228,79 @@ export default {
     }
   },
   watch: {
-    'ruleForm.shopObject'(e) {
+    'shopObject'(e) {
       console.log(e, 'jjjjjjjjj')
     },
     'checkGoodsList'(e){
-      console.log(e, 'list.......')
+      // console.log(e, 'list.......')
     }
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getaAllCategory()
-    this.grade.adminId = this.$store.state.user.roleId
+    this.adminId = this.$store.state.user.roleId
     // console.log(this.$store, 'hhhhhhhh')
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
       this.checkGoodsList= []
       this.ruleForm.id = this.$route.params.id
       this.id = this.$route.params.id
-      this.grade.providerId = this.$route.params.id
+      this.providerId = this.$route.params.id
       this.getProviderDetail()
     }
     this.getShopOption()
     this.ruleForm.shops = []
   },
   methods: {
+    gradeObject(e){
+      this.grades = e
+    },
+    dialogVisible(){
+      this.showState = true
+      this.returnScore()
+    },
+    getCloseState(state){
+      if(!state){
+        this.showState = false
+      }
+    },
     // 商品单选
     selectGoods(a, row){
+      // console.log(row, 'kkkkkkk')
+      let count=0
+      let length= this.checkGoodsList.length
       for(let i=0; i<this.checkGoodsList.length; i++){
         if(this.checkGoodsList[i].goodsId === row.goodsId){
           this.checkGoodsList.splice(i, 1)
           return
-        }else{this.checkGoodsList.push(row)}
+        }else{
+          count++
+        }
       }
+      console.log(count, length, 'lenght/count.....')
+      if(count>=length){
+          console.log('changduxiangtong....')
+          this.checkGoodsList.push(row)
+        }
       console.log(this.checkGoodsList, 'listllllllll')
     },
     // 商品全选
     selectGoodsAll(all){
+      console.log(all,'alllllll')
         for(let i=0;i<all.length;i++){
           let count = 0
+          let length = this.checkGoodsList.length
           for(let j=0;j<this.checkGoodsList.length;j++){
             if(this.checkGoodsList[j].goodsId === all[i].goodsId){
               this.checkGoodsList.splice(j, 1)
-              break
+              continue
             }else{
               count++
             }
           }
-          if(count === this.checkGoodsList.length){
+          console.log(count, length, 'length....')
+          if(count >= length){
+            console.log('length....')
             this.checkGoodsList.push(all[i])
           }
         }
@@ -337,20 +329,24 @@ export default {
           this.ruleForm = res.info
           this.ruleForm.shops = ''
           if(res.info.provinceDomain){
-            this.ruleForm.provinceId = res.info.provinceDomain.id
+            // this.ruleForm.provinceId = res.info.provinceDomain.id
+            this.ruleForm.provinceId = res.info.provinceId.toString()
           }
           if(res.info.cityDomain) {
-            this.ruleForm.cityId = res.info.cityDomain.id
+            // this.ruleForm.cityId = res.info.cityDomain.id
+            this.ruleForm.cityId = res.info.cityId.toString()
           }
           if(res.info.areaDomain) {
-            this.ruleForm.areaId = res.info.areaDomain.id
+            // this.ruleForm.areaId = res.info.areaDomain.id
+            this.ruleForm.areaId = res.info.areaId.toString()
           }
           // 可配送店铺
-          console.log(res.info.providerShopList, 'res.info.providerShopList......')
           this.ruleForm.shopObject = []
+          let arr =[]
           res.info.providerShopList.forEach(item => {
-            this.ruleForm.shopObject.push(item.id)
+            arr.push(item.id)
           })
+          this.shopObject=arr
           // 商品
           res.info.providerGoodsList.forEach(item => {
             let goods = {}
@@ -366,13 +362,7 @@ export default {
             this.providerGoodsList.push(goods)
             this.checkGoodsList.push(goods)
           })
-          // 评分
-          this.grade.qualification=this.ruleForm.qualificationScore
-          this.grade.price=this.ruleForm.priceScore
-          this.grade.quality=this.ruleForm.qualityScore
-          this.grade.service=this.ruleForm.serviceScore
-          this.grade.amount=this.ruleForm.deliverShopScore
-          console.log(this.checkGoodsList, 'chushi.......')
+          this.returnScore()
           setTimeout(() =>{
             this.handleToggles(this.providerGoodsList, this.goodsList)
           }, 2000)
@@ -385,23 +375,19 @@ export default {
         this.$message.error('供应商详情查询出错')
       })
     },
-    // 评分确定
-    addGrade(){
-      addGrade(this.grade).then(res => {
-        if(res.status === 1){
-          this.$message.success('评分添加成功！')
-          this.dialogVisible = false
-        }else{
-          this.$message.error('评分添加出错！')
-        }
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('评分添加失败！')
-      })
+    // 评分
+    returnScore(){
+      this.grade.qualification=this.ruleForm.qualificationScore
+      this.grade.price=this.ruleForm.priceScore
+      this.grade.quality=this.ruleForm.qualityScore
+      this.grade.service=this.ruleForm.serviceScore
+      this.grade.amount=this.ruleForm.deliverShopScore
+      this.grades = this.grade
     },
+
     // 门头照片上传成功
     handleAvatarSuccess(file) {
-      console.log(file, 'hhhh')
+      // console.log(file, 'hhhh')
       this.ruleForm.headerPic = file.info
     },
     // 资质照片上传成功
@@ -421,12 +407,12 @@ export default {
     },
     // 编辑供应商
     submitFormEdit(formName) {
-        this.ruleForm.providerShops = this.ruleForm.shopObject.toString()
-        console.log(this.checkGoodsList,'list;;;;;;')
+        this.ruleForm.providerShops = this.shopObject.toString()
+        // console.log(this.checkGoodsList,'list;;;;;;')
         let array = []
         this.checkGoodsList.map(item => {
           let ob = {}
-          console.log(this.ruleForm.providerId, 'this.ruleForm.providerId....')
+          // console.log(this.ruleForm.providerId, 'this.ruleForm.providerId....')
           ob.providerId = this.ruleForm.id
           ob.categoryOneId = item.categoryOneId
           ob.categoryTwoId = item.categoryTwoId
@@ -453,7 +439,7 @@ export default {
             this.$message.error('编辑商品失败！')
           })
           editProviderShop(this.ruleForm.id,this.ruleForm.providerShops).then(res => {
-
+            this.$router.go(-1)
           }).catch(err => {
             this.$message.error('编辑店铺失败！')
           })
@@ -465,8 +451,8 @@ export default {
     },
     // 添加供应商
     submitForm(formName) {
-      this.ruleForm.providerShops = this.ruleForm.shopObject.toString()
-      console.log(this.checkGoodsList,'list;;;;;;')
+      this.ruleForm.providerShops = this.shopObject.toString()
+      // console.log(this.checkGoodsList,'list;;;;;;')
       let array = []
       this.checkGoodsList.map(item => {
         let ob = {}
@@ -484,6 +470,7 @@ export default {
           addProvider(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加供应商成功！')
+              this.$router.go(-1)
             }else {
               this.$message.warning('添加供应商出错！')
             }

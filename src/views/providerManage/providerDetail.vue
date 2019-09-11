@@ -56,60 +56,27 @@
             <el-table-column prop="unit" label="单位"/>
           </el-table>
     </p>
-    <!-- <p>资质照片：<img v-for="url in imgList" :src="url" /></p> -->
+    <p>资质照片：<img :src="providerObj.qualificationPics" /></p>
     <div>
       评分：
-      <div style="margin-left:50px;">
-        <span>资质：{{providerObj.qualificationScore}}</span>&nbsp;&nbsp;<span>满分=5</span>
-        <el-button @click="addGradeOpen" style="margin-left:20px;" size="mini" type="success">去评分</el-button><br/>
-        <span>价格分：{{providerObj.priceScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
-        <span>品质分：{{providerObj.qualityScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
-        <span>服务分：{{providerObj.serviceScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
-        <span>配送店铺数量分：{{providerObj.deliverShopScore}}</span>&nbsp;&nbsp;<span>满分=5</span><br/>
-      </div>
+      <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
+      <gradeDetail :grade="gradeDetail"></gradeDetail>
     </div>
     <!-- 评分弹框 -->
-    <el-dialog
-      title="评分"
-      :visible.sync="dialogVisible"
-      width="30%"
-      class="dialogCustom"
-      :show-close="false"
-      center>
-      <div class="dialogBorder">
-        <el-form label-position="right" label-width="130px" :model="grade">
-          <el-form-item label="资质:">
-            <el-input v-model="grade.qualification" placeholder="请输入分数" />
-          </el-form-item>
-          <el-form-item label="价格分:">
-            <el-input v-model="grade.price"  placeholder="请输入分数"/>
-          </el-form-item>
-          <el-form-item label="品质分:">
-            <el-input v-model="grade.quality"  placeholder="请输入分数"/>
-          </el-form-item>
-          <el-form-item label="服务分:">
-            <el-input v-model="grade.service"  placeholder="请输入分数"/>
-          </el-form-item>
-          <el-form-item label="配送店铺数量分:">
-            <el-input v-model="grade.amount"  placeholder="请输入分数"/>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer botton" style="margin:0px;padding:0px;">
-        <div @click="dialogVisible = false" style="border-right: 1px #DDDDDD solid">取消</div>
-        <div @click="addGrade">确定</div>
-      </div>
-    </el-dialog>
+    <grade @getCloseState="getCloseState" @getGradeDetail="getGradeDetail" :gradeObject="gradeObject" :showState="showState" :providerId="providerId" :adminId="adminId"></grade>
   </div>
 </template>
 <script>
+import gradeDetail from './gradeDetail.vue'
+import grade from './grade.vue'
 import {getProviderDetail} from '@/api/provider.js'
 import {addGrade, getGrade} from '@/api/providerGrade.js'
 export default {
   name: 'providerDetail',
+  components:{gradeDetail,grade},
   data() {
     return {
-      dialogVisible:false,
+      showState:false,
       providerObj:{},
       imgList:[],
       mergeList:[],
@@ -117,6 +84,10 @@ export default {
       city:'',
       province:'',
       area:'',
+      adminId:'',
+      providerId:0,
+      gradeObject:{},
+      gradeDetail:{},
       grade: {
         adminId: '',
         qualification: '',
@@ -130,11 +101,20 @@ export default {
   },
   mounted(){
     console.log(this.$route.params,'HHHHHH')
+    this.adminId = this.$store.state.user.roleId
     if(JSON.stringify(this.$route.params)!== '{}') {
       console.log(this.$route.params.id,'kkkkkkkkkkk')
       this.providerId = this.$route.params.id
-      getProviderDetail(this.$route.params.id).then(res => {
+      this.getProviderDetail(this.providerId)
+    }else{
+      // this.$router.go(-1)
+    }
+  },
+  methods:{
+    getProviderDetail(id){
+      getProviderDetail(id).then(res => {
           this.providerObj = res.info
+          this.scoreRturn()
           if(res.info.provinceDomain){
             this.province = res.info.provinceDomain.name
           }
@@ -151,11 +131,7 @@ export default {
         window.history.go(-1)
         this.$message.error('查询供应商详情失败！')
       })
-    }else{
-      this.$message.warning('此供应商暂无详情！')
-    }
-  },
-  methods:{
+    },
     // 合并单元格
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -234,29 +210,31 @@ export default {
         }
       })
     },
-    addGradeOpen(){
-      this.dialogVisible = true
+    dialogVisible(){
+      this.showState = true
+      // 将查询结果放入评分修改框
+      this.scoreRturn()
     },
-    addGrade(){
-      this.providerObj.qualificationScore = this.grade.qualification
-      this.providerObj.priceScore =this.grade.price
-      this.providerObj.qualityScore =this.grade.quality
-      this.providerObj.serviceScore=this.grade.service
-      this.providerObj.deliverShopScore=this.grade.amount
-      this.grade.adminId = this.$store.state.user.roleId
+    getCloseState(e){
+      if(!e){
+        this.showState = false
+      }
+    },
+    // 评分回显
+    scoreRturn(){
+      this.grade.adminId = this.adminId
       this.grade.providerId = this.providerId
-      addGrade(this.grade).then(res => {
-        if(res.status === 1){
-          this.$message.success('评分添加成功！')
-          this.dialogVisible = false
-        }else{
-          this.$message.error('评分添加出错！')
-        }
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('评分添加失败！')
-      })
-    }
+      this.grade.qualification=this.providerObj.qualificationScore
+      this.grade.price=this.providerObj.priceScore
+      this.grade.quality=this.providerObj.qualityScore
+      this.grade.service=this.providerObj.serviceScore
+      this.grade.amount=this.providerObj.deliverShopScore
+      this.gradeObject = this.grade
+      this.gradeDetail = this.grade
+    },
+    getGradeDetail(a){
+      this.gradeDetail = a
+    },
   }
 }
 </script>

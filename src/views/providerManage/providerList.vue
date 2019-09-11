@@ -24,9 +24,9 @@
       <el-table-column prop="name" label="供应商名称" />
       <el-table-column prop="mobile" label="手机号" />
       <el-table-column prop="average" label="评分">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           {{scope.row.qualificationScore + scope.row.qualityScore + scope.row.serviceScore + scope.row.deliverShopScore + scope.row.priceScore}}
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="" label="操作" width= "260px">
         <template slot-scope="scope">
@@ -46,14 +46,6 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <!-- 删除 -->
-    <!-- <el-dialog :visible.sync="showDelete" center width="380px" title="删除广告">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该供应商？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="deleteAdConfirm">确定</el-button>
-      </div>
-    </el-dialog> -->
     <hint title="删除供应商" v-model="showDelete" text="是否删除供应商？" @confirm="deleteAdConfirm" />
   </div>
 </template>
@@ -170,9 +162,12 @@ export default {
     editProvider(row) {
       console.log(row,'888888888')
       this.$router.push({name: 'providerAddEdit', params: row })
+      this.$store.state.user.providerObject = row
     },
     detailProvider(row) {
       this.$router.push({name: 'providerDetail', params: row })
+      this.$store.state.user.providerObject = row
+      console.log(this.$store, 'xiangqing ')
     },
     deleteProviderHandle(row) {
       this.showDelete = true

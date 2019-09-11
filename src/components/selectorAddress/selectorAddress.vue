@@ -87,12 +87,15 @@ export default {
       this.$emit('getCounty', this.countyId)
     },
     'province1id'(e) {
+      console.log(e, 'sheng//////')
       this.provinceId = e
     },
     'city1id'(e) {
+      console.log(e, 'sheng//////')
       this.cityId = e
     },
     'county1id'(e) {
+      console.log(e, 'sheng//////')
       this.countyId = e
     }
   },

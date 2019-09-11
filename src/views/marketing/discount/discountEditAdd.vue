@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import pickGoods from '../pickGoods.vue'
+import pickGoods from '@/views/pickGoods'
 import { getAllShop } from '@/api/shop.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'

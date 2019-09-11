@@ -12,7 +12,7 @@ const state = {
   roleId: '',
   buttonRoleList: [],
   vipObject:{},
-  orderObject:{}
+  orderObject:{},
 }
 
 const mutations = {

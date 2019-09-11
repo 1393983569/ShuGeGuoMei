@@ -53,8 +53,8 @@ export default {
         getAllCity(this.provinceId).then(res => {
           if (res.info.length > 0) {
             this.cityList = res.info
-            this.cityId = ''
-            this.countyId = ''
+            // this.cityId = ''
+            // this.countyId = ''
           } else {
             // this.$message.error('暂无城市')
           }
@@ -65,16 +65,16 @@ export default {
       }
     },
     'cityId'(e) {
-      console.log(e)
+      // console.log(e)
       // return
       if (e) {
         this.cityId = e
         this.$emit('getCity', this.cityId)
         getAllArea(this.cityId).then(res => {
           if (res.info.length > 0) {
-            console.log('ddddddd')
+            // console.log('ddddddd')
             this.countyList = res.info
-            this.countyId = ''
+            // this.countyId = ''
           } else {
             // this.$message.error('暂无区县！')
           }
@@ -89,12 +89,15 @@ export default {
       this.$emit('getCounty', this.countyId)
     },
     'province1id'(e) {
+      console.log(e, 'eeeeeee1')
       this.provinceId = e
     },
     'city1id'(e) {
+      console.log(e, 'eeeeeee2')
       this.cityId = e
     },
     'county1id'(e) {
+      console.log(e, 'eeeeeee3')
       this.countyId = e
     }
   },
