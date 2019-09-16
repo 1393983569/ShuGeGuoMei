@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsContainer">
+  <div class="goodsContainers">
     <div>
       <div class="categoryHeader">品类</div>
       <div class="categoryBody">
@@ -191,13 +191,13 @@ export default {
     color:#909399;
     font-weight: 700;
   }
-  .goodsContainer{
+  .goodsContainers{
     display:flex;
     flex-direction: row;
-    width:90%;
+    width:80%;
   }
   .categoryBody{
-    width:260px;
+    width:100px;
     height:745px;
     border:1px solid #f0f2f3;
     background-color:#FFFFFF;

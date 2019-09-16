@@ -456,6 +456,7 @@ export const asyncRoutes = [
       {
         path: 'discountDetail',
         name: 'discountDetail',
+        hidden:true,
         meta: {
           // roles: ['discountDetail'],
           icon: 'dashboard',
@@ -466,6 +467,7 @@ export const asyncRoutes = [
       {
         path: 'discountEditAdd',
         name: 'discountEditAdd',
+        hidden:true,
         meta: {
           // roles: ['discountEditAdd'],
           icon: 'dashboard',
