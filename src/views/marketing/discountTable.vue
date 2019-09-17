@@ -47,6 +47,10 @@ export default {
     state:{
       default:false,
       type:Boolean,
+    },
+    tableArray:{
+      default:()=> {},
+      type:Array
     }
   },
   data(){
@@ -202,6 +206,18 @@ export default {
           rangNum:7,
         }
       ],
+      firstObj: {
+          index:'',
+          num:'代码',
+          c:'当前数据',
+          tp:'目标设定（%）',
+          t:'目标数据值',
+          w:'权重（合计0%）',
+          range:'range条件',
+          r:'range范围值（%）',
+          ra:'range取值（%）',
+          wv:'加权值'
+        },
     }
   },
   watch:{
@@ -212,6 +228,14 @@ export default {
       if(e){
         this.$emit('getDiscountList', this.tableData)
       }
+    },
+    'tableArray'(e){
+      let Arr = []
+      Arr.push(this.firstObj)
+      e.map(item=> {
+        Arr.push(item)
+      })
+      this.tableData = Arr
     }
   },
   mounted(){

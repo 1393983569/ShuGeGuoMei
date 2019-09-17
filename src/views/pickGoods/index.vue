@@ -27,6 +27,12 @@
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 export default {
+  props:{
+    goodsArray:{
+      default:() => {},
+      type:Array
+    }
+  },
   data(){
     return{
       dataTree:[],
@@ -41,6 +47,15 @@ export default {
     'checkGoodsList'(e){
       console.log(e, 'yingxiaobao')
       this.$emit('getGoodFunction', this.checkGoodsList)
+    },
+    'goodsArray'(e){
+      console.log(e, 'goodsArr......')
+      this.checkGoodsList = e
+      let array =[]
+      array = e
+      setTimeout(() =>{
+        this.handleToggles(array, this.goodsList)
+      }, 2000)
     }
   },
   mounted(){

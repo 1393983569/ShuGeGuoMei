@@ -35,7 +35,7 @@ export function editDiscount(data) {
   params.append('salesVolume',JSON.stringify(data.obj.salesVolume))
   params.append('stock',JSON.stringify(data.obj.stock))
   return request({
-    url: `/admin/editDiscount?id=${data.id}&name=${data.name}&shopId=${data.shopId}&discountPackageGoods=${data.discountPackageGoods}`,
+    url: `/admin/editDiscount?id=${data.id}&discountId=${data.id}&discountPackageId=${data.discountPackageId}&name=${data.name}&shopId=${data.shopId}&discountPackageGoods=${data.discountPackageGoods}`,
     method: 'post',
     data:params,
   })
@@ -92,4 +92,20 @@ export function queryDiscount(pageNum,pageSize,shopId, status) {
     method: 'post',
     data:params
   })
+}
+/**
+ * 一个折扣下的商品查询
+ * @param {Integer} id 一级品类id
+ * @param {Integer} discountId 折扣包id
+ */
+export function getDiscountGoods (id, discountId) {
+  let params = new URLSearchParams()
+  params.append("categoryOneId", id)
+  params.append("discountId", discountId)
+  return request({
+    url: '/admin/selectCategoryGoods',
+    method: 'post',
+    data:params
+  })
+
 }

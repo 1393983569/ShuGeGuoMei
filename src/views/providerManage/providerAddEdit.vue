@@ -211,10 +211,7 @@ export default {
         ],
         shopObject: [
           { required: true, message: '请输入面积', trigger: 'blur' },
-        ],
-        // qualificationPics:[
-        //   { required: true, message: '请输入面积', trigger: 'blur' },
-        // ],
+        ]
       },
       apiUrl: '',
       id: '',
@@ -247,6 +244,8 @@ export default {
       this.id = this.$route.params.id
       this.providerId = this.$route.params.id
       this.getProviderDetail()
+    }else{
+
     }
     this.getShopOption()
     this.ruleForm.shops = []

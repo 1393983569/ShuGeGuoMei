@@ -13,6 +13,7 @@ const state = {
   buttonRoleList: [],
   vipObject:{},
   orderObject:{},
+  discountObject:{}
 }
 
 const mutations = {
@@ -42,6 +43,9 @@ const mutations = {
   },
   SET_ORDEROBJECT:(state, orderObject) => {
     state.orderObject = orderObject
+  },
+  SET_DISCOUNTOBJECT:(state, discountObject) => {
+    state.discountObject = discountObject
   }
 }
 

@@ -155,10 +155,12 @@ export default {
     discountEdit(row){
       row.addEdit = '编辑'
       this.$router.push({name:'discountEditAdd', params: row})
+      this.$store.state.user.discountObject = row
     },
     // 查看折扣详情
     discountDetail(row){
       this.$router.push({name:'discountDetail', params: row})
+      this.$store.state.user.discountObject = row
     },
     // 删除折扣包
     discountDelete(row){
