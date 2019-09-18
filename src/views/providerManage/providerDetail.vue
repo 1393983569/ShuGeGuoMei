@@ -59,7 +59,8 @@
     <p>资质照片：<img :src="providerObj.qualificationPics" /></p>
     <div>
       评分：
-      <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
+      <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible" v-if="buttonList.includes('操作')">去评分</el-button>
+      <el-button style="margin-left:20px;" size="mini" type="success" v-else disabled>去评分</el-button>
       <gradeDetail :grade="gradeDetail"></gradeDetail>
     </div>
     <!-- 评分弹框 -->
@@ -97,7 +98,14 @@ export default {
         amount: '',
         providerId: ''
       },
+      buttonList:[],
     }
+  },
+  beforeRouteEnter (to, form, next) {
+   console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+  	})
   },
   mounted(){
     console.log(this.$route.params,'HHHHHH')
@@ -111,6 +119,14 @@ export default {
     }
   },
   methods:{
+    getButton(list, name){
+      console.log()
+      list.forEach(e => {
+        if(e.name === name){
+          this.buttonList = e.checkList
+        }
+      });
+    },
     getProviderDetail(id){
       getProviderDetail(id).then(res => {
           this.providerObj = res.info

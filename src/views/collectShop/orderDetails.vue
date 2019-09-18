@@ -78,7 +78,7 @@
         </div>
       </el-col>
       <el-col :span="20">
-        <childOrdersList :row="childOrderData" style="width:70%;" />
+        <childOrdersList :row="childOrderData" @refresh="refresh" :buttonList="buttonArray" style="width:70%;" />
       </el-col>
     </el-row>
   </div>
@@ -113,7 +113,14 @@ export default {
       orderDetailCateList:[],
       orderTotalMoney:'',
       temNum:0,
+      buttonArray:[],
     }
+  },
+  beforeRouteEnter (to, form, next) {
+   console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+  	})
   },
   mounted(){
     console.log(this.$store.state.user, 'user')
@@ -128,12 +135,22 @@ export default {
     }
   },
   methods:{
+    getButton(list, name){
+      list.forEach(e => {
+        if(e.name === name){
+          this.buttonArray = e.checkList
+        }
+      });
+    },
     // 拆单
     separateBill(index, row) {
       this.$router.push({
         name: 'separateBill',
         params: row
       })
+    },
+    refresh(){
+      this.getOrderDetail()
     },
     // 订单详情
     getOrderDetail(){
@@ -155,6 +172,7 @@ export default {
           })
           this.temNum = sum/100
           this.childOrderData = arr.subOrderList
+          this.childOrderData.fatherId = res.info[0].id
           this.orderDetailCateList = this.handleClassify(this.orderDetailList)
         }
       }).catch(err => {

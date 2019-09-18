@@ -150,7 +150,9 @@ export default {
     },
     // 添加折扣
     addDiscount(){
-      this.$router.push({name:'discountEditAdd'})
+      let row = {}
+      row.addEdit = '添加'
+      this.$router.push({name:'discountEditAdd', params:row})
     },
     discountEdit(row){
       row.addEdit = '编辑'

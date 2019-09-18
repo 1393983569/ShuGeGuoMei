@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" size="mini" @click="addProvider">新建</el-button>
+      <el-button type="primary" size="mini" @click="addProvider" v-if="buttonList.includes('操作')">新建</el-button>
+      <el-button type="primary" size="mini" v-else disabled>新建</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
       <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
@@ -30,9 +31,12 @@
       </el-table-column>
       <el-table-column prop="" label="操作" width= "260px">
         <template slot-scope="scope">
-          <el-button size="mini" type="warning" @click="detailProvider(scope.row)">查看详情</el-button>
-          <el-button size="mini" type="primary" @click="editProvider(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="deleteProviderHandle(scope.row)">删除</el-button>
+          <el-button size="mini" type="warning" @click="detailProvider(scope.row)" v-if="buttonList.includes('操作')||buttonList.includes('查看')">查看详情</el-button>
+          <el-button size="mini" type="warning" v-else disabled>查看详情</el-button>
+          <el-button size="mini" type="primary" @click="editProvider(scope.row)" v-if="buttonList.includes('操作')">编辑</el-button>
+          <el-button size="mini" type="primary" v-else disabled>编辑</el-button>
+          <el-button size="mini" type="danger" @click="deleteProviderHandle(scope.row)" v-if="buttonList.includes('操作')">删除</el-button>
+          <el-button size="mini" type="danger" v-else disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,8 +74,15 @@ export default {
       loadingClear: false,
       showDelete: false,
       id: '',
-      param:''
+      param:'',
+      buttonList:[]
     }
+  },
+  beforeRouteEnter (to, form, next) {
+   console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+  	})
   },
   watch: {
     'param'(e){
@@ -82,10 +93,16 @@ export default {
     }
   },
   mounted() {
-    // console.log(this.$router, '%%%%%%')
     this.getProviderList()
   },
   methods: {
+    getButton(list, name){
+      list.forEach(e => {
+        if(e.name === name){
+          this.buttonList = e.checkList
+        }
+      });
+    },
     inputSearch(){
       this.getProviderList()
     },

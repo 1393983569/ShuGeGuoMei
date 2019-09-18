@@ -73,6 +73,7 @@
     </el-table-column>
   </el-table>
   <hint v-model="showDelete" title="删除子订单" text="是否删除该订单？" @confirm="confirmDelete" />
+  <!-- <hint v-model="showSend" title="派单确定" text="是否派单确定？" @confirm="confirmSend" /> -->
   <hintSend v-model="showSend" title="派单确定" @confirm="confirmSend" />
 </div>
 </template>
@@ -87,14 +88,26 @@ export default {
     row: {
       type: Array,
       default: () => []
-    }
+    },
+    buttonList: {
+      type: Array,
+      default: () => []
+    },
   },
 
   data() {
     return {
+      buttonArray:[],
       showDelete:false,
       subOrderNo:'',
+      subOrderId:'',
       showSend:false,
+      fatherId:''
+    }
+  },
+  watch:{
+    'buttonList'(e){
+      this.buttonArray = e
     }
   },
   mounted() {
@@ -116,27 +129,34 @@ export default {
     },
     // 派单
     sendOrders(row) {
+      console.log(row, 'row......')
       this.showSend = true
       this.subOrderNo = row.suborder_no
+      this.subOrderId = row.id
     },
     confirmSend(){
       let status = 1
-      updateSubOrderStatus(row.suborder_no,status).then(res => {
+      updateSubOrderStatus(this.subOrderId,status).then(res => {
         this.$message.success('派单成功！')
         this.showSend = false
+        this.$emit('refresh')
       }).catch(err => {
         this.$message.error('派单失败！')
       })
     },
     // 删除
     removeOrder(row) {
+      console.log(row,this.row, 'id......')
       this.subOrderNo = row.suborder_no
+      this.subOrderId=row.id
+      this.fatherId = this.row.fatherId
       this.showDelete = true
     },
     confirmDelete(){
-      deleteSubOrder().then(res => {
+      deleteSubOrder(this.subOrderId, this.fatherId).then(res => {
         this.$message.success('删除成功！')
         this.showDelete = false
+        this.$emit('refresh')
       }).catch(err=> {
         this.$message.error('删除失败！')
       })

@@ -216,6 +216,7 @@ export default {
             this.tableData = res.info.records
             this.total = res.info.totalrecord
           }else{
+            this.$message.info('暂无数据！')
             this.tableData=[]
           }
 

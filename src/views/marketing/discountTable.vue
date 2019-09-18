@@ -9,14 +9,14 @@
       <el-table-column label="TP" prop="tp" width="120">
         <template slot-scope="scope">
           <P v-if="scope.row.index===''||scope.row.index==='5'||scope.row.index==='6'||scope.row.index==='7'">{{scope.row.tp}}</P>
-          <P v-else><el-input v-model="scope.row.tp" style="width:100px;" placeholder="请填写"/></P>
+          <P v-else><el-input v-if="deState" v-model="scope.row.tp" style="width:100px;" placeholder="请填写"/><p v-else>{{scope.row.tp}}</p></P>
         </template>
       </el-table-column>
       <el-table-column label="T" prop="t"/>
       <el-table-column label="W" prop="w" width="120">
         <template slot-scope="scope">
           <P v-if="scope.row.index===''||scope.row.index==='5'||scope.row.index==='6'||scope.row.index==='7'">{{scope.row.w}}</P>
-          <P v-else><el-input v-model="scope.row.w" style="width:100px;" placeholder="请填写"/></P>
+          <P v-else><el-input v-if="deState" v-model="scope.row.w" style="width:100px;" placeholder="请填写"/><p v-else>{{scope.row.w}}</p></P>
         </template>
       </el-table-column>
       <el-table-column label="range" prop="range" width="120">
@@ -51,10 +51,15 @@ export default {
     tableArray:{
       default:()=> {},
       type:Array
+    },
+    detailState:{
+      default:false,
+      type:Boolean
     }
   },
   data(){
     return{
+      deState:false,
       rangelist6:[
         ' TP<100',
         '100<=TP<120',
@@ -236,6 +241,9 @@ export default {
         Arr.push(item)
       })
       this.tableData = Arr
+    },
+    'detailState'(e){
+      this.deState = e
     }
   },
   mounted(){

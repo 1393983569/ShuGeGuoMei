@@ -212,6 +212,7 @@ export default {
             this.cost=this.tableData[0].cost
             this.orderCost=this.tableData[0].orderCost
           }else{
+            this.$message.info('暂无数据！')
             this.tableData = []
           }
         }

@@ -3,7 +3,6 @@
   <div style="display: flex; flex-direction: row">
     <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
     <div>
-
       类型：<el-select v-model="type" style="width:100px;" placeholder="请选择" size="mini">
         <el-option
           v-for="item in typeList"
@@ -22,17 +21,20 @@
       </el-select>
     </div>
     <div style="position: absolute; right: 5px;">
-      <el-button size="mini" @click="searchOrder">筛选</el-button>
-      <el-button size="mini" @click="clearOrder">清空</el-button>
+      <el-button size="mini" @click="searchOrder" v-if="buttonList.includes('操作')">筛选</el-button>
+      <el-button size="mini"v-else disabled>筛选</el-button>
+      <el-button size="mini" @click="clearOrder" v-if="buttonList.includes('操作')">清空</el-button>
+      <el-button size="mini" v-else disabled>清空</el-button>
     </div>
   </div>
   <div style="margin-top:5px;margin-bottom:20px;">
     <el-input
       placeholder="请输入关键词进行搜索"
       prefix-icon="el-icon-search"
-      v-model="param" style="width:400px;" size="mini">
+      v-model="params" style="width:400px;" size="mini">
     </el-input>
-    <el-button size="mini" @click ="handleFind">搜索</el-button>
+    <el-button size="mini" @click ="handleFind" v-if="buttonList.includes('操作')">搜索</el-button>
+    <el-button size="mini" disabled v-else>搜索</el-button>
   </div>
   <el-table
     :data="tableData"
@@ -56,8 +58,6 @@
       <template slot-scope="scope">
         <p v-if="scope.row.status ===0">未拆单</p>
         <p v-else-if="scope.row.status===1">已拆单</p>
-        <!-- <p v-else-if="scope.row.status===2">已派单</p>
-        <p v-else>已入库</p> -->
       </template>
     </el-table-column>
     <el-table-column label="子订单数" prop="">
@@ -72,12 +72,21 @@
           size="mini"
           type="warning"
           @click="viewDetails(scope.$index, scope.row)"
+          v-if="buttonList.includes('操作')"
+        >查看详情</el-button>
+         <el-button
+          size="mini"
+          type="warning"
+          disabled
+          v-else
         >查看详情</el-button>
         <el-button
           size="mini"
           type="primary"
           @click="separateBill(scope.$index, scope.row)"
+          v-if="buttonList.includes('操作')"
         >拆单</el-button>
+        <el-button size="mini" type="primary" v-else disabled>拆单</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -146,8 +155,15 @@ export default {
           id:1
         }
       ],
-      param:'',
+      params:'',
+      buttonList:[]
     }
+  },
+  beforeRouteEnter (to, form, next) {
+   console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+  	})
   },
   watch:{
     'param'(e){
@@ -160,6 +176,14 @@ export default {
     this.getOrderList()
   },
   methods: {
+    getButton(list, name){
+      console.log(list, name, 'llllll')
+      list.forEach(e => {
+        if(e.name === name){
+          this.buttonList = e.checkList
+        }
+      });
+    },
     handleFind(){
       this.getOrderList()
     },

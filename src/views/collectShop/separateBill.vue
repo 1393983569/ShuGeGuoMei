@@ -74,7 +74,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.params, 'pppppp')
+    console.log(this.$route.params, 'pppppp&&&&&&&&&&&&&&&')
     this.shopId = this.$route.params.shopId
     if(JSON.stringify(this.$route.params)!== '{}'){
       this.temObject = this.$route.params
@@ -144,8 +144,10 @@ export default {
       })
       let list = JSON.stringify(arr)
       // 派单
+      console.log(this.shopId, 'shopId......')
       separateBill(this.providerId, list, this.orderId, this.orderNo, this.subMoney, this.shopId).then(res => {
         this.$message.success('拆单成功！')
+        this.$router.push({name: 'orderFormList'})
       }).catch(err => {
         this.$message.error('拆单失败！')
       })

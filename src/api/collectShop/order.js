@@ -41,11 +41,11 @@ export const orderSubDetail = (orderNo) => {
   })
 }
 // 拆单
-export const separateBill = (providerId, list,orderId, orderNo, money) => {
+export const separateBill = (providerId, list,orderId, orderNo, money,shopId) => {
   // const params = new URLSearchParams()
   // params.append('list', list)
   return request({
-    url:`/admin/dismantling?providerId=${providerId}&orderId=${orderId}&orderNo=${orderNo}&money=${money}`,
+    url:`/admin/dismantling?providerId=${providerId}&orderId=${orderId}&orderNo=${orderNo}&money=${money}&shopId=${shopId}`,
     method:'post',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
@@ -67,9 +67,9 @@ export const enterQuantity = (id, inputQuantity) => {
 /**
  * 删除订单
  */
-export const deleteSubOrder = (id) => {
+export const deleteSubOrder = (id,orderId) => {
   return request({
-    url: `/app/deleteSubOrder?id=${id}`,
+    url: `/app/deleteSubOrder?id=${id}&orderId=${orderId}`,
     method: 'get'
   })
 }

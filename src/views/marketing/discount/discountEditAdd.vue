@@ -17,7 +17,7 @@
       <el-form-item label="选择商品：" prop="name"><span style="color:red;">*</span>
         <pickGoods @getGoodFunction="getGoodFunction" :goodsArray="goodsArray"></pickGoods>
         <span class="hint">*S>2V参与计算，否则DR=100%</span>
-        <discountTable :state="discountState" @getDiscountList="getDiscountList" :tableArray="tableArray"></discountTable>
+        <discountTable :state="discountState" @getDiscountList="getDiscountList" :tableArray="tableArray" :detailState="detailstate"></discountTable>
       </el-form-item>
       <div v-if="addEdit==='编辑'">
         <el-button type="primary" @click="submitEditForm('discountForm')">修改</el-button>
@@ -46,6 +46,7 @@ export default {
     return {
       goodsArray:[],
       tableArray:[],
+      detailstate:false,
       discountPackageId:'',
       discountForm:{
         name:'',
@@ -74,15 +75,19 @@ export default {
   mounted(){
     console.log(this.$route.params, 'canshu.....')
     if(JSON.stringify(this.$route.params)!== '{}'){
-      this.addEdit = this.$route.params.addEdit
-      this.id = this.$route.params.id
-      this.getDiscountDetail()
-    }else if(this.$store.state.user.discountObject){
-      console.log(this.$store.state.user,this.$route.params, 'bianji......' )
+      if(this.$route.params.addEdit ==='编辑'){
+        this.addEdit = this.$route.params.addEdit
+        this.id = this.$route.params.id
+        this.detailstate = true
+        this.getDiscountDetail()
+      }else if(this.$route.params.addEdit ==='添加'){
+        this.detailstate = true
+      }
+    }else if(JSON.stringify(this.$store.state.user.discountObject)!=='{}'){
       this.addEdit = this.$route.params
       this.id = this.$store.state.user.discountObject.id
       this.getDiscountDetail()
-    }
+    }else{}
     this.getAllShopList()
   },
   methods:{
@@ -186,25 +191,27 @@ export default {
             })
             this.goodsArray = arr
             // 折扣包回显数据
-            let disArr = []
-            let object = res.info.goods[0].findPackage
-            let stock = JSON.parse(object.stock)
-            disArr.push(stock[0])
-            let salesVolume = JSON.parse(object.salesVolume)
-            disArr.push(salesVolume[0])
-            let profitMargin = JSON.parse(object.profitMargin)
-            disArr.push(profitMargin[0])
-            let profit = JSON.parse(object.profit)
-            disArr.push(profit[0])
-            let member = JSON.parse(object.member)
-            disArr.push(member[0])
-            let purchasing = JSON.parse(object.purchasing)
-            disArr.push(purchasing[0])
-            let frequency = JSON.parse(object.frequency)
-            disArr.push(frequency[0])
-            let powerIndex = JSON.parse(object.powerIndex)
-            disArr.push(powerIndex[0])
-            this.tableArray = disArr
+            if(res.info.goods[0].findPackage){
+              let disArr = []
+              let object = res.info.goods[0].findPackage
+              let stock = JSON.parse(object.stock)
+              disArr.push(stock[0])
+              let salesVolume = JSON.parse(object.salesVolume)
+              disArr.push(salesVolume[0])
+              let profitMargin = JSON.parse(object.profitMargin)
+              disArr.push(profitMargin[0])
+              let profit = JSON.parse(object.profit)
+              disArr.push(profit[0])
+              let member = JSON.parse(object.member)
+              disArr.push(member[0])
+              let purchasing = JSON.parse(object.purchasing)
+              disArr.push(purchasing[0])
+              let frequency = JSON.parse(object.frequency)
+              disArr.push(frequency[0])
+              let powerIndex = JSON.parse(object.powerIndex)
+              disArr.push(powerIndex[0])
+              this.tableArray = disArr
+            }
           }
         }
       }).catch(err => {
