@@ -28,7 +28,7 @@
 
         </el-form-item>
         <el-form-item label="">
-          <discountTable :tableArray="tableArray"></discountTable>
+          <discountTable :tableArray="tableArray" :goodsName="goodsName"></discountTable>
         </el-form-item>
       </el-form>
     </div>
@@ -38,8 +38,9 @@
 <script>
 import discountTable from '../discountTable.vue'
 import hint from '@/components/Hint'
-import {discountDetail, getDiscountGoods, editStatus} from '@/api/marketing/discount.js'
+import {discountDetail, getDiscountGoods, editStatus,getDiscountTable} from '@/api/marketing/discount.js'
 import breadcrumb from '@/components/Breadcrumb'
+import { dirname } from 'path';
 export default {
   components:{
     breadcrumb,hint, discountTable
@@ -49,11 +50,14 @@ export default {
       showGoodsState:true,
       name:'',
       shopName: '',
+      shopId:'',
+      recodeDiscountId:'',
       categoryOneList:[],
       buttonList:[],
       firstObj:{},
       text:'',
       title:'',
+      goodsName:'',
       showUpdate:false,
       status:0,
       state:0,
@@ -79,30 +83,15 @@ export default {
     retractHandle(){
       this.showGoodsState = true
     },
-    // getDiscountDetail(){
-    //   discountDetail(this.id).then(res => {
-    //     this.name = res.info.name
-    //     this.shopName = res.info.shopName
-    //     this.categoryOneList=[]
-    //     let idArr = []
-    //     let objArr = []
-    //     res.info.goods.map(item =>{
-    //       let tempObj = {}
-    //       tempObj.id = item.categoryOneId
-    //       tempObj.name = item.categoryOneName
-    //       objArr.push(tempObj)
-    //       idArr.push(item.categoryOneId)
-    //     })
-    //     let uniqueArr = this.unique(idArr)
-    //     this.getCategoryHandle(uniqueArr,objArr)
-    //   }).catch(err => {})
-    // },
      // 查询折扣详情
     getDiscountDetail(){
       discountDetail(this.id).then(res => {
         if(res.status === 1){
           this.name = res.info.name
           this.shopName = res.info.shopName
+          // 查询折扣表用
+          this.shopId = res.info.shopId
+          this.recodeDiscountId = res.info.id
           this.categoryOneList=[]
           // 商品回显
           if(res.info.goods.length>0){
@@ -119,25 +108,7 @@ export default {
             this.getCategoryHandle(uniqueArr,objArr)
             // 折扣包回显数据
             if(res.info.goods[0].findPackage){
-              let disArr = []
-              let object = res.info.goods[0].findPackage
-              let stock = JSON.parse(object.stock)
-              disArr.push(stock[0])
-              let salesVolume = JSON.parse(object.salesVolume)
-              disArr.push(salesVolume[0])
-              let profitMargin = JSON.parse(object.profitMargin)
-              disArr.push(profitMargin[0])
-              let profit = JSON.parse(object.profit)
-              disArr.push(profit[0])
-              let member = JSON.parse(object.member)
-              disArr.push(member[0])
-              let purchasing = JSON.parse(object.purchasing)
-              disArr.push(purchasing[0])
-              let frequency = JSON.parse(object.frequency)
-              disArr.push(frequency[0])
-              let powerIndex = JSON.parse(object.powerIndex)
-              disArr.push(powerIndex[0])
-              this.tableArray = disArr
+              this.tableArray = this.detailArrFunction(res.info.goods[0].findPackage)
             }
           }
         }
@@ -145,6 +116,27 @@ export default {
         console.log(err)
         this.$message.error('查询折扣详情出错！')
       })
+    },
+    detailArrFunction(res){
+      let disArr = []
+      let object = res
+      let stock = JSON.parse(object.stock)
+      disArr.push(stock[0])
+      let salesVolume = JSON.parse(object.salesVolume)
+      disArr.push(salesVolume[0])
+      let profitMargin = JSON.parse(object.profitMargin)
+      disArr.push(profitMargin[0])
+      let profit = JSON.parse(object.profit)
+      disArr.push(profit[0])
+      let member = JSON.parse(object.member)
+      disArr.push(member[0])
+      let purchasing = JSON.parse(object.purchasing)
+      disArr.push(purchasing[0])
+      let frequency = JSON.parse(object.frequency)
+      disArr.push(frequency[0])
+      let powerIndex = JSON.parse(object.powerIndex)
+      disArr.push(powerIndex[0])
+      return disArr
     },
     // 去重处理
     unique(arr) {
@@ -155,6 +147,51 @@ export default {
             }
         }
         return newArr
+    },
+    // 折扣表的计算
+    switch5(tp){
+      switch(true){
+        case tp<20:
+          return 70;break;
+        case tp>=20&&tp<50:
+          return 80;break;
+        case tp>=50&&tp<70:
+          return 85;break;
+        case tp>=70&&tp<90:
+          return 90;break;
+        case tp>=90&&tp<100:
+          return 95;break;
+      }
+    },
+    switch6(tp){
+      switch(true){
+        case tp<100:
+          return 100;break;
+        case tp<120&&tp>=100:
+          return 97;break;
+        case tp<150&&tp>=120:
+          return 95;break;
+        case tp<180&&tp>=150:
+          return 92;break;
+        case tp<200&&tp>=180:
+          return 90;break;
+        case tp<300&&tp>=200:
+          return 85;break;
+      }
+    },
+    switch7(c){
+      switch(true){
+        case c>=12:
+          return 95;break;
+        case c<=8&&c<12:
+          return 92;break;
+        case c<=5&&c<8:
+          return 88;break;
+        case c<=2.5&&c<5:
+          return 85;break;
+        case c<2.5:
+          return 80;break;
+      }
     },
     // 一级品类按钮处理
     getCategoryHandle(idList, objList){
@@ -177,7 +214,6 @@ export default {
         if(res.info.length>0){
           this.buttonList=res.info
           this.firstObj = this.buttonList[0]
-
         }
       }).catch(err => {
         console.log(err)
@@ -186,8 +222,96 @@ export default {
     },
     // 根据商品查折扣包
     getDiscountHnadle(e){
-      console.log(e, 'biao////////')
+      this.goodsName = e.goodsName
+      getDiscountTable(this.recodeDiscountId,e.goods_id, this.shopId).then(res => {
+        if(res.status === 1){
+          let ob = res.info.discountPackageDomain
+          // 将每个对象中的C赋值
+          let disArray = this.arrFunction(res)
+          console.log(disArray,'kanyixiac.....')
+          // 计算每一项
+          if(res.info.computerStock>(2*res.info.salesVolume)){
+            console.log('s>2v.......')
+            for(let i=0;i<disArray.length; i++){
+              if(disArray[i].name === '库存'){
+                disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
+                // console.log(disArray[i].t, '%%%%%%%%%%%%%%%%%')
+                disArray[i].ra=this.switch5(disArray[i].tp)
+                disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+              }else if(disArray[i].name === '会员购买力指数(万)'){
+                disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
+                disArray[i].ra=this.switch7(disArray[i].c)
+                disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+              }else if(disArray[i].index==='2'||disArray[i].index==='3'||disArray[i].index==='4'){
+                disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
+                disArray[i].ra=this.switch6(disArray[i].tp)
+                disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+              }
+            }
+          }else{
+
+          }
+          this.tableArray = disArray
+        }
+      }).catch(err => {
+        this.$message.error('折扣表查询出错！')
+      })
     },
+    // 折扣表table数据处理
+    arrFunction(res){
+      // 库存s
+      let computerStocks = res.info.computerStock
+      // 日销量v
+      let salesVolumes = res.info.salesVolume
+      // 利润率pm
+      let profitMargins = res.info.profitMargin
+      // 利润值p
+      let profits = res.info.profit
+      // 店铺会员数m
+      let members = res.info.members
+      // 会员人均购买力b
+      let purchasings = res.info.purchasing
+      // 月复购频次fm
+      let frequencys = res.info.frequency
+
+      let disArr = []
+      let object = res.info.discountPackageDomain
+
+      let stock = JSON.parse(object.stock)
+      stock[0].c = computerStocks
+      disArr.push(stock[0])
+
+      let salesVolume = JSON.parse(object.salesVolume)
+      salesVolume[0].c= salesVolumes
+      disArr.push(salesVolume[0])
+
+      let profitMargin = JSON.parse(object.profitMargin)
+      profitMargin[0].c = profitMargins
+      disArr.push(profitMargin[0])
+
+      let profit = JSON.parse(object.profit)
+      profit[0].c= profits
+      disArr.push(profit[0])
+
+      let member = JSON.parse(object.member)
+      member[0].c =members
+      disArr.push(member[0])
+
+      let purchasing = JSON.parse(object.purchasing)
+      purchasing[0].c = purchasings
+      disArr.push(purchasing[0])
+
+      let frequency = JSON.parse(object.frequency)
+      frequency[0].c = frequencys
+      disArr.push(frequency[0])
+
+      let powerIndex = JSON.parse(object.powerIndex)
+      powerIndex[0].c= (members*purchasings*frequencys)/10000
+      disArr.push(powerIndex[0])
+
+      return disArr
+    },
+
     editHandle(){
       this.$router.push({name:'discountEditAdd'})
     },

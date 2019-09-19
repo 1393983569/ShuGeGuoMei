@@ -29,9 +29,11 @@
       </div>
       </el-form-item>
     </el-form>
+    <!-- <timeCount :endTime="endTime">{{endTime}}</timeCount> -->
   </div>
 </template>
 <script>
+import timeCount from './timeCount.vue'
 import discountTable from '../discountTable.vue'
 import pickGoods from '@/views/pickGoods'
 import { getAllShop } from '@/api/shop.js'
@@ -40,10 +42,11 @@ import { getGoods } from '@/api/collectShop.js'
 import {addDiscount,editDiscount, discountDetail} from '@/api/marketing/discount.js'
 import { setTimeout } from 'timers';
 export default {
-  components:{pickGoods, discountTable},
+  components:{pickGoods, discountTable,timeCount},
   name:"discountEditAdd",
   data(){
     return {
+      endTime:'',
       goodsArray:[],
       tableArray:[],
       detailstate:false,
@@ -69,7 +72,8 @@ export default {
       discountState:false,
       discountTable:[],
       profitMargin:0,
-      addEdit:''
+      addEdit:'',
+      wNum:0,
     }
   },
   mounted(){
@@ -112,6 +116,7 @@ export default {
           addDiscount(this.discountForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加成功！')
+              this.discountState = false
               this.$router.go(-1)
             }
           }).catch(err=> {
@@ -134,11 +139,15 @@ export default {
       // 折扣表参数处理
       let obj = {}
       console.log(this.discountTable, 'addBefore.....')
+      this.wNum = 0
       for(let i = 1; i<this.discountTable.length; i++){
-        if(this.discountTable[i].tp&&this.discountTable[i].tp){
+        if(this.discountTable[i].tp&&this.discountTable[i].w){
           this.discountTable[i].tp = Number(this.discountTable[i].tp)
           this.discountTable[i].w = Number(this.discountTable[i].w)
+          // w不能超过100，超过100数据有误
+          this.wNum += this.discountTable[i].w
         }
+
         if(this.discountTable[i].name==='库存'){
             obj.stock= []
             obj.stock.push(this.discountTable[i])
@@ -165,7 +174,27 @@ export default {
             obj.powerIndex.push(this.discountTable[i])
           }
         }
-        this.discountForm.obj = obj
+        if(this.wNum===100){
+          this.discountForm.obj = obj
+          return true
+        }else{
+          this.open()
+          return false
+        }
+
+    },
+    open() {
+      this.$alert('W列数据填写有误！', '提示', {
+        // confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'error',
+            message: `action: ${ action }`,
+            showClose:false,
+            showConfirmButton:false,
+          });
+        }
+      });
     },
     // 查询折扣详情
     getDiscountDetail(){
@@ -173,7 +202,7 @@ export default {
         if(res.status === 1){
           this.discountForm.name = res.info.name
           this.discountForm.shopId = res.info.shopId
-          this.discountPackageId = res.info.goods[0].discountPackageId
+          this.discountPackageId = res.info.goods[0].findPackage.id
           // 商品回显
           if(res.info.goods.length>0){
             let arr =[]
@@ -221,29 +250,32 @@ export default {
     },
     // 编辑必填项验证
     submitEditForm(formName) {
+      console.log('edit,.,,,,,,,,')
       this.discountState = true
       this.discountForm.id = this.id
       this.discountForm.discountPackageId = this.discountPackageId
       setTimeout(()=>{
-        this.handleData()
-        this.$refs[formName].validate((valid) => {
-        if (valid) {
-          editDiscount(this.discountForm).then(res => {
-            if(res.status === 1){
-              this.$message.success('编辑成功！')
-              this.$router.go(-1)
+        if(this.handleData()){
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              editDiscount(this.discountForm).then(res => {
+                if(res.status === 1){
+                  this.$message.success('编辑成功！')
+                  this.$router.go(-1)
+                }
+              }).catch(err=> {
+                this.$message.success('编辑失败！')
+              })
+            } else {
+              return false
             }
-          }).catch(err=> {
-            this.$message.success('编辑失败！')
           })
-        } else {
-          return false
-        }
-      })
+        }else{}
       }, 200)
     },
     getDiscountList(e){
       this.discountTable= e
+
     },
     // 重置必填项
     resetForm(formName) {

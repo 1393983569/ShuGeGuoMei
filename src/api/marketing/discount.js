@@ -35,7 +35,7 @@ export function editDiscount(data) {
   params.append('salesVolume',JSON.stringify(data.obj.salesVolume))
   params.append('stock',JSON.stringify(data.obj.stock))
   return request({
-    url: `/admin/editDiscount?id=${data.id}&discountId=${data.id}&discountPackageId=${data.discountPackageId}&name=${data.name}&shopId=${data.shopId}&discountPackageGoods=${data.discountPackageGoods}`,
+    url: `/admin/editDiscount?id=${data.id}&discountId=${data.discountPackageId}&discountPackageId=${data.discountPackageId}&name=${data.name}&shopId=${data.shopId}&discountPackageGoods=${data.discountPackageGoods}`,
     method: 'post',
     data:params,
   })
@@ -107,5 +107,21 @@ export function getDiscountGoods (id, discountId) {
     method: 'post',
     data:params
   })
-
+}
+/**
+ * 查询每个商品的折扣
+ * @param {Integer} discountId 折扣包id
+ * @param {Integer} goodsId 商品id
+ * @param {Integer} shopId 店铺id
+ */
+export function getDiscountTable (discountId, goodsId,shopId) {
+  let params = new URLSearchParams()
+  params.append("discountId", discountId)
+  params.append("goodsId", goodsId)
+  params.append("shopId", shopId)
+  return request({
+    url: '/admin/findDiscountPackage',
+    method: 'post',
+    data:params
+  })
 }

@@ -1,7 +1,8 @@
 // 数组求和
 export const sumList = (arr) => {
   return arr.reduce((prev, cur) => {
-    return prev + cur
+    if(prev&&cur)
+    return !isNaN(prev) + !isNaN(cur)
   }, 0)
 }
 

@@ -1,22 +1,23 @@
 <template>
   <div>
-    <div class="header">DR:</div>
+    <div class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
     <el-table :data="tableData" style="width:80%;" border center show-summary :summary-method="getSummaries">
       <el-table-column label="序号" prop="index" width="80"/>
       <el-table-column label=" " prop="name"/>
       <el-table-column label=" " prop="num" width="80"/>
       <el-table-column label="C" prop="c"/>
-      <el-table-column label="TP" prop="tp" width="120">
+      <el-table-column label="TP" prop="tp" width="140">
         <template slot-scope="scope">
           <P v-if="scope.row.index===''||scope.row.index==='5'||scope.row.index==='6'||scope.row.index==='7'">{{scope.row.tp}}</P>
-          <P v-else><el-input v-if="deState" v-model="scope.row.tp" style="width:100px;" placeholder="请填写"/><p v-else>{{scope.row.tp}}</p></P>
+          <P v-else-if="scope.row.index==='1'"><el-input-number :min="0" :max="100" v-if="deState" v-model="scope.row.tp" style="width:120px;" placeholder="请填写"/><p v-else>{{scope.row.tp}}</p></P>
+          <P v-else><el-input-number :min="0" :max="300" v-if="deState" v-model="scope.row.tp" style="width:120px;" placeholder="请填写"/><p v-else>{{scope.row.tp}}</p></P>
         </template>
       </el-table-column>
       <el-table-column label="T" prop="t"/>
-      <el-table-column label="W" prop="w" width="120">
+      <el-table-column label="W" prop="w" width="140">
         <template slot-scope="scope">
           <P v-if="scope.row.index===''||scope.row.index==='5'||scope.row.index==='6'||scope.row.index==='7'">{{scope.row.w}}</P>
-          <P v-else><el-input v-if="deState" v-model="scope.row.w" style="width:100px;" placeholder="请填写"/><p v-else>{{scope.row.w}}</p></P>
+          <P v-else><el-input-number  :min="0" :max="100"  v-if="deState" v-model="scope.row.w" style="width:120px;" placeholder="请填写"/><p v-else>{{scope.row.w}}</p></P>
         </template>
       </el-table-column>
       <el-table-column label="range" prop="range" width="120">
@@ -42,6 +43,7 @@
 </template>
 <script>
 import { sumList } from '_u/logic'
+import { isNull } from 'util';
 export default {
   props:{
     state:{
@@ -55,17 +57,23 @@ export default {
     detailState:{
       default:false,
       type:Boolean
+    },
+    goodsName:{
+      default:'',
+      type:String
     }
   },
   data(){
     return{
       deState:false,
+      numCount:0,
+      productName:'',
       rangelist6:[
         ' TP<100',
         '100<=TP<120',
         '120<=TP<150',
         '150<=TP<180',
-        '180<TP<200',
+        '180<=TP<200',
         '200<=TP<300'
       ],
       rangelist5:[
@@ -73,13 +81,13 @@ export default {
         '20<=TP<50',
         '50<=TP<70',
         '70<=TP<90',
-        '90<TP<100'
+        '90<=TP<100'
       ],
       rangelist7:[
         'C>=12',
         '8<=C<12',
         '5<=C<8',
-        '2.5<=C<12',
+        '2.5<=C<5',
         'C<2.5'
       ],
       rList5:[70,80,85,90,95],
@@ -232,6 +240,8 @@ export default {
     'state'(e){
       if(e){
         this.$emit('getDiscountList', this.tableData)
+      }else{
+
       }
     },
     'tableArray'(e){
@@ -244,6 +254,9 @@ export default {
     },
     'detailState'(e){
       this.deState = e
+    },
+    'goodsName'(e){
+      this.productName = e
     }
   },
   mounted(){
@@ -251,28 +264,33 @@ export default {
   },
   methods:{
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 1) {
-            sums[index] = '折扣率';
-            return;
-          }
-          const values = data.map(item => {
-            // console.log(item,column.property, 'item....')
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 1) {
+          sums[index] = '折扣率';
+          return;
+        }
+         const values = data.map(item => {
           if (column.property === 'wv' && item[column.property]) {
             return Number(item[column.property])
           }
         })
-        if (!values.every(value => isNaN(value))) {
-          const sun = sumList(values)
-          sums[index] = `${sun}`
+        if (values) {
+          let number = 0
+          values.forEach(item => {
+            if(item&&!isNaN(item)){
+              number+= item
+            }
+          })
+          sums[10] = `${number.toFixed(2)}`
         } else {
           sums[index] = ''
         }
-        });
-        return sums;
-      }
+      });
+      this.numCount = sums
+      return sums;
+    }
   }
 }
 </script>
