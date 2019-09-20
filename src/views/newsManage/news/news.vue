@@ -19,17 +19,17 @@
       </div>
     </div>
     <!-- 列表 -->
-    <div class="size-color">
+    <div style="margin-top:10px;">
       <el-table :data="newsTable" center stripe>
-        <el-table-column prop="createTime" label="发布时间" />
+        <el-table-column prop="createTime" label="发布时间"/>
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="category" label="类型" />
-        <el-table-column prop="shopJson" label="对象" :width="500">
+        <el-table-column prop="shopJson" label="对象" width="200">
           <template slot-scope="scope">
-            <span v-for="item in scope.row.shopJson">{{item.name}}&nbsp;|&nbsp;</span>
+            <span class="outer" v-for="item in scope.row.shopJson">{{item.name}},</span>
           </template>
         </el-table-column>
-        <el-table-column prop="operate" label="操作" :width="300">
+        <el-table-column prop="operate" label="操作" width="300">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" v-if="buttonList.includes('查看'||'操作')" @click="handleDetail(scope.row)">查看详情</el-button>
             <el-button type="warning" size="mini" v-else disabled>查看详情</el-button>
@@ -145,7 +145,7 @@ export default {
       obj.year = this.yearPro
       obj.month = this.monthPro
       obj.day = this.dayPro
-      obj.category = this.category
+      obj.category = this.newsType
       getNews(obj).then(res => {
         this.total = res.info.totalrecord
         // const array = []
@@ -229,5 +229,13 @@ export default {
 <style>
 .loginOut{
   float:right;
+}
+.outer{
+  /* 文本强制不换行；*/
+  white-space: nowrap;
+    /* 文本溢出显示省略号； */
+  text-overflow:ellipsis;
+  /* 溢出的部分隐藏； */
+  overflow:hidden;
 }
 </style>

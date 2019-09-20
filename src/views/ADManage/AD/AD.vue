@@ -52,7 +52,7 @@
     <!-- 删除 -->
     <hint v-model="showDelete" title="删除广告" text="是否删除该条广告？" @confirm="deleteAdConfirm" />
     <!-- 广告详情 -->
-    <ad-detail :show-ad-detail="showAdDetail" :ad-object="adObject" @handleClose="handleClose" />
+    <ad-detail :adminName="adminName" :show-ad-detail="showAdDetail" :ad-object="adObject" @handleClose="handleClose" />
   </div>
 </template>
 <script>
@@ -79,7 +79,8 @@ export default {
       showDelete: false,
       editObject: {},
       bottonList: [],
-      apiUrl: ''
+      apiUrl: '',
+      adminName:''
     }
   },
  beforeRouteEnter (to, form, next) {
@@ -91,8 +92,8 @@ export default {
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getAdvertiseList()
-    console.log(process.env.VUE_APP_BASE_API, '&&&&&&&&&&&')
-    console.log(this.bottonList, '@@@@@@@@@@@@@@@@@@@@@@@', this)
+    console.log(this.$store, '&&&&&&&&&&&')
+    // console.log(this.bottonList, '@@@@@@@@@@@@@@@@@@@@@@@', this)
   },
   methods: {
     // 分页
@@ -130,6 +131,7 @@ export default {
     // 查看详情
     handleDetail(row) {
       this.adObject = row
+      this.adminName = this.$store.state.user.name
       this.showAdDetail = true
     },
     // 关闭详情

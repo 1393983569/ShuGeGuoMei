@@ -35,7 +35,7 @@ export function editDiscount(data) {
   params.append('salesVolume',JSON.stringify(data.obj.salesVolume))
   params.append('stock',JSON.stringify(data.obj.stock))
   return request({
-    url: `/admin/editDiscount?id=${data.id}&discountId=${data.discountPackageId}&discountPackageId=${data.discountPackageId}&name=${data.name}&shopId=${data.shopId}&discountPackageGoods=${data.discountPackageGoods}`,
+    url: `/admin/editDiscount?id=${data.id}&discountId=${data.id}&discountPackageId=${data.discountPackageId}&name=${data.name}&shopId=${data.shopId}&discountPackageGoods=${data.discountPackageGoods}`,
     method: 'post',
     data:params,
   })

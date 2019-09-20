@@ -69,27 +69,24 @@
           </el-table>
       </div>
       <!-- <div class="" style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;"> -->
-      <!-- <div>
-        职员人数：
-        <el-table :data="employeeTable" border :header-cell-style="tableHeaderColor" style="width:400px;">
-          <el-table-column prop="num" label="序号" />
-          <el-table-column prop="name" label="姓名" />
-          <el-table-column prop="level" label="职级" />
-        </el-table>
-      </div> -->
+      <div>
+        <span style="font-weight:bold;">职员人数：</span>
+        <staff :staffTable ="staffTable"></staff>
+      </div>
       <div class="size-color">
         <span class="font-weight">经营模式：</span>{{ shopObject.management }}
       </div>
       <div class="size-color">
         <span class="font-weight">成本结构：</span>
       </div>
-      <!-- <div class="size-color">
-        会员人数(人)： 3000
-      </div> -->
+      <div class="size-color">
+        <span class="font-weight">会员人数(人)：</span> {{shopObject.members}}
+      </div>
     <!-- </el-dialog> -->
   </div>
 </template>
 <script>
+import staff from './staff.vue'
 export default {
   name: 'shopDetail',
   // props: {
@@ -98,13 +95,15 @@ export default {
   //     default: Array
   //   }
   // },
+  components:{staff},
   data() {
     return {
       employeeTable: [],
       categoryTable: [],
       mergeList: [],
       shopObject: {},
-      urlList: []
+      urlList: [],
+      staffTable:[]
     }
   },
   watch: {
@@ -122,6 +121,7 @@ export default {
       this.urlList= this.$route.params.imge.split(',')
       this.shopObject = this.$route.params
       let arr = JSON.parse(this.shopObject.categoryJson)
+      this.staffTable = this.shopObject.shopStaffList
       this.categoryTable = this.recursionTableData(arr)
       this.getMergeList()
     }else{

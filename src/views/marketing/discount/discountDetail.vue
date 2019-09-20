@@ -25,7 +25,8 @@
           </div>
         </el-form-item>
         <el-form-item label="状态：">
-
+          <span v-if="status === 0">停用</span>
+          <span v-if="status === 1">启用</span>
         </el-form-item>
         <el-form-item label="">
           <discountTable :tableArray="tableArray" :goodsName="goodsName"></discountTable>
@@ -61,13 +62,14 @@ export default {
       showUpdate:false,
       status:0,
       state:0,
-      tableArray:[]
+      tableArray:[],
+      rowObject:{}
     }
   },
   mounted(){
     if(JSON.stringify(this.$route.params)!== '{}'){
       // this.addEdit = this.$route.params.addEdit
-      this.status = this.$route.params.status
+      // this.status = this.$route.params.status
       this.id = this.$route.params.id
       this.getDiscountDetail()
     }else{
@@ -87,8 +89,10 @@ export default {
     getDiscountDetail(){
       discountDetail(this.id).then(res => {
         if(res.status === 1){
+          this.rowObject = res.info
           this.name = res.info.name
           this.shopName = res.info.shopName
+          this.status = res.info.status
           // 查询折扣表用
           this.shopId = res.info.shopId
           this.recodeDiscountId = res.info.id
@@ -228,14 +232,11 @@ export default {
           let ob = res.info.discountPackageDomain
           // 将每个对象中的C赋值
           let disArray = this.arrFunction(res)
-          console.log(disArray,'kanyixiac.....')
           // 计算每一项
           if(res.info.computerStock>(2*res.info.salesVolume)){
-            console.log('s>2v.......')
             for(let i=0;i<disArray.length; i++){
               if(disArray[i].name === '库存'){
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
-                // console.log(disArray[i].t, '%%%%%%%%%%%%%%%%%')
                 disArray[i].ra=this.switch5(disArray[i].tp)
                 disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
               }else if(disArray[i].name === '会员购买力指数(万)'){
@@ -313,7 +314,8 @@ export default {
     },
 
     editHandle(){
-      this.$router.push({name:'discountEditAdd'})
+      this.rowObject.addEdit = '编辑'
+      this.$router.push({name:'discountEditAdd', params:this.rowObject})
     },
     // 停用启用
     discountStop(){

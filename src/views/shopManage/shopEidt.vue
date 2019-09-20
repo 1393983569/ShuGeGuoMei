@@ -95,6 +95,14 @@
             </el-table-column>
           </el-table>
         </el-form-item>
+        <el-form-item label="职员人数：">
+          <el-table :data="staffTables" style="width:40%;" size="mini">
+          <el-table-column prop="role_id" label="序号"/>
+          <el-table-column prop="name" label="姓名"/>
+          <el-table-column prop="rank" label="职级"/>
+          <el-table-column prop="mobile" label="电话"/>
+    </el-table>
+        </el-form-item>
         <div v-if="showState" />
         <div v-else class="div-margin font-weight">成本结构：</div>
         <div v-if="showState" />
@@ -114,12 +122,14 @@
   </div>
 </template>
 <script>
+import staff from './staff.vue'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { addShop, editShop } from '@/api/shop.js'
 import { getCategory } from '@/api/category.js'
+import { stringify } from 'querystring';
 export default {
   components: {
-    selectorAddress
+    selectorAddress, staff
   },
   props: {
     showEdit: {
@@ -210,7 +220,8 @@ export default {
       imageUrl: '',
       key:0,
       reFresh:true,
-      // categoryJsonList:[],
+      // 员工数据
+      staffTables:[],
     }
   },
   watch: {
@@ -218,6 +229,7 @@ export default {
       if(e.imge){
         this.imgelist = e.imge.split(',')
       }
+      this.staffTables = e.shopStaffList
       // 品类的回显
       this.shopForm = e
 
@@ -516,6 +528,8 @@ export default {
     },
     cancelHandle(formName) {
       this.$refs[formName].resetFields()
+      // 取消添加或编辑
+      this.handleClose()
     },
     getProvince(id) {
       this.shopForm.provinceId = id

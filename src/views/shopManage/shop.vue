@@ -15,10 +15,10 @@
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
-        <el-button type="primaryX" v-if="buttonList.includes('操作')" @click="handleSearch" size="mini">筛选</el-button>
-        <el-button type="primaryX" v-else disabled @click="handleSearch" size="mini">筛选</el-button>
-        <el-button type="info" v-if="buttonList.includes('操作')" @click="handleClearCondition"  size="mini">清空</el-button>
-        <el-button type="info" v-else disabled  @click="handleClearCondition"  size="mini">清空</el-button>
+        <el-button type="primaryX" v-if="buttonList.includes('操作')||buttonList.includes('查看')" @click="handleSearch" size="mini">筛选</el-button>
+        <el-button type="primaryX" v-else disabled size="mini">筛选</el-button>
+        <el-button type="info" v-if="buttonList.includes('操作')||buttonList.includes('查看')" @click="handleClearCondition"  size="mini">清空</el-button>
+        <el-button type="info" v-else disabled size="mini">清空</el-button>
       </div>
     </div>
     <div>
@@ -34,18 +34,23 @@
         <el-table-column prop="id" label="店铺ID" width="200px" />
         <el-table-column prop="simpleName" label="店铺简称" />
         <el-table-column prop="name" label="店铺名称" />
-        <el-table-column prop="vipNum" label="会员数" />
+        <el-table-column prop="members" label="会员数" />
         <el-table-column prop="management" label="经营模式" />
-        <el-table-column prop="sellNum" label="销售额" />
+        <!-- <el-table-column prop="sellNum" label="销售额" /> -->
         <el-table-column prop="adminName" label="掌柜姓名" />
-        <!-- <el-table-column prop="employeeNum" label="职员人数" /> -->
-        <el-table-column prop="operate" label="操作" width="300px">
+        <el-table-column prop="staffMember" label="职员人数" />
+        <el-table-column prop="operate" label="操作" width="400px">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" v-if="buttonList.includes('操作')" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button type="primary" size="mini" v-else disabled >编辑</el-button>
-            <el-button type="success" size="mini" v-if="buttonList.includes('操作')" @click="handleStart(scope.row)">{{ scope.row.status=== 1? '启用': '停用' }}</el-button>
-            <el-button type="success" size="mini" v-else disabled>{{ scope.row.status=== 1? '启用': '停用' }}</el-button>
-
+            <span v-if="buttonList.includes('操作')">
+              <el-button type="up" size="mini" v-if="scope.row.status=== 1" @click="handleStart(scope.row)">启用</el-button>
+              <el-button type="down" size="mini" v-else-if="scope.row.status=== 0" @click="handleStart(scope.row)">停用</el-button>
+            </span>
+            <span v-else-if="!buttonList.includes('操作')">
+              <el-button type="up" size="mini" v-if="scope.row.status=== 1" disabled>启用</el-button>
+              <el-button type="down" size="mini" v-else-if="scope.row.status=== 0" disabled>停用</el-button>
+            </span>
             <el-button type="danger" size="mini" v-if="buttonList.includes('操作')" @click="handleDelete(scope.row)">删除</el-button>
             <el-button type="danger" size="mini" v-else disabled >删除</el-button>
             <el-button type="warning" size="mini" v-if="buttonList.includes('操作'||'查看')" @click="handleDetail(scope.row)">详情</el-button>
@@ -66,23 +71,9 @@
     </div>
     <!-- 店铺编辑 -->
     <shop-edit :show-edit="showEdit" @closeHandle="closeEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
-    <!-- 删除弹框 -->
-    <!-- <el-dialog :visible.sync="showDelete" center width="380px" title="删除店铺" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否删除该店铺？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showDelete = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="confirmDelete">确定</el-button>
-      </div>
-    </el-dialog> -->
+
     <hint v-model="showDelete" title="删除店铺" text="是否删除该店铺？" @confirm="confirmDelete" />
-    <!-- 启用弹框 -->
-    <!-- <el-dialog :visible.sync="showStart" center width="380px" :title="`${startShopTitle}店铺`" style="border-ra">
-      <div width="100%" style="font-size: 17px;display: flex;justify-content:center;align-items: center;height:100px;border-radius: 10px;">是否{{ startShopTitle }}该店铺？</div>
-      <div slot="footer" style="boeder:1px solid black">
-        <el-button style="width:160px;border:none;font-size:18px;" @click="showStart = false">取消</el-button>
-        <el-button style="width:160px;border:none;font-size:18px;" @click="confirmStart">确定</el-button>
-      </div>
-    </el-dialog> -->
+
     <hint v-model="showStart" :title="`${startShopTitle}店铺`" :text="`是否${startShopTitle}该店铺？`" @confirm="confirmStart" />
   </div>
 </template>
@@ -207,11 +198,11 @@ export default {
       const obj = {}
       obj.pageNum = this.pageNum
       obj.pageSize = this.pageSize
-      if (this.provinceId && this.cityId && this.countyId) {
+      // if (this.provinceId && this.cityId && this.countyId) {
         obj.provinceId = this.provinceId
         obj.cityId = this.cityId
         obj.countyId = this.countyId
-      }
+      // }
       obj.management = this.management
       getShopList(obj).then(res => {
         if (res.info.records.length > 0) {

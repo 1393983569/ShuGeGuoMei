@@ -192,7 +192,7 @@ export default {
         },
          {
           index:'7',
-          name:'月复够频次(取累计均值)',
+          name:'月复购频次(取累计均值)',
           num:'FM',
           c:'',
           tp:'',

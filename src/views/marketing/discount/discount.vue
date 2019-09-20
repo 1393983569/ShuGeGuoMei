@@ -32,7 +32,7 @@
       <el-table-column prop="shopName" label="使用店铺"/>
       <el-table-column prop="" label="折扣商品">
         <template slot-scope="scope">
-          <span v-for="item in scope.row.goods">{{item.goodsName}}， </span>...
+          <span class="outer" v-for="item in scope.row.goods">{{item.goodsName}},</span>
         </template>
       </el-table-column>
       <el-table-column prop="" label="状态">
@@ -214,4 +214,13 @@ export default {
   }
 }
 </script>
-<style></style>
+<style>
+.outer{
+    /* 文本强制不换行；*/
+    white-space: nowrap;
+     /* 文本溢出显示省略号； */
+    text-overflow:ellipsis;
+    /* 溢出的部分隐藏； */
+    overflow:hidden;
+}
+</style>

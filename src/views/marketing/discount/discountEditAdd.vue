@@ -20,20 +20,30 @@
         <discountTable :state="discountState" @getDiscountList="getDiscountList" :tableArray="tableArray" :detailState="detailstate"></discountTable>
       </el-form-item>
       <div v-if="addEdit==='编辑'">
-        <el-button type="primary" @click="submitEditForm('discountForm')">修改</el-button>
+        <el-button type="primary" @click="submitEditForm('discountForm')" :loading="editLoading">修改</el-button>
         <el-button @click="resetForm('discountForm')">取消</el-button>
       </div>
       <div v-else>
-        <el-button type="primary" @click="submitForm('discountForm')">保存</el-button>
+        <el-button type="primary" @click="submitForm('discountForm')" :loading="addLoading">保存</el-button>
         <el-button @click="resetForm('discountForm')">取消</el-button>
       </div>
       </el-form-item>
     </el-form>
-    <!-- <timeCount :endTime="endTime">{{endTime}}</timeCount> -->
+    <el-dialog
+      title="提示"
+      modal
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      :visible.sync="outerHundred"
+      width="30%"
+      center>
+      <span>W列数据填写有误，请确认无误后保存！</span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import timeCount from './timeCount.vue'
+// import timeCount from './timeCount.vue'
 import discountTable from '../discountTable.vue'
 import pickGoods from '@/views/pickGoods'
 import { getAllShop } from '@/api/shop.js'
@@ -42,10 +52,29 @@ import { getGoods } from '@/api/collectShop.js'
 import {addDiscount,editDiscount, discountDetail} from '@/api/marketing/discount.js'
 import { setTimeout } from 'timers';
 export default {
-  components:{pickGoods, discountTable,timeCount},
+  components:{pickGoods, discountTable},
   name:"discountEditAdd",
   data(){
     return {
+      // 加载圈
+      addLoading:false,
+      editLoading:false,
+      // w数据超出100的提示
+      outerHundred:false,
+      frequencyArr:[{
+          index:'7',
+          name:'月复购频次(取累计均值)',
+          num:'FM',
+          c:'',
+          tp:'',
+          t:'',
+          w:'',
+          range:'',
+          r:'',
+          ra:'',
+          wv:'',
+          rangNum:0,
+        },],
       endTime:'',
       goodsArray:[],
       tableArray:[],
@@ -107,25 +136,28 @@ export default {
     // 必填项验证
     submitForm(formName) {
       this.discountState = true
+      this.addLoading = true
       setTimeout(()=>{
-        this.handleData()
-        // console.log(this.discountTable, 'adddd......')
-        // return
-        this.$refs[formName].validate((valid) => {
-        if (valid) {
-          addDiscount(this.discountForm).then(res => {
-            if(res.status === 1){
-              this.$message.success('添加成功！')
-              this.discountState = false
-              this.$router.go(-1)
+        // 数据处理方法
+        if(this.handleData()){
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              addDiscount(this.discountForm).then(res => {
+                if(res.status === 1){
+                  this.$message.success('添加成功！')
+                  this.addLoading = false
+                  this.discountState = false
+                  this.$router.go(-1)
+                }
+              }).catch(err=> {
+                this.$message.success('添加失败！')
+              })
+            } else {
+              return false
             }
-          }).catch(err=> {
-            this.$message.success('添加失败！')
           })
-        } else {
-          return false
         }
-      })
+
       }, 200)
     },
     // 数据处理
@@ -166,7 +198,7 @@ export default {
           }else if(this.discountTable[i].name==='会员人均购买力(取累计均值)'){
             obj.purchasing= []
             obj.purchasing.push(this.discountTable[i])
-          }else if(this.discountTable[i].name==='月复够频次(取累计均值)'){
+          }else if(this.discountTable[i].name==='月复购频次(取累计均值)'){
             obj.frequency= []
             obj.frequency.push(this.discountTable[i])
           }else if(this.discountTable[i].name==='会员购买力指数(万)'){
@@ -184,17 +216,11 @@ export default {
 
     },
     open() {
-      this.$alert('W列数据填写有误！', '提示', {
-        // confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'error',
-            message: `action: ${ action }`,
-            showClose:false,
-            showConfirmButton:false,
-          });
-        }
-      });
+     this.outerHundred = true
+     let _this = this
+     setTimeout(function(){
+       _this.outerHundred = false
+     },3000)
     },
     // 查询折扣详情
     getDiscountDetail(){
@@ -235,7 +261,7 @@ export default {
               disArr.push(member[0])
               let purchasing = JSON.parse(object.purchasing)
               disArr.push(purchasing[0])
-              let frequency = JSON.parse(object.frequency)
+              let frequency = this.frequencyArr
               disArr.push(frequency[0])
               let powerIndex = JSON.parse(object.powerIndex)
               disArr.push(powerIndex[0])
@@ -250,6 +276,7 @@ export default {
     },
     // 编辑必填项验证
     submitEditForm(formName) {
+      this.editLoading = true
       console.log('edit,.,,,,,,,,')
       this.discountState = true
       this.discountForm.id = this.id
@@ -261,6 +288,7 @@ export default {
               editDiscount(this.discountForm).then(res => {
                 if(res.status === 1){
                   this.$message.success('编辑成功！')
+                  this.editLoading = false
                   this.$router.go(-1)
                 }
               }).catch(err=> {

@@ -20,7 +20,11 @@ export default {
     },
     adObject: {
       type: Object,
-      default: Array
+      default: ()=>{}
+    },
+    adminName:{
+      default:'',
+      type:String
     }
   },
   data() {
@@ -29,9 +33,14 @@ export default {
       releasePerson: ''
     }
   },
+  watch:{
+    'adminName'(e){
+      this.releasePerson = e
+    }
+  },
   mounted() {
     // console.log( this.$store, 'llllllll')
-    this.releasePerson = this.$store.state.user.name
+    // this.releasePerson = this.$store.state.user.name
   },
   methods: {
     handleClose() {
