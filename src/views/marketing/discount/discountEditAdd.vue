@@ -173,13 +173,22 @@ export default {
       console.log(this.discountTable, 'addBefore.....')
       this.wNum = 0
       for(let i = 1; i<this.discountTable.length; i++){
-        if(this.discountTable[i].tp&&this.discountTable[i].w){
-          this.discountTable[i].tp = Number(this.discountTable[i].tp)
-          this.discountTable[i].w = Number(this.discountTable[i].w)
-          // w不能超过100，超过100数据有误
-          this.wNum += this.discountTable[i].w
-        }
+          if(this.discountTable[i].tp){
+            this.discountTable[i].tp = Number(this.discountTable[i].tp)
+          }else{
+            this.discountTable[i].tp = ''
+          }
+          if(this.discountTable[i].w){
+            this.discountTable[i].w = Number(this.discountTable[i].w)
+          }else{
 
+          }
+          // w不能超过100，超过100数据有误
+          if(this.discountTable[i].w){
+            this.wNum += this.discountTable[i].w
+          }else{
+
+          }
         if(this.discountTable[i].name==='库存'){
             obj.stock= []
             obj.stock.push(this.discountTable[i])
@@ -220,6 +229,8 @@ export default {
      let _this = this
      setTimeout(function(){
        _this.outerHundred = false
+       _this.editLoading = false
+       _this.addLoading = false
      },3000)
     },
     // 查询折扣详情
@@ -247,6 +258,7 @@ export default {
             this.goodsArray = arr
             // 折扣包回显数据
             if(res.info.goods[0].findPackage){
+              console.log(res.info.goods[0].findPackage, 'kkkkkkkk')
               let disArr = []
               let object = res.info.goods[0].findPackage
               let stock = JSON.parse(object.stock)

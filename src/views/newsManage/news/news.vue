@@ -199,7 +199,7 @@ export default {
     },
     // 显示详情页
     handleDetail(row) {
-      // console.log(row, 'ooooooo')
+      console.log(row, 'ooooooo')
       this.showDetail = true
       this.detailtObject = row
     },

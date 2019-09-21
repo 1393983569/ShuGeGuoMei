@@ -94,7 +94,7 @@
             @click="handleShelf(scope.row)"
           >上架</el-button>
           <el-button
-            v-else-if="buttonList.includes('操作')&&(scope.row.isShelf === 0||!scope.row.isShelf)"
+            v-else-if="buttonList.includes('操作')&&scope.row.isShelf === 0"
             size="mini"
             type="down"
             @click="handleShelf(scope.row)"
@@ -103,8 +103,8 @@
             v-else
             disabled
             size="mini"
-            type="success"
-          >{{ titleShelf = scope.row.isShelf === 1? '上架':'下架' }}</el-button>
+            type="info"
+          >{{scope.row.isShelf === 1? '上架':'下架' }}</el-button>
           <el-button
             v-if="buttonList.includes('操作')"
             size="mini"
@@ -263,12 +263,12 @@ export default {
     handleShelf(row) {
       this.id = row.id
       this.showShelf = true
-      if (row.is_shelf) {
-        this.titleShelf = '上架'
+      if (row.isShelf === 0) {
+        // this.titleShelf = '上架'
         this.isShelf = 1
-      } else {
-        this.titleShelf = '下架'
-        this.isShelf = '0'
+      } else if(row.isShelf === 1) {
+        // this.titleShelf = '下架'
+        this.isShelf = 0
       }
       console.log(row, 'ggggg')
     },

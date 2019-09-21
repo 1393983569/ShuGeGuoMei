@@ -179,7 +179,7 @@ export default {
       orderSubDetail(this.childrenNo).then(res => {
         console.log(res, 'xiangqing....')
         this.childrenObject = res.info[0]
-        this.type = this.childrenObject.type
+        this.type = this.childrenObject.status
         this.orderDetailCateList = this.handleClassify(this.childrenObject.subOrderDetailList)
         this.temNum = this.HnaldeTotal(this.childrenObject.subOrderDetailList)
         this.providerDomain = this.childrenObject.providerDomain

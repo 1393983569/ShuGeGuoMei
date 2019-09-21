@@ -100,14 +100,28 @@ export default {
       pageNum:1,
       total:0,
       id:'',
-
+      discountPackageId:'',
+      buttonList:[],
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+    })
   },
   mounted(){
     this.getDiscount()
     this.getAllShop()
   },
   methods:{
+    getButton(list, name) {
+      list.forEach(item => {
+        if(item.name === name){
+          console.log(item.checkList, 'jjjjj')
+          this.buttonList = item.checkList
+        }
+      })
+    },
     handleSizeChange(e){
       this.pageSize=  e
     },
@@ -168,10 +182,11 @@ export default {
     discountDelete(row){
       this.showDelete = true
       this.id = row.id
+      this.discountPackageId = row.goods[0].discountPackageId
     },
     // 确认删除
     deleteAdConfirm(){
-      deleteDiscount(this.id).then(res => {
+      deleteDiscount(this.id, this.discountPackageId).then(res => {
         if(res.status === 1){
           this.$message.success('删除折扣包成功！')
           this.showDelete = false

@@ -56,11 +56,11 @@
             <el-table-column prop="unit" label="单位"/>
           </el-table>
     </p>
-    <p>资质照片：<img :src="providerObj.qualificationPics" /></p>
+    <p>资质照片：<img :src="providerObj.qualificationPics"  style="width:300px;"/></p>
     <div>
       评分：
-      <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible" v-if="buttonList.includes('操作')">去评分</el-button>
-      <el-button style="margin-left:20px;" size="mini" type="success" v-else disabled>去评分</el-button>
+      <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
+      <!-- <el-button style="margin-left:20px;" size="mini" type="success" v-else disabled>去评分</el-button> -->
       <gradeDetail :grade="gradeDetail"></gradeDetail>
     </div>
     <!-- 评分弹框 -->

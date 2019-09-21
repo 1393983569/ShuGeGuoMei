@@ -30,6 +30,7 @@ export default {
       addSystemMsg(this.content).then(res => {
         if(res.status === 1){
           this.$message.success('保存成功！')
+          this.$router.back()
         }else{
           this.$message.error('保存失败！')
         }

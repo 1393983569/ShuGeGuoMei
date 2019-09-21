@@ -230,7 +230,6 @@ export default {
           sums[index] = ''
         }
       })
-      // console.log(sums, 'sums....')
       return sums
     }
   }

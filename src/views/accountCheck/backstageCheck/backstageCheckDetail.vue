@@ -146,7 +146,7 @@ export default {
           this.orderNo = arr.orderNo
           this.orderDate = arr.createTime
           this.shopName = arr.shopDomain.name
-          this.type = arr.type
+          this.type = arr.status
           this.status = arr.status
           this.amount = arr.amount
           this.orderDetailList = arr.orderDetailList

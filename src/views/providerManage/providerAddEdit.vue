@@ -119,7 +119,7 @@
         </div>
       </el-form-item>
     </el-form>
-    <grade @getCloseState="getCloseState" @gradeObject="gradeObject" :showState ="showState" :provider-id="providerId" :admin-id="adminId"></grade>
+    <grade @getCloseState="getCloseState" :gradeObject="gradeObject" :showState ="showState" :provider-id="providerId" :admin-id="adminId"></grade>
   </div>
 </template>
 <script>
@@ -209,9 +209,9 @@ export default {
         area: [
           { required: true, message: '请输入面积', trigger: 'blur' },
         ],
-        shopObject: [
-          { required: true, message: '请输入面积', trigger: 'blur' },
-        ]
+        // shopObject: [
+        //   { required: true, message: '请输入面积', trigger: 'blur' },
+        // ]
       },
       apiUrl: '',
       id: '',
@@ -251,9 +251,7 @@ export default {
     this.ruleForm.shops = []
   },
   methods: {
-    gradeObject(e){
-      this.grades = e
-    },
+
     dialogVisible(){
       this.showState = true
       this.returnScore()
@@ -362,6 +360,7 @@ export default {
             this.checkGoodsList.push(goods)
           })
           this.returnScore()
+          this.gradeObject = this.grades
           setTimeout(() =>{
             this.handleToggles(this.providerGoodsList, this.goodsList)
           }, 2000)
@@ -376,6 +375,8 @@ export default {
     },
     // 评分
     returnScore(){
+      this.grade.providerId = this.providerId
+      this.grade.adminId  = this.adminId
       this.grade.qualification=this.ruleForm.qualificationScore
       this.grade.price=this.ruleForm.priceScore
       this.grade.quality=this.ruleForm.qualityScore

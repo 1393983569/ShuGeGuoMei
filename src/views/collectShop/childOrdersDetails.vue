@@ -1,8 +1,10 @@
 <template>
   <div class="box-margin">
     <HeadButton v-if="childrenObject.status !== 2">
-      <el-button type="primary" style=" margin-left: 10px" @click="sendOrders">派单</el-button>
-      <el-button type="danger" @click="deleteOrder">删除</el-button>
+      <span v-if="status===0">
+        <el-button type="primary" style=" margin-left: 10px" @click="sendOrders">派单</el-button>
+        <el-button type="danger" @click="deleteOrder">删除</el-button>
+      </span>
     </HeadButton>
     <div>子订单编号：{{childrenObject.suborderNo}}</div>
     <div>
@@ -59,7 +61,7 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="total">
+          <div class="total" v-if="temNum">
             <div>订单总金额：</div>
             <div class="rightItem">￥{{temNum}}</div>
           </div>
@@ -67,35 +69,43 @@
       </el-row>
     </div>
     <div>订单状态：
-      <span v-if="type ===0">未派单</span>
-      <span v-else-if="type===1">已派单</span>
-      <span v-else-if="type===2">已收货b</span>
+      <span v-if="status ===0">未派单</span>
+      <span v-else-if="status===1">已派单</span>
+      <span v-else-if="status===2">已收货</span>
       <span v-else>暂无状态</span>
     </div>
+    <hintSend v-model="showSend" title="派单确定" @confirm="confirmSend" />
+    <hint v-model="showDelete" title="删除子订单" text="是否删除该订单？" @confirm="confirmDelete" />
   </div>
 </template>
 
 <script>
 import { sumList  } from '_u/logic'
+import hint from '@/components/Hint'
 import HeadButton from '@/components/HeadButton'
-import { orderSubDetail, enterQuantity } from '@/api/collectShop/order.js'
+import hintSend from '@/views/collectShop/hintSend.vue'
+import { orderSubDetail, enterQuantity,deleteSubOrder, updateSubOrderStatus } from '@/api/collectShop/order.js'
 export default {
   name: 'ChildOrdersDetails',
   components: {
-    HeadButton
+    HeadButton,hintSend, hint
   },
   data() {
     return {
       orderDetailCateList:[],
       temNum:0,
+      subOrderId:'',
+      showSend:false,
       dataTable:[{
         detailAmount:300
       }],
       childrenNo:'',
       childrenObject:{},
-      type:0,
+      status:0,
       providerDomain:{},
-      inputState:true
+      inputState:true,
+      showDelete:false,
+      orderId:''
     }
   },
   mounted() {
@@ -103,6 +113,7 @@ export default {
     if(JSON.stringify(this.$route.params)!=='{}'){
       var obj = this.$route.params
       this.childrenNo = obj.suborder_no
+      this.subOrderId = this.$route.params.id
     }
     this.getChildrenDtail()
   },
@@ -126,11 +137,33 @@ export default {
       })
     },
     // 派单
-    sendOrders() {},
+    sendOrders() {
+      this.showSend = true
+    },
+    confirmSend(){
+      let status = 1
+      updateSubOrderStatus(this.subOrderId,status).then(res => {
+        this.$message.success('派单成功！')
+        this.showSend = false
+        this.status = 1
+        // this.$emit('refresh')
+      }).catch(err => {
+        this.$message.error('派单失败！')
+      })
+    },
     // 删除
     deleteOrder() {
-      // 成功后返回上一级
-      this.$router.back()
+      this.showDelete = true
+    },
+    confirmDelete(){
+      deleteSubOrder(this.subOrderId, this.fatherId).then(res => {
+        this.$message.success('删除成功！')
+        this.showDelete = false
+        this.$router.back()
+        this.$emit('refresh')
+      }).catch(err=> {
+        this.$message.error('删除失败！')
+      })
     },
     // 修改入库数量
     changeAmount(id, input){
@@ -179,7 +212,8 @@ export default {
       orderSubDetail(this.childrenNo).then(res => {
         console.log(res, 'xiangqing....')
         this.childrenObject = res.info[0]
-        this.type = this.childrenObject.type
+        this.fatherId = res.info[0].orderId
+        this.status = this.childrenObject.status
         this.orderDetailCateList = this.handleClassify(this.childrenObject.subOrderDetailList)
         this.temNum = this.HnaldeTotal(this.childrenObject.subOrderDetailList)
         this.providerDomain = this.childrenObject.providerDomain

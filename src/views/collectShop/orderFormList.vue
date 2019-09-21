@@ -31,9 +31,10 @@
     <el-input
       placeholder="请输入关键词进行搜索"
       prefix-icon="el-icon-search"
+      clearable
       v-model="params" style="width:400px;" size="mini">
     </el-input>
-    <el-button size="mini" @click ="handleFind" v-if="buttonList.includes('操作')">搜索</el-button>
+    <el-button size="mini" @click ="handleFind" v-if="buttonList.includes('操作')" >搜索</el-button>
     <el-button size="mini" disabled v-else>搜索</el-button>
   </div>
   <el-table
@@ -166,7 +167,7 @@ export default {
   	})
   },
   watch:{
-    'param'(e){
+    'params'(e){
       if(!e){
         this.getOrderList()
       }
@@ -193,7 +194,10 @@ export default {
     clearOrder(){
       this.orderNo = ''
       this.status = ''
+      this.type = ''
       this.yearPro = ''
+      this.monthPro = ''
+      this.dayPro = ''
       this.type = ''
       this.getOrderList()
     },

@@ -10,7 +10,7 @@ export const addGrade = (data)=> {
   }
   return request({
     url: '/admin/addFraction',
-    method: 'POST',
+    method: 'post',
     data: params
   })
 }

@@ -62,7 +62,13 @@
         <el-button
           size="mini"
           type="primary"
+          v-if="scope.row.status===0"
           @click="sendOrders(scope.row)"
+        >派单</el-button>
+         <el-button size="mini"
+          type="info"
+          v-else
+          disabled
         >派单</el-button>
         <el-button
           size="mini"
@@ -72,7 +78,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <hint v-model="showDelete" title="删除子订单" text="是否删除该订单？" @confirm="confirmDelete" />
+<hint v-model="showDelete" title="删除子订单" text="是否删除该订单？" @confirm="confirmDelete" />
   <!-- <hint v-model="showSend" title="派单确定" text="是否派单确定？" @confirm="confirmSend" /> -->
   <hintSend v-model="showSend" title="派单确定" @confirm="confirmSend" />
 </div>

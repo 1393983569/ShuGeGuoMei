@@ -53,9 +53,9 @@ export function discountDetail(id) {
     data:params
   })
 }
-export function deleteDiscount(id) {
+export function deleteDiscount(id,discountPackageId) {
   return request({
-    url: `/admin/deleteDiscount?id=${id}`,
+    url: `/admin/deleteDiscount?id=${id}&discountPackageId=${discountPackageId}`,
     method: 'get',
   })
 }

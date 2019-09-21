@@ -77,6 +77,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
+        hidden:true,
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: '首页图表', icon: 'Cameramanagement_default', affix: true }
@@ -169,38 +170,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/shopManage',
-    name: 'shopManage',
-    component: Layout,
-    meta: {
-      roles: ['shopManage'],
-      icon: 'shopmanagement_default',
-      title: '店铺管理'
-    },
-    children: [
-      {
-        path: 'shop',
-        name: 'shop',
-        meta: {
-          roles: ['shop'],
-          icon: 'shopmanagement_default',
-          title: '店铺管理'
-        },
-        component: () => import('@/views/shopManage/shop.vue')
-      },
-      {
-        hidden: true,
-        path: 'shopDetail',
-        name: 'shopDetail',
-        meta: {
-          icon: 'dashboard',
-          title: '详情'
-        },
-        component: () => import('@/views/shopManage/shopDetail.vue')
-      }
-    ]
-  },
-  {
     path: '/newsManage',
     name: 'newsManage',
     component: Layout,
@@ -284,6 +253,38 @@ export const asyncRoutes = [
           title: '数据中心'
         },
         component: () => import('@/views/dataManage/dataCenter.vue')
+      }
+    ]
+  },
+  {
+    path: '/shopManage',
+    name: 'shopManage',
+    component: Layout,
+    meta: {
+      roles: ['shopManage'],
+      icon: 'shopmanagement_default',
+      title: '店铺管理'
+    },
+    children: [
+      {
+        path: 'shop',
+        name: 'shop',
+        meta: {
+          roles: ['shop'],
+          icon: 'shopmanagement_default',
+          title: '店铺管理'
+        },
+        component: () => import('@/views/shopManage/shop.vue')
+      },
+      {
+        hidden: true,
+        path: 'shopDetail',
+        name: 'shopDetail',
+        meta: {
+          icon: 'dashboard',
+          title: '详情'
+        },
+        component: () => import('@/views/shopManage/shopDetail.vue')
       }
     ]
   },
@@ -602,7 +603,7 @@ export const asyncRoutes = [
     meta: {
       // roles: ['admin'],
       icon: 'backgroundsystem_default',
-      title: '后台用户'
+      title: '后台系统'
     },
     children: [
       {
@@ -667,6 +668,16 @@ export const asyncRoutes = [
           title: '开通城市'
         },
         component: () => import('@/views/category/cityList')
+      },
+      {
+        path: 'caiJia',
+        name: 'caiJia',
+        meta: {
+          // roles: ['cityList'],
+          icon: 'dashboard',
+          title: '菜价市场数据'
+        },
+        component: () => import('@/views/category/caiJia')
       }
     ]
   },
