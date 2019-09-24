@@ -20,7 +20,15 @@ export const selectSysCity = (provinceId) => {
     method: 'get'
   })
 }
-
+/**
+ * 查询所有省市区
+ */
+export const selectAllData = () => {
+  return request({
+    url: `/basics/selectAllData`,
+    method: 'get'
+  })
+}
 /**
  * 查询基础数据市下的区县
  * @param cityId

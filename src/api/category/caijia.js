@@ -5,14 +5,15 @@ import request from '../../utils/request'
  */
 export const selectCaijia = (data) => {
   let params = new URLSearchParams()
-  params.append('areaId', data.areaId)
-  params.append('cityId', data.cityId)
+  if(data.areaId)params.append('areaId', data.areaId)
+  if(data.cityId)params.append('cityId', data.cityId)
   params.append('pageNum', data.pageNum)
   params.append('pageSize', data.pageSize)
-  params.append('provinceId', data.provinceId)
+  if(data.provinceId)params.append('provinceId', data.provinceId)
   return request({
     url: '/basics/queryPageMarket',
-    method: 'post'
+    method: 'post',
+    data:params
   })
 }
 /**
@@ -27,7 +28,8 @@ export const addCaijia = (data) => {
   params.append('type', data.type)
   return request({
     url: '/basics/addMarket',
-    method: 'post'
+    method: 'post',
+    data:params
   })
 }
 /**
@@ -43,14 +45,14 @@ export const editCaijia = (data) => {
   params.append('type', data.type)
   return request({
     url: '/basics/editMarket',
-    method: 'post'
+    method: 'post',
+    data:params
   })
 }
 /**
  * 删除采价
  */
 export const deleteCaijia = (id) => {
-  params.append('id', id)
   return request({
     url: `/basics/deleteMarket?id=${id}`,
     method: 'get'

@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: '蔬哥果妹',
-      logo: 'http://qiniu-sggm.sandianke.com/1564564174221.png'
+      logo: 'http://qiniu.freshergo.com/1569295819739.png'
     }
   }
 }

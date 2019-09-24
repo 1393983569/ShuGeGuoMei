@@ -46,6 +46,15 @@ const mutations = {
   },
   SET_DISCOUNTOBJECT:(state, discountObject) => {
     state.discountObject = discountObject
+  },
+  SET_MOBILE:(state, mobile) => {
+    state.mobile = mobile
+  },
+  SET_ID:(state, id) => {
+    state.id = id
+  },
+  SET_ROLENAME:(state, rolename) => {
+    state.rolename = rolename
   }
 }
 
@@ -60,6 +69,11 @@ const actions = {
         commit('SET_TOKEN', 'chengGong')
         commit('SET_NAME', data.info.name)
         // commit('SET_ROLEID', data.info.role.id)
+        commit('SET_ID', data.info.id)
+        commit('SET_MOBILE', data.info.mobile)
+        commit('SET_ROLENAME', data.info.role.name)
+        commit('SET_AVATAR', data.info.avatar)
+
         setUserId(data.info.role.id)
         setToken(data.info.token)
         resolve()

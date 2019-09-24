@@ -12,6 +12,9 @@
           <el-dropdown-item>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
+          <el-dropdown-item>
+            <span style="display:block;" @click="ownCenter">个人中心</span>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -61,6 +64,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    ownCenter(){
+      this.$router.push({name:'owner'})
     }
   }
 }

@@ -96,11 +96,19 @@ export default {
     // 年
     getYear(year){
       this.tempYear = year
+      this.month = ''
+      this.day =''
+      this.monthList = []
+      this.dayList = []
       this.setMonth()
     },
     // 月
     getMonth(month){
+      this.dayList = []
+      this.day =''
       if(month === '整年'||month===''){
+
+        this.tempMonth = ''
         this.tempDay = ''
         this.day = ''
         this.dayList = []
@@ -112,6 +120,7 @@ export default {
     },
     // 号
     getDay(day){
+      console.log('day:',day)
       if(day === '整月'||day===''){
         this.tempDay = ''
         this.handleFinalDate()

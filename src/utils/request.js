@@ -19,10 +19,10 @@ service.interceptors.request.use(
       // 让每个请求携带令牌
       // ['X-Token']是一个自定义头键
       // 请根据实际情况修改
-      console.log('token====',store.getters.token)
+      // console.log('token====',store.getters.token)
       // config.headers['X-Token'] = getToken()
     }
-    console.log(config, '请求拦截器/////')
+    // console.log(config, '请求拦截器/////')
     return config
   },
   error => {

@@ -97,7 +97,7 @@
 </template>
 
 <script>
-  import { selectSysProvince, selectSysCity, selectSysArea, addSysArea } from '@/api/category/cityList'
+  import { selectSysProvince, selectSysCity, selectSysArea, addSysArea, selectAllData } from '@/api/category/cityList'
   import Breadcrumb from '@/components/Breadcrumb'
   export default {
     name: 'cityList',
@@ -121,6 +121,9 @@
         selectCounty1: [],
         tataTable:[],
         bottonList:[],
+        totalList:[],
+        spanArr:[],
+        dataList:[],
       }
     },
     beforeRouteEnter (to, form, next) {
@@ -130,26 +133,89 @@
       })
     },
     mounted() {
-
+      this.getAllData()
     },
     methods: {
+      getAllData(){
+        selectAllData().then(res => {
+          if(res.status === 1){
+            this.getCodeList(res.info)
+            // this.totalList = res.info
+            this.spanArr = this.gteRule(this.dataList)
+          }else{
+
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+       // 得到合并规则
+      gteRule(err) {
+        let listIndex = 0
+        let listRule = []
+        err.forEach((item, index) => {
+          if (index === 0) {
+            listRule.push(1)
+            listIndex = 0
+          } else {
+            if (err[index].stairId === err[index - 1].stairId) {
+              listRule[listIndex] += 1
+              listRule.push(0)
+            } else {
+              listRule.push(1)
+              listIndex = index
+            }
+          }
+        })
+        return listRule
+      },
+      // 合并列
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0 || columnIndex === 1) {
+          const _row = this.spanArr[rowIndex]
+          const _col = _row > 0 ? 1 : 0
+          return {
+            rowspan: _row,
+            colspan: _col
+          }
+        }
+      },
+      // 展开后台返回的品类数据
+      getCodeList(arr) {
+        this.dataList = []
+        arr.forEach(item => {
+          if (item.seconds.length !== 0) {
+            item.seconds.forEach(itemx => {
+              let data = {}
+              data.stairName = item.name
+              data.stairId = item.id
+              data.childrenName = itemx.name
+              data.childrenId = itemx.id
+              data.childrenName = itemx.name
+              data.childrenCategoryOneId = itemx.categoryOneId
+              this.dataList.push(data)
+            })
+          } else {
+            let data = {}
+            data.stairName = item.name
+            data.stairId = item.id
+            this.dataList.push(data)
+          }
+        })
+      },
+      //
       getButton(list, name) {
         list.forEach(item => {
           if (item.name === name) {
             this.bottonList = item.checkList
           }
         })
-        // console.log(this.bottonList)
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 
       },
-      edit() {
-
-      },
-      removeData() {
-
-      },
+      edit() {},
+      removeData() {},
       getSelectSysProvince() {
         this.optionsProvince = []
         selectSysProvince().then(res => {

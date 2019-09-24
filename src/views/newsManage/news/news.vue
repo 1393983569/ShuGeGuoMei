@@ -166,8 +166,8 @@ export default {
       this.yearPro = ''
       this.monthPro = ''
       this.dayPro = ''
-      this.month = ''
-      this.day = ''
+      // this.month = ''
+      // this.day = ''
       this.category = ''
       this.newsType = ''
       this.getNewsList()
@@ -215,9 +215,12 @@ export default {
       console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
+        this.monthPro = ''
+        this.dayPro = ''
       }else if(dateArr.length === 3) {
         this.yearPro = dateArr[0]
         this.monthPro = dateArr[1]
+        this.dayPro = ''
       }else if(dateArr.length === 4){
         this.yearPro = dateArr[0]
         this.monthPro = dateArr[1]

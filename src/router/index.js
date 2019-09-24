@@ -85,25 +85,26 @@ export const constantRoutes = [
     ]
   },
   // {
-  //   path: '/shopManage',
-  //   name: 'shopManage',
+  //   path: '/ownerCenter',
+  //   name: 'ownerCenter',
   //   component: Layout,
   //   meta: {
-  //     roles: ['店铺管理'],
+  //     roles: ['ownerCenter'],
   //     icon: 'dashboard',
-  //     title: '店铺管理'
+  //     title: '个人中心'
   //   },
   //   // component: Main,
   //   children: [
   //     {
-  //       path: 'shop',
-  //       name: 'shop',
+  //       path: 'ownerCenter',
+  //       name: 'ownerCenter',
+  //       hidden:true,
   //       meta: {
-  //         roles: ['editor'],
+  //         roles: ['ownerCenter'],
   //         icon: 'dashboard',
-  //         title: '店铺'
+  //         title: '个人中心'
   //       },
-  //       component: () => import('@/views/shopManage/shop.vue')
+  //       component: () => import('@/views/ownerCenter/owner.vue')
   //     }
   //   ]
   // },
@@ -166,6 +167,29 @@ export const asyncRoutes = [
           title: '角色权限',
           roles: ['RolePermission']
         }
+      }
+    ]
+  },
+  {
+    path: '/ownerCenter',
+    name: 'ownerCenter',
+    hidden:true,
+    component: Layout,
+    meta: {
+      // roles: ['ownerCenter'],
+      icon: 'messagecenter_default',
+      title: '个人中心'
+    },
+    children: [
+      {
+        path: 'owner',
+        name: 'owner',
+        meta: {
+          // roles: ['owner'],
+          icon: 'messagecenter_default',
+          title: '个人中心'
+        },
+        component: () => import('@/views/ownerCenter/owner.vue')
       }
     ]
   },

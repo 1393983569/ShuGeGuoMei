@@ -90,9 +90,10 @@ export default {
     beforeUpload(file) {
       // const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 1;
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!');
-      // }
+      if (!file.type) {
+        this.$message.error('只能上传图片！');
+        return
+      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 1MB!')
         return

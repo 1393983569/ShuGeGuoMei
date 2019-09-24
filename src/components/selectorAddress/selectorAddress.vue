@@ -50,6 +50,8 @@ export default {
       if (e) {
         this.provinceId = e
         this.$emit('getProvince', this.provinceId)
+        this.cityId = ''
+        this.countyId = ''
         getCity(this.provinceId).then(res => {
           if (res.info.length > 0) {
             // console.log(res.info, 'city;;;;')
@@ -66,12 +68,14 @@ export default {
         this.cityId = ''
         this.countyId = ''
         this.cityList = []
+        this.countyList = []
       }
     },
     'cityId'(e) {
       console.log(e)
       // return
       if (e) {
+        this.countyId = ''
         this.cityId = e
         this.$emit('getCity', this.cityId)
         getArea(this.cityId).then(res => {
