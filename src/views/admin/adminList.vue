@@ -1,11 +1,14 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button @click="addData">新建</el-button>
-      <el-button>角色设置</el-button>
+      <el-button @click="addData" type="primary" v-if="bottonList.includes('操作')">新建</el-button>
+      <el-button @click="addData" type="primary" v-else disabled>新建</el-button>
+      <!-- <el-button type="">角色设置</el-button> -->
     </breadcrumb>
     <el-dialog
       title="编辑"
+      :modal="true"
+      :close-on-click-modal="false"
       :visible.sync="dialogVisible"
       width="50%"
     >
@@ -79,12 +82,16 @@
             size="mini"
             type="primary"
             @click="editData(scope.$index, scope.row)"
+            v-if="bottonList.includes('操作')"
           >编辑</el-button>
+          <el-button size="mini" type="primary" v-else disabled>编辑</el-button>
           <el-button
             size="mini"
             type="danger"
             @click="removeData(scope.$index, scope.row)"
+            v-if="bottonList.includes('操作')"
           >删除</el-button>
+          <el-button size="mini" type="danger" v-else disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -119,8 +126,15 @@ export default {
       listIndex: '',
       listRow: {},
       roleList: [],
-      loading: false
+      loading: false,
+      bottonList:[],
     }
+  },
+  beforeRouteEnter (to, form, next) {
+   console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+  	})
   },
   mounted() {
     // 初始化
@@ -128,6 +142,14 @@ export default {
     this.getRoles()
   },
   methods: {
+    getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      // console.log(this.bottonList)
+    },
     getAdminList() {
       this.dataList = []
       selectPageAdmin(1).then(res => {

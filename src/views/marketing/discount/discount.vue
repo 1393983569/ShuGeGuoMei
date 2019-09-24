@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" @click="addDiscount">新建</el-button>
+      <el-button type="primary" @click="addDiscount" v-if="buttonList.includes('操作')">新建</el-button>
+      <el-button type="primary" v-else disabled>新建</el-button>
     </breadcrumb>
     <div style="display:flex;flex-redirection:row;margin:10px;">
       <div>
@@ -23,8 +24,10 @@
         </el-select>
       </div>
       <div style="position:absolute;right:0px;">
-        <el-button type="primaryX" size="mini" @click="handleSearch">筛选</el-button>
-        <el-button type="danger" size="mini" @click="handleClear">清除</el-button>
+        <el-button type="primaryX" size="mini" @click="handleSearch" v-if="buttonList.includes('查看')||buttonList.includes('操作')">筛选</el-button>
+        <el-button type="primaryX" size="mini" v-else disabled>筛选</el-button>
+        <el-button type="danger" size="mini" @click="handleClear" v-if="buttonList.includes('查看')||buttonList.includes('操作')">清除</el-button>
+        <el-button type="danger" size="mini" v-else disabled>清除</el-button>
       </div>
     </div>
     <el-table :data="dataList">
@@ -43,11 +46,18 @@
       </el-table-column>
       <el-table-column label="操作" :width="400">
         <template slot-scope="scope">
-          <el-button size="mini" type="warning" @click="discountDetail(scope.row)">查看详情</el-button>
-          <el-button size="mini" type="up" @click="discountStop(scope.row)" v-if="scope.row.status === 0">启用</el-button>
-          <el-button  size="mini" type="down" @click="discountStop(scope.row)" v-if="scope.row.status === 1">停用</el-button>
-          <el-button size="mini" type="primary" @click="discountEdit(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="discountDelete(scope.row)">删除</el-button>
+          <el-button size="mini" type="warning" @click="discountDetail(scope.row)" v-if="buttonList.includes('操作')">查看详情</el-button>
+          <el-button size="mini" type="warning" @click="discountDetail(scope.row)" v-else disabled>查看详情</el-button>
+          <!-- 启用、停用 -->
+          <el-button size="mini" type="up" @click="discountStop(scope.row)" v-if="scope.row.status === 0&&buttonList.includes('操作')">启用</el-button>
+          <el-button  size="mini" type="down" @click="discountStop(scope.row)" v-else-if="scope.row.status === 1&&buttonList.includes('操作')">停用</el-button>
+          <el-button  size="mini" type="down" v-else disabled>停用</el-button>
+          <!-- 编辑 -->
+          <el-button size="mini" type="primary" v-if="buttonList.includes('操作')" @click="discountEdit(scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" v-else disabled>编辑</el-button>
+          <!-- 删除 -->
+          <el-button size="mini" type="danger"  v-if="buttonList.includes('操作')" @click="discountDelete(scope.row)">删除</el-button>
+          <el-button size="mini" type="danger"  v-else disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>

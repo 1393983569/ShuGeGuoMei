@@ -2,15 +2,15 @@
   <div style="display:inline;">
     <!-- <p>{{province1Id, city1Id, county1Id}}</p> -->
     <span class="font-weight">省:</span>
-    <el-select v-model="provinceId" style="width:90px;" size="mini">
+    <el-select v-model="provinceId" style="width:90px;" size="mini" clearable>
       <el-option v-for="item in provinceList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span class="font-weight">市:</span>
-    <el-select v-model="cityId" style="width:90px;"  size="mini">
+    <el-select v-model="cityId" style="width:90px;"  size="mini" clearable>
       <el-option v-for="item in cityList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span class="font-weight">区/县:</span>
-    <el-select v-model="countyId" style="width:90px;"  size="mini">
+    <el-select v-model="countyId" style="width:90px;"  size="mini" clearable>
       <el-option v-for="item in countyList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
   </div>
@@ -62,6 +62,10 @@ export default {
           console.log(err)
           this.$message.error('查询城市出错！')
         })
+      }else{
+        this.cityId = ''
+        this.countyId= ''
+        this.cityList = []
       }
     },
     'cityId'(e) {
@@ -82,6 +86,9 @@ export default {
           console.log(err)
           this.$message.error('查询区县出错！')
         })
+      }else{
+        this.countyId= ''
+        this.countyList= []
       }
     },
     'countyId'(e) {

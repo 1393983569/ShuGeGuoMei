@@ -96,6 +96,14 @@ export default {
     // console.log(this.bottonList, '@@@@@@@@@@@@@@@@@@@@@@@', this)
   },
   methods: {
+    getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      // console.log(this.bottonList)
+    },
     // 分页
     handleSizeChange(e) {
       this.pageSize = e
@@ -206,14 +214,7 @@ export default {
       })
     },
 
-    getButton(list, name) {
-      list.forEach(item => {
-        if (item.name === name) {
-          this.bottonList = item.checkList
-        }
-      })
-      console.log(this.bottonList)
-    },
+
     // 上架广告不可编辑提示
     handleEditShelf() {
       this.$alert('该广告已上架，不可编辑!', '提示', {

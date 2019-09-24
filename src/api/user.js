@@ -8,7 +8,7 @@ export function login(data) {
   return request({
     url: '/basics/login',
     method: 'post',
-    params
+    data: params
   })
 }
 

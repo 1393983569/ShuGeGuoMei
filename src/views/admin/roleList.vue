@@ -19,11 +19,14 @@
         <el-button
           size="mini"
           type="warning"
-          @click="viewDetails(scope.$index, scope.row)">查看权限</el-button>
+          @click="viewDetails(scope.$index, scope.row)" v-if="bottonList.includes('操作'||'查看')">查看权限</el-button>
+        <el-button v-else disabled size="mini" type="warning">查看权限</el-button>
         <el-button
           size="mini"
           type="primary"
+          v-if="bottonList.includes('操作')"
           @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+        <el-button size="mini" type="primary" v-else disabled>编辑</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -35,13 +38,28 @@
     name: 'jurisdiction',
     data () {
       return{
-        tableData: []
+        tableData: [],
+        bottonList:[],
       }
+    },
+    beforeRouteEnter (to, form, next) {
+      console.log(to)
+      next(mv => {
+        mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+      })
     },
     mounted() {
       this.getList()
     },
     methods: {
+      getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      // console.log(this.bottonList)
+    },
       getList() {
         this.tableData = []
         selectAfter().then(res => {

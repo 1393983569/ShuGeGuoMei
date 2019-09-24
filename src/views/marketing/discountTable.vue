@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
-    <el-table :data="tableData" style="width:80%;" border center show-summary :summary-method="getSummaries">
-      <el-table-column label="序号" prop="index" width="80"/>
+    <el-table :data="tableData" style="width:70%;" border center show-summary :summary-method="getSummaries">
+      <el-table-column label="序号" prop="index" width="60"/>
       <el-table-column label=" " prop="name"/>
       <el-table-column label=" " prop="num" width="80"/>
       <el-table-column label="C" prop="c"/>
@@ -305,7 +305,7 @@ p{
 }
 .header{
   height: 40px;
-  width: 80%;
+  width: 70%;
   background-color: #f0f2f3;
   border-bottom:1px solid #dfe6ec;
   color: #909399;

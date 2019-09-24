@@ -675,7 +675,7 @@ export const asyncRoutes = [
         meta: {
           // roles: ['cityList'],
           icon: 'dashboard',
-          title: '菜价市场数据'
+          title: '采价市场数据'
         },
         component: () => import('@/views/category/caiJia')
       }

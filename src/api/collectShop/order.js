@@ -35,7 +35,7 @@ export const orderSubDetail = (orderNo) => {
   // const params = new URLSearchParams()
   // params.append('orderNo', orderNo)
   return request({
-    url: `/app/selectSubOrder?suborderNo=${orderNo}`,
+    url: `/admin/selectSubOrder?suborderNo=${orderNo}`,
     // data:params,
     method: 'get'
   })
@@ -60,7 +60,7 @@ export const separateBill = (providerId, list,orderId, orderNo, money,shopId) =>
  */
 export const enterQuantity = (id, inputQuantity) => {
   return request({
-    url: `/app/updateInputQuantity?id=${id}&inputQuantity=${inputQuantity}`,
+    url: `/admin/updateInputQuantity?id=${id}&inputQuantity=${inputQuantity}`,
     method: 'get'
   })
 }
@@ -69,7 +69,7 @@ export const enterQuantity = (id, inputQuantity) => {
  */
 export const deleteSubOrder = (id,orderId) => {
   return request({
-    url: `/app/deleteSubOrder?id=${id}&orderId=${orderId}`,
+    url: `/admin/deleteSubOrder?id=${id}&orderId=${orderId}`,
     method: 'get'
   })
 }
@@ -78,7 +78,7 @@ export const deleteSubOrder = (id,orderId) => {
  */
 export const updateSubOrderStatus = (id, status) => {
   return request({
-    url: `/app/updateSubOrderStatus?id=${id}&status=${status}`,
+    url: `/admin/updateSubOrderStatus?id=${id}&status=${status}`,
     method: 'get'
   })
 }

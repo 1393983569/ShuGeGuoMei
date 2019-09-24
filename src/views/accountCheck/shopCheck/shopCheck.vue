@@ -129,7 +129,7 @@ export default {
       shopList:[],
       shop:'',
       shopName:'',
-      shopId:1,
+      shopId:'',
       tableData:[],
       exportDialog:false,
       total:0,
@@ -169,7 +169,7 @@ export default {
       this.year = ''
       this.month = ''
       this.shop=''
-      this.shopId=1
+      this.shopId=''
       this.shopName = ''
       this.purchaseAmount = [0]
       this.getOrderList()

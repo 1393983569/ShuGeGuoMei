@@ -112,7 +112,7 @@ export default {
         addArray.category = this.newsForm.category + ''
         addArray.content = this.newsForm.content
         addArray.deleteStatus = this.newsForm.deleteStatus + ''
-        addArray.thumbnail = this.newsForm.thumbnail
+        // addArray.thumbnail = this.newsForm.thumbnail
         console.log(this.newsForm.shopIds, 'lhdhdufugfhngnguhih')
         let shopIdList = []
         let shopJson = []

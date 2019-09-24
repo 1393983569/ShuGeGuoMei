@@ -137,7 +137,7 @@ export default {
       shopList:[],
       shop:'',
       shopName:'',
-      shopId:1,
+      shopId:'',
       // 列表数据
       tableData:[],
       exportDialog:false,
@@ -231,7 +231,7 @@ export default {
       this.month = ''
       this.year = ''
       this.shop=''
-      this.shopId=1
+      this.shopId=''
       this.shopName = ''
       this.purchaseAmount = [0]
       this.getOrderList()

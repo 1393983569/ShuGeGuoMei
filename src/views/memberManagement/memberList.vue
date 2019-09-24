@@ -1,7 +1,7 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button @click="explainHandle">会员系统说明</el-button>
+      <el-button @click="explainHandle" type="primary">会员系统说明</el-button>
     </breadcrumb>
     <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">
       店铺：
@@ -32,8 +32,8 @@
         </el-option>
       </el-select>
       <div style="position:absolute;right:4px;">
-        <el-button size="mini" tpe="primary" @click="searchVip">筛选</el-button>
-        <el-button size="mini" type="danger" @click="clearVip">清除</el-button>
+        <el-button size="mini" type="primaryX" @click="searchVip">筛选</el-button>
+        <el-button size="mini" type="info" @click="clearVip">清除</el-button>
       </div>
     </div>
     <div style="margin-top:5px;margin-bottom:10px;">
@@ -84,12 +84,16 @@
             size="mini"
             type="warning"
             @click="viewDetails(scope.$index, scope.row)"
+            v-if="bottonList.includes('操作')"
           >查看详情</el-button>
+          <el-button size="mini" type="warning">查看详情</el-button>
           <el-button
             size="mini"
             type="danger"
+            v-if="bottonList.includes('操作')"
             @click="deleteVipHandle(scope.row)"
           >删除</el-button>
+          <el-button size="mini" type="danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -127,6 +131,7 @@ export default {
   },
   data() {
     return {
+      bottonList:[],
       // 时间选择
       yearPro:'',
       monthPro:'',
@@ -175,6 +180,12 @@ export default {
       condition:''
     }
   },
+  beforeRouteEnter (to, form, next) {
+   console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+  	})
+  },
   watch:{
     'param'(e){
       if(e){
@@ -192,6 +203,14 @@ export default {
 
   },
   methods: {
+    getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      console.log(this.bottonList)
+    },
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')

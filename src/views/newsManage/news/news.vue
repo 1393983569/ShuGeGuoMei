@@ -165,6 +165,7 @@ export default {
     handleClear(){
       this.yearPro = ''
       this.monthPro = ''
+      this.dayPro = ''
       this.month = ''
       this.day = ''
       this.category = ''

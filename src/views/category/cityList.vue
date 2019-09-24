@@ -1,11 +1,47 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" @click="showProvince">新建省</el-button>
-      <el-button type="primary" @click="showCity">新建市</el-button>
-      <el-button type="primary" @click="showCounty">新建区/县</el-button>
+      <!-- <el-button type="primary" @click="showProvince">新建省</el-button> -->
+      <!-- <el-button type="primary" @click="showCity">新建市</el-button> -->
+      <el-button type="primary" @click="showCounty" v-if="bottonList.includes('操作')">新建区/县</el-button>
+      <el-button type="primary" v-else disabled>新建区/县</el-button>
     </breadcrumb>
     <el-dialog
+      title="新建区/县"
+      :visible.sync="dialogCounty"
+      modal
+      :close-on-click-modal="false"
+      width="40%">
+      <el-select @change="changeProvince" v-model="selectProvince3" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
+        <el-option
+          v-for="item in optionsProvince"
+          :key="`${item.id}_o`"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <el-select @change="changeCity" v-model="selectCity2" placeholder="请选择市" style="margin-bottom: 5px; width: 100%">
+        <el-option
+          v-for="item in optionsCity"
+          :key="`${item.id}_o`"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <el-select multiple v-model="selectCounty1" placeholder="请选择市" style="margin-bottom: 5px; width: 100%">
+        <el-option
+          v-for="item in optionsCounty"
+          :key="`${item.id}_o`"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogCounty = false">取 消</el-button>
+        <el-button type="primary" @click="addChildren('区', selectProvince3, selectCity2, selectCounty1)">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- <el-dialog
       title="新建省"
       :visible.sync="dialogProvince"
       width="40%">
@@ -46,117 +82,17 @@
         <el-button @click="dialogChildren = false">取 消</el-button>
         <el-button type="primary" @click="addChildren('市', selectProvince2, selectCity1)">确 定</el-button>
       </span>
-    </el-dialog>
-    <el-dialog
-      title="新建区/县"
-      :visible.sync="dialogCounty"
-      width="40%">
-      <el-select @change="changeProvince" v-model="selectProvince3" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
-        <el-option
-          v-for="item in optionsProvince"
-          :key="`${item.id}_o`"
-          :label="item.name"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      <el-select @change="changeCity" v-model="selectCity2" placeholder="请选择市" style="margin-bottom: 5px; width: 100%">
-        <el-option
-          v-for="item in optionsCity"
-          :key="`${item.id}_o`"
-          :label="item.name"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      <el-select multiple v-model="selectCounty1" placeholder="请选择市" style="margin-bottom: 5px; width: 100%">
-        <el-option
-          v-for="item in optionsCounty"
-          :key="`${item.id}_o`"
-          :label="item.name"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogChildren = false">取 消</el-button>
-        <el-button type="primary" @click="addChildren('区', selectProvince3, selectCity2, selectCounty1)">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!--<el-table-->
-      <!--:data="tableData"-->
-      <!--:span-method="objectSpanMethod"-->
-      <!--border-->
-      <!--style="width: 100%; margin-top: 20px">-->
-      <!--<el-table-column-->
-        <!--prop="name"-->
-        <!--label="省">-->
-        <!--<template slot-scope="scope" v-if="scope.row.childrenId">-->
-          <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="primary"-->
-            <!--@click="edit(scope.$index, scope.row, '一级')"-->
-          <!--&gt;编辑</el-button>-->
-          <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="danger"-->
-            <!--@click="removeData(scope.$index, scope.row, '一级')"-->
-          <!--&gt;删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--prop="amount1"-->
-        <!--label="市">-->
-        <!--<template slot-scope="scope" v-if="scope.row.childrenId">-->
-          <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="primary"-->
-            <!--@click="edit(scope.$index, scope.row, '二级')"-->
-          <!--&gt;编辑</el-button>-->
-          <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="danger"-->
-            <!--@click="removeData(scope.$index, scope.row, '二级')"-->
-          <!--&gt;删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--prop="amount2"-->
-        <!--label="区/县">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="操作"-->
-        <!--width="280"-->
-      <!--&gt;-->
-        <!--<template slot-scope="scope" v-if="scope.row.childrenId">-->
-          <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="primary"-->
-            <!--@click="edit(scope.$index, scope.row, '三级')"-->
-          <!--&gt;编辑</el-button>-->
-          <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="danger"-->
-            <!--@click="removeData(scope.$index, scope.row, '三级')"-->
-          <!--&gt;删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-    <!--</el-table>-->
-    <!--<el-dialog-->
-      <!--title="添加二级品类"-->
-      <!--:visible.sync="dialogChildren"-->
-      <!--width="40%">-->
-      <!--<el-select v-for="" v-model="optionValue" placeholder="请选择一级品类" style="margin-bottom: 5px; width: 100%">-->
-        <!--<el-option-->
-          <!--v-for="item in optionsStair"-->
-          <!--:key="`${item.id}_o`"-->
-          <!--:label="item.name"-->
-          <!--:value="item.id">-->
-        <!--</el-option>-->
-      <!--</el-select>-->
-      <!--<el-button @click="addChildrenInput">+</el-button>-->
-      <!--<span slot="footer" class="dialog-footer">-->
-        <!--<el-button @click="dialogChildren = false">取 消</el-button>-->
-        <!--<el-button type="primary" @click="addChildren">确 定</el-button>-->
-      <!--</span>-->
-    <!--</el-dialog>-->
+    </el-dialog> -->
+    <el-table :data="tataTable" :span-method="objectSpanMethod"
+      stripe
+      border
+      style="width:70%;"
+      >
+      <el-table-column prop="" label="省"/>
+      <el-table-column prop="" label="市"/>
+      <el-table-column prop="" label="区/县"/>
+      <el-table-column prop="" label="操作"/>
+    </el-table>
   </div>
 </template>
 
@@ -182,13 +118,29 @@
         selectProvince3: '',
         selectCity1: [],
         selectCity2: '',
-        selectCounty1: []
+        selectCounty1: [],
+        tataTable:[],
+        bottonList:[],
       }
+    },
+    beforeRouteEnter (to, form, next) {
+    console.log(to)
+      next(mv => {
+        mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+      })
     },
     mounted() {
 
     },
     methods: {
+      getButton(list, name) {
+        list.forEach(item => {
+          if (item.name === name) {
+            this.bottonList = item.checkList
+          }
+        })
+        // console.log(this.bottonList)
+      },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 
       },

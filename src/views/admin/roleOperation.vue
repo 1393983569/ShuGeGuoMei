@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button v-if="showButton" type="primary" @click="getUserRole">确定</el-button>
+      <el-button v-if="showButton&&bottonList.includes('操作')" type="primary" @click="getUserRole">确定</el-button>
+      <el-button v-else-if="showButton&&!bottonList.includes('操作')" type="primary" disabled>确定</el-button>
     </breadcrumb>
     <el-table
       :data="tableData"
@@ -44,8 +45,15 @@
         tableData: [],
         showButton: false,
         userId: '',
-        operationState: ''
+        operationState: '',
+        bottonList:[]
       }
+    },
+    beforeRouteEnter (to, form, next) {
+    console.log(to)
+      next(mv => {
+        mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+      })
     },
     mounted() {
 
@@ -61,9 +69,18 @@
           mv.showButton = true
         }
         mv.getUserListRole()
+        mv.getButton(mv.$store.getters.buttonRoleList, to.name)
       })
     },
     methods: {
+      getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      // console.log(this.bottonList)
+    },
       getUserListRole() {
         // getAllMenu(this.userId).then(res => {
         getAllMenu(this.$store.state.user.roleId).then(res => {

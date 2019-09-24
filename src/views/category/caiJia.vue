@@ -13,11 +13,11 @@
       :header-cell-style="{   }"
       center
       stripe>
-      <el-table-column prop="" label="名称"/>
+      <el-table-column prop="name" label="名称"/>
       <el-table-column  prop="" label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" @click="editCaijiaHandle">编辑</el-button>
-          <el-button type="danger" @click="deleteCaijiaHandle">删除</el-button>
+          <el-button type="primary" size="mini" @click="editCaijiaHandle(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="deleteCaijiaHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -29,25 +29,36 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-      <el-dialog
-        :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="handleClose">
-          <p>市场名称：<el-input style="width:200px;" placeholder="请输入名称"/></p>
-          <p>
-            市场类型：<el-select v-model="shichang" style="width:200px;">
-                      <el-option v-for="item in shichangList" :key="item.id" :value="item.id" :label="item.name" />
-                    </el-select>
-          </p>
-          <p>
-            <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
-          </p>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addhandle">确 定</el-button>
-        </span>
-      </el-dialog>
-      <hint title="删除采价" v-model="showDelete" text="是否删除蔡家市场？" @confirm="deleteAdConfirm" />
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="550px"
+      :title="caijiaTitle"
+      >
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="市场名称：" prop="name">
+          <el-input v-model="ruleForm.name" style="width:40%;" placeholder="请输入名称"/>
+        </el-form-item>
+        <el-form-item label="市场类型：" prop="shichang">
+          <el-select v-model="ruleForm.type" style="width:40%;">
+            <el-option v-for="item in shichangList" :key="item.id" :value="item.id" :label="item.name" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="区域选择：" prop="areaId">
+           <selector-address :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
+        </el-form-item>
+        <el-form-item style="margin-right:10px;">
+          <div style="width:90%;text-align: right;" v-if="eidtState=== '新建'">
+            <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+            <el-button @click="resetForm('ruleForm')">取消</el-button>
+          </div>
+          <div style="width:90%;text-align: right;" v-else-if="eidtState=== '编辑'">
+            <el-button type="primary" @click="editSubmitForm('ruleForm')">保存</el-button>
+            <el-button @click="resetForm('ruleForm')">取消</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <hint title="删除采价" v-model="showDelete" text="是否删除蔡家市场？" @confirm="deleteAdConfirm" />
   </div>
 </template>
 <script>
@@ -59,7 +70,21 @@ import {selectCaijia, addCaijia, editCaijia, deleteCaijia} from '@/api/category/
 export default {
   data(){
     return{
-      tableData:[],
+      tableData:[{}],
+      ruleForm:{
+        name:'',
+        type:'',
+        cityId: '',
+        provinceId: '',
+        areaId: '',
+      },
+      rules: {
+          name: [{ required: true, message: '请输采价市场名称', trigger: 'blur' }],
+          type: [{ required: true, message: '请选择市场类型', trigger: 'blur' }],
+          cityId: [{ required: true, message: '请选择省、市、区/县', trigger: 'blur' }],
+          provinceId: [{ required: true, message: '请选择省、市、区/县', trigger: 'blur' }],
+          areaId: [{ required: true, message: '请选择省、市、区/县', trigger: 'blur' }],
+      },
       total: 0,
       pagesize: 10,
       pageNum: 1,
@@ -85,10 +110,16 @@ export default {
           name:'早市'
         },
       ],
+      caijiaTitle:'',
+      eidtState:''
     }
   },
   components:{selectorAddress, Breadcrumb, hint, caijiaAdd},
+  mounted(){
+    this.getCaijiaList()
+  },
   methods:{
+    addhandle(){},
     getCaijiaList(){
       let data = {}
       data.pageSize = this.pageSize
@@ -96,7 +127,16 @@ export default {
       data.provinceId = this.provinceId
       data.cityId = this.cityId
       data.areaId = this.areaId
-      selectCaijia(data).then(res=> {}).catch(err => {})
+      selectCaijia(data).then(res=> {
+        if(res.status === 1){
+          this.total = res.info.totalrecord
+          if(res.info.records.length>0){
+            this.tableData= res.info.records
+          }else{
+            this.$message.info('暂无数据！')
+          }
+        }
+      }).catch(err => {})
     },
     allArea(){},
      handleSizeChange(e) {
@@ -106,22 +146,65 @@ export default {
       this.pageNum = e
     },
     getProvince(id) {
-      this.provinceId = id
+      this.ruleForm.provinceId = id
     },
     getCity(id) {
-      this.cityId = id
+      this.ruleForm.cityId = id
     },
     getCounty(id) {
-      this.areaId = id
-    },
-    addCijiaHandle(){
-      this.closeState = true
+      this.ruleForm.areaId = id
     },
     deleteAdConfirm(){},
-    editCaijiaHandle(){
-      this.closeState = true
-    },
     deleteCaijiaHandle(){},
+    editCaijiaHandle(row){
+      this.eidtState ="编辑"
+      this.ruleForm = row
+      this.ruleForm.provinceId = row.provinceId.toString()
+      this.ruleForm.cityId = row.cityId.toString()
+      this.ruleForm.areaId = row.areaId.toString()
+
+      this.dialogVisible = true
+      this.caijiaTitle = '编辑'
+    },
+    addCijiaHandle(){
+      this.eidtState ="新建"
+      this.ruleForm = {}
+      this.dialogVisible = true
+      this.caijiaTitle = '新建'
+    },
+    // 编辑
+    editSubmitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    // 添加
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          addCaijia().then().catch()
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    }
   }
 }
 </script>
+<style>
+.l{
+  text-align: right;
+}
+</style>

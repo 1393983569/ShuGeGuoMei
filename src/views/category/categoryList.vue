@@ -1,8 +1,10 @@
 <template>
   <div>
     <breadcrumb>
-      <el-button type="primary" @click="dialogStair = true, stairInput = [{value: ''}]">添加一级品类</el-button>
-      <el-button type="primary" @click="dialogChildren = true, childrenInput = [{value: ''}], optionValue = ''">添加二级品类</el-button>
+      <el-button v-if="bottonList.includes('操作')" type="primary" @click="dialogStair = true, stairInput = [{value: ''}]">添加一级品类</el-button>
+      <el-button v-else type="primary" disabled>添加一级品类</el-button>
+      <el-button v-if="bottonList.includes('操作')" type="primary" @click="dialogChildren = true, childrenInput = [{value: ''}], optionValue = ''">添加二级品类</el-button>
+      <el-button v-else type="primary" disabled>添加二级品类</el-button>
     </breadcrumb>
     <el-dialog
       title="编辑一级品类"
@@ -81,13 +83,17 @@
           <el-button
             size="mini"
             type="primary"
+            v-if="bottonList.includes('操作')"
             @click="edit(scope.$index, scope.row, '一级')"
           >编辑</el-button>
+          <el-button v-else disabled size="mini" type="primary">编辑</el-button>
           <el-button
             size="mini"
             type="danger"
+            v-if="bottonList.includes('操作')"
             @click="removeData(scope.$index, scope.row, '一级')"
           >删除</el-button>
+          <el-button v-else disabled size="mini" type="danger">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -122,13 +128,17 @@
           <el-button
             size="mini"
             type="primary"
+            v-if="bottonList.includes('操作')"
             @click="edit(scope.$index, scope.row, '二级')"
           >编辑</el-button>
+          <el-button v-else disabled size="mini" type="danger">编辑</el-button>
           <el-button
             size="mini"
             type="danger"
+            v-if="bottonList.includes('操作')"
             @click="removeData(scope.$index, scope.row, '二级')"
           >删除</el-button>
+          <el-button v-else disabled size="mini" type="danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -187,14 +197,29 @@
           stairId: '',
           childrenId: '',
           childrenName: ''
-        }
+        },
+        bottonList:[],
       }
+    },
+    beforeRouteEnter (to, form, next) {
+    console.log(to)
+      next(mv => {
+        mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+      })
     },
     mounted() {
       this.getList()
       this.getStair()
     },
     methods: {
+      getButton(list, name) {
+        list.forEach(item => {
+          if (item.name === name) {
+            this.bottonList = item.checkList
+          }
+        })
+        // console.log(this.bottonList)
+      },
       getList() {
         getSecondCategory().then(res => {
           this.getCategoryList(res.info)

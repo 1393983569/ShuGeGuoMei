@@ -7,7 +7,8 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // 当跨域请求时发送cookie
-  timeout: 5000 // request timeout
+  timeout: 50000, // request timeout
+  // headers: {'Access-Control-Allow-Origin': '*'}
 })
 
 // 请求拦截器
@@ -18,9 +19,10 @@ service.interceptors.request.use(
       // 让每个请求携带令牌
       // ['X-Token']是一个自定义头键
       // 请根据实际情况修改
-      config.headers['X-Token'] = getToken()
+      console.log('token====',store.getters.token)
+      // config.headers['X-Token'] = getToken()
     }
-    // console.log(config, '***********')
+    console.log(config, '请求拦截器/////')
     return config
   },
   error => {
@@ -36,7 +38,6 @@ service.interceptors.response.use(
    * 如果您想获得http信息，例如头信息或状态信息
    * Please return  response => response
   */
-
   /**
    * 通过自定义代码确定请求状态
    * 这里只是一个例子
@@ -44,7 +45,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
     // 如果自定义代码不是1，则判断为错误。
     if (res.status !== 1) {
       Message({

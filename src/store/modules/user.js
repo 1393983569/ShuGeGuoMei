@@ -71,6 +71,7 @@ const actions = {
 
   // 获取用户信息
   getInfo({ commit, state }) {
+    console.log('获取用户信息')
     return new Promise((resolve, reject) => {
       getInfo(getUserId()).then(response => {
         try {
