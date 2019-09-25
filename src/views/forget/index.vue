@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+      <i class="el-icon-back return" @click="returnHandle"></i>
       <div class="login-input">
         <el-form-item prop="username">
           <md-input
@@ -13,10 +14,24 @@
             tabindex="1"
             auto-complete="on"
           >
-            手机号
+            请输入手机号
           </md-input>
         </el-form-item>
-
+        <el-form-item prop="username">
+          <md-input
+            ref="username"
+            v-model="loginForm.mobile"
+            placeholder="Username"
+            name="username"
+            icon="密码"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          >
+            请输入验证码el-icon-lock
+            <el-button slot="append">发送验证码</el-button>
+          </md-input>
+        </el-form-item>
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
             <md-input
@@ -33,11 +48,30 @@
               @blur="capsTooltip = false"
               @keyup.enter.native="handleLogin"
             >
-              密码
+              请输入新登录密码
             </md-input>
           </el-form-item>
         </el-tooltip>
-        <p @click="change" class="forget-password">忘记密码</p>
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password">
+            <md-input
+              v-model="loginForm.password"
+              icon="密码"
+              :key="passwordType"
+              ref="password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              auto-complete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            >
+              请确认新登录密码
+            </md-input>
+          </el-form-item>
+        </el-tooltip>
         <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleLogin">登录</el-button>
       </div>
     </el-form>
@@ -49,7 +83,7 @@ import { validUsername } from '@/utils/validate'
 // import SocialSign from './components/SocialSignin'
 import MdInput from '@/components/MDinput'
 export default {
-  name: 'Login',
+  name: 'forget',
   components: {
     // SocialSign
     MdInput
@@ -115,6 +149,12 @@ export default {
       console.log(this.$router, 'rrrrrrrrrrrr')
       this.$router.push({name:'forget'})
     },
+    returnHandle(){
+      console.log('kkkkkkk')
+      this.$router.push({
+        path:'/login'
+      })
+    },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
@@ -140,15 +180,19 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
+          this.$router.push({
+            path:'/login'
+          })
+          this.$message.success('请重新登录！')
+          // this.loading = true
+          // this.$store.dispatch('user/login', this.loginForm)
+          //   .then(() => {
+          //     this.$router.push({ path: '/', query: this.otherQuery })
+          //     this.loading = false
+          //   })
+          //   .catch(() => {
+          //     this.loading = false
+          //   })
         } else {
           console.log('error submit!!')
           return false
@@ -316,14 +360,15 @@ $light_gray:#eee;
     }
   }
 }
-.forget-password{
-  font-size:14px;
-  color:black;
-  font-family:'微软雅黑';
+.return{
+  position: absolute;
+  left:70px;
+  top: 300px;
+  // height: 400px;
+  margin: auto;
+  font-size:50px;
+  font-weight:bold;
+  color:#D0E6A5;
   cursor: pointer;
-  width:99%;
-  display: flex;
-  justify-content: flex-end;
-
 }
 </style>

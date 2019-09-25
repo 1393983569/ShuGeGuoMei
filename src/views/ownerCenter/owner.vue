@@ -32,7 +32,7 @@
         <el-form-item label="验证码：" prop="code">
           <el-input placeholder="请输入验证码" style="width:45%;" v-model="ruleForm.code">
             <el-button slot="append" v-if="sendAuthCode" @click="getAuthCode">发送验证码</el-button>
-            <el-button slot="append" v-else>{{auth_time}}秒发送信息</el-button>
+            <el-button slot="append" v-else>{{auth_time}}秒后重发</el-button>
           </el-input>
         </el-form-item>
         <el-form-item label="新密码：" prop="newpassword">
@@ -121,6 +121,8 @@ export default {
     // 修改密码弹框
     changePassword(){
       this.dialogTableVisible = true
+      this.auth_time =0
+      this.sendAuthCode = true;
     },
     // 发送验证码
     // getAuthCode(){},

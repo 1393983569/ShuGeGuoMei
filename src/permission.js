@@ -57,7 +57,10 @@ router.beforeEach(async(to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       // 在免费登录白名单，直接去
       next()
-    } else {
+    }else if(to.path === '/forget') {
+      next()
+      // console.log('fffffffffffff')
+    }else {
       // 没有访问权限的其他页面被重定向到登录页面。
       next(`/login?redirect=${to.path}`)
       NProgress.done()

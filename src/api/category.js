@@ -27,3 +27,4 @@ export const getSecondCategory = (id) => {
     method: 'get'
   })
 }
+

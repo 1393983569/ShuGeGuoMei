@@ -51,3 +51,15 @@ export const addSysArea = (data) => {
     data
   })
 }
+/**
+ * 删除省市区
+ * @param {Integer} proviceId 省id
+ * @param {Integer} cityId 市id
+ * @param {Integer} areaId 区县id
+ */
+export const deleteSysArea = (proviceId, cityId, areaId) => {
+  return request({
+    url: `/basics/deleteCity?proviceId=${proviceId}&cityId=${cityId}&areaId=${areaId}`,
+    method: 'get'
+  })
+}

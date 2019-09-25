@@ -1,11 +1,12 @@
 <template>
   <div>
     <breadcrumb>
-      <!-- <el-button type="primary" @click="showProvince">新建省</el-button> -->
-      <!-- <el-button type="primary" @click="showCity">新建市</el-button> -->
+      <el-button type="primary" @click="showProvince">新建省</el-button>
+      <el-button type="primary" @click="showCity">新建市</el-button>
       <el-button type="primary" @click="showCounty" v-if="bottonList.includes('操作')">新建区/县</el-button>
       <el-button type="primary" v-else disabled>新建区/县</el-button>
     </breadcrumb>
+    <!-- 新建区/县 -->
     <el-dialog
       title="新建区/县"
       :visible.sync="dialogCounty"
@@ -41,8 +42,11 @@
         <el-button type="primary" @click="addChildren('区', selectProvince3, selectCity2, selectCounty1)">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- <el-dialog
+    <!-- 新建省 -->
+    <el-dialog
       title="新建省"
+      modal
+      :close-on-click-modal="false"
       :visible.sync="dialogProvince"
       width="40%">
       <el-select multiple v-model="selectProvince1" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
@@ -54,12 +58,15 @@
         </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogChildren = false">取 消</el-button>
+        <el-button @click="dialogProvince = false">取 消</el-button>
         <el-button type="primary" @click="addChildren('省', selectProvince1)">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 新建市 -->
     <el-dialog
       title="新建市"
+      modal
+      :close-on-click-modal="false"
       :visible.sync="dialogCity"
       width="40%">
       <el-select @change="changeProvince" v-model="selectProvince2" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
@@ -79,33 +86,53 @@
         </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogChildren = false">取 消</el-button>
+        <el-button @click="dialogCity = false">取 消</el-button>
         <el-button type="primary" @click="addChildren('市', selectProvince2, selectCity1)">确 定</el-button>
       </span>
-    </el-dialog> -->
-    <el-table :data="tataTable" :span-method="objectSpanMethod"
+    </el-dialog>
+    <el-table :data="dataList" :span-method="objectSpanMethod"
       stripe
       border
-      style="width:70%;"
+      style="width:90%;"
       >
-      <el-table-column prop="" label="省"/>
-      <el-table-column prop="" label="市"/>
-      <el-table-column prop="" label="区/县"/>
-      <el-table-column prop="" label="操作"/>
+      <el-table-column prop="" label="省" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.fatherName}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="" label="市" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.childrenName}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="" label="区/县" align="center">
+        <template slot-scope="scope">
+        {{ scope.row.sunName}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="danger" @click="deleteHandle(scope)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    <hint v-model="showDelete" title="删除省市区" text="是否确认删除？" @confirm="confirmDelete" />
   </div>
 </template>
 
 <script>
-  import { selectSysProvince, selectSysCity, selectSysArea, addSysArea, selectAllData } from '@/api/category/cityList'
-  import Breadcrumb from '@/components/Breadcrumb'
+import hint from '@/components/Hint'
+import { selectSysProvince, selectSysCity, selectSysArea, addSysArea, selectAllData,deleteSysArea } from '@/api/category/cityList'
+import Breadcrumb from '@/components/Breadcrumb'
+import { isNull } from 'util';
   export default {
     name: 'cityList',
     components: {
-      Breadcrumb
+      Breadcrumb, hint
     },
     data() {
       return {
+        showDelete:false,
         idList: [],
         dialogProvince: false,
         dialogCity: false,
@@ -123,7 +150,10 @@
         bottonList:[],
         totalList:[],
         spanArr:[],
+        spanArrTwo:[],
         dataList:[],
+        dataListTmp:[],
+
       }
     },
     beforeRouteEnter (to, form, next) {
@@ -139,26 +169,31 @@
       getAllData(){
         selectAllData().then(res => {
           if(res.status === 1){
-            this.getCodeList(res.info)
-            // this.totalList = res.info
-            this.spanArr = this.gteRule(this.dataList)
+            this.getCityList(res.info)
+            let span = this.gteRule(this.dataList)
+            this.spanArr= span.province
+            this.spanArrTwo= span.city
           }else{
 
           }
         }).catch(err => {
-          this.$message.error(err)
+          console.log(err)
+          this.$message.error('查询出错！')
         })
       },
        // 得到合并规则
       gteRule(err) {
         let listIndex = 0
         let listRule = []
+        let listIndex1 = 0
+        let listRule1 = []
         err.forEach((item, index) => {
+          // 省的合并规则
           if (index === 0) {
             listRule.push(1)
             listIndex = 0
           } else {
-            if (err[index].stairId === err[index - 1].stairId) {
+            if (err[index].fatherId === err[index - 1].fatherId) {
               listRule[listIndex] += 1
               listRule.push(0)
             } else {
@@ -166,12 +201,30 @@
               listIndex = index
             }
           }
+          // 市的合并规则
+          if (index === 0) {
+            listRule1.push(1)
+            listIndex1 = 0
+          } else {
+            if (err[index].childrenId === err[index - 1].childrenId) {
+              listRule1[listIndex1] += 1
+              listRule1.push(0)
+            } else {
+              listRule1.push(1)
+              listIndex1 = index
+            }
+          }
         })
-        return listRule
+        let spanObj = {}
+        spanObj.province = listRule
+        spanObj.city = listRule1
+        // 将合并规则返回
+        return spanObj
       },
-      // 合并列
+      // 合并列方法
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0 || columnIndex === 1) {
+        // 合并第一列
+        if (columnIndex === 0 ) {
           const _row = this.spanArr[rowIndex]
           const _col = _row > 0 ? 1 : 0
           return {
@@ -179,31 +232,93 @@
             colspan: _col
           }
         }
+        // 合并第二列
+        if(columnIndex === 1){
+          const rows = this.spanArrTwo[rowIndex]
+          const cols = rows > 0 ? 1 : 0
+          return {
+            rowspan: rows,
+            colspan: cols
+          }
+        }
       },
-      // 展开后台返回的品类数据
-      getCodeList(arr) {
-        this.dataList = []
+      // 展开后台返回的市
+      getCityList(arr) {
+        this.dataListTmp = []
         arr.forEach(item => {
-          if (item.seconds.length !== 0) {
-            item.seconds.forEach(itemx => {
-              let data = {}
-              data.stairName = item.name
-              data.stairId = item.id
-              data.childrenName = itemx.name
-              data.childrenId = itemx.id
-              data.childrenName = itemx.name
-              data.childrenCategoryOneId = itemx.categoryOneId
-              this.dataList.push(data)
+          if (item.allCity) {
+            // 省份下有市
+            item.allCity.forEach(itemx => {
+              if(itemx){
+                let data = {}
+                data.fatherName = item.name
+                data.fatherId = item.id
+                data.childrenName = itemx.name
+                data.childrenId = itemx.id
+                if(itemx.allCity){
+                  // 复制
+                  data.allCity = itemx.allCity
+                }
+                this.dataListTmp.push(data)
+              }else{
+                let data = {}
+                data.fatherName = item.name
+                data.fatherId = item.id
+                this.dataListTmp.push(data)
+              }
             })
           } else {
+            // 省份下没市
             let data = {}
-            data.stairName = item.name
-            data.stairId = item.id
-            this.dataList.push(data)
+            data.fatherName = item.name
+            data.fatherId = item.id
+            this.dataListTmp.push(data)
+          }
+        })
+        this.getCountry(this.dataListTmp)
+      },
+      // 展开后台返回的品区县
+      getCountry(arr){
+        // return
+        this.dataList = []
+        arr.forEach(item => {
+          if (item.allCity) {
+            item.allCity.forEach(itemx => {
+              if(itemx){
+                let data = {}
+                data.fatherName = item.fatherName
+                data.fatherId = item.fatherId
+                data.childrenName = item.childrenName
+                data.childrenId = item.childrenId
+                data.sunName = itemx.name
+                data.sunId = itemx.id
+                this.dataList.push(data)
+              }else{
+                let data = {}
+                data.fatherName = item.fatherName
+                data.fatherId = item.fatherId
+                data.childrenName = item.childrenName
+                data.childrenId = item.childrenId
+                this.dataList.push(data)
+              }
+            })
+          }else{
+            if(item.childrenId){
+              let data = {}
+              data.fatherName = item.fatherName
+              data.fatherId = item.fatherId
+              data.childrenName = item.childrenName
+              data.childrenId = item.childrenId
+              this.dataList.push(data)
+            }else{
+              let data = {}
+              data.fatherName = item.fatherName
+              data.fatherId = item.fatherId
+            }
           }
         })
       },
-      //
+      // 按钮权限（操作、查看）
       getButton(list, name) {
         list.forEach(item => {
           if (item.name === name) {
@@ -211,9 +326,30 @@
           }
         })
       },
-      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-
+      // 删除按钮操作
+      deleteHandle(res){
+        this.showDelete = true
+        this.deleteObj = res.row
+        let aId=''
+        let cId=''
+        let pId=''
+        if(this.deleteObj.sunId){
+          aId = this.deleteObj.sunId
+        }else if(this.deleteObj.childrenId){
+          cId = this.deleteObj.childrenId
+        }else if(this.deleteObj.fatherId){
+          pId = this.deleteObj.fatherId
+        }
+        deleteSysArea(pId, cId, aId).then(res => {
+          if(res.status === 1){
+            this.$message.success('删除成功！')
+            this.showDelete = false
+          }
+        }).catch(err => {
+          this.$message.error('删除失败！')
+        })
       },
+      confirmDelete(){},
       edit() {},
       removeData() {},
       getSelectSysProvince() {
@@ -286,9 +422,13 @@
             })
           })
           addSysArea(list).then(res => {
+            this.dialogProvince = false
+            this.dialogCity = false
+            this.dialogCounty = false
+            this.$message.success('添加成功！')
             console.log(res)
           }).catch(err => {
-
+            this.$message.error('添加失败！')
           })
         } else {
           let list = []
@@ -300,7 +440,8 @@
             })
           })
           addSysArea(list).then(res => {
-            console.log(res)
+            this.dialogProvince = false
+            this.dialogCity = false
             this.dialogCounty = false
             this.$message.success('添加成功！')
           }).catch(err => {

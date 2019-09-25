@@ -305,8 +305,10 @@
       // 合并列
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 0 || columnIndex === 1) {
+          // console.log('this.spanArr:',this.spanArr)
           const _row = this.spanArr[rowIndex]
           const _col = _row > 0 ? 1 : 0
+          console.log(_row,_col, '_row,_col' )
           return {
             rowspan: _row,
             colspan: _col
@@ -315,9 +317,11 @@
       },
       // 得到合并规则
       gteRule(err) {
+        console.log(err, 'err')
         let listIndex = 0
         let listRule = []
         err.forEach((item, index) => {
+          console.log(item, index, 'err')
           if (index === 0) {
             listRule.push(1)
             listIndex = 0

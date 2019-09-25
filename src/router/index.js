@@ -56,6 +56,12 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/forget',
+    name: 'forget',
+    component: () => import('@/views/forget/index'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -193,6 +199,29 @@ export const asyncRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/forgetPassword',
+  //   name: 'forgetPassword',
+  //   // hidden:true,
+  //   component: Layout,
+  //   meta: {
+  //     // roles: ['ownerCenter'],
+  //     icon: 'messagecenter_default',
+  //     title: '忘记密码'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'changePassword',
+  //       name: 'changePassword',
+  //       meta: {
+  //         // roles: ['owner'],
+  //         icon: 'messagecenter_default',
+  //         title: '修改密码'
+  //       },
+  //       component: () => import('@/views/forgetPassword/changePassword.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/newsManage',
     name: 'newsManage',
