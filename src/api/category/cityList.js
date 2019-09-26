@@ -57,9 +57,15 @@ export const addSysArea = (data) => {
  * @param {Integer} cityId 市id
  * @param {Integer} areaId 区县id
  */
-export const deleteSysArea = (proviceId, cityId, areaId) => {
+export const deleteSysArea = (provinceId, cityId, areaId) => {
+  // console.log('proviceId:',proviceId,'cityId:', cityId,'areaId:', areaId)
+  const params = new URLSearchParams()
+  if(provinceId)params.append('provinceId', provinceId)
+  if(cityId)params.append('cityId', cityId)
+  if(areaId)params.append('areaId', areaId)
   return request({
-    url: `/basics/deleteCity?proviceId=${proviceId}&cityId=${cityId}&areaId=${areaId}`,
-    method: 'get'
+    url: `/basics/deleteCity`,
+    method: 'post',
+    data:params
   })
 }

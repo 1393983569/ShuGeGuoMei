@@ -29,7 +29,7 @@
   </div>
   <div style="margin-top:5px;margin-bottom:20px;">
     <el-input
-      placeholder="请输入关键词进行搜索"
+      placeholder="请输入订单编号或店铺名称"
       prefix-icon="el-icon-search"
       clearable
       v-model="params" style="width:400px;" size="mini">
@@ -170,6 +170,9 @@ export default {
     'params'(e){
       if(!e){
         this.getOrderList()
+      }else{
+        // 去除参数前后的空格
+        this.params = this.Trim(e)
       }
     }
   },
@@ -177,6 +180,9 @@ export default {
     this.getOrderList()
   },
   methods: {
+    Trim(str){
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    },
     getButton(list, name){
       console.log(list, name, 'llllll')
       list.forEach(e => {

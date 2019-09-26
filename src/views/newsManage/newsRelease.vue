@@ -50,6 +50,9 @@ export default {
   // name: 'TinymceDemo',
   components: { Tinymce },
   data() {
+    const istitle=(rule, value, callback)=> {
+      console.log(value, 'hhhhhhhhh')
+    }
     return {
       newsForm: {
         title: '',
@@ -62,7 +65,7 @@ export default {
       },
       apiUrl:'',
       rules: {
-        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur', validate:'istitle' }],
         shopIds: [{ required: true, message: '请输入对象', trigger: 'blur' }],
         category: [{ required: true, message: '请输入类别', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
@@ -98,6 +101,14 @@ export default {
         temp.name = element.split(':')[1]
         this.shopList.push(temp)
       })
+    },
+    'newsForm.title'(title){
+      // 标题超出上限的验证
+      if(title.length>40){
+        this.$message.warning('该标题已超出字符上限，请重新输入！')
+        this.newsForm.title = ''
+      }
+
     }
   },
   mounted() {

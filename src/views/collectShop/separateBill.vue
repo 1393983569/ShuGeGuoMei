@@ -2,7 +2,8 @@
   <div class="box-margin">
     <breadcrumb>
       <el-button type="danger" @click="handleCancel">取消</el-button>
-      <el-button type="primary" @click="handleSeparateBill">保存</el-button>
+      <el-button type="primary" @click="handleSeparateBill" v-if="addButton">保存</el-button>
+      <el-button type="primary" v-else disabled>保存</el-button>
     </breadcrumb>
     <div>
       关联供应商：
@@ -71,6 +72,7 @@ export default {
       goodsArray:[],
       shopId:0,
       orderId:0,
+      addButton:false,
     }
   },
   mounted() {
@@ -98,6 +100,11 @@ export default {
     getOrderList(orderNo){
       orderDetail(orderNo).then(res => {
         this.goodsList = res.info[0].orderDetailList
+        this.goodsList.forEach(item => {
+          if(item.choose ===1){
+            this.addButton = true
+          }
+        })
       }).catch(err => {
         this.$message.error('查询订单商品出错！')
       })

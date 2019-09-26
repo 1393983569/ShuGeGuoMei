@@ -282,7 +282,35 @@ export default {
           this.$message.warning('暂无二级品类')
         })
       }
-    }
+    },
+    'ruleForm.name'(name){
+      console.log(name,name.length, 'name.......')
+      if(name.length>30){
+        this.ruleForm.name = ''
+        this.$message.warning('字数已经超出上限，请重新填写！')
+      }
+    },
+    'inputValue'(tag){
+      // 标签字数限制
+      if(tag.length>5){
+        this.inputValue = ''
+        this.$message.warning('超过字数限制，请重新填写！')
+      }
+    },
+    'ruleForm.unit'(e){
+      console.log(e.length)
+      if(e.length>4){
+        this.ruleForm.unit = ''
+        this.$message.warning('超出单位字符限制，请重新填写！')
+      }
+    },
+    'ruleForm.standards'(standards){
+      console.log(standards, standards.length)
+      if(standards.length>6){
+        this.ruleForm.standards = ''
+        this.$message.warning('超出规格字符限制，请重新填写！')
+      }
+    },
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
@@ -290,8 +318,10 @@ export default {
       if(this.$route.params.row === '添加') {
         this.addEditState = true
       }else {
+        console.log(this.$route.params, 'this.$route.params.....')
         this.addEditState = false
         this.goodsId = this.$route.params.row.id
+        // return
         this.getDetailsGoods()
       }
     } else {
@@ -345,7 +375,7 @@ export default {
     // 查询详情
     getDetailsGoods() {
       seeDetailsGoods(this.goodsId).then(res => {
-        // console.log(res)
+        console.log('res:',res)
         // if(res.status === 1) {
           let obj = {}
           obj = res.info
@@ -358,7 +388,12 @@ export default {
           }else{
             this.ruleForm.categoryTwoId = ''
           }
-          this.ruleForm.categoryOneId = obj.categoryOne.id
+          if(obj.categoryOne){
+            this.ruleForm.categoryOne = obj.categoryOne.id
+          }else{
+            this.ruleForm.categoryOne = ''
+          }
+          // this.ruleForm.categoryOneId = obj.categoryOne.id
           this.ruleForm.standards = obj.goodStandard
           this.ruleForm.unit = obj.goodUnit
           this.ruleForm.remark = obj.goodRmark
@@ -452,11 +487,15 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleClose(tag) {
-      console.log(tag, 'hhhhhh')
+      // console.log(tag, 'hhhhhh')
       this.ruleForm.tab.splice(this.ruleForm.tab.indexOf(tag), 1)
     },
     showInput() {
-      // console.log('ssssssssssssss')
+      // 标签各数限制
+      if(this.ruleForm.tab.length>3){
+        this.$message.warning('已超过标签上限，不能继续添加！')
+        return
+      }
       this.inputVisible = true
       this.$nextTick(() => {
         this.$refs.saveTagInput.$refs.input.focus()
@@ -465,12 +504,20 @@ export default {
     handleInputConfirm() {
       // this.ruleForm.tab = []
       // inputValue是输入框绑定值
-      const inputValue = this.inputValue
-      if (inputValue) {
-        this.ruleForm.tab.push(inputValue)
+
+      // 标签不可重复
+      if(this.ruleForm.tab.includes(this.inputValue)){
+        this.$message.warning('标签已存在！')
+        this.inputVisible = false
+        this.inputValue = ''
+      }else{
+        const inputValue = this.inputValue
+        if (inputValue) {
+          this.ruleForm.tab.push(inputValue)
+        }
+        this.inputVisible = false
+        this.inputValue = ''
       }
-      this.inputVisible = false
-      this.inputValue = ''
     }
   }
 }

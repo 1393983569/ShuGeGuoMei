@@ -39,7 +39,7 @@
     <div style="margin-top:5px;margin-bottom:10px;">
       <el-input
         clearable
-        placeholder="请输入关键词进行搜索"
+        placeholder="请输入会员ID、手机号、注册店铺搜索"
         prefix-icon="el-icon-search"
         v-model="param" style="width:400px;" size="mini">
       </el-input>
@@ -86,14 +86,14 @@
             @click="viewDetails(scope.$index, scope.row)"
             v-if="bottonList.includes('操作')"
           >查看详情</el-button>
-          <el-button size="mini" type="warning">查看详情</el-button>
+          <el-button size="mini" type="warning" v-else disabled>查看详情</el-button>
           <el-button
             size="mini"
             type="danger"
             v-if="bottonList.includes('操作')"
             @click="deleteVipHandle(scope.row)"
           >删除</el-button>
-          <el-button size="mini" type="danger">删除</el-button>
+          <el-button size="mini" type="danger" v-else disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -108,7 +108,8 @@
         :total="total">
       </el-pagination>
     </div>
-    <hint v-model="showDelete" title="删除会员" text="是否删除该会员？" @confirm="confirmDelete" />
+    <hint v-model="showDelete" title="删除会员" text="确认删除该会员？" @confirm="confirmDelete" />
+    <hint v-model="showScore" title="删除会员" text="该会员还有余额/积分，不可删除" @confirm="confirmScore" />
   </div>
 </template>
 
@@ -136,6 +137,7 @@ export default {
       yearPro:'',
       monthPro:'',
       dayPro:'',
+      showScore:false,
       showDelete:false,
       shopList: [],
       shopId: '',
@@ -177,7 +179,7 @@ export default {
       identity:'',
       level: '',
       vipId:'',
-      condition:''
+      condition:'',
     }
   },
   beforeRouteEnter (to, form, next) {
@@ -189,20 +191,21 @@ export default {
   watch:{
     'param'(e){
       if(e){
-        this.param = e
+        this.param = this.Trim(e)
       }else{
         this.param = ''
         this.getVipLists()
       }
-
     }
   },
   mounted() {
     this.getAllShopList()
     this.getVipLists()
-
   },
   methods: {
+    Trim(str){
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    },
     getButton(list, name) {
       list.forEach(item => {
         if (item.name === name) {
@@ -262,10 +265,18 @@ export default {
         this.$message.error('删除失败')
       })
     },
+    confirmScore(){
+      this.showDelete = true
+      this.showScore = false
+    },
     // 删除会员
     deleteVipHandle(row) {
+      console.log(row, 'row.....')
       this.vipId = row.id
-      this.showDelete = true
+      // this.showDelete = true
+      if(row.score>0||row.balance>0){
+        this.showScore = true
+      }
     },
     // 查询会员列表
     getVipLists(){

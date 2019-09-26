@@ -51,7 +51,7 @@
               <el-button type="up" size="mini" v-if="scope.row.status=== 1" disabled>启用</el-button>
               <el-button type="down" size="mini" v-else-if="scope.row.status=== 0" disabled>停用</el-button>
             </span>
-            <el-button type="danger" size="mini" v-if="buttonList.includes('操作')" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="danger" size="mini" v-if="buttonList.includes('操作')&&scope.row.status=== 1" @click="handleDelete(scope.row)">删除</el-button>
             <el-button type="danger" size="mini" v-else disabled >删除</el-button>
             <el-button type="warning" size="mini" v-if="buttonList.includes('操作'||'查看')" @click="handleDetail(scope.row)">详情</el-button>
             <el-button type="warning" size="mini" v-else disabled>详情</el-button>

@@ -7,7 +7,11 @@
 
     <el-table :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
-      <el-table-column prop="title" label="标题" />
+      <el-table-column prop="title" label="标题">
+        <span slot-scope="scope" class="outer">
+          {{scope.row.title}}
+        </span>
+      </el-table-column>
       <el-table-column prop="picture" label="轮播图">
         <template slot-scope="scope">
           <img v-if="scope.row.imge" :src="scope.row.imge" class="avatar" style="width:100px;height:100px;">
@@ -234,5 +238,10 @@ export default {
     align-items: center;
     margin: 0;
     text-align: center;
+  }
+  .outer{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 </style>

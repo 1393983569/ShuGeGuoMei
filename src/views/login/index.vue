@@ -38,7 +38,7 @@
           </el-form-item>
         </el-tooltip>
         <p @click="change" class="forget-password">忘记密码</p>
-        <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleLogin()">登录</el-button>
       </div>
     </el-form>
   </div>
@@ -55,13 +55,13 @@ export default {
     MdInput
   },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入用户名'))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (!validUsername(value)) {
+    //     callback(new Error('请输入用户名'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     const validatePassword = (rule, value, callback) => {
       if (value.length === 0) {
         callback(new Error('请输入密码'))
@@ -69,15 +69,39 @@ export default {
         callback()
       }
     }
+    var isMobileNumber= (rule, value, callback) => {
+      console.log(value, 'yanzheng....')
+        if (!value) {
+          return new Error("请输入电话号码");
+        } else {
+          const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+          const isPhone = reg.test(value);
+          value = Number(value); //转换为数字
+          if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
+          value = value.toString(); //转换成字符串
+            if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
+              callback(new Error("手机号码格式如:138xxxx8754"));
+            } else {
+              callback();
+            }
+          } else {
+            callback(new Error("请输入正确电话号码"));
+          }
+        }
+    }
     return {
       loginForm: {
         mobile: '',
         password: ''
       },
       loginRules: {
-        mobile: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        mobile: [
+          { required: true, trigger: 'blur'},
+          { validator: isMobileNumber, trigger: "blur" }
+        ],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
+
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
@@ -138,8 +162,15 @@ export default {
       })
     },
     handleLogin() {
+      // 手机号验证
+      if(this.isMobileNumber(this.loginForm.mobile)){
+
+      }else{
+        return
+      }
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          console.log('login before!')
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
@@ -150,10 +181,31 @@ export default {
               this.loading = false
             })
         } else {
-          console.log('error submit!!')
+          // console.log('error submit!!')
           return false
         }
       })
+    },
+    isMobileNumber(value){
+        if (!value) {
+          this.$message.warning('请输入手机号码！')
+          return false
+        } else {
+          const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+          const isPhone = reg.test(value);
+          value = Number(value); //转换为数字
+          if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
+          value = value.toString(); //转换成字符串
+            if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
+              this.$message.warning('手机号码格式有误！')
+              return false
+            } else {
+              return true
+            }
+          } else {
+            return true
+          }
+        }
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {

@@ -13,7 +13,7 @@
     </div>
     <div style="margin-top:5px;margin-bottom:20px;">
       <el-input
-        placeholder="请输入关键词进行搜索"
+        placeholder="请输入供应商名称或手机号搜索"
         prefix-icon="el-icon-search"
         clearable
         v-model="param" style="width:400px;" size="mini">
@@ -89,6 +89,9 @@ export default {
       if(!e){
         this.params = e
         this.getProviderList()
+      }else{
+        // 去除参数前后的空格
+        this.param = this.Trim(e)
       }
     }
   },
@@ -96,6 +99,9 @@ export default {
     this.getProviderList()
   },
   methods: {
+    Trim(str){
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    },
     getButton(list, name){
       list.forEach(e => {
         if(e.name === name){

@@ -132,11 +132,13 @@ import { isNull } from 'util';
     },
     data() {
       return {
-        showDelete:false,
+
         idList: [],
+        // 新建省市区弹框
         dialogProvince: false,
         dialogCity: false,
         dialogCounty: false,
+        // 其他
         optionsProvince: [],
         optionsCity: [],
         optionsCounty: [],
@@ -149,10 +151,18 @@ import { isNull } from 'util';
         tataTable:[],
         bottonList:[],
         totalList:[],
+        // 合并单元格合并规则
         spanArr:[],
         spanArrTwo:[],
+        // table数据数组
         dataList:[],
         dataListTmp:[],
+        // 删除弹框
+        showDelete:false,
+        // 删除省市区id
+        aId:'',
+        cId:'',
+        pId:'',
 
       }
     },
@@ -166,10 +176,12 @@ import { isNull } from 'util';
       this.getAllData()
     },
     methods: {
+      // 查询所有省市区
       getAllData(){
         selectAllData().then(res => {
           if(res.status === 1){
             this.getCityList(res.info)
+            // span是一个{}
             let span = this.gteRule(this.dataList)
             this.spanArr= span.province
             this.spanArrTwo= span.city
@@ -314,6 +326,7 @@ import { isNull } from 'util';
               let data = {}
               data.fatherName = item.fatherName
               data.fatherId = item.fatherId
+              this.dataList.push(data)
             }
           }
         })
@@ -328,28 +341,33 @@ import { isNull } from 'util';
       },
       // 删除按钮操作
       deleteHandle(res){
+        console.log('res:',res.row)
         this.showDelete = true
         this.deleteObj = res.row
-        let aId=''
-        let cId=''
-        let pId=''
+
         if(this.deleteObj.sunId){
-          aId = this.deleteObj.sunId
+          console.log('sunId:', this.deleteObj.sunId)
+          this.aId = this.deleteObj.sunId
         }else if(this.deleteObj.childrenId){
-          cId = this.deleteObj.childrenId
+          console.log('childrenId:', this.deleteObj.childrenId)
+          this.cId = this.deleteObj.childrenId
         }else if(this.deleteObj.fatherId){
-          pId = this.deleteObj.fatherId
+          console.log('fatherId:', this.deleteObj.fatherId)
+          this.pId = this.deleteObj.fatherId
         }
-        deleteSysArea(pId, cId, aId).then(res => {
+
+      },
+      confirmDelete(){
+        deleteSysArea(this.pId, this.cId, this.aId).then(res => {
           if(res.status === 1){
             this.$message.success('删除成功！')
             this.showDelete = false
+            this.getAllData()
           }
         }).catch(err => {
           this.$message.error('删除失败！')
         })
       },
-      confirmDelete(){},
       edit() {},
       removeData() {},
       getSelectSysProvince() {
@@ -426,6 +444,7 @@ import { isNull } from 'util';
             this.dialogCity = false
             this.dialogCounty = false
             this.$message.success('添加成功！')
+            this.getAllData()
             console.log(res)
           }).catch(err => {
             this.$message.error('添加失败！')
@@ -444,6 +463,7 @@ import { isNull } from 'util';
             this.dialogCity = false
             this.dialogCounty = false
             this.$message.success('添加成功！')
+            this.getAllData()
           }).catch(err => {
             console.log(err)
             this.$message.error('添加失败！')
