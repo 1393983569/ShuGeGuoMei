@@ -46,15 +46,15 @@
         </el-table-column>
       </el-table>
       <div>
-      <el-pagination
-        :page-sizes="[10, 15]"
-        background
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
+        <el-pagination
+          :page-sizes="[10, 15]"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </div>
      <hint title="删除供应商" v-model="showDelete" text="是否删除供应商？" @confirm="deleteAdConfirm" />
   </div>

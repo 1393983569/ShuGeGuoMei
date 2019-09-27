@@ -39,9 +39,9 @@ export const editAdmin = (data) => {
  *
  * @param pageNum 页数
  */
-export const selectPageAdmin = (pageNum) => {
+export const selectPageAdmin = (pageNum,pageSize,param) => {
   return request({
-    url: `/admin/selectPageAdmin?pageNum=${pageNum}`,
+    url: `/admin/selectPageAdmin?pageNum=${pageNum}&pageSize=${pageSize}&param=${param}`,
     method: 'get'
   })
 }

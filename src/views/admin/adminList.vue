@@ -34,6 +34,28 @@
       </span>
     </el-dialog>
     <hint v-model="hintState" :title="'删除'" :text="'是否删除该后台用户？'" @confirm="deleteUser" />
+    <!-- 搜索条件 -->
+    <div style="display:flex;direction-flex:row;">
+      <span style="font-weight:bold;">角色：</span>
+      <el-select v-model="charactar" style="width:20%;" size="mini">
+        <el-option v-for="item in roleList" :key="item.id" :value="item.id" :label="item.name" />
+      </el-select>
+      <div>
+        <div style="position:absolute; right:10px;">
+        <!-- <el-button size="mini" type="primaryX" @click="search" :loading="loadingSearch">筛选</el-button>
+        <el-button size="mini" type="info" @click="clearSearch" :loading="loadingClear">清空</el-button> -->
+      </div>
+      </div>
+    </div>
+    <div style="margin-top:5px;margin-bottom:20px;">
+      <el-input
+        placeholder="请输入用户名、手机号搜索"
+        prefix-icon="el-icon-search"
+        clearable
+        v-model="param" style="width:400px;" size="mini">
+      </el-input>
+      <el-button size="mini" @click="inputSearch" type="primary">搜索</el-button>
+    </div>
     <el-table
       :data="dataList"
       center
@@ -95,6 +117,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <div style="margin-top:5px;">
+      <el-pagination
+        :page-sizes="[10, 15]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -128,6 +160,12 @@ export default {
       roleList: [],
       loading: false,
       bottonList:[],
+      param:'',
+      charactar:'',
+      charactarList:[],
+      total: 0,
+      pagesize: 10,
+      pageNum: 1,
     }
   },
   beforeRouteEnter (to, form, next) {
@@ -136,12 +174,30 @@ export default {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
   },
+  watch:{
+    'param'(e){
+      if(!e){
+        this.params = e
+        this.getAdminList()
+      }else{
+        // 去除参数前后的空格
+        this.param = this.Trim(e)
+        // this.getCaijiaUser()
+      }
+    }
+  },
   mounted() {
     // 初始化
     this.getAdminList()
     this.getRoles()
   },
   methods: {
+    Trim(str){
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    },
+    inputSearch(){
+      this.getAdminList()
+    },
     getButton(list, name) {
       list.forEach(item => {
         if (item.name === name) {
@@ -152,8 +208,9 @@ export default {
     },
     getAdminList() {
       this.dataList = []
-      selectPageAdmin(1).then(res => {
+      selectPageAdmin(this.pageNum, this.pagesize, this.param).then(res => {
         this.dataList = []
+        this.total = res.info.totalrecord
         res.info.records.map(item => {
           // console.log(item.role)
           if(item.role){
@@ -229,6 +286,12 @@ export default {
           this.$message.success(err)
         })
       }
+    },
+    handleSizeChange(e) {
+      this.pageSize = e
+    },
+    handleCurrentChange(e) {
+      this.pageNum = e
     },
     // 取消
     clickCancel() {

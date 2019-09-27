@@ -100,23 +100,40 @@ export default {
       if (!isLt20M) {
               this.$message.error('上传图片的大小不能超过 1M!');
       }
-//       const isSize = new Promise(function(resolve, reject) {
-//               let width = 300;
-//               let height = 100;
-//               let _URL = window.URL || window.webkitURL;
-//               let img = new Image();
-//               img.onload = function() {
-//                       let valid = img.width == width && img.height == height;
-//                       valid ? resolve() : reject();
-//               }
-//               img.src = _URL.createObjectURL(file);
-//       }).then(() => {
-//               return file;
-//       }, () => {
-//               this.$message.error('上传的图片宽高必须是300*100!');
-//               return Promise.reject();
-//       });
-//       return isPNG && isJPG && isSize && isLt20M;
+      this.valWidthAndHeight(file)
+      if(this.valWidthAndHeight(file)){
+        console.log('true.......')
+      }
+      console.log(this.valWidthAndHeight(file), 'function.......')
+    },
+    //验证图片宽高
+    valWidthAndHeight:function(file){
+      let _this =this
+      let valid = false
+      new Promise(function(resolve, reject) {
+        // let width = _this.validWidth  //图片宽度
+        // let height = _this.validHeight ; //图片高度
+        let _URL = window.URL || window.webkitURL;
+        let image = new Image();
+        image.src = _URL.createObjectURL(file);
+        image.onload = function() {
+          console.log(image.height,image.width, 'img......')
+          if(image.width == 3*image.height){
+            valid = true
+          }else{
+
+          }
+          valid ? resolve() : reject();
+        };
+      }).then(
+        () => {
+          return file;
+        },
+        () => {
+          this.$message.error("上传图片尺寸不符合,只能是3（宽）：1（高）");
+        }
+      );
+      return valid
     },
     handleAvatarSuccess(res) {
       console.log(res, 'gggggg')
