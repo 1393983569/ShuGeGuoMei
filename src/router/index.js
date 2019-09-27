@@ -688,6 +688,27 @@ export const asyncRoutes = [
           title: '角色操作'
         },
         component: () => import('@/views/admin/roleOperation.vue')
+      },
+      {
+        path: 'caijiaUser',
+        name: 'caijiaUser',
+        meta: {
+          // roles: ['caijiaUser'],
+          icon: 'dashboard',
+          title: '采价端用户'
+        },
+        component: () => import('@/views/admin/caijiaUser.vue')
+      },
+      {
+        path: 'caijiaUserAdd',
+        name: 'caijiaUserAdd',
+        hidden:true,
+        meta: {
+          // roles: ['caijiaUser'],
+          icon: 'dashboard',
+          title: '采价端用户编辑/新建'
+        },
+        component: () => import('@/views/admin/caijiaUserAdd.vue')
       }
     ]
   },

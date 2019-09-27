@@ -5,7 +5,7 @@
       <!-- <el-button type="primary" size="mini" v-else disabled>新建</el-button> -->
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
-      <el-button @click="allArea" style="margin:3px;hight:28px;">全部区域</el-button>
+      <!-- <el-button @click="allArea" style="margin:3px;hight:28px;">全部区域</el-button> -->
       <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="province" @getCity="city" @getCounty="county"/>
       <div style="position:absolute;right:1%;">
         <el-button @click="searchHandle" size="mini" type="primaryX">筛选</el-button>
@@ -102,15 +102,15 @@ export default {
       shichang:'',
       shichangList:[
         {
-          id:0,
+          id:1,
           name:'批发市场'
         },
         {
-          id:1,
+          id:2,
           name:'零售市场'
         },
         {
-          id:2,
+          id:3,
           name:'早市'
         },
       ],
