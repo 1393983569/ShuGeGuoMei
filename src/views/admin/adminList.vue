@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button @click="addData" type="primary" v-if="bottonList.includes('操作')">新建</el-button>
       <el-button @click="addData" type="primary" v-else disabled>新建</el-button>
       <!-- <el-button type="">角色设置</el-button> -->

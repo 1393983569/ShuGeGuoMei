@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="primary" @click="showProvince">新建省</el-button>
       <el-button type="primary" @click="showCity">新建市</el-button>
       <el-button type="primary" @click="showCounty" v-if="bottonList.includes('操作')">新建区/县</el-button>

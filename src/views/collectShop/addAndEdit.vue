@@ -33,9 +33,11 @@
         :show-file-list="false"
         :on-success="handleAvatarSuccessSmall"
         :before-upload="beforeAvatarUpload"
+        :on-progress="handleProgressSmall"
       >
+      <el-progress v-if="0<percentageSmall&&percentageSmall<=100" type="circle" :percentage="percentageSmall" :width="177" style="width:178px;height:178px;"></el-progress>
         <img v-if="ruleForm.smallImg" :src="ruleForm.smallImg" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon" />
+        <i v-else-if="!ruleForm.smallImg&&percentageSmall>100||percentageSmall<=0" class="el-icon-plus avatar-uploader-icon" />
       </el-upload>
     </el-form-item>
     <el-form-item label="展示图：" prop="name">
@@ -45,9 +47,11 @@
         :show-file-list="false"
         :on-success="handleAvatarSuccessBig"
         :before-upload="beforeAvatarUpload"
+        :on-progress="handleProgressBig"
       >
+      <el-progress v-if="0<percentageBig&&percentageBig<=100" type="circle" :percentage="percentageBig" :width="177" style="width:178px;height:178px;"></el-progress>
         <img v-if="ruleForm.bigImg" :src="ruleForm.bigImg" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon" />
+        <i v-else-if="!ruleForm.bigImg&&percentageBig>100||percentageBig<=0" class="el-icon-plus avatar-uploader-icon" />
       </el-upload>
     </el-form-item>
     <el-form-item label="标签：" prop="tab">
@@ -151,6 +155,8 @@ export default {
   components: { selectorAddress },
   data() {
     return {
+      percentageSmall:0,
+      percentageBig:0,
       getAddressTable: [
         {
           getAddress: '采集点1',
@@ -330,6 +336,16 @@ export default {
     this.getFirstCategory()
   },
   methods: {
+    handleProgressSmall(event, file, fileList){
+      this.percentageSmall = event.percent
+      this.ruleForm.smallImg = ''
+      // console.log(event, file, fileList, 'progress.....')
+    },
+    handleProgressBig(event, file, fileList){
+      this.percentageBig = event.percent
+      this.ruleForm.bigImg = ''
+      // console.log(event, file, fileList, 'progress.....')
+    },
     getProvince(e) {
       this.ruleForm.provinceId = e
     },
@@ -356,9 +372,11 @@ export default {
     // 上传图片
     handleAvatarSuccessSmall(res) {
       this.ruleForm.smallImg = res.info
+      this.percentageSmall = 101
     },
     handleAvatarSuccessBig(res) {
       this.ruleForm.bigImg = res.info
+      this.percentageBig = 101
     },
     beforeAvatarUpload(file) {
       // const isJPG = file.type === 'image/jpeg';

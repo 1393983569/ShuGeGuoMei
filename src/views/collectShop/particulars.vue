@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb><el-button @click="handleEdit">编辑</el-button></breadcrumb>
+    <breadcrumb :stateShow ='false'><el-button @click="handleEdit">编辑</el-button></breadcrumb>
     <p>商品ID：{{ row.goodId }}</p>
     <p>一级品类：{{ row.categoryOne.name}} (ID: {{ row.categoryOne.id }})</p>
     <p v-if="row.categoryTwo">二级品类：{{ row.categoryTwo.name }} (ID: {{ row.categoryTwo.id }})</p>

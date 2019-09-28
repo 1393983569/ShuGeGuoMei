@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="primary" @click="exportHandle">导出</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">

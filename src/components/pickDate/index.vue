@@ -72,7 +72,7 @@ export default {
       this.year = y
       this.tempYear = y
       this.setMonth()
-      for (var i =(y-100); i <=y+100; i++){
+      for (var i =(y-20); i <=y+20; i++){
         this.yearList.push(i)
       }
     },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleReleaseNews" size="mini">发布消息</el-button>
       <el-button type="primary" v-else disabled @click="handleReleaseNews" size="mini">发布消息</el-button>
     </breadcrumb>
@@ -51,8 +51,6 @@
     </div>
     <!-- 删除确认弹框 -->
     <hint v-model="showDelete" title="删除消息" text="是否删除该消息？" @confirm="deleteNews" />
-    <!-- 消息详情 -->
-    <news-detail :show-detail="showDetail" :detailt-object="detailtObject" @isCloseDetail="isCloseDetail" />
   </div>
 </template>
 <script>
@@ -66,6 +64,7 @@ export default {
   components: { newsDetail, Breadcrumb, hint, pickDate },
   data() {
     return {
+      showReturn:false,
       showDayState:false,
       yearPro:'',
       monthPro:'',
@@ -86,6 +85,10 @@ export default {
       // 消息类别
       newsType: '',
       newsTypeList: [
+        {
+          id: 3,
+          name: '全部'
+        },
         {
           id: 0,
           name: '通知'
@@ -145,7 +148,11 @@ export default {
       obj.year = this.yearPro
       obj.month = this.monthPro
       obj.day = this.dayPro
-      obj.category = this.newsType
+      if(this.newsType === 3){
+        obj.category = ''
+      }else{
+        obj.category = this.newsType
+      }
       getNews(obj).then(res => {
         this.total = res.info.totalrecord
         // const array = []
@@ -200,9 +207,13 @@ export default {
     },
     // 显示详情页
     handleDetail(row) {
-      console.log(row, 'ooooooo')
-      this.showDetail = true
-      this.detailtObject = row
+      this.$router.push({
+        name:'newsDetail',
+        params:row
+      })
+      // console.log(row, 'ooooooo')
+      // this.showDetail = true
+      // this.detailtObject = row
     },
     // 关闭详情页
     isCloseDetail(e) {

@@ -108,7 +108,8 @@ export default {
   },
   watch: {
    'shopObject'(e) {
-     console.log(this.shopObject.imge, 'jjjjj')
+    //  console.log(this.shopObject.imge, 'jjjjj')
+     console.log(this.shopObject, 'jjjjj')
 
       let arr = JSON.parse(this.shopObject.categoryJson)
       this.recursionTableData(arr)

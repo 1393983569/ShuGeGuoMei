@@ -193,7 +193,7 @@ export const asyncRoutes = [
         meta: {
           // roles: ['owner'],
           icon: 'messagecenter_default',
-          title: '个人中心'
+          title: ''
         },
         component: () => import('@/views/ownerCenter/owner.vue')
       }
@@ -243,6 +243,17 @@ export const asyncRoutes = [
         component: () => import('@/views/newsManage/news/news.vue')
       },
       {
+        path: 'newsDetail',
+        name: 'newsDetail',
+        hidden:true,
+        meta: {
+          roles: ['news'],
+          icon: 'messagecenter_default',
+          title: '详情'
+        },
+        component: () => import('@/views/newsManage/news/newsDetail.vue')
+      },
+      {
         path: 'newsRelease',
         name: 'newsRelease',
         hidden: true,
@@ -284,6 +295,16 @@ export const asyncRoutes = [
           title: '广告发布'
         },
         component: () => import('@/views/ADManage/ADRelease.vue')
+      },
+      {
+        path: 'ADDetail',
+        name: 'ADDetail',
+        hidden: true,
+        meta: {
+          icon: 'dashboard',
+          title: '详情'
+        },
+        component: () => import('@/views/ADManage/AD/ADDetail.vue')
       }
     ]
   },

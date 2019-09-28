@@ -17,13 +17,14 @@
         <el-form-item label="店铺图片：" prop="picture">
           <div class="size-color div-margin font-weight " v-if="showState">
             <el-upload
-              :limit= "5"
+              :limit= "2"
               :on-exceed="outNumMax"
               :action="`${apiUrl}/basics/upload`"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :on-success="uploadSuccess"
+              :before-upload="beforeAvatarUpload"
             >
               <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
               <i class="el-icon-plus" />
@@ -275,6 +276,12 @@ export default {
           this.key = key
         }
       })
+    },
+    beforeAvatarUpload(file) {
+      const isLt20M = file.size / 1024 / 1024 < 1;
+      if (!isLt20M) {
+        this.$message.error('上传图片的大小不能超过 1M!');
+      }
     },
     changeOneCate(row){
       for(let i=0;i<this.categoryTable.length;i++){

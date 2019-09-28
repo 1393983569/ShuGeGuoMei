@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button @click="addGoods" type="primary" size="mini" v-if="buttonList.includes('操作')">添加商品</el-button>
       <el-button type="primary" size="mini" v-else disabled>添加商品</el-button>
     </breadcrumb>

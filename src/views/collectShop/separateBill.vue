@@ -1,6 +1,6 @@
 <template>
   <div class="box-margin">
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="danger" @click="handleCancel">取消</el-button>
       <el-button type="primary" @click="handleSeparateBill" v-if="addButton">保存</el-button>
       <el-button type="primary" v-else disabled>保存</el-button>

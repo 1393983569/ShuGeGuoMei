@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
-
+import { getToken, setToken } from '@/utils/auth'
+import router from '../router'
 // 创建一个axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -46,7 +46,11 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     // 如果自定义代码不是1，则判断为错误。
-    if (res.status !== 1) {
+    console.log(res, 'res')
+    if (res.status === 2) {
+      setToken('')
+      router.push('/login')
+    } else if (res.status !== 1 && res.status !== 2) {
       Message({
         message: res.info || 'Error',
         type: 'error',

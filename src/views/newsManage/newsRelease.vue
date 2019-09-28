@@ -8,15 +8,19 @@
           <el-input v-model="newsForm.title" style="width:400px;" />
         </el-form-item>
         <el-form-item label="缩略图:" prop="thumbnail">
-          <el-upload
-            class="avatar-uploader"
-            :action="`${apiUrl}/basics/upload`"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="newsForm.thumbnail" :src="newsForm.thumbnail" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
+          <div title="建议上传120*80px图片，大小不超过1m">
+            <el-upload
+              class="avatar-uploader"
+              :action="`${apiUrl}/basics/upload`"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :on-progress="handleProgress"
+              :before-upload="beforeAvatarUpload">
+              <el-progress v-if="0<percentage&&percentage<=100" type="circle" :percentage="percentage" :width="177" style="width:178px;height:178px;"></el-progress>
+              <img v-if="newsForm.thumbnail" :src="newsForm.thumbnail" class="avatar">
+              <i v-else-if="!newsForm.thumbnail&&percentage>100||percentage<=0" class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </div>
         </el-form-item>
         <el-form-item label="对象" prop="shopIds">
           <el-select v-model="newsForm.shopIds" clearable multiple style="width:300px;">
@@ -38,6 +42,7 @@
         <el-button type="primary" @click="submitForm('newsForm')" :loading="loadingState">确定</el-button>
       </el-form-item>
     </el-form>
+    <hint v-model="showReturn" title="返回" text="是否放弃该内容？" @confirm="handleBack" />
   </div>
 </template>
 
@@ -45,10 +50,11 @@
 import Tinymce from '@/components/Tinymce'
 import { addNews } from '@/api/news.js'
 import { getAllShop } from '@/api/shop.js'
+import hint from '@/components/Hint'
 export default {
   name: 'NewsRelease',
   // name: 'TinymceDemo',
-  components: { Tinymce },
+  components: { Tinymce, hint },
   data() {
     const istitle=(rule, value, callback)=> {
       console.log(value, 'hhhhhhhhh')
@@ -85,7 +91,8 @@ export default {
       objectList: [],
       // shopArray: [],
       shopIdList: [],
-      loadingState: false
+      loadingState: false,
+      percentage:0,
     }
   },
   watch: {
@@ -163,6 +170,11 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.showReturn = true
+    },
+    handleBack(){
+      this.showReturn = false
+      this.$router.back()
     },
     // 查询所有商铺
     getAllShop() {
@@ -186,8 +198,14 @@ export default {
     },
     handleAvatarSuccess(res) {
       console.log(res, 'gggggg')
+      this.percentage = 101
       this.newsForm.thumbnail = res.info
     },
+    handleProgress(event, file, fileList){
+      this.percentage = event.percent
+      this.newsForm.thumbnail = ''
+      console.log(event, file, fileList, 'progress.....')
+    }
   }
 }
 </script>
@@ -199,6 +217,8 @@ export default {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    width:178px;
+    height:178px;
   }
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;

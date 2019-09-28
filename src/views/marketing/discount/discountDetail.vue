@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
      <el-button size="mini" type="down"  v-if="status === 1" @click="discountStop">停用</el-button>
      <el-button size="mini" type="up" v-if="status === 0" @click="discountStop">启用</el-button>
      <el-button size="mini" type="primary" @click="editHandle">编辑</el-button>

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow="stateShow">
+      <!-- <div><i classs="el-icon-back"></i><span>|</span>个人中心</div> -->
       <el-button size="mini" type="primary" @click="changePassword">修改密码</el-button>
       <el-button size="mini" type="danger" @click="logout">退出登录</el-button>
     </breadcrumb>
@@ -25,7 +26,6 @@
       </div>
     </div>
     <el-dialog title="修改密码" :visible.sync="dialogTableVisible">
-      <!-- <p slot="title" class="header">修改密码</p> -->
       <el-form style="margin-left:20px;" :model="ruleForm" :rules="rules" ref="ruleForm" >
         <el-form-item label="姓名：">{{user.name}}</el-form-item>
         <el-form-item label="手机号：">{{user.mobile}}</el-form-item>
@@ -59,6 +59,7 @@ export default {
   components:{Breadcrumb},
   data(){
     return{
+      stateShow:false,
       showCodeState:false,
       apiUrl:'',
       avatar:'http://qiniu.freshergo.com/1569311477638.png',
@@ -79,6 +80,7 @@ export default {
     }
   },
   mounted(){
+    this.stateShow=true
     console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
     this.apiUrl = process.env.VUE_APP_BASE_API

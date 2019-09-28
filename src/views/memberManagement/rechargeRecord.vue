@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <div style="display:flex;flex-direction:row;">
         <div>会员ID：021AH135617926</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div>手机号：13619390363</div>

@@ -1,6 +1,6 @@
 <template>
   <div class="body-margin">
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleAdd">新建</el-button>
       <el-button type="primary" v-else disabled @click="handleAdd">新建</el-button>
     </breadcrumb>
@@ -45,15 +45,15 @@
             <el-button type="primary" size="mini" v-else disabled >编辑</el-button>
             <span v-if="buttonList.includes('操作')">
               <el-button type="up" size="mini" v-if="scope.row.status=== 1" @click="handleStart(scope.row)">启用</el-button>
-              <el-button type="down" size="mini" v-else-if="scope.row.status=== 0" @click="handleStart(scope.row)">停用</el-button>
+              <el-button type="down" size="mini" v-else @click="handleStart(scope.row)">停用</el-button>
             </span>
             <span v-else-if="!buttonList.includes('操作')">
               <el-button type="up" size="mini" v-if="scope.row.status=== 1" disabled>启用</el-button>
-              <el-button type="down" size="mini" v-else-if="scope.row.status=== 0" disabled>停用</el-button>
+              <el-button type="down" size="mini" v-else disabled>停用</el-button>
             </span>
             <el-button type="danger" size="mini" v-if="buttonList.includes('操作')&&scope.row.status=== 1" @click="handleDelete(scope.row)">删除</el-button>
             <el-button type="danger" size="mini" v-else disabled >删除</el-button>
-            <el-button type="warning" size="mini" v-if="buttonList.includes('操作'||'查看')" @click="handleDetail(scope.row)">详情</el-button>
+            <el-button type="warning" size="mini" v-if="buttonList.includes('查看')" @click="handleDetail(scope.row)">详情</el-button>
             <el-button type="warning" size="mini" v-else disabled>详情</el-button>
           </template>
         </el-table-column>

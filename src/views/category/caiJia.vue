@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="primary" size="mini" @click="addCijiaHandle">新建</el-button>
       <!-- <el-button type="primary" size="mini" v-else disabled>新建</el-button> -->
     </breadcrumb>

@@ -4,19 +4,23 @@
     <el-form ref="ADForm" :model="ADForm" :rules="rules" label-width="100px">
       <!-- <div style="float:left;"> -->
       <div>
-        <el-form-item label="标题" prop="tile">
+        <el-form-item label="标题" prop="title">
           <el-input v-model="ADForm.title" style="width:400px;" />
         </el-form-item>
         <el-form-item label="轮播图" prop="imge">
-         <el-upload
-          class="avatar-uploader"
-          :action="`${apiUrl}/basics/upload`"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="ADForm.imge" :src="ADForm.imge" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+         <div title="建议上传414*138px图片，大小不超过1m">
+           <el-upload
+            class="avatar-uploader"
+            :action="`${apiUrl}/basics/upload`"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :on-progress="handleProgress"
+            :before-upload="beforeAvatarUpload">
+            <el-progress v-if="0<percentage&&percentage<=100" type="circle" :percentage="percentage" :width="177" style="width:178px;height:178px;"></el-progress>
+            <img v-if="ADForm.imge" :src="ADForm.imge" class="avatar">
+            <i v-else-if="!ADForm.imge&&percentage>100||percentage<=0" class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+         </div>
         </el-form-item>
         <el-form-item label="内容" prop="content">
           <tinymce v-model="ADForm.content" :height="300" :width="700" />
@@ -34,14 +38,16 @@
         </div>
       </el-form-item>
     </el-form>
+    <hint v-model="showReturn" title="返回" text="是否放弃该内容？" @confirm="handleBack" />
   </div>
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
-import { addAdvertisement, editAdvertisement } from '@/api/advertisement.js'
+import hint from '@/components/Hint'
+import { addAdvertisement, editAdvertisement} from '@/api/advertisement.js'
 export default {
   name: 'ADRelease',
-  components: { Tinymce },
+  components: { Tinymce ,hint},
   // props: {
   //   editObject:{
   //     type: Object,
@@ -50,6 +56,7 @@ export default {
   // },
   data() {
     return {
+      percentage:0,
       picture: [],
       // 富文本内容
       content: '',
@@ -68,6 +75,8 @@ export default {
       },
       apiUrl: '',
       addEditState: false,
+      valid:false,
+      showReturn:false
     }
   },
   mounted() {
@@ -86,6 +95,11 @@ export default {
     }
   },
   methods: {
+    handleProgress(event, file, fileList){
+      this.percentage = event.percent
+      this.ADForm.imge = ''
+      // console.log(event, file, fileList, 'progress.....')
+    },
     // 图片上传
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -94,30 +108,29 @@ export default {
       this.ADForm.dialogImageUrl = ''
       this.dialogVisible = true
       this.ADForm.imge = file.response.info
+
     },
     beforeAvatarUpload(file) {
       const isLt20M = file.size / 1024 / 1024 < 1;
       if (!isLt20M) {
-              this.$message.error('上传图片的大小不能超过 1M!');
+        this.$message.error('上传图片的大小不能超过 1M!');
       }
-      this.valWidthAndHeight(file)
-      if(this.valWidthAndHeight(file)){
-        console.log('true.......')
-      }
-      console.log(this.valWidthAndHeight(file), 'function.......')
+      // console.log(this.valWidthAndHeight(file), 'function1.......')
+      // if(this.valWidthAndHeight(file)){
+      //   console.log('true.......')
+      // }
+      // console.log(this.valWidthAndHeight(file), 'function2.......')
     },
     //验证图片宽高
-    valWidthAndHeight:function(file){
+    valWidthAndHeight(file){
       let _this =this
       let valid = false
-      new Promise(function(resolve, reject) {
-        // let width = _this.validWidth  //图片宽度
-        // let height = _this.validHeight ; //图片高度
+      return new Promise(function(resolve, reject) {
         let _URL = window.URL || window.webkitURL;
         let image = new Image();
         image.src = _URL.createObjectURL(file);
         image.onload = function() {
-          console.log(image.height,image.width, 'img......')
+          // console.log(image.height,image.width, 'img......')
           if(image.width == 3*image.height){
             valid = true
           }else{
@@ -138,6 +151,7 @@ export default {
     handleAvatarSuccess(res) {
       console.log(res, 'gggggg')
       this.ADForm.imge = res.info
+      this.percentage = 101
     },
     submitForm(formName) {
       // console.log(formName, 'formName....')
@@ -157,6 +171,12 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.showReturn = true
+      // this.$router.back()
+    },
+    handleBack(){
+      this.showReturn = false
+      this.$router.back()
     },
     submitEditForm(formName) {
       // console.log(formName, 'formName....')

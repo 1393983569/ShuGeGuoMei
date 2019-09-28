@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button v-if="showButton&&bottonList.includes('操作')" type="primary" @click="getUserRole">确定</el-button>
       <el-button v-else-if="showButton&&!bottonList.includes('操作')" type="primary" disabled>确定</el-button>
     </breadcrumb>

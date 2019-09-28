@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Breadcrumb>
+    <Breadcrumb :stateShow ='false'>
       <el-button type="primary" size="mini" @click="addHandle">新建</el-button>
     </Breadcrumb>
     <div style="display:flex;flex-direction:row;align-items:center;">

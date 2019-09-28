@@ -1,6 +1,6 @@
 <template>
   <div class="body-margin" style="display:float;">
-    <breadcrumb>
+    <breadcrumb :stateShow ="stateShow">
       <el-button type="primary" size="mini" v-if="bottonList.includes('操作')" @click="handleRelease">广告发布</el-button>
       <el-button type="primary" size="mini" v-else disabled @click="handleRelease">广告发布</el-button>
     </breadcrumb>
@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column prop="picture" label="轮播图">
         <template slot-scope="scope">
-          <img v-if="scope.row.imge" :src="scope.row.imge" class="avatar" style="width:100px;height:100px;">
+          <img v-if="scope.row.imge" :src="scope.row.imge" class="avatar" style="width:240px;height:80px;">
         </template>
       </el-table-column>
       <el-table-column prop="status" label="上下架状态" />
@@ -56,7 +56,7 @@
     <!-- 删除 -->
     <hint v-model="showDelete" title="删除广告" text="是否删除该条广告？" @confirm="deleteAdConfirm" />
     <!-- 广告详情 -->
-    <ad-detail :adminName="adminName" :show-ad-detail="showAdDetail" :ad-object="adObject" @handleClose="handleClose" />
+    <!-- <ad-detail :adminName="adminName" :show-ad-detail="showAdDetail" :ad-object="adObject" @handleClose="handleClose" /> -->
   </div>
 </template>
 <script>
@@ -71,6 +71,7 @@ export default {
       ADTable: [],
       showAdDetail: false,
       showAdEdit: false,
+      stateShow:false,
       pageSize: 10,
       pageNum: 1,
       total: 0,
@@ -142,9 +143,13 @@ export default {
     },
     // 查看详情
     handleDetail(row) {
-      this.adObject = row
-      this.adminName = this.$store.state.user.name
-      this.showAdDetail = true
+      // this.adObject = row
+      row.adminName = this.$store.state.user.name
+      // this.showAdDetail = true
+      this.$router.push({
+        name:'ADDetail',
+        params:row
+      })
     },
     // 关闭详情
     handleClose(e) {

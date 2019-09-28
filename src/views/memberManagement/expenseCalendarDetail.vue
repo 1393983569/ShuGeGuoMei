@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <span>会员ID：{{memberId}}</span>
       <span>手机号：{{mobile}}</span>
     </breadcrumb>

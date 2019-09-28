@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb>
+    <breadcrumb :stateShow ='false'>
       <el-button type="primary" @click="addDiscount" v-if="buttonList.includes('操作')">新建</el-button>
       <el-button type="primary" v-else disabled>新建</el-button>
     </breadcrumb>

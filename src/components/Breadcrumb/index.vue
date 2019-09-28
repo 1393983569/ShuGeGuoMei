@@ -1,5 +1,6 @@
 <template>
-  <div style="border-bottom: 1px solid #bbbbbb; margin-bottom: 10px">
+  <div style="border-bottom: 1px solid #bbbbbb; margin-bottom: 10px;display:flex;align-items:center;">
+    <div v-if="stateShow" class="back"><i class="el-icon-back" @click="backHandle"></i>&nbsp;<span style="font-weight:bold;">|</span></div>
     <el-breadcrumb class="app-breadcrumb" separator="/">
       <transition-group name="breadcrumb">
         <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
@@ -8,7 +9,8 @@
         </el-breadcrumb-item>
       </transition-group>
     </el-breadcrumb>
-    <div style="display: inline-block; line-height: 50px; vertical-align: top; float: right;">
+    <!-- <div style="display: inline-block; line-height: 50px; vertical-align: top; float: right;"> -->
+    <div style="position:absolute;right:10px;">
       <slot></slot>
     </div>
   </div>
@@ -18,9 +20,16 @@
 import pathToRegexp from 'path-to-regexp'
 
 export default {
+  props:{
+    stateShow:{
+      default:false,
+      type:Boolean
+    }
+  },
   data() {
     return {
-      levelList: null
+      levelList: null,
+      title:'首页'
     }
   },
   watch: {
@@ -30,19 +39,32 @@ export default {
         return
       }
       this.getBreadcrumb()
+    },
+    'stateShow'(e){
+      console.log(e, 'e.....')
+      if(e){
+        this.title= ''
+        this.getBreadcrumb()
+      }else{
+        this.title="首页"
+      }
     }
   },
   created() {
     this.getBreadcrumb()
   },
   methods: {
+    backHandle(){
+      console.log('kjhggggg')
+      this.$router.back()
+    },
     getBreadcrumb() {
       // only show routes with meta.title
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]
 
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)
+        matched = [{ path: '/dashboard', meta: { title: this.title }}].concat(matched)
       }
 
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
@@ -83,5 +105,8 @@ export default {
     color: #97a8be;
     cursor: text;
   }
+}
+.back{
+  cursor: pointer;
 }
 </style>
