@@ -1,13 +1,17 @@
 <template>
   <div>
     <!-- 编辑/新建 -->
-    <el-dialog :visible="showEdit" @close="closeEdit" :before-close="handleClose" width="1200px" height="700">
-      <div class="title-size-color">{{ dialogTitle }}</div><br>
-      <div v-if="showState" />
+    <!-- <el-dialog :visible="showEdit" @close="closeEdit" :before-close="handleClose" width="1200px" height="700"> -->
+      <breadcrumb :stateShow="breadState"></breadcrumb>
+      <!-- <div v-if="showState" />
       <div v-else class=" div-margin font-weight">
-        &nbsp;&nbsp;店铺ID：{{ editObject.id }}
-      </div>
+        &nbsp;&nbsp;店铺ID：{{ }}
+      </div> -->
       <el-form ref="shopForm" :model="shopForm" :rules="rules" label-width="100px">
+        <el-form-item v-if="showState"></el-form-item>
+        <el-form-item v-else label="店铺ID：">
+          <span>{{shopForm.id}}</span>
+        </el-form-item>
         <el-form-item label="店铺名称：" prop="name">
           <el-input v-model="shopForm.name" style="width:500px;" placeholder="请输入店铺名称" />
         </el-form-item>
@@ -15,9 +19,27 @@
           <el-input v-model="shopForm.simpleName" style="width:500px;" placeholder="请输入店铺简称" />
         </el-form-item>
         <el-form-item label="店铺图片：" prop="picture">
+          <!-- 添加上传图片 -->
           <div class="size-color div-margin font-weight " v-if="showState">
             <el-upload
-              :limit= "2"
+              v-if="imgState"
+              :limit= "5"
+              :on-exceed="outNumMax"
+              :action="`${apiUrl}/basics/upload`"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
+              <i class="el-icon-plus" />
+            </el-upload>
+            <el-upload
+              v-else
+              disabled
+              title="已上传5张图片，不能继续上传！"
+              :limit= "5"
               :on-exceed="outNumMax"
               :action="`${apiUrl}/basics/upload`"
               list-type="picture-card"
@@ -33,17 +55,43 @@
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
           </div>
+          <!-- 编辑修改图片 -->
           <div v-else style="display:flex;flex-direction:row;">
             <el-upload
-              class="avatar-uploader"
+              v-if="imgState"
+              :limit= "5"
+              :on-exceed="outNumMax"
               :action="`${apiUrl}/basics/upload`"
-              :show-file-list="false"
-              :on-success="uploadSuccessEdit"
-              v-for="item in imgelist" :key="item"
-              >
-              <img v-if="item" :src="item" class="avatar" @click="clickImg(item)">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-upload="beforeAvatarUpload"
+              :file-list ="fileList"
+            >
+              <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
+              <i class="el-icon-plus" />
             </el-upload>
+            <el-upload
+              v-else
+              disabled
+              title="已上传5张图片，不能继续上传！"
+              :limit= "5"
+              :on-exceed="outNumMax"
+              :action="`${apiUrl}/basics/upload`"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              :before-upload="beforeAvatarUpload"
+              :file-list ="fileList"
+            >
+              <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
+              <i class="el-icon-plus" />
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
+              <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
           </div>
         </el-form-item>
         <el-form-item label="掌柜姓名：" prop="adminName">
@@ -53,7 +101,7 @@
           <el-input v-model="shopForm.adminPhone" style="width:300px;" placeholder="请输入手机号" />
         </el-form-item>
         <el-form-item label="初始密码：" prop="adminPassword">
-          <el-input v-model="shopForm.adminPassword" style="width:300px;" placeholder="请输入初始密码" /> <el-button size="mini">重置密码</el-button>
+          <el-input v-model="shopForm.adminPassword" style="width:300px;" placeholder="请输入初始密码" />
         </el-form-item>
         <el-form-item label="店铺地址：" prop="detailsAddress">
           <selectorAddress :province1id="shopForm.provinceId+''" :city1id="shopForm.cityId+''" :county1id="shopForm.countyId+''" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" /><br>
@@ -116,10 +164,10 @@
         <!-- 编辑 -->
         <el-form-item v-else>
           <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">修改</el-button>
+          <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog>
+    <!-- </el-dialog> -->
   </div>
 </template>
 <script>
@@ -128,32 +176,19 @@ import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { addShop, editShop } from '@/api/shop.js'
 import { getCategory } from '@/api/category.js'
 import { stringify } from 'querystring';
+import Breadcrumb from '@/components/Breadcrumb'
 export default {
+  name:'shopEidt',
   components: {
-    selectorAddress, staff
-  },
-  props: {
-    showEdit: {
-      type: Boolean,
-      default: false
-    },
-    showState: {
-      type: Boolean,
-      default: false
-    },
-    dialogTitle: {
-      type: String,
-      default: ''
-    },
-    editObject: {
-      type: Object,
-      default: Array
-    }
+    selectorAddress, staff,Breadcrumb
   },
   data() {
     return {
+      breadState:false,
+      showState:false,
       oneState:false,
       twoState:false,
+      fileList:[],
       indeterminate: true,
       finalArray: [],
       addCategoryObj: {},
@@ -223,22 +258,58 @@ export default {
       reFresh:true,
       // 员工数据
       staffTables:[],
+      // 上传图片个数限制状态
+      imgState:true,
+      editObject:{},
     }
   },
   watch: {
-    'editObject'(e) {
+    'categoryTable'(e){
+      if(e){
+        if(this.showState){
+
+        }else{
+          this.editObjectHandle(this.editObject)
+        }
+      }
+    },
+  },
+  mounted() {
+    this.getCategoryList()
+    // this.handleClose()
+    if(JSON.stringify(this.$route.params)!== '{}'){
+      this.editObject= this.$route.params
+    }else{
+      this.editObject = ''
+      this.showState = true
+    }
+    this.apiUrl = process.env.VUE_APP_BASE_API
+
+  },
+  methods: {
+    // 品类编辑的时候回显
+    editObjectHandle(e) {
       if(e.imge){
+        this.fileList = []
         this.imgelist = e.imge.split(',')
+        this.imgelist.map(url => {
+          if(url){
+            let ob = {}
+            ob.url = url
+            this.fileList.push(ob)
+          }
+        })
+        if(this.fileList.length>=5){
+          this.imgState = false
+        }
       }
       this.staffTables = e.shopStaffList
       // 品类的回显
       this.shopForm = e
-
        for(let n=0; n<this.categoryTable.length;n++){
          this.categoryTable[n].state = false
          this.categoryTable[n].status = false
        }
-
       if(e.categoryJson){
         let cateArr = []
         cateArr = this.recursionTableData(JSON.parse(e.categoryJson))
@@ -248,7 +319,7 @@ export default {
           idArr.push(e.id)
           childrenIdArr.push(e.childrenId)
         })
-        for(let i=0;i<this.categoryTable.length;i++){
+        for(let i=0; i<this.categoryTable.length; i++){
           if(this.categoryTable[i].id){
             if(idArr.includes(this.categoryTable[i].id)){
               this.categoryTable[i].status = true
@@ -263,13 +334,6 @@ export default {
         }
       }
     },
-  },
-  mounted() {
-    this.apiUrl = process.env.VUE_APP_BASE_API
-    this.getCategoryList()
-    this.handleClose()
-  },
-  methods: {
     clickImg(e) {
       this.imgelist.forEach((el, key) => {
         if(el === e) {
@@ -282,6 +346,10 @@ export default {
       if (!isLt20M) {
         this.$message.error('上传图片的大小不能超过 1M!');
       }
+      // 限制图片上传个数
+      if(this.imgelist.length>5){
+        this.imgState = false
+      }
     },
     changeOneCate(row){
       for(let i=0;i<this.categoryTable.length;i++){
@@ -394,17 +462,14 @@ export default {
     },
     //  上传图片
     handleRemove(file, fileList) {
+
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
-    uploadSuccess(file){
-      this.shopImg += file.info+','
-    },
-    uploadSuccessEdit(file) {
-      this.imgelist[this.key] = file.info
-      this.$forceUpdate()
+    uploadSuccess(response, file, fileList){
+      this.imgelist.push(file.response.info)
     },
     handleEditPreview(e){
       // console.log(e, 'fffffff')
@@ -467,18 +532,21 @@ export default {
       let arr = this.handleJson(this.finalArray)
       this.shopForm.categoryJson = JSON.stringify(arr)
       this.shopForm.imge = this.shopImg.substring(0, this.shopImg.length-1)
+      // return
       addShop(this.shopForm).then(res => {
-        this.$message.success('操作成功')
-        this.loadingState = false
-        this.showEdit = false
-        this.handleClose()
-        this.provinceId = ''
-        this.finalArray = []
-        this.checkAll = []
-        this.checkedCategory = []
-        this.management = ''
-        this.shopImg = ''
-        this.$parent.getShopList()
+        if(res.status === 1){
+          this.$message.success('操作成功')
+          this.loadingState = false
+          this.showEdit = false
+          this.handleClose()
+          this.provinceId = ''
+          this.finalArray = []
+          this.checkAll = []
+          this.checkedCategory = []
+          this.management = ''
+          this.shopImg = ''
+          this.$router.back()
+        }
       }).catch(error => {
         this.$message.error('添加商铺失败！')
         console.log(error)
@@ -509,12 +577,17 @@ export default {
       } else {
         this.shopForm.management = 2
       }
+      console.log(this.imgelist, 'imgggggggggg')
       this.shopForm.imge = this.imgelist.toString()
+      // return
       editShop(this.shopForm).then(res => {
-        this.$message.success('操作成功')
-        this.loadingState = false
-        this.handleClose()
-        this.$parent.getShopList()
+        if(res.status === 1){
+           this.$message.success('操作成功')
+          this.loadingState = false
+          this.handleClose()
+          this.$router.back()
+          // this.$parent.getShopList()
+        }
       }).catch(error => {
         console.log(error)
         this.$message.error('编辑商铺失败！')
@@ -579,6 +652,17 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .change-img{
+    width:100px;
+    height:30px;
+    color:#ffffff;
+    position:absolute;
+    right:0px;top:0px;
+    background-color:#8c939d;
+    margin:0px;
+    border-radius:10%;
+    line-height: 30px;
   }
 </style>
 

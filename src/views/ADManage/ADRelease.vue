@@ -8,7 +8,7 @@
           <el-input v-model="ADForm.title" style="width:400px;" />
         </el-form-item>
         <el-form-item label="轮播图" prop="imge">
-         <div title="建议上传414*138px图片，大小不超过1m">
+         <div title="建议上传414*138px图片，大小不超过1m" style="dispaly:flex;">
            <el-upload
             class="avatar-uploader"
             :action="`${apiUrl}/basics/upload`"
@@ -16,6 +16,8 @@
             :on-success="handleAvatarSuccess"
             :on-progress="handleProgress"
             :before-upload="beforeAvatarUpload">
+            <p v-if="addEditState"></p>
+            <p v-else class="change-img">更换图片</p>
             <el-progress v-if="0<percentage&&percentage<=100" type="circle" :percentage="percentage" :width="177" style="width:178px;height:178px;"></el-progress>
             <img v-if="ADForm.imge" :src="ADForm.imge" class="avatar">
             <i v-else-if="!ADForm.imge&&percentage>100||percentage<=0" class="el-icon-plus avatar-uploader-icon"></i>
@@ -225,8 +227,20 @@ export default {
     text-align: center;
   }
   .avatar {
+
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .change-img{
+    width:100px;
+    height:30px;
+    color:#ffffff;
+    position:absolute;
+    right:0px;top:0px;
+    background-color:#8c939d;
+    margin:0px;
+    border-radius:10%;
+    line-height: 30px;
   }
 </style>

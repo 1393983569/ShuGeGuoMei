@@ -352,6 +352,16 @@ export const asyncRoutes = [
       },
       {
         hidden: true,
+        path: 'shopEidt',
+        name: 'shopEidt',
+        meta: {
+          icon: 'dashboard',
+          title: '操作'
+        },
+        component: () => import('@/views/shopManage/shopEidt.vue')
+      },
+      {
+        hidden: true,
         path: 'shopDetail',
         name: 'shopDetail',
         meta: {

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <breadcrumb :stateShow="breadState"></breadcrumb>
     <!-- 详情显示 -->
     <!-- <el-dialog :visible="showDetail" width="1000px" height="700" :before-close="handleCloseDetail"> -->
       <!-- <div slot="title" class="title-size-color">店铺详情</div> -->
@@ -87,6 +88,7 @@
 </template>
 <script>
 import staff from './staff.vue'
+import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'shopDetail',
   // props: {
@@ -95,7 +97,7 @@ export default {
   //     default: Array
   //   }
   // },
-  components:{staff},
+  components:{staff, Breadcrumb},
   data() {
     return {
       employeeTable: [],
@@ -103,7 +105,8 @@ export default {
       mergeList: [],
       shopObject: {},
       urlList: [],
-      staffTable:[]
+      staffTable:[],
+      breadState:false,
     }
   },
   watch: {
@@ -117,6 +120,7 @@ export default {
    }
   },
   mounted() {
+    this.breadState = true
     // console.log(JSON.stringify(this.$route.params) == '{}', 'canshuooooooo')
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.urlList= this.$route.params.imge.split(',')

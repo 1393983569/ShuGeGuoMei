@@ -7,11 +7,11 @@
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
       <span class="item">经营模式:</span>
-      <el-select v-model="management" style="width:100px;" size="mini">
+      <el-select v-model="management" style="width:100px;" size="mini" clearable>
         <el-option v-for="item in managementList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <span class="item">排序:</span>
-      <el-select v-model="orderId" style="width:100px;" size="mini">
+      <el-select v-model="orderId" style="width:100px;" size="mini" clearable>
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="float:right;">
@@ -70,7 +70,7 @@
       </div>
     </div>
     <!-- 店铺编辑 -->
-    <shop-edit :show-edit="showEdit" @closeHandle="closeEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" />
+    <!-- <shop-edit :show-edit="showEdit" @closeHandle="closeEdit" :show-state="showState" :dialog-title="dialogTitle" :edit-object="editObject" @isClose="isClose" /> -->
 
     <hint v-model="showDelete" title="删除店铺" text="是否删除该店铺？" @confirm="confirmDelete" />
 
@@ -124,6 +124,10 @@ export default {
       // 经营模式
       managementList: [
         {
+          id: 3,
+          name: '全部'
+        },
+        {
           id: 1,
           name: '直营'
         },
@@ -152,22 +156,12 @@ export default {
   },
   watch: {
     orderId(newValue, oldValue) {
-      console.log(newValue, oldValue, '%%%%%%%')
       if (oldValue) {
         this.tableAttribute.order = 'descending'
         this.tableAttribute.prop = newValue
         this.getTableData()
-        // this.getShopList()
       }
     }
-    // 'cityId'(e) {
-    //   console.log(e, 'lllll')
-    // },
-    // 'provinceId'(e){
-    //   console.log(e, 'kkkkkk')
-    // },
-    // 'countyId'(e){
-    //   console.log(e, 'jjjjjjs')
     // }
   },
   mounted() {
@@ -203,7 +197,11 @@ export default {
         obj.cityId = this.cityId
         obj.countyId = this.countyId
       // }
-      obj.management = this.management
+      if(this.management === 3){
+        obj.management = ''
+      }else{
+        obj.management = this.management
+      }
       getShopList(obj).then(res => {
         if (res.info.records.length > 0) {
           this.total = res.info.totalrecord
@@ -248,14 +246,17 @@ export default {
       }
     },
     handleAdd() {
-      this.showEdit = true
-      this.showState = true
-      this.dialogTitle = '新建'
-      this.editObject = {
-        provinceId: '',
-        cityId: '',
-        countyId: ''
-      }
+      this.$router.push({
+        name:'shopEidt',
+      })
+      // this.showEdit = true
+      // this.showState = true
+      // this.dialogTitle = '新建'
+      // this.editObject = {
+      //   provinceId: '',
+      //   cityId: '',
+      //   countyId: ''
+      // }
     },
     // 删除店铺
     handleDelete(row) {
@@ -299,11 +300,12 @@ export default {
       })
     },
     handleEdit(row) {
-      console.log(row, 'row,,,,,,')
-      this.showEdit = true
-      this.showState = false
-      this.dialogTitle = '编辑'
-      this.editObject = row
+      console.log(row, 'kkkkkkkk')
+      row.showState = false
+      this.$router.push({
+        name:'shopEidt',
+        params:row,
+      })
       // this.$router.push({ path:'/'})
     },
     handleDetail(row) {
