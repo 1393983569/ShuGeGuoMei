@@ -61,7 +61,7 @@
     // 用来判断查看或者编辑
     beforeRouteEnter: (to, form, next) => {
       next((mv) => {
-        console.log(to, form)
+        // console.log(to, form)
         mv.userId = mv.$route.params.id
         if (mv.$route.params.state === 'select') {
           mv.showButton = false
@@ -83,12 +83,14 @@
     },
       getUserListRole() {
         // getAllMenu(this.userId).then(res => {
+          console.log('getUserListRole........')
         getAllMenu(this.$store.state.user.roleId).then(res => {
           if (res.info === null) {
+            // console.log(res.info.id, '0000000nulllll')
             this.tableData = this.recursionList(asyncRoutes)
             this.operationState = 'add'
           } else {
-            console.log(JSON.parse(res.info.menu), '0000000')
+            // console.log(res.info.id, '0000000')
             this.tableData = JSON.parse(res.info.menu)
             this.id = res.info.id
             this.operationState = 'edit'

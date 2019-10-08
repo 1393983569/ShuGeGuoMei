@@ -125,7 +125,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm, 'kkkkkkkk')
+          // console.log(this.ruleForm, 'kkkkkkkk')
           addCaijiaUser(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加成功！')
@@ -143,7 +143,7 @@ export default {
     editsubmitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm, 'kkkkkkkk')
+          // console.log(this.ruleForm, 'kkkkkkkk')
           let obj = {}
           obj.id = this.ruleForm.id
           obj.name = this.ruleForm.name

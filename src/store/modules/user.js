@@ -13,7 +13,8 @@ const state = {
   buttonRoleList: [],
   vipObject:{},
   orderObject:{},
-  discountObject:{}
+  discountObject:{},
+  goodsObject:{},
 }
 
 const mutations = {
@@ -55,7 +56,10 @@ const mutations = {
   },
   SET_ROLENAME:(state, rolename) => {
     state.rolename = rolename
-  }
+  },
+  SET_GOODSOBJECT:(state, goodsObject) => {
+    state.goodsObject = goodsObject
+  },
 }
 
 const actions = {
@@ -93,10 +97,12 @@ const actions = {
           // return
           let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
           let roleList = getRole(JSON.parse(response.info.menu))
+          console.log(roleList, 'roleList.....')
           commit('SET_ROLEID', response.info.roleId)
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)
           commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+          console.log(state, 'state........')
           const data = {
             buttonRoleList: state.buttonRoleList,
             name: state.name,
@@ -108,6 +114,7 @@ const actions = {
             reject('验证失败，请重新登录。')
           }
           const { roles, name, avatar, introduction } = data
+          console.log(roles, 'kkkkklength.....')
           if (!roles || roles.length <= 0) {
             reject('getInfo:角色必须是非空数组!')
           }

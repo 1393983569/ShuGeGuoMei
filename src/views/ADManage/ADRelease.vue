@@ -1,6 +1,16 @@
 <template>
   <!-- <div class="body-margin" style="display:float;"> -->
   <div class="body-margin">
+    <Breadcrumb>
+      <div v-if="addEditState">
+        <el-button type="warning" @click="resetForm('ADForm')">取消</el-button>
+        <el-button type="primary" @click="submitForm('ADForm')">确定</el-button>
+      </div>
+      <div v-else>
+        <el-button type="warning" @click="resetForm('ADForm')">取消</el-button>
+        <el-button type="primary" @click="submitEditForm('ADForm')">修改</el-button>
+      </div>
+    </Breadcrumb>
     <el-form ref="ADForm" :model="ADForm" :rules="rules" label-width="100px">
       <!-- <div style="float:left;"> -->
       <div>
@@ -30,14 +40,7 @@
       </div>
       <!-- <el-form-item style="float:right;"> -->
       <el-form-item>
-        <div v-if="addEditState">
-          <el-button type="warning" @click="resetForm('ADForm')">取消</el-button>
-          <el-button type="primary" @click="submitForm('ADForm')">确定</el-button>
-        </div>
-        <div v-else>
-          <el-button type="warning" @click="resetForm('ADForm')">取消</el-button>
-          <el-button type="primary" @click="submitEditForm('ADForm')">修改</el-button>
-        </div>
+
       </el-form-item>
     </el-form>
     <hint v-model="showReturn" title="返回" text="是否放弃该内容？" @confirm="handleBack" />
@@ -46,10 +49,11 @@
 <script>
 import Tinymce from '@/components/Tinymce'
 import hint from '@/components/Hint'
-import { addAdvertisement, editAdvertisement} from '@/api/advertisement.js'
+import Breadcrumb from '@/components/Breadcrumb'
+import { addAdvertisement, editAdvertisement } from '@/api/advertisement.js'
 export default {
   name: 'ADRelease',
-  components: { Tinymce ,hint},
+  components: { Tinymce ,hint, Breadcrumb},
   // props: {
   //   editObject:{
   //     type: Object,

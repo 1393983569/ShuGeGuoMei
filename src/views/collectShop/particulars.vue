@@ -1,9 +1,10 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'><el-button @click="handleEdit">编辑</el-button></breadcrumb>
-    <p>商品ID：{{ row.goodId }}</p>
-    <p>一级品类：{{ row.categoryOne.name}} (ID: {{ row.categoryOne.id }})</p>
-    <p v-if="row.categoryTwo">二级品类：{{ row.categoryTwo.name }} (ID: {{ row.categoryTwo.id }})</p>
+    <breadcrumb :stateShow ="stateShow"><el-button @click="handleEdit" type="primary">编辑</el-button></breadcrumb>
+    <p v-if="row.goodId">商品ID：{{ row.goodId.toString().substring(row.goodId.length-4) }}</p>
+    <p v-if="categoryOne">一级品类：{{ categoryOne.name}} (ID: {{ categoryOne.id }})</p>
+    <p v-else>一级品类：暂无数据</p>
+    <p v-if="categoryTwo">二级品类：{{ categoryTwo.name }} (ID: {{ categoryTwo.id }})</p>
     <p v-else>二级品类：暂无数据</p>
     <p>商品名称：{{ row.goodName}}</p>
     <div>
@@ -28,7 +29,7 @@
     <p>备注：{{ row.goodRmark }}</p>
     <p>保质期：{{ row.goodQualityDate }}</p>
     <p>保鲜期：{{ row.goodFreshDate }}</p>
-    <p>产地：{{ row.countryId === 999999 ? '国外':'国内'+ '-' +row.province.name+ ' '+row.city.name+ ' '+row.area.name }}</p>
+    <p>产地：{{ row.countryId === 999999 ? '国外':'国内'+ '-' +province.name+ ' '+city.name+ ' '+area.name }}</p>
     <p>状态：{{ row.goodState=== 0 ? '有货': '缺货' }}</p>
     <p>进价：{{ row.goodPurchasePrice/100 }}</p>
     <p>出价：{{ row.goodSellPrice/100 }}</p>
@@ -53,7 +54,8 @@ export default {
       goodBigImg: '',
       img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       fit: 'fit',
-      id: ''
+      id: '',
+      stateShow:false,
     }
   },
   // beforeRouteEnter(to, form, next) {
@@ -63,13 +65,16 @@ export default {
   //   })
   // },
   mounted() {
-    if (JSON.stringify(this.$route.params)) {
+    this.stateShow = true
+    console.log(this.$store.state, '$store..')
+    if (JSON.stringify(this.$route.params)!=='{}') {
       console.log(this.$route.params, 'kkkkkk')
       this.goodId = this.$route.params.id
       this.getDetailsGoods()
-    } else (
-      window.history.go(-1)
-    )
+    } else if(this.$store.state.user.goodsObject){
+      this.goodId = this.$store.state.user.goodsObject.id
+      this.getDetailsGoods()
+    }else{}
     // this.showRow()
   },
   methods: {
@@ -90,6 +95,20 @@ export default {
         console.log(res, '#######')
         if(res.info) {
           this.row = res.info
+          this.province = res.info.province
+          this.city = res.info.city
+          this.area = res.info.area
+          if(res.info.categoryOne){
+            this.categoryOne = res.info.categoryOne
+          }else{
+            this.categoryOne = {name:'',id:''}
+          }
+          if(res.info.categoryTwo){
+            this.categoryOne = res.info.categoryTwo
+          }else{
+            this.categoryTwo = {name:'',name:'',id:''}
+          }
+
         }else{
           this.$message.error('查询详情失败!')
         }

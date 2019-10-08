@@ -52,12 +52,17 @@
           <img :src="scope.row.smallImg" style="width: 80px; height: 80px">
         </template>
       </el-table-column>
-      <el-table-column label="店铺ID" prop="id" />
+      <el-table-column label="商品ID" prop="id">
+        <template slot-scope="scope">
+          <!-- 显示商品id后四位 -->
+          {{scope.row.id.toString().substring(scope.row.id.toString().length-4)}}
+        </template>
+      </el-table-column>
       <el-table-column label="商品名称" prop="name" />
       <el-table-column label="状态" prop="state" />
-      <el-table-column label="进价(元/斤)" prop="purchasePrice" />
-      <el-table-column label="出价(元/斤)" prop="sellPrice" />
-      <el-table-column label="零售价(元/斤)" prop="price" />
+      <el-table-column label="进价(元/单位)" prop="purchasePrice" />
+      <el-table-column label="出价(元/单位)" prop="sellPrice" />
+      <el-table-column label="零售价(元/单位)" prop="price" />
       <el-table-column
         label="操作"
         width="350"
@@ -292,6 +297,7 @@ export default {
     },
     // 查看详情
     viewDetails(row) {
+      this.$store.state.user.goodsObject = row
       this.$router.push({
         name: 'particulars',
         params: row

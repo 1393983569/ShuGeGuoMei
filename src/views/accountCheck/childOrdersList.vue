@@ -97,7 +97,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.row, 'kkkkkkkk')
+    // console.log(this.row, 'kkkkkkkk')
     // if(this.row.length === 0){
     //   this.$router.push({
     //     name:'orderFormList'

@@ -65,6 +65,7 @@ export const getRole = (role) => {
     listValue.forEach((item, index) => {
       if (item.checkList.length !== 0) {
         // if (item.checkList) {
+          console.log(item, 'kkkkkkkkkkkk')
         if (item.roles) {
           item.roles.forEach(itemx => {
             if (!list.includes(itemx)) {
@@ -77,6 +78,7 @@ export const getRole = (role) => {
         recursion(item.children)
       }
     })
+    console.log(list, 'list/////////')
     return list
   }
   return recursion(role)

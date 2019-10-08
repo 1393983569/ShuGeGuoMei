@@ -1,6 +1,10 @@
 <template>
   <!-- <div class="body-margin" style="display:float;"> -->
   <div class="body-margin">
+    <breadcrumb>
+      <el-button type="warning" @click="resetForm('newsForm')">取消</el-button>
+      <el-button type="primary" @click="submitForm('newsForm')" :loading="loadingState">确定</el-button>
+    </breadcrumb>
     <el-form ref="newsForm" :model="newsForm" :rules="rules" label-width="100px">
       <!-- <div style="float:left;"> -->
       <div>
@@ -38,8 +42,7 @@
       </div>
       <!-- <el-form-item style="float:right;"> -->
       <el-form-item>
-        <el-button type="warning" @click="resetForm('newsForm')">取消</el-button>
-        <el-button type="primary" @click="submitForm('newsForm')" :loading="loadingState">确定</el-button>
+
       </el-form-item>
     </el-form>
     <hint v-model="showReturn" title="返回" text="是否放弃该内容？" @confirm="handleBack" />
@@ -51,13 +54,14 @@ import Tinymce from '@/components/Tinymce'
 import { addNews } from '@/api/news.js'
 import { getAllShop } from '@/api/shop.js'
 import hint from '@/components/Hint'
+import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'NewsRelease',
   // name: 'TinymceDemo',
-  components: { Tinymce, hint },
+  components: { Tinymce, hint, Breadcrumb },
   data() {
     const istitle=(rule, value, callback)=> {
-      console.log(value, 'hhhhhhhhh')
+      // console.log(value, 'hhhhhhhhh')
     }
     return {
       newsForm: {
@@ -68,7 +72,9 @@ export default {
         deleteStatus: 0,
         // shopJson: [],
         thumbnail:'',
+
       },
+      showReturn:false,
       apiUrl:'',
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur', validate:'istitle' }],
@@ -97,12 +103,10 @@ export default {
   },
   watch: {
     'newsForm'(e) {
-      console.log(e, 'eeeee')
+      // console.log(e, 'eeeee')
     },
     'object.shopId'(e) {
-      console.log(e, 'jjjjjjj')
       e.forEach(element => {
-        console.log(element.split(':'), 'element....')
         const temp = {}
         temp.id = parseInt(element.split(':')[0])
         temp.name = element.split(':')[1]
@@ -130,8 +134,7 @@ export default {
         addArray.category = this.newsForm.category + ''
         addArray.content = this.newsForm.content
         addArray.deleteStatus = this.newsForm.deleteStatus + ''
-        // addArray.thumbnail = this.newsForm.thumbnail
-        console.log(this.newsForm.shopIds, 'lhdhdufugfhngnguhih')
+        addArray.thumbnail = this.newsForm.thumbnail
         let shopIdList = []
         let shopJson = []
         this.newsForm.shopIds.map(item => {
@@ -142,7 +145,6 @@ export default {
           ob.name = arr[1]
           shopJson.push(ob)
         })
-        // return
         addArray.shopJson = JSON.stringify(shopJson)
         addArray.shopIds = shopIdList.toString()
       addNews(addArray).then(res => {
@@ -155,8 +157,13 @@ export default {
         }
       }).catch(err => {
         this.loadingState = false
-        console.log(err)
-        this.$message.error('添加消息失败')
+        // console.log(err)
+        if(err === '该消息标题已发布'){
+          this.$message.error('消息名称不可重复！')
+        }else{
+          this.$message.error('添加消息失败！')
+        }
+
       })
     },
     submitForm(formName) {
@@ -179,7 +186,7 @@ export default {
     // 查询所有商铺
     getAllShop() {
       getAllShop().then(res => {
-        console.log(res, 'kkkkkkk')
+        // console.log(res, 'kkkkkkk')
         if (res.info.length > 0) {
           this.objectList = res.info
         } else {
@@ -197,14 +204,13 @@ export default {
       }
     },
     handleAvatarSuccess(res) {
-      console.log(res, 'gggggg')
       this.percentage = 101
       this.newsForm.thumbnail = res.info
     },
     handleProgress(event, file, fileList){
       this.percentage = event.percent
       this.newsForm.thumbnail = ''
-      console.log(event, file, fileList, 'progress.....')
+      // console.log(event, file, fileList, 'progress.....')
     }
   }
 }

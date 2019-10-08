@@ -407,7 +407,7 @@ export const asyncRoutes = [
         name: 'separateBill',
         hidden: true,
         meta: {
-          // roles: ['separateBill'],
+          roles: ['separateBill'],
           icon: 'dashboard',
           title: '拆单',
           breadcrumb: false
@@ -419,7 +419,7 @@ export const asyncRoutes = [
         name: 'orderDetails',
         hidden: true,
         meta: {
-          // roles: ['orderDetails'],
+          roles: ['orderDetails'],
           icon: 'dashboard',
           title: '订单详情',
           breadcrumb: false
@@ -431,7 +431,7 @@ export const asyncRoutes = [
         name: 'particulars',
         hidden: true,
         meta: {
-          // roles: ['particulars'],
+          roles: ['particulars'],
           icon: 'dashboard',
           title: '商品详情',
           breadcrumb: false
@@ -443,7 +443,7 @@ export const asyncRoutes = [
         name: 'childOrdersDetails',
         hidden: true,
         meta: {
-          // roles: ['childOrdersDetails'],
+          roles: ['childOrdersDetails'],
           icon: 'dashboard',
           title: '子订单详情',
           breadcrumb: false
@@ -469,7 +469,7 @@ export const asyncRoutes = [
     name: 'providerManage',
     component: Layout,
     meta: {
-      // roles: ['providerManage'],
+      roles: ['providerManage'],
       icon: 'Suppliermanagement_default',
       title: '供应商管理'
     },
@@ -500,7 +500,7 @@ export const asyncRoutes = [
         name: 'providerDetail',
         hidden: true,
         meta: {
-          // roles: ['providerList'],
+          roles: ['providerList'],
           icon: 'dashboard',
           title: '详情'
         },
@@ -617,7 +617,7 @@ export const asyncRoutes = [
         name: 'membershipDetails',
         hidden: true,
         meta: {
-          // roles: ['membershipDetails'],
+          roles: ['membershipDetails'],
           icon: 'dashboard',
           title: '会员详情'
         },

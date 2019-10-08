@@ -64,7 +64,7 @@ export default {
           this.$message.error('查询城市出错！')
         })
       }else{
-        console.log('kong......')
+        // console.log('kong......')
         this.cityId = ''
         this.countyId = ''
         this.cityList = []
@@ -99,15 +99,15 @@ export default {
       this.$emit('getCounty', this.countyId)
     },
     'province1id'(e) {
-      console.log(e, 'sheng//////')
+      // console.log(e, 'sheng//////')
       this.provinceId = e
     },
     'city1id'(e) {
-      console.log(e, 'sheng//////')
+      // console.log(e, 'sheng//////')
       this.cityId = e
     },
     'county1id'(e) {
-      console.log(e, 'sheng//////')
+      // console.log(e, 'sheng//////')
       this.countyId = e
     }
   },
@@ -127,7 +127,7 @@ export default {
     getProvinceList() {
       getProvince().then(res => {
         if (res.info.length > 0) {
-          console.log(res.info,'province......')
+          // console.log(res.info,'province......')
           this.provinceList = res.info
         } else {
           this.$message.info('暂无省份！')

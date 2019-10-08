@@ -107,7 +107,7 @@ export default {
     // 查询所有商铺
     getAllShop() {
       getAllShop().then(res => {
-        console.log(res, 'kkkkkkk')
+        // console.log(res, 'kkkkkkk')
         if (res.status === 1) {
           this.shopList = res.info
         } else {

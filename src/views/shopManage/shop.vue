@@ -149,8 +149,8 @@ export default {
   },
   beforeRouteEnter(to, from, next){
     next(mv => {
-      console.log(mv, '&&&&&&&')
-      console.log(to,'*****')
+      // console.log(mv, '&&&&&&&')
+      // console.log(to,'*****')
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
     })
   },
