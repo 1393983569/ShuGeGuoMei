@@ -407,10 +407,10 @@ export const asyncRoutes = [
         name: 'separateBill',
         hidden: true,
         meta: {
-          roles: ['separateBill'],
+          roles: ['orderFormList'],
           icon: 'dashboard',
           title: '拆单',
-          breadcrumb: false
+          // breadcrumb: false
         },
         component: () => import('@/views/collectShop/separateBill.vue')
       },
@@ -419,10 +419,10 @@ export const asyncRoutes = [
         name: 'orderDetails',
         hidden: true,
         meta: {
-          roles: ['orderDetails'],
+          roles: ['orderFormList'],
           icon: 'dashboard',
           title: '订单详情',
-          breadcrumb: false
+          // breadcrumb: false
         },
         component: () => import('@/views/collectShop/orderDetails.vue')
       },
@@ -431,10 +431,10 @@ export const asyncRoutes = [
         name: 'particulars',
         hidden: true,
         meta: {
-          roles: ['particulars'],
+          roles: ['collectShopList'],
           icon: 'dashboard',
           title: '商品详情',
-          breadcrumb: false
+          // breadcrumb: false
         },
         component: () => import('@/views/collectShop/particulars.vue')
       },
@@ -443,10 +443,10 @@ export const asyncRoutes = [
         name: 'childOrdersDetails',
         hidden: true,
         meta: {
-          roles: ['childOrdersDetails'],
+          roles: ['orderFormList'],
           icon: 'dashboard',
           title: '子订单详情',
-          breadcrumb: false
+          // breadcrumb: false
         },
         component: () => import('@/views/collectShop/childOrdersDetails.vue')
       },
@@ -455,10 +455,10 @@ export const asyncRoutes = [
         name: 'addAndEdit',
         hidden: true,
         meta: {
-          // roles: ['addAndEdit'],
+          roles: ['collectShopList'],
           icon: 'dashboard',
           title: '修改添加',
-          breadcrumb: false
+          // breadcrumb: false
         },
         component: () => import('@/views/collectShop/addAndEdit.vue')
       }
@@ -489,7 +489,7 @@ export const asyncRoutes = [
         name: 'providerAddEdit',
         hidden: true,
         meta: {
-          // roles: ['providerList'],
+          roles: ['providerManage'],
           icon: 'dashboard',
           title: '修改添加'
         },
@@ -500,7 +500,7 @@ export const asyncRoutes = [
         name: 'providerDetail',
         hidden: true,
         meta: {
-          roles: ['providerList'],
+          roles: ['providerManage'],
           icon: 'dashboard',
           title: '详情'
         },
@@ -617,7 +617,7 @@ export const asyncRoutes = [
         name: 'membershipDetails',
         hidden: true,
         meta: {
-          roles: ['membershipDetails'],
+          roles: ['memberManagement'],
           icon: 'dashboard',
           title: '会员详情'
         },
@@ -628,7 +628,7 @@ export const asyncRoutes = [
         name: 'rechargeRecord',
         hidden:true,
         meta: {
-          // roles: ['rechargeRecord'],
+          roles: ['memberManagement'],
           icon: 'dashboard',
           title: '充值记录'
         },
@@ -639,7 +639,7 @@ export const asyncRoutes = [
         name: 'expenseCalendar',
         hidden:true,
         meta: {
-          // roles: ['expenseCalendar'],
+          roles: ['memberManagement'],
           icon: 'dashboard',
           title: '消费记录'
         },
@@ -650,7 +650,7 @@ export const asyncRoutes = [
         name: 'expenseCalendarDetail',
         hidden:true,
         meta: {
-          // roles: ['expenseCalendar'],
+          roles: ['memberManagement'],
           icon: 'dashboard',
           title: '消费记录详情'
         },
@@ -661,7 +661,7 @@ export const asyncRoutes = [
         name: 'integralDetails',
         hidden: true,
         meta: {
-          // roles: ['integralDetails'],
+          roles: ['memberManagement'],
           icon: 'dashboard',
           title: '积分详情'
         },
@@ -672,7 +672,7 @@ export const asyncRoutes = [
         name: 'explain',
         hidden: true,
         meta: {
-          // roles: ['explain'],
+          roles: ['memberManagement'],
           icon: 'dashboard',
           title: '会员系统说明'
         },

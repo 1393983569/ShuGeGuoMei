@@ -37,7 +37,7 @@
     <!-- 搜索条件 -->
     <div style="display:flex;direction-flex:row;">
       <span style="font-weight:bold;">角色：</span>
-      <el-select v-model="charactar" style="width:20%;" size="mini">
+      <el-select v-model="charactar" style="width:20%;" size="mini" placeholder="请选择活动区域">
         <el-option v-for="item in roleList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div>

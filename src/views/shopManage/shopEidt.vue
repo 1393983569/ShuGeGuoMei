@@ -5,13 +5,13 @@
       <breadcrumb :stateShow="breadState">
         <!-- 新建 -->
         <div v-if="showState">
-          <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button type="primary" :loading="loadingState" @click="addShopHandle('shopForm')">保存</el-button>
+          <el-button size="mini" type="primary" :loading="loadingState" @click="addShopHandle('shopForm')">保存</el-button>
+          <el-button size="mini" type="warning" @click="cancelHandle('shopForm')">取消</el-button>
         </div>
         <!-- 编辑 -->
         <div v-else>
-          <el-button type="warning" @click="cancelHandle('shopForm')">取消</el-button>
-          <el-button type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
+          <el-button size="mini" type="primary" :loading="loadingState" @click="editShopHandle('shopForm')">保存</el-button>
+          <el-button size="mini" type="warning" @click="cancelHandle('shopForm')">取消</el-button>
         </div>
       </breadcrumb>
       <!-- <div v-if="showState" />

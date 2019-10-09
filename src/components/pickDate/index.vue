@@ -7,12 +7,12 @@
       月：<el-select v-model="month" size="mini" class="datePick" @change="getMonth">
           <el-option v-for="(item, key) in monthList" :key="key" :value="item" selected>{{item}}</el-option>
       </el-select>
-      <!-- <span v-if="showDay"> -->
-        日：<el-select v-model="day" size="mini" class="datePick" @change="getDay">
-          <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
-        </el-select>
-      <!-- </span> -->
-
+      <!-- 整年 -->
+      日：<el-select v-if="dayState" disabled placeholder="----" class="datePick"></el-select>
+      <!-- 非整年 -->
+      <el-select v-else v-model="day" size="mini" class="datePick" @change="getDay">
+        <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
+      </el-select>
     </div>
   </form>
 </template>
@@ -29,6 +29,7 @@ export default {
       dayList:[],
       tempYear:'',
       tempMonth:'',
+      dayState:false,
       // showDay:false,
     }
   },
@@ -69,9 +70,9 @@ export default {
       this.yearList = []
       var date = new Date()
       var y = date.getFullYear()
-      this.year = y
-      this.tempYear = y
-      this.setMonth()
+      // this.year = y
+      // this.tempYear = y
+      // this.setMonth()
       for (var i =(y-20); i <=y+20; i++){
         this.yearList.push(i)
       }
@@ -112,8 +113,10 @@ export default {
         this.tempDay = ''
         this.day = ''
         this.dayList = []
+        this.dayState = true
         this.handleFinalDate()
       }else{
+        this.dayState = false
         this.tempMonth = month
         this.setDay()
       }

@@ -132,10 +132,11 @@ export default {
     },
     // 品类树形选择处理
     changeHandle(e){
-        this.categoryOneId = ''
-        this.categoryTwoId = ''
+        // this.categoryOneId = ''
+        // this.categoryTwoId = ''
       if(e.children){
         this.categoryOneId = e.id
+        this.categoryTwoId = ''
         this.getGoods()
       }else{
         this.categoryTwoId = e.id

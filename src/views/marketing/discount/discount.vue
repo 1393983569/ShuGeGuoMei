@@ -1,8 +1,8 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button type="primary" @click="addDiscount" v-if="buttonList.includes('操作')">新建</el-button>
-      <el-button type="primary" v-else disabled>新建</el-button>
+      <el-button size="mini" type="primary" @click="addDiscount" v-if="buttonList.includes('操作')">新建</el-button>
+      <el-button size="mini" type="primary" v-else disabled>新建</el-button>
     </breadcrumb>
     <div style="display:flex;flex-redirection:row;margin:10px;">
       <div>
@@ -56,7 +56,7 @@
           <el-button size="mini" type="primary" v-if="buttonList.includes('操作')" @click="discountEdit(scope.row)">编辑</el-button>
           <el-button size="mini" type="primary" v-else disabled>编辑</el-button>
           <!-- 删除 -->
-          <el-button size="mini" type="danger"  v-if="buttonList.includes('操作')" @click="discountDelete(scope.row)">删除</el-button>
+          <el-button size="mini" type="danger"  v-if="buttonList.includes('操作')&&scope.row.status === 0" @click="discountDelete(scope.row)">删除</el-button>
           <el-button size="mini" type="danger"  v-else disabled>删除</el-button>
         </template>
       </el-table-column>

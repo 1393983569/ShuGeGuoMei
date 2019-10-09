@@ -1,5 +1,17 @@
 <template>
   <div>
+    <Breadcrumb>
+    <!-- 编辑 -->
+      <div v-if="editState">
+        <el-button size="mini" type="primary" @click="submitFormEdit('ruleForm')">保存</el-button>
+        <el-button size="mini" type="warning" @click="resetForm('ruleForm')">取消</el-button>
+      </div>
+      <!-- 添加 -->
+      <div v-else>
+        <el-button size="mini" type="primary" @click="submitForm('ruleForm')">保存</el-button>
+        <el-button size="mini" type="warning" @click="resetForm('ruleForm')">取消</el-button>
+      </div>
+    </Breadcrumb>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="right" label-width="150px">
       <el-form-item v-if="editState" label="供应商ID：" prop="">
         {{id}}
@@ -8,16 +20,23 @@
         <el-input v-model="ruleForm.name" placeholder="请输入供应商名称" style="width:400px;"/>
       </el-form-item>
       <el-form-item label="门头照片：" prop="headerPic">
-        <el-upload
-          class="avatar-uploader"
-          :action="`${apiUrl}/basics/upload`"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="ruleForm.headerPic" :src="ruleForm.headerPic" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon" />
-        </el-upload>
+        <div style="display:flex;">
+          <el-upload
+            class="avatar-uploader"
+            :action="`${apiUrl}/basics/upload`"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-progress="handleProgressHeader"
+          >
+            <p v-if="editState" class="change-img">更换图片</p>
+            <p v-else></p>
+            <div slot="tip" class="el-upload__tip">建议上传大小不超过1m的图片</div>
+            <el-progress v-if="0<percentageHeader&&percentageHeader<=100" type="circle" :percentage="percentageHeader" :width="177" style="width:178px;height:178px;"></el-progress>
+            <img v-if="ruleForm.headerPic" :src="ruleForm.headerPic" class="avatar">
+            <i v-else-if="!ruleForm.headerPic&&percentageHeader<=0||percentageHeader>100" class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </div>
       </el-form-item>
       <el-form-item label="联系人：" prop="contactName">
         <el-input v-model="ruleForm.contactName" placeholder="请输入联系人" style="width:400px;"/>
@@ -44,7 +63,7 @@
         <el-input v-model="ruleForm.addressDetail" placeholder="请输入详细地址" style="width:400px;"/>
       </el-form-item>
       <el-form-item label="仓库面积：" prop="area">
-        <el-input v-model="ruleForm.area" placeholder="请输入仓库面积" style="width:400px;"/>
+        <el-input v-model="ruleForm.area" placeholder="请输入仓库面积" style="width:370px;"/> <span style="font-size:14px;font-weight:bold;">m</span><sup>2</sup>
       </el-form-item>
       <el-form-item label="备注：" prop="remark">
         <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
@@ -99,30 +118,30 @@
           :show-file-list="false"
           :on-success="handleQualificationSuccess"
           :before-upload="beforeQualificationUpload"
+          :on-progress="handleProgressQua"
         >
+          <p v-if="editState" class="change-img">更换图片</p>
+          <p v-else></p>
+          <div slot="tip" class="el-upload__tip">建议上传大小不超过1m的图片</div>
+          <el-progress v-if="0<percentageQua&&percentageQua<=100" type="circle" :percentage="percentageQua" :width="177" style="width:178px;height:178px;"></el-progress>
           <img v-if="ruleForm.qualificationPics" :src="ruleForm.qualificationPics" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon" />
+          <i v-else-if="!ruleForm.qualificationPics&&percentageQua>100||percentageQua<=0" class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
       <el-form-item v-if="editState" label="评分：" prop="">
+        {{totalScore}}
         <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
         <gradeDetail :grade="grades"></gradeDetail>
       </el-form-item>
       <el-form-item>
-        <div v-if="editState">
-          <el-button type="primary" @click="submitFormEdit('ruleForm')">修改</el-button>
-          <el-button @click="resetForm('ruleForm')" type="danger">取消</el-button>
-        </div>
-        <div v-else>
-          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-          <el-button @click="resetForm('ruleForm')" type="danger">取消</el-button>
-        </div>
+
       </el-form-item>
     </el-form>
     <grade @getCloseState="getCloseState" :gradeObject="gradeObject" :showState ="showState" :provider-id="providerId" :admin-id="adminId"></grade>
   </div>
 </template>
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import gradeDetail from './gradeDetail.vue'
 import grade from './grade.vue'
 import { getAllShop } from '@/api/shop.js'
@@ -133,10 +152,13 @@ import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
 
 export default {
-  components: { selectorAddress,grade ,gradeDetail },
+  components: { selectorAddress,grade ,gradeDetail, Breadcrumb },
   name: 'providerAddEdit',
   data() {
     return {
+      percentageHeader:0,
+      percentageQua:0,
+      gradeObject:{},
       shopObject:[],
       providerId:0,
       adminId:'',
@@ -147,11 +169,11 @@ export default {
       checkList:[],
       grades:{},
       grade: {
-        qualification: '',
-        price: '',
-        quality: '',
-        service: '',
-        amount: '',
+        qualification: 0,
+        price: 0,
+        quality: 0,
+        service: 0,
+        amount: 0,
       },
       ruleForm:{
         id:'',
@@ -180,7 +202,7 @@ export default {
         deliverShopScore: '',
         providerShops:'',
         providerGoods:[],
-        status: 0,
+        status: 3,
       },
       shopList: [],
       editState: false,
@@ -209,9 +231,9 @@ export default {
         area: [
           { required: true, message: '请输入面积', trigger: 'blur' },
         ],
-        // shopObject: [
-        //   { required: true, message: '请输入面积', trigger: 'blur' },
-        // ]
+        qualificationPics: [
+          { required: true, message: '请上传资质照片', trigger: 'blur' },
+        ]
       },
       apiUrl: '',
       id: '',
@@ -222,6 +244,8 @@ export default {
       goodsTempList:[],
       toggleSelectionList:[],
       providerGoodsList:[],
+      // 总分
+      totalScore:0,
     }
   },
   watch: {
@@ -251,7 +275,14 @@ export default {
     this.ruleForm.shops = []
   },
   methods: {
-
+    handleProgressHeader(event, file, fileList){
+      this.percentageHeader = event.percent
+      this.ruleForm.headerPic = ''
+    },
+    handleProgressQua(event, file, fileList){
+      this.percentageQua = event.percent
+      this.ruleForm.qualificationPics = ''
+    },
     dialogVisible(){
       this.showState = true
       this.returnScore()
@@ -341,7 +372,9 @@ export default {
           this.ruleForm.shopObject = []
           let arr =[]
           res.info.providerShopList.forEach(item => {
-            arr.push(item.id)
+            if(item){
+              arr.push(item.id)
+            }
           })
           this.shopObject=arr
           // 商品
@@ -383,15 +416,18 @@ export default {
       this.grade.service=this.ruleForm.serviceScore
       this.grade.amount=this.ruleForm.deliverShopScore
       this.grades = this.grade
+      this.totalScore = (this.grade.qualification+this.grade.price+this.grade.quality+this.grade.service+this.grade.amount)/5
     },
 
     // 门头照片上传成功
     handleAvatarSuccess(file) {
       // console.log(file, 'hhhh')
       this.ruleForm.headerPic = file.info
+      this.percentageHeader = 101
     },
     // 资质照片上传成功
     handleQualificationSuccess(file){
+      this.percentageQua = 101
       this.ruleForm.qualificationPics = file.info
     },
     beforeAvatarUpload(file) {},
@@ -486,6 +522,7 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.$router.back()
     },
     // 查询所有品类
     getaAllCategory(){
@@ -650,5 +687,17 @@ export default {
     // width:200px;
     height:746px;
     border:1px solid #f0f2f3;
+  }
+  .change-img{
+    width:100px;
+    height:30px;
+    color:#ffffff;
+    position:absolute;
+    left:78px;
+    top:0px;
+    background-color:#8c939d;
+    margin:0px;
+    border-radius:10%;
+    line-height: 30px;
   }
 </style>

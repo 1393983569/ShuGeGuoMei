@@ -102,7 +102,7 @@ const actions = {
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)
           commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
-          console.log(state, 'state........')
+          // console.log(state, 'state........')
           const data = {
             buttonRoleList: state.buttonRoleList,
             name: state.name,
@@ -114,7 +114,7 @@ const actions = {
             reject('验证失败，请重新登录。')
           }
           const { roles, name, avatar, introduction } = data
-          console.log(roles, 'kkkkklength.....')
+          // console.log(roles, 'kkkkklength.....')
           if (!roles || roles.length <= 0) {
             reject('getInfo:角色必须是非空数组!')
           }

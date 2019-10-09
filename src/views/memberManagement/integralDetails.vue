@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
+    <breadcrumb :stateShow ='stateShow'>
       <div style="display:flex;flex-direction:row;">
         <div>会员ID：{{vipId}}</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div>手机号：{{mobile}}</div>
@@ -65,6 +65,7 @@ export default {
   },
   data() {
     return {
+      stateShow:false,
       dataList: [],
       total:0,
       pageNum:1,
@@ -75,6 +76,7 @@ export default {
     }
   },
   mounted() {
+    this.stateShow = true
     console.log(this.$route.params, 'kkkkkkk')
     if(JSON.stringify(this.$route.params)!=='{}'){
       this.vipObject = this.$route.params

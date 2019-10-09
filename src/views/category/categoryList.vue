@@ -40,8 +40,15 @@
       title="添加一级品类"
       :visible.sync="dialogStair"
       width="40%">
-      <el-input style="margin-bottom: 5px" v-for="(item, index) in stairInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类"></el-input>
-      <el-button @click="addStairInput">+</el-button>
+      <el-input style="margin-bottom: 5px;" v-for="(item, index) in stairInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类">
+        <i
+          style="margin-top:10px;cursor: pointer;"
+          class="el-icon-circle-close"
+          slot="suffix"
+          @click="handleIconClick(index)">
+        </i>
+      </el-input>
+      <el-button @click="addStairInput">一级品类+</el-button>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogStair = false">取 消</el-button>
         <el-button type="primary" @click="addStair">确 定</el-button>
@@ -51,16 +58,24 @@
       title="添加二级品类"
       :visible.sync="dialogChildren"
       width="40%">
+      <!-- :key="`${item.id}_o`" -->
       <el-select v-model="optionValue" placeholder="请选择一级品类" style="margin-bottom: 5px; width: 100%">
         <el-option
           v-for="item in optionsStair"
-          :key="`${item.id}_o`"
+          :key="item.id"
           :label="item.name"
           :value="item.id">
         </el-option>
       </el-select>
-      <el-input style="margin-bottom: 5px" v-for="(item, index) in childrenInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类"></el-input>
-      <el-button @click="addChildrenInput">+</el-button>
+      <el-input style="margin-bottom: 5px" v-for="(item, index) in childrenInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类">
+        <i
+          style="margin-top:10px;cursor: pointer;"
+          class="el-icon-circle-close"
+          slot="suffix"
+          @click="handleSecondIconClick(index)">
+        </i>
+      </el-input>
+      <el-button @click="addChildrenInput">二级品类+</el-button>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogChildren = false">取 消</el-button>
         <el-button type="primary" @click="addChildren">确 定</el-button>
@@ -308,7 +323,7 @@
           // console.log('this.spanArr:',this.spanArr)
           const _row = this.spanArr[rowIndex]
           const _col = _row > 0 ? 1 : 0
-          console.log(_row,_col, '_row,_col' )
+          // console.log(_row,_col, '_row,_col' )
           return {
             rowspan: _row,
             colspan: _col
@@ -317,11 +332,11 @@
       },
       // 得到合并规则
       gteRule(err) {
-        console.log(err, 'err')
+        // console.log(err, 'err')
         let listIndex = 0
         let listRule = []
         err.forEach((item, index) => {
-          console.log(item, index, 'err')
+          // console.log(item, index, 'err')
           if (index === 0) {
             listRule.push(1)
             listIndex = 0
@@ -343,12 +358,12 @@
         this.rowSecond = row
         this.editState = state
         if (state === '一级') {
-          console.log(row)
+          // console.log(row)
           this.stair = true
           this.showStairData.stairId = row.stairId
           this.showStairData.stairName = row.stairName
         } else {
-          console.log(row)
+          // console.log(row)
           this.second = true
           this.showSecondData.stairId = row.stairId
           this.showSecondData.stairName = row.stairName
@@ -368,7 +383,7 @@
         return value
       },
       addStair() {
-        console.log(this.stairInput, 'kkkkkkk')
+        // console.log(this.stairInput, 'kkkkkkk')
         let arr = this.dataList
         let id = ''
         let stairList = []
@@ -399,14 +414,18 @@
         // }
         // id = arr[arr.length - 1].stairId
         this.stairInput.forEach((item, index) => {
-          stairList.push({
-            id: this.addId(id, index + 1),
-            name: item.value
-          })
+          if(item.value){
+            stairList.push({
+              id: this.addId(id, index + 1),
+              name: item.value
+            })
+          }
         })
+        // console.log(stairList, 'stairList//////')
         addCategoryOne(stairList).then(res => {
           this.dialogStair = false
           this.getList()
+          this.getStair()
         }).catch(err => {
           console.log(err)
         })
@@ -509,11 +528,28 @@
         }).catch(err => {
 
         })
-      }
+      },
+      handleIconClick(index){
+        if(this.stairInput.length<=1){
+
+        }else{
+          this.stairInput.splice(index, 1)
+        }
+      },
+      handleSecondIconClick(index){
+        if(this.childrenInput.length<=1){
+
+        }else{
+          this.childrenInput.splice(index, 1)
+        }
+
+      },
     }
 }
 </script>
 
 <style scoped>
+.a{
 
+}
 </style>

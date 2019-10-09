@@ -94,8 +94,10 @@ export default {
         if(res.status === 1){
           this.$message.success('评分添加成功！')
           this.dialogVisible = false
+          this.$emit('getCloseState', this.dialogVisible)
         }else{
           this.$message.error('评分添加出错！')
+          this.$emit('getCloseState', this.dialogVisible)
         }
       }).catch(err => {
         console.log(err)

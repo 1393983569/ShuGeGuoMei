@@ -1,11 +1,17 @@
 <template>
   <div class="box-margin">
-    <HeadButton v-if="childrenObject.status !== 2">
+    <Breadcrumb :stateShow="stateShowBread">
+      <span v-if="status===0">
+        <el-button size="mini" type="primary" style=" margin-left: 10px" @click="sendOrders">派单</el-button>
+        <el-button size="mini" type="danger" @click="deleteOrder">删除</el-button>
+      </span>
+    </Breadcrumb>
+    <!-- <HeadButton v-if="childrenObject.status !== 2">
       <span v-if="status===0">
         <el-button type="primary" style=" margin-left: 10px" @click="sendOrders">派单</el-button>
         <el-button type="danger" @click="deleteOrder">删除</el-button>
       </span>
-    </HeadButton>
+    </HeadButton> -->
     <div>子订单编号：{{childrenObject.suborderNo}}</div>
     <div>
       子订单时间：{{childrenObject.createTime}}
@@ -80,6 +86,7 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import { sumList  } from '_u/logic'
 import hint from '@/components/Hint'
 import HeadButton from '@/components/HeadButton'
@@ -88,10 +95,11 @@ import { orderSubDetail, enterQuantity,deleteSubOrder, updateSubOrderStatus } fr
 export default {
   name: 'ChildOrdersDetails',
   components: {
-    HeadButton,hintSend, hint
+    HeadButton,hintSend, hint, Breadcrumb
   },
   data() {
     return {
+      stateShowBread:false,
       orderDetailCateList:[],
       temNum:0,
       subOrderId:'',
@@ -109,6 +117,7 @@ export default {
     }
   },
   mounted() {
+    this.stateShowBread = true
     console.log(this.$route.params, 'hhhhhh')
     if(JSON.stringify(this.$route.params)!=='{}'){
       var obj = this.$route.params

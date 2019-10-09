@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
+    <breadcrumb :stateShow ="stateShowBread">
      <el-button size="mini" type="down"  v-if="status === 1" @click="discountStop">停用</el-button>
      <el-button size="mini" type="up" v-if="status === 0" @click="discountStop">启用</el-button>
      <el-button size="mini" type="primary" @click="editHandle">编辑</el-button>
@@ -48,6 +48,7 @@ export default {
   },
   data(){
     return{
+      stateShowBread:false,
       showGoodsState:true,
       name:'',
       shopName: '',
@@ -67,6 +68,7 @@ export default {
     }
   },
   mounted(){
+    this.stateShowBread= true
     if(JSON.stringify(this.$route.params)!== '{}'){
       // this.addEdit = this.$route.params.addEdit
       // this.status = this.$route.params.status
@@ -203,7 +205,9 @@ export default {
       for(let i=0; i<idList.length; i++){
         for(let j=0; j<objList.length; j++){
           if(idList[i]===objList[j].id){
-            this.categoryOneList.push(objList[j])
+            if(objList[j].name){
+              this.categoryOneList.push(objList[j])
+            }
             break
           }else{
 

@@ -1,5 +1,6 @@
 <template>
   <div class="box-margin">
+    <Breadcrumb :stateShow="stateShowBread"></Breadcrumb>
     <div>订单编号：{{orderNo}}</div>
     <div>
       订单时间：{{orderDate}}
@@ -85,6 +86,7 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
 import { sumList } from '_u/logic'
 import { orderDetail } from '@/api/collectShop/order.js'
@@ -93,10 +95,11 @@ import { filter } from 'minimatch';
 export default {
   name: 'OrderDetails',
   components: {
-    childOrdersList, hint
+    childOrdersList, hint, Breadcrumb
   },
   data() {
     return {
+      stateShowBread:false,
       showDelete:false,
       tableData:[],
       childOrderData:[],
@@ -123,6 +126,7 @@ export default {
   	})
   },
   mounted(){
+    this.stateShowBread = true
     console.log(this.$store.state.user, 'user')
     if(JSON.stringify(this.$route.params) === '{}'){
       this.orderNo = this.$store.state.user.orderObject.orderNo
@@ -161,7 +165,11 @@ export default {
           arr= res.info[0]
           this.orderNo = arr.orderNo
           this.orderDate = arr.createTime
-          this.shopName = arr.shopDomain.name
+          if(arr.shopDomain){
+            this.shopName = arr.shopDomain.name
+          }else{
+            this.shopName = ''
+          }
           this.type = arr.type
           this.status = arr.status
           this.amount = arr.amount

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Breadcrumb :stateShow="stateShowBreadcrumb"></Breadcrumb>
     <p>供应商ID：{{providerObj.id}}</p>
     <!-- <p>供应商名称：{{providerObj.name}}</p> -->
     <div style="display:flex;flex-direction:row;align-items: flex-start;">门头照片：<img :src="providerObj.headerPic" style="width: 200px;height:200px;"/></div>
@@ -15,7 +16,7 @@
     <p>详细地址：{{providerObj.addressDetail}}</p>
     <p>仓库面积：{{providerObj.area}}m<sup>2</sup></p>
     <p>备注：{{providerObj.remark}}</p>
-    <p>可配送店铺列表：<span v-for="item in providerObj.providerShopList">{{item.name}},</span></p>
+    <div style="display:flex;flex-direction: row;">可配送店铺列表：<span v-for="item in providerObj.providerShopList"><i style="font-style:normal;" v-if="item">{{item.name}},</i></span></div>
     <p>供应商品：
       <el-table
             :data="categoryTable"
@@ -58,7 +59,7 @@
     </p>
     <p>资质照片：<img :src="providerObj.qualificationPics"  style="width:300px;"/></p>
     <div>
-      评分：
+      评分：{{totalScore}}
       <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
       <!-- <el-button style="margin-left:20px;" size="mini" type="success" v-else disabled>去评分</el-button> -->
       <gradeDetail :grade="gradeDetail"></gradeDetail>
@@ -68,15 +69,18 @@
   </div>
 </template>
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import gradeDetail from './gradeDetail.vue'
 import grade from './grade.vue'
 import {getProviderDetail} from '@/api/provider.js'
 import {addGrade, getGrade} from '@/api/providerGrade.js'
 export default {
   name: 'providerDetail',
-  components:{gradeDetail,grade},
+  components:{gradeDetail,grade, Breadcrumb},
   data() {
     return {
+      totalScore:0,
+      stateShowBreadcrumb:false,
       showState:false,
       providerObj:{},
       imgList:[],
@@ -91,11 +95,11 @@ export default {
       gradeDetail:{},
       grade: {
         adminId: '',
-        qualification: '',
-        price: '',
-        quality: '',
-        service: '',
-        amount: '',
+        qualification: 0,
+        price: 0,
+        quality: 0,
+        service: 0,
+        amount: 0,
         providerId: ''
       },
       buttonList:[],
@@ -108,6 +112,7 @@ export default {
   	})
   },
   mounted(){
+    this.stateShowBreadcrumb = true
     console.log(this.$route.params,'HHHHHH')
     this.adminId = this.$store.state.user.roleId
     if(JSON.stringify(this.$route.params)!== '{}') {
@@ -247,6 +252,7 @@ export default {
       this.grade.amount=this.providerObj.deliverShopScore
       this.gradeObject = this.grade
       this.gradeDetail = this.grade
+      this.totalScore = (this.grade.qualification+this.grade.price+this.grade.quality+this.grade.service+this.grade.amount)/5
     },
     getGradeDetail(a){
       this.gradeDetail = a

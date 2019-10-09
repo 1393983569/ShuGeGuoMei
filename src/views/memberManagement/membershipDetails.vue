@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Breadcrumb :stateShow="stateShowBread"></Breadcrumb>
     <p>会员ID：{{vipObject.id}}</p>
     <p>手机号：{{vipObject.mobile}}</p>
     <p>注册时间：{{vipObject.registerTime}}</p>
@@ -12,20 +13,39 @@
       />
     </div>
     <div class="div_margin">
-      <span>余额：</span><el-button type="success">查询详情</el-button>
+      <span>余额：{{vipObject.balance/100}} </span><el-button type="success">查询详情</el-button>
     </div>
     <div class="div_margin">
-      <span>积分：</span><el-button type="success" @click="integralDetails">查询详情</el-button>
+      <span>积分：
+        <span v-if="vipObject.score">{{vipObject.score}}</span>
+        <span v-else>0</span>
+      </span>
+      <el-button type="success" @click="integralDetails">查询详情</el-button>
     </div>
-    <p>性别：{{vipObject.sex}}</p>
-    <p>年龄：{{vipObject.age}}</p>
-    <p>职业：{{vipObject.career}}</p>
-    <p>常住小区：{{province}},{{city}},{{area}}</p>
+    <p>性别：----
+      <!-- <span v-if="vipObject.sex">{{vipObject.sex}}</span>
+      <span v-else>----</span> -->
+    </p>
+    <p>年龄：
+      <span v-if="vipObject.age">{{vipObject.age}}</span>
+      <span v-else>----</span>
+    </p>
+    <p>职业：
+      <span v-if="vipObject.career">{{vipObject.career}}</span>
+      <span v-else>----</span>
+    </p>
+    <p>常住小区：
+      <span v-if="province||city||area">{{province}},{{city}},{{area}}</span>
+      <span v-else>----</span>
+    </p>
     <p>身份：
       <span v-if="vipObject.identity===1">家庭会员</span>
       <span v-else>VIP会员</span>
     </p>
-    <p>折扣能力：{{vipObject.discountAbility}}</p>
+    <p>折扣能力：
+      <span v-if="vipObject.discountAbility">{{vipObject.discountAbility}}</span>
+      <span v-else>100</span>
+    </p>
     <p>级别：
       <span v-if="vipObject.level===1">普通会员</span>
       <span v-else-if="vipObject.level===2">银牌会员</span>
@@ -62,11 +82,14 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import { vipDetail, categoryTwoAmount } from '@/api/member.js'
 export default {
   name: 'MembershipDetails',
+  components:{Breadcrumb},
   data() {
     return {
+      stateShowBread:false,
       historyObj:{},
       titleState: true,
       row: {},
@@ -154,7 +177,10 @@ export default {
             }
         ]
       },
-      vipObject:{},
+      vipObject:{
+        score:0,
+        balance:0,
+      },
       province:'',
       city:'',
       area:'',
@@ -167,6 +193,7 @@ export default {
     })
   },
   mounted() {
+    this.stateShowBread = true
     if(JSON.stringify(this.$route.params)=== '{}'){
       this.vipId = this.$store.state.user.vipObject.id
       this.getVipDetail()

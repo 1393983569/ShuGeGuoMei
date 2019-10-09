@@ -2,8 +2,8 @@
   <!-- <div class="body-margin" style="display:float;"> -->
   <div class="body-margin">
     <breadcrumb>
-      <el-button type="warning" @click="resetForm('newsForm')">取消</el-button>
-      <el-button type="primary" @click="submitForm('newsForm')" :loading="loadingState">确定</el-button>
+      <el-button size="mini" type="primary" @click="submitForm('newsForm')" :loading="loadingState">确定</el-button>
+      <el-button size="mini" type="warning" @click="resetForm('newsForm')">取消</el-button>
     </breadcrumb>
     <el-form ref="newsForm" :model="newsForm" :rules="rules" label-width="100px">
       <!-- <div style="float:left;"> -->

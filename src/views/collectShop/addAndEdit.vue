@@ -3,13 +3,13 @@
    <breadcrumb>
    <!-- 添加 -->
     <div v-if="addEditState">
-      <el-button type="primary" :loading="addLoading" @click="submitForm('ruleForm')">保存</el-button>
-      <el-button @click="resetForm('ruleForm')">取消</el-button>
+      <el-button type="primary" size="mini" :loading="addLoading" @click="submitForm('ruleForm')">保存</el-button>
+      <el-button type="warning" size="mini" @click="resetForm('ruleForm')">取消</el-button>
     </div>
     <!-- 修改 -->
     <div v-else>
-      <el-button type="primary" :loading="addLoading" @click="submitEditForm('ruleForm')">保存</el-button>
-      <el-button @click="resetForm('ruleForm')">取消</el-button>
+      <el-button size="mini" type="primary" :loading="addLoading" @click="submitEditForm('ruleForm')">保存</el-button>
+      <el-button size="mini" type="warning" @click="resetForm('ruleForm')">取消</el-button>
     </div>
    </breadcrumb>
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">

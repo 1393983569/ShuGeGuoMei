@@ -21,9 +21,9 @@
       </el-select>
     </div>
     <div style="position: absolute; right: 5px;">
-      <el-button size="mini" @click="searchOrder" v-if="buttonList.includes('操作')">筛选</el-button>
+      <el-button size="mini" @click="searchOrder" v-if="buttonList.includes('操作')" type="primary">筛选</el-button>
       <el-button size="mini"v-else disabled>筛选</el-button>
-      <el-button size="mini" @click="clearOrder" v-if="buttonList.includes('操作')">清空</el-button>
+      <el-button size="mini" @click="clearOrder" v-if="buttonList.includes('操作')" type="info">清空</el-button>
       <el-button size="mini" v-else disabled>清空</el-button>
     </div>
   </div>
@@ -46,6 +46,11 @@
     <el-table-column label="订单时间"  prop="createTime" ></el-table-column>
     <el-table-column label="订单编号" prop="orderNo"> </el-table-column>
     <el-table-column label="订单店铺" prop="name"></el-table-column>
+    <el-table-column label="商品数量" prop="">
+      <template slot-scope="scope">
+        {{scope.row.goodsAmount[0].goodsAmount}}
+      </template>
+    </el-table-column>
     <el-table-column label="订单金额(元)" prop="total_money"> </el-table-column>
     <el-table-column label="订单类型" prop="type">
       <template slot-scope="scope">
@@ -154,6 +159,10 @@ export default {
         {
           name:'已拆单',
           id:1
+        },
+        {
+          name:'已派单',
+          id:2
         }
       ],
       params:'',

@@ -1,8 +1,8 @@
 <template>
   <div class="body-margin">
     <breadcrumb :stateShow ='false'>
-      <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleAdd">新建</el-button>
-      <el-button type="primary" v-else disabled @click="handleAdd">新建</el-button>
+      <el-button size="mini" type="primary" v-if="buttonList.includes('操作')" @click="handleAdd">新建</el-button>
+      <el-button size="mini" type="primary" v-else disabled @click="handleAdd">新建</el-button>
     </breadcrumb>
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
@@ -144,7 +144,8 @@ export default {
       cityId: '',
       countyId: '',
       tableAttribute: {},
-      buttonList: []
+      buttonList: [],
+      shopId:'',
     }
   },
   beforeRouteEnter(to, from, next){
@@ -262,9 +263,10 @@ export default {
     handleDelete(row) {
       this.showDelete = true
       this.id = row.id
+      this.shopId = row.id
     },
     confirmDelete() {
-      deleteShop(this.id).then(res => {
+      deleteShop(this.id, this.shopId).then(res => {
         if (res.status === 1) {
           this.$message.success('删除成功！')
           this.getShopList()

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb :stateShow ="stateShow"><el-button @click="handleEdit" type="primary">编辑</el-button></breadcrumb>
+    <breadcrumb :stateShow ="stateShow"><el-button @click="handleEdit" type="primary" size="mini">编辑</el-button></breadcrumb>
     <p v-if="row.goodId">商品ID：{{ row.goodId.toString().substring(row.goodId.length-4) }}</p>
     <p v-if="categoryOne">一级品类：{{ categoryOne.name}} (ID: {{ categoryOne.id }})</p>
     <p v-else>一级品类：暂无数据</p>

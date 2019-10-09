@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
+    <breadcrumb :stateShow ='stateShow'>
       <span>会员ID：{{memberId}}</span>
       <span>手机号：{{mobile}}</span>
     </breadcrumb>
@@ -57,6 +57,7 @@ export default {
   name:'expenseCalendarDetail',
   data() {
     return {
+      stateShow:false,
       dataList:[],
       recordId:'',
       memberId:'',
@@ -74,7 +75,7 @@ export default {
     }
   },
   mounted(){
-
+    this.stateShow= true
     if(JSON.stringify(this.$route.params) === '{}'){
 
     }else{

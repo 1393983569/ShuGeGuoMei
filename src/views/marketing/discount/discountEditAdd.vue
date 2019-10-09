@@ -1,5 +1,15 @@
 <template>
   <div>
+    <Breadcrumb :stateShow="stateShowBread">
+      <div v-if="addEdit==='编辑'">
+        <el-button size="mini" type="primary" @click="submitEditForm('discountForm')" :loading="editLoading">保存</el-button>
+        <el-button size="mini" @click="resetForm('discountForm')" type="warning">取消</el-button>
+      </div>
+      <div v-else>
+        <el-button size="mini" type="primary" @click="submitForm('discountForm')" :loading="addLoading">保存</el-button>
+        <el-button size="mini" @click="resetForm('discountForm')" type="warning">取消</el-button>
+      </div>
+    </Breadcrumb>
     <el-form ref="discountForm" :model="discountForm" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="折扣包名称：" prop="name">
         <el-input v-model="discountForm.name" style="width:300px;" placeholder="请输入折扣包名称"></el-input><span style="color:red;">*</span>
@@ -19,14 +29,7 @@
         <span class="hint">*S>2V参与计算，否则DR=100%</span>
         <discountTable :state="discountState" @getDiscountList="getDiscountList" :tableArray="tableArray" :detailState="detailstate"></discountTable>
       </el-form-item>
-      <div v-if="addEdit==='编辑'">
-        <el-button type="primary" @click="submitEditForm('discountForm')" :loading="editLoading">修改</el-button>
-        <el-button @click="resetForm('discountForm')">取消</el-button>
-      </div>
-      <div v-else>
-        <el-button type="primary" @click="submitForm('discountForm')" :loading="addLoading">保存</el-button>
-        <el-button @click="resetForm('discountForm')">取消</el-button>
-      </div>
+
       </el-form-item>
     </el-form>
     <el-dialog
@@ -44,6 +47,7 @@
 </template>
 <script>
 // import timeCount from './timeCount.vue'
+import Breadcrumb from '@/components/Breadcrumb'
 import discountTable from '../discountTable.vue'
 import pickGoods from '@/views/pickGoods'
 import { getAllShop } from '@/api/shop.js'
@@ -52,10 +56,11 @@ import { getGoods } from '@/api/collectShop.js'
 import {addDiscount,editDiscount, discountDetail} from '@/api/marketing/discount.js'
 import { setTimeout } from 'timers';
 export default {
-  components:{pickGoods, discountTable},
+  components:{pickGoods, discountTable, Breadcrumb},
   name:"discountEditAdd",
   data(){
     return {
+      stateShowBread:false,
       // 加载圈
       addLoading:false,
       editLoading:false,
@@ -106,6 +111,7 @@ export default {
     }
   },
   mounted(){
+    this.stateShowBread = true
     console.log(this.$route.params, 'canshu.....')
     if(JSON.stringify(this.$route.params)!== '{}'){
       if(this.$route.params.addEdit ==='编辑'){
@@ -320,6 +326,7 @@ export default {
     // 重置必填项
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.$router.back()
     },
     getGoodFunction(list){
       this.goodsList = list

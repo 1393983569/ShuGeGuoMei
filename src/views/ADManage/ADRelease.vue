@@ -3,12 +3,12 @@
   <div class="body-margin">
     <Breadcrumb>
       <div v-if="addEditState">
-        <el-button type="warning" @click="resetForm('ADForm')">取消</el-button>
-        <el-button type="primary" @click="submitForm('ADForm')">确定</el-button>
+        <el-button size="mini" type="primary" @click="submitForm('ADForm')">确定</el-button>
+        <el-button size="mini" type="warning" @click="resetForm('ADForm')">取消</el-button>
       </div>
       <div v-else>
-        <el-button type="warning" @click="resetForm('ADForm')">取消</el-button>
-        <el-button type="primary" @click="submitEditForm('ADForm')">修改</el-button>
+        <el-button size="mini" type="primary" @click="submitEditForm('ADForm')">修改</el-button>
+        <el-button size="mini" type="warning" @click="resetForm('ADForm')">取消</el-button>
       </div>
     </Breadcrumb>
     <el-form ref="ADForm" :model="ADForm" :rules="rules" label-width="100px">

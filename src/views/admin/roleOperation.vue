@@ -90,7 +90,7 @@
             this.tableData = this.recursionList(asyncRoutes)
             this.operationState = 'add'
           } else {
-            // console.log(res.info.id, '0000000')
+            console.log(this.recursionList(asyncRoutes), 'this.recursionList(asyncRoutes)')
             this.tableData = JSON.parse(res.info.menu)
             this.id = res.info.id
             this.operationState = 'edit'

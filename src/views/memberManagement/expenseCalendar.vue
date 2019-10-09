@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
+    <breadcrumb :stateShow ='stateShow'>
       <div style="display:flex;flex-direction:row;">
         <div>会员ID：{{vipId}}</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div>手机号：{{mobile}}</div>
@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column prop="finalMoney" label="支付金额">
           <template slot-scope="scope">
-            {{scope.row.finalMoney/100}}
+            {{scope.row.finalMoney/100}}￥
           </template>
         </el-table-column>
       </el-table>
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      stateShow:false,
       pageNum:1,
       pageSize:10,
       total:0,
@@ -78,6 +79,7 @@ export default {
     }
   },
   mounted() {
+    this.stateShow = true
     console.log(this.$store, 'store..')
     if(JSON.stringify(this.$route.params) === '{}') {
       this.vipObject = this.$store.state.user.vipObject

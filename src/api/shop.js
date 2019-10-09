@@ -50,10 +50,10 @@ export const getShopList = (data) => {
  * 删除店铺
  * @param {Integer} id 店铺id
  */
-export const deleteShop = (id) => {
+export const deleteShop = (id, shopId) => {
   const params = new URLSearchParams()
   return request({
-    url: `/admin/deleteShop?id=${id}`,
+    url: `/admin/deleteShop?id=${id}&shopId=${shopId}`,
     method: 'get',
     data: params
   })
