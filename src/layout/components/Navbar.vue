@@ -55,7 +55,6 @@ export default {
   mounted(){
     this.adminName = this.$store.state.user.name
     this.avatars = this.$store.state.user.avatar
-    console.log(this.$store, 'st.....')
   },
   methods: {
     toggleSideBar() {

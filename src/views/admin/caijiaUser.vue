@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Breadcrumb :stateShow ='false'>
+    <Breadcrumb :stateShow ='stateShow'>
       <el-button type="primary" size="mini" @click="addHandle">新建</el-button>
     </Breadcrumb>
     <div style="display:flex;flex-direction:row;align-items:center;">
@@ -28,7 +28,7 @@
         <el-table-column prop="name" label="用户名"/>
         <el-table-column prop="mobile" label="手机号"/>
         <el-table-column prop="password" label="密码"/>
-        <el-table-column prop="" label="市场名称"/>
+        <el-table-column prop="priceMarketName" label="市场名称"/>
         <el-table-column prop="priceMarketType" label="市场类别">
           <template slot-scope="scope">
             <p v-if="scope.row.priceMarketType===1">批发市场</p>
@@ -36,7 +36,11 @@
             <p v-else-if="scope.row.priceMarketType===3">早市</p>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="市场区域"/>
+        <el-table-column prop="" label="市场区域">
+          <template slot-scope="scope">
+            {{scope.row.provinceDomain.name}}{{scope.row.cityDomain.name}}{{scope.row.areaDomain.name}}-{{scope.row.priceMarketName}}
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间"/>
         <el-table-column prop="" label="操作" width="200">
           <template slot-scope="scope">
@@ -68,6 +72,7 @@ export default {
   components: { selectorAddress, Breadcrumb, hint },
   data(){
     return{
+      stateShow:false,
       searchInput: '',
       total: 0,
       pagesize: 10,

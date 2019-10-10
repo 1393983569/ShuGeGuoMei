@@ -39,9 +39,19 @@ export const editAdmin = (data) => {
  *
  * @param pageNum 页数
  */
-export const selectPageAdmin = (pageNum,pageSize,param) => {
+export const selectPageAdmin = (pageNum,pageSize,param,roleId) => {
   return request({
-    url: `/admin/selectPageAdmin?pageNum=${pageNum}&pageSize=${pageSize}&param=${param}`,
+    url: `/admin/selectPageAdmin?pageNum=${pageNum}&pageSize=${pageSize}&param=${param}&roleId=${roleId}`,
+    method: 'get'
+  })
+}
+/**
+ *删除后台用户
+ * @param {Integer} id 用户id
+ */
+export const deleteAdmin = (id) => {
+  return request({
+    url: `/admin/deleteAdmin?id=${id}`,
     method: 'get'
   })
 }

@@ -46,7 +46,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     // 如果自定义代码不是1，则判断为错误。
-    console.log(res, 'res')
+    // console.log(res, 'res')
     if (res.status === 2) {
       setToken('')
       router.push('/login')

@@ -703,6 +703,7 @@ export const asyncRoutes = [
       {
         path: 'roleList',
         name: 'roleList',
+        hidden:true,
         meta: {
           // roles: ['roleList'],
           icon: 'dashboard',
@@ -713,6 +714,7 @@ export const asyncRoutes = [
       {
         path: 'roleOperation',
         name: 'roleOperation',
+        hidden:true,
         meta: {
           // roles: ['roleOperation'],
           icon: 'dashboard',
@@ -737,7 +739,7 @@ export const asyncRoutes = [
         meta: {
           // roles: ['caijiaUser'],
           icon: 'dashboard',
-          title: '采价端用户编辑/新建'
+          title: '采价端用户操作'
         },
         component: () => import('@/views/admin/caijiaUserAdd.vue')
       }

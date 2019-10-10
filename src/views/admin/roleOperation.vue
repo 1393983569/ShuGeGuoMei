@@ -1,34 +1,44 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
+    <breadcrumb :stateShow ='stateShow'>
       <el-button v-if="showButton&&bottonList.includes('操作')" type="primary" @click="getUserRole">确定</el-button>
       <el-button v-else-if="showButton&&!bottonList.includes('操作')" type="primary" disabled>确定</el-button>
     </breadcrumb>
-    <el-table
-      :data="tableData"
-      style="width: 100%;margin-bottom: 20px;"
-      row-key="name"
-      border
-      default-expand-all
-      :tree-props="{children: 'children'}">
-      <el-table-column
-        prop="title"
-        label="功能"
-        sortable>
-      </el-table-column>
-      <el-table-column
-        prop="role"
-        label="权限"
-        sortable>
-        <template slot-scope="scope">
-          <el-checkbox-group v-model="scope.row.checkList" @change="changeList($event, scope.row, scope.$index)">
-            <el-checkbox label="查看" :disabled='scope.row.stateSelet'>查看</el-checkbox>
-            <el-checkbox label="操作" :disabled='scope.row.stateOperation'>操作</el-checkbox>
-          </el-checkbox-group>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div style="margin-bottom:10px;">
+      角色：{{roleName}}
     </div>
+    <div style="display:flex;flex-direction:row;">
+      功能权限：
+      <el-table
+        :data="tableData"
+        style="width: 100%;margin-bottom: 20px;"
+        row-key="name"
+        border
+        default-expand-all
+        :tree-props="{children: 'children'}">
+        <el-table-column
+          prop="title"
+          label="功能"
+          sortable>
+        </el-table-column>
+        <el-table-column
+          prop="role"
+          label="权限"
+          sortable>
+          <template slot-scope="scope">
+            <el-checkbox-group v-if="showButton" v-model="scope.row.checkList" @change="changeList($event, scope.row, scope.$index)">
+              <el-checkbox label="查看" :disabled='scope.row.stateSelet'>查看</el-checkbox>
+              <el-checkbox label="操作" :disabled='scope.row.stateOperation'>操作</el-checkbox>
+            </el-checkbox-group>
+            <el-checkbox-group v-else disabled v-model="scope.row.checkList" @change="changeList($event, scope.row, scope.$index)">
+              <el-checkbox label="查看" :disabled='scope.row.stateSelet'>查看</el-checkbox>
+              <el-checkbox label="操作" :disabled='scope.row.stateOperation'>操作</el-checkbox>
+            </el-checkbox-group>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -42,26 +52,33 @@
     },
     data () {
       return {
+        stateShow:false,
         tableData: [],
         showButton: false,
         userId: '',
         operationState: '',
-        bottonList:[]
+        bottonList:[],
+        roleId:'',
+        roleName:'',
       }
     },
     beforeRouteEnter (to, form, next) {
-    console.log(to)
+    // console.log(to)
       next(mv => {
         mv.getButton(mv.$store.getters.buttonRoleList, to.name)
       })
     },
     mounted() {
-
+      this.stateShow = true
+      if(JSON.stringify(this.$route.params)!=='{}'){
+        this.roleId = this.$route.params.id
+        this.roleName = this.$route.params.row.name
+      }
+      this.getUserListRole()
     },
     // 用来判断查看或者编辑
     beforeRouteEnter: (to, form, next) => {
       next((mv) => {
-        // console.log(to, form)
         mv.userId = mv.$route.params.id
         if (mv.$route.params.state === 'select') {
           mv.showButton = false
@@ -79,18 +96,14 @@
           this.bottonList = item.checkList
         }
       })
-      // console.log(this.bottonList)
     },
       getUserListRole() {
-        // getAllMenu(this.userId).then(res => {
-          console.log('getUserListRole........')
-        getAllMenu(this.$store.state.user.roleId).then(res => {
+        // getAllMenu(this.$store.state.user.roleId).then(res => {
+        getAllMenu(this.roleId).then(res => {
           if (res.info === null) {
-            // console.log(res.info.id, '0000000nulllll')
             this.tableData = this.recursionList(asyncRoutes)
             this.operationState = 'add'
           } else {
-            console.log(this.recursionList(asyncRoutes), 'this.recursionList(asyncRoutes)')
             this.tableData = JSON.parse(res.info.menu)
             this.id = res.info.id
             this.operationState = 'edit'
@@ -136,7 +149,7 @@
           delete tmp.redirect
           tmp.checkList = []
           tmp.title = tmp.meta ? tmp.meta.title : ''
-          console.log(tmp.meta)
+          // console.log(tmp.meta)
           tmp.roles = tmp.meta ? tmp.meta.roles : ''
           delete tmp.meta
           // 禁用父级下的子级

@@ -79,7 +79,7 @@ export default {
     if(JSON.stringify(this.$route.params) === '{}'){
 
     }else{
-      console.log(this.$route.params)
+      // console.log(this.$route.params)
       this.recordId = this.$route.params.id
       this.getRecordsDetail()
     }

@@ -53,7 +53,7 @@
         <el-form-item style="margin-right:10px;">
           <div style="width:90%;text-align: right;" v-if="eidtState=== '新建'">
             <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
+            <el-button @click="resetForm('ruleForm')">取消</el-button>
           </div>
           <div style="width:90%;text-align: right;" v-else-if="eidtState=== '编辑'">
             <el-button type="primary" @click="editSubmitForm('ruleForm')">保存</el-button>
@@ -67,7 +67,7 @@
 </template>
 <script>
 import hint from '@/components/Hint'
-import caijiaAdd from './caijiaAdd.vue'
+// import caijiaAdd from './caijiaAdd.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import {selectCaijia, addCaijia, editCaijia, deleteCaijia} from '@/api/category/caijia.js'
@@ -119,7 +119,7 @@ export default {
       id:'',
     }
   },
-  components:{selectorAddress, Breadcrumb, hint, caijiaAdd},
+  components:{selectorAddress, Breadcrumb, hint},
   mounted(){
     this.getCaijiaList()
   },
@@ -201,7 +201,7 @@ export default {
       this.ruleForm.provinceId = row.provinceId.toString()
       this.ruleForm.cityId = row.cityId.toString()
       this.ruleForm.areaId = row.areaId.toString()
-
+      this.ruleForm.type = row.type.toString()
       this.dialogVisible = true
       this.caijiaTitle = '编辑'
     },
@@ -236,6 +236,7 @@ export default {
     // 取消必填验证
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.dialogVisible = false
     },
     // 确认添加
     submitForm(formName) {

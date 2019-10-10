@@ -16,7 +16,7 @@ export const getSecondCategory = () => {
  */
 export const deleteCategoryOne = (id) => {
   return request({
-    url: `/basics/deleteCategoryOne?id=${id}`,
+    url: `/basics/deleteCategoryOne?id=${id}&categoryOneId=${id}`,
     method: 'get'
   })
 }
@@ -35,9 +35,9 @@ export const selectAll = () => {
  * 二级品类删除
  * @param id
  */
-export const delCategoryTwo = (id) => {
+export const delCategoryTwo = (categoryOneId,categoryTwoId) => {
   return request({
-    url: `/basics/delCategoryTwo?id=${id}`,
+    url: `/basics/delCategoryTwo?categoryOneId=${categoryOneId}&categoryTwoId=${categoryTwoId}`,
     method: 'get'
   })
 }

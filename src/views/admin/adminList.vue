@@ -1,12 +1,12 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
-      <el-button @click="addData" type="primary" v-if="bottonList.includes('操作')">新建</el-button>
-      <el-button @click="addData" type="primary" v-else disabled>新建</el-button>
-      <!-- <el-button type="">角色设置</el-button> -->
+    <breadcrumb :stateShow ='stateShow'>
+      <el-button size="mini" @click="addData" type="primary" v-if="bottonList.includes('操作')">新建</el-button>
+      <el-button size="mini" @click="addData" type="primary" v-else disabled>新建</el-button>
+      <el-button size="mini" @click="roleSet" type="warning">角色设置</el-button>
     </breadcrumb>
     <el-dialog
-      title="编辑"
+      :title="title"
       :modal="true"
       :close-on-click-modal="false"
       :visible.sync="dialogVisible"
@@ -37,13 +37,13 @@
     <!-- 搜索条件 -->
     <div style="display:flex;direction-flex:row;">
       <span style="font-weight:bold;">角色：</span>
-      <el-select v-model="charactar" style="width:20%;" size="mini" placeholder="请选择活动区域">
+      <el-select v-model="charactar" style="width:20%;" size="mini" placeholder="请选择活动区域" clearable>
         <el-option v-for="item in roleList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div>
         <div style="position:absolute; right:10px;">
-        <!-- <el-button size="mini" type="primaryX" @click="search" :loading="loadingSearch">筛选</el-button>
-        <el-button size="mini" type="info" @click="clearSearch" :loading="loadingClear">清空</el-button> -->
+        <el-button size="mini" type="primaryX" @click="search" :loading="loadingSearch">筛选</el-button>
+        <el-button size="mini" type="info" @click="clearSearch" :loading="loadingClear">清空</el-button>
       </div>
       </div>
     </div>
@@ -133,7 +133,7 @@
 <script>
 import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
-import { addAdmin, selectPageAdmin, editAdmin } from '@/api/admin/adminList'
+import { addAdmin, selectPageAdmin, editAdmin, deleteAdmin } from '@/api/admin/adminList'
 import { selectAfter } from '@/api/role'
 import { constants } from 'fs';
 export default {
@@ -150,6 +150,10 @@ export default {
   },
   data() {
     return {
+      loadingSearch:false,
+      loadingClear:false,
+      title:'',
+      stateShow:false,
       dataList: [],
       ruleForm: {},
       rules: {},
@@ -166,6 +170,7 @@ export default {
       total: 0,
       pagesize: 10,
       pageNum: 1,
+      adminId:'',
     }
   },
   beforeRouteEnter (to, form, next) {
@@ -184,9 +189,18 @@ export default {
         this.param = this.Trim(e)
         // this.getCaijiaUser()
       }
-    }
+    },
+    'charactar'(e){
+      if(e){
+
+      }else{
+        this.charactar = ''
+        this.getAdminList()
+      }
+    },
   },
   mounted() {
+    // this.stateShow = true
     // 初始化
     this.getAdminList()
     this.getRoles()
@@ -204,15 +218,13 @@ export default {
           this.bottonList = item.checkList
         }
       })
-      // console.log(this.bottonList)
     },
     getAdminList() {
       this.dataList = []
-      selectPageAdmin(this.pageNum, this.pagesize, this.param).then(res => {
+      selectPageAdmin(this.pageNum, this.pagesize, this.param, this.charactar).then(res => {
         this.dataList = []
         this.total = res.info.totalrecord
         res.info.records.map(item => {
-          // console.log(item.role)
           if(item.role){
             this.dataList.push(item)
           }else{
@@ -223,6 +235,12 @@ export default {
         })
       }).catch(err => {
         console.log(err)
+      })
+    },
+    // 角色设置
+    roleSet(){
+      this.$router.push({
+        name:'roleList'
       })
     },
     // 获取角色
@@ -237,6 +255,7 @@ export default {
     editData(index, row) {
       this.dialogVisible = true
       this.state = 'edit'
+      this.title = '编辑用户'
       this.listIndex = index
       this.ruleForm = row
       this.ruleForm.roleId = row.role.id
@@ -246,17 +265,30 @@ export default {
       this.ruleForm = {}
       this.dialogVisible = true
       this.state = 'add'
+      this.title = '新建用户'
     },
     // 删除
     removeData(index, row) {
       this.listRow = row
+      this.adminId = row.id
       this.hintState = true
     },
     // 删除用户
     deleteUser() {
-      this.dataList.splice(this.listIndex, 1)
+      // this.dataList.splice(this.listIndex, 1)
+      deleteAdmin(this.adminId).then(res => {
+        if(res.status === 1){
+          this.hintState = false
+          this.$message.success('删除成功！')
+          this.getAdminList()
+        }
+      }).catch(err => {
+        console.log(err)
+        this.hintState = false
+        this.$message.error('删除成功！')
+      })
       // 成功后隐藏
-      this.hintState = false
+
     },
     // 添加成功
     addSuccess() {
@@ -269,6 +301,7 @@ export default {
     // 添加用户
     addAdminClick () {
       this.loading = true
+      this.ruleForm.type=1
       // 新建
       if (this.state === 'add') {
         addAdmin(this.ruleForm).then(res => {
@@ -289,15 +322,24 @@ export default {
     },
     handleSizeChange(e) {
       this.pageSize = e
+      this.getAdminList()
     },
     handleCurrentChange(e) {
       this.pageNum = e
+      this.getAdminList()
     },
     // 取消
     clickCancel() {
       this.dialogVisible = false
       this.ruleForm = {}
       this.loading = false
+    },
+    clearSearch(){
+      this.charactar = ''
+      this.getAdminList()
+    },
+    search(){
+      this.getAdminList()
     }
   }
 }

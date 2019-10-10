@@ -1,5 +1,15 @@
 <template>
   <div>
+    <Breadcrumb :stateShow="stateShow">
+      <div v-if="userObject.state === '编辑'">
+        <el-button size="mini" type="primary" @click="editsubmitForm('ruleForm')">保存</el-button>
+        <el-button size="mini" type="warning" @click="resetForm('ruleForm')">取消</el-button>
+      </div>
+      <div v-else>
+        <el-button size="mini" type="primary" @click="submitForm('ruleForm')">保存</el-button>
+        <el-button size="mini" type="warning" @click="resetForm('ruleForm')">取消</el-button>
+      </div>
+    </Breadcrumb>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
       <el-form-item label="用户名" prop="name">
         <el-input v-model="ruleForm.name" placeholder="请输入用户名：" style="width:30%;"/>
@@ -15,36 +25,31 @@
           <el-option v-for="item in shichangTypeList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </el-form-item>
-      <el-form-item label="市场区域：" prop="priceMarketId">
+      <el-form-item label="市场区域：" prop="priceMarketIdList">
         <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
-        <el-select v-model="ruleForm.priceMarketId" style="width:30%;" placeholder="请选择市场" size="mini" clearable>
+        <el-select v-model="ruleForm.priceMarketIdList" multiple  style="width:30%;" placeholder="请选择市场" size="mini">
           <el-option v-for="item in shichangList" :key="item.id" :value="item.id" :label="item.name" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <div v-if="userObject.state === '编辑'">
-          <el-button type="primary" @click="editsubmitForm('ruleForm')">保存</el-button>
-          <el-button @click="resetForm('ruleForm')">取消</el-button>
-        </div>
-        <div v-else>
-          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-          <el-button @click="resetForm('ruleForm')">取消</el-button>
-        </div>
+
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { getCaijiaUser, addCaijiaUser, editCaijiaUser, deleteCaijiaUser, getPriceMarket} from '@/api/admin/caijiaUser.js'
 export default {
   name:'caijiaUserAdd',
-  components:{selectorAddress},
+  components:{selectorAddress,Breadcrumb},
   data(){
     return{
+      stateShow:false,
       ruleForm:{
         priceMarketType:'',
-        priceMarketId:'',
+        priceMarketIdList:[],
         mobile:'',
         password:'',
         name:'',
@@ -60,7 +65,7 @@ export default {
       rules:{
          name: [{ required: true, message: '请输入采价用户名称', trigger: 'blur' }],
          priceMarketType: [{ required: true, message: '请选择市场种类', trigger: 'blur' }],
-         priceMarketId: [{ required: true, message: '请选择市场', trigger: 'blur' }],
+         priceMarketIdList: [{ required: true, message: '请选择市场', trigger: 'blur' }],
          mobile: [{ required: true, message: '请输入手机号码', trigger: 'blur' }],
          password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
          cityId: [{ required: true, message: '请选择市', trigger: 'blur' }],
@@ -82,12 +87,12 @@ export default {
         },
       ],
       shichangList:[],
-      priceMarketId:'',
+      priceMarketIdList:[],
       userObject:{},
     }
   },
   mounted(){
-    console.log(this.$route.params)
+    this.stateShow = true
     if(JSON.stringify(this.$route.params)!=='{}'){
       this.userObject = this.$route.params
       this.ruleForm = this.$route.params
@@ -115,6 +120,7 @@ export default {
       obj.areaId = this.ruleForm.areaId
       getPriceMarket(obj).then(res => {
         if(res.status === 1){
+          console.log(res.info, 'kkkkkkkk')
           this.shichangList = res.info
         }
       }).catch(err=> {
@@ -125,7 +131,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // console.log(this.ruleForm, 'kkkkkkkk')
+          //需要处理市场区域
           addCaijiaUser(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加成功！')
@@ -143,7 +149,7 @@ export default {
     editsubmitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // console.log(this.ruleForm, 'kkkkkkkk')
+          console.log(this.ruleForm, 'this.ruleForm....')
           let obj = {}
           obj.id = this.ruleForm.id
           obj.name = this.ruleForm.name
@@ -156,6 +162,8 @@ export default {
           obj.priceMarketId = this.ruleForm.priceMarketId
           obj.type = this.ruleForm.type
           obj.roleId = this.ruleForm.roleId
+          //需要处理市场区域
+          return
           editCaijiaUser(obj).then(res => {
             if(res.status === 1){
               this.$message.success('修改成功！')
@@ -172,6 +180,7 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.$router.back()
     }
   }
 }

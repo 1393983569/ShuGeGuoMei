@@ -93,11 +93,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(getUserId()).then(response => {
         try {
-          console.log(JSON.parse(response.info.menu), 'json.....')
+          // console.log(JSON.parse(response.info.menu), 'json.....')
           // return
           let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
           let roleList = getRole(JSON.parse(response.info.menu))
-          console.log(roleList, 'roleList.....')
+          // console.log(roleList, 'roleList.....')
           commit('SET_ROLEID', response.info.roleId)
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)

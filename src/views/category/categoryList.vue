@@ -48,7 +48,7 @@
           @click="handleIconClick(index)">
         </i>
       </el-input>
-      <el-button @click="addStairInput">一级品类+</el-button>
+      <el-button @click="addStairInput">+</el-button>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogStair = false">取 消</el-button>
         <el-button type="primary" @click="addStair">确 定</el-button>
@@ -75,7 +75,7 @@
           @click="handleSecondIconClick(index)">
         </i>
       </el-input>
-      <el-button @click="addChildrenInput">二级品类+</el-button>
+      <el-button @click="addChildrenInput">+</el-button>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogChildren = false">取 消</el-button>
         <el-button type="primary" @click="addChildren">确 定</el-button>
@@ -280,13 +280,15 @@
           this.spanArr = this.gteRule(list)
           this.dataList = clonedeep(list)
           this.hintState = false
+          this.$message.success('删除成功！')
+          this.getStair()
         }).catch(err => {
           console.log(err)
         })
       },
       // 删除二级
       removeChildren(row) {
-        delCategoryTwo(row.childrenId).then(res => {
+        delCategoryTwo(row.stairId,row.childrenId).then(res => {
           let list = []
           let cloneList = clonedeep(this.dataList)
           list = cloneList.filter((item, i) => {
@@ -298,12 +300,17 @@
           this.spanArr = this.gteRule(list)
           this.dataList = clonedeep(list)
           this.hintState = false
+          if(res.status ===1){
+            this.$message.success('删除成功！')
+            this.getStair()
+          }
         }).catch(err => {
           console.log(err)
         })
       },
       // 删除
       removeData(index, row, state) {
+        console.log(row,state, 'shanchu//////////')
         this.selectRow = row
         this.selectIndex = index
         this.removeState = state
@@ -384,6 +391,7 @@
       },
       addStair() {
         // console.log(this.stairInput, 'kkkkkkk')
+        // return
         let arr = this.dataList
         let id = ''
         let stairList = []
@@ -413,15 +421,21 @@
         //   }
         // }
         // id = arr[arr.length - 1].stairId
+        let count = 0
         this.stairInput.forEach((item, index) => {
           if(item.value){
             stairList.push({
               id: this.addId(id, index + 1),
               name: item.value
             })
+          }else{
+            count++
           }
         })
-        // console.log(stairList, 'stairList//////')
+        if(count>0){
+          this.$message.warning('一级品类的名称不能存在空值！')
+          return
+        }
         addCategoryOne(stairList).then(res => {
           this.dialogStair = false
           this.getList()
@@ -465,7 +479,11 @@
         }else{
           id='01'
         }
+        let count = 0
         this.childrenInput.forEach((item, index) => {
+          if(!item.value){
+            count++
+          }
           let data = {
             id: this.addId(id, index + 1),
             categoryOneId : this.optionValue,
@@ -473,6 +491,10 @@
           }
           listChildren.push(data)
         })
+        if(count>0){
+          this.$message.warning('二级品类名称不能存在空值！')
+          return
+        }
         addCategoryTwo(listChildren).then(res => {
           this.dialogChildren = false
           this.getList()
@@ -482,18 +504,38 @@
       },
       // 添加一级品类input数组
       addStairInput() {
+        let count = 0
+        this.stairInput.forEach(item => {
+          if(item.value.length>6){
+            count++
+          }
+        })
+        if(count>0){
+          this.$message.warning('一级品类名称不超过6个汉字!')
+          return
+        }
         this.stairInput.push({
           value: ''
         })
       },
       // 添加二级品类input数组
       addChildrenInput() {
+        let count = 0
+        this.childrenInput.forEach(item => {
+          if(item.value.length>6){
+            count++
+          }
+        })
+        if(count>0){
+          this.$message.warning('二级品类名称超过6个汉字！')
+        }
         this.childrenInput.push({
           value: ''
         })
       },
       // 获取一级品类
       getStair() {
+        this.optionsStair = []
         selectAll().then(res => {
           this.optionsStair.push(...res.info)
         }).catch(err => {
@@ -502,29 +544,51 @@
       },
       // 编辑二级
       editSecond() {
+        if(!this.showSecondData.childrenName){
+          this.$message.warning('二级品类的名称不能为空！')
+          return
+        }
+        if(this.showSecondData.childrenName.length>6){
+          this.$message.warning('二级品类的名称长度不能超过6汉字！')
+          return
+        }
+        console.log(this.showSecondData, 'showSecondData.....')
         let data = {
           name: this.showSecondData.childrenName,
           id: this.showSecondData.childrenId,
           categoryOneId: this.showSecondData.stairId
         }
+
         editCategoryTwo(data).then(res => {
           console.log(res)
-          this.second = false
-          this.getList()
+          if(res.status === 1){
+            this.second = false
+            this.$message.success('修改成功！')
+            this.getList()
+          }
         }).catch(err => {
 
         })
       },
       // 编辑一级
       editStair() {
+        if(!this.showStairData.stairName){
+          this.$message.warning('品类名称不能为空')
+          return
+        }else if(this.showStairData.stairName.length>6){
+          this.$message.warning('品类名称不能超过6个汉字！')
+          return
+        }
         let data = {
           id: this.showStairData.stairId,
           name: this.showStairData.stairName,
         }
-        console.log(data)
         updateCategoryOne(data).then(res => {
-          this.stair = false
-          this.getList()
+          if(res.status ===1){
+            this.stair = false
+            this.getList()
+            this.$message.success('修改成功！')
+          }
         }).catch(err => {
 
         })
