@@ -201,7 +201,7 @@ export default {
       this.ruleForm.provinceId = row.provinceId.toString()
       this.ruleForm.cityId = row.cityId.toString()
       this.ruleForm.areaId = row.areaId.toString()
-      this.ruleForm.type = row.type.toString()
+      this.ruleForm.type = row.type
       this.dialogVisible = true
       this.caijiaTitle = '编辑'
     },

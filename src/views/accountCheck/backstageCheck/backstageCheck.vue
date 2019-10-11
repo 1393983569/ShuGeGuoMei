@@ -36,7 +36,11 @@
       >
         <el-table-column label="订单时间"  prop="createTime" ></el-table-column>
         <el-table-column label="订单编号" prop="orderNo"> </el-table-column>
-        <el-table-column label="订单店铺" prop="name"></el-table-column>
+        <el-table-column label="商品数量" prop="name">
+          <template slot-scope="scope">
+            {{scope.row.goodsAmount[0].goodsAmount}}
+          </template>
+        </el-table-column>
         <el-table-column label="订单金额(元)" prop="">
           <template slot-scope="scope">{{scope.row.total_money/100}}</template>
         </el-table-column>

@@ -11,6 +11,7 @@ export const getCaijiaUser = (data) => {
   }
   return request({
     url: '/admin/selectDetailMarketMan',
+
     method: 'post',
     data: params
   })
@@ -20,14 +21,14 @@ export const getCaijiaUser = (data) => {
  * @param data
  */
 export const addCaijiaUser = (data) => {
-  const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key]) params.append(key, data[key])
-  }
+
   return request({
-    url: '/admin/addMarketMan',
+    url: `/admin/addMarketMan?name=${data.name}&priceMarketType=${data.priceMarketType}&mobile=${data.mobile}&password=${data.password}&provinceId=${data.provinceId}&cityId=${data.cityId}&areaId=${data.areaId}&type=${data.type}&roleId=${data.roleId}`,
     method: 'post',
-    data: params
+    headers: {
+      'content-Type': 'application/json;charset=UTF-8'
+    },
+    data: data.priceMarketManDomain
   })
 }
 /**
@@ -35,14 +36,13 @@ export const addCaijiaUser = (data) => {
  * @param data
  */
 export const editCaijiaUser = (data) => {
-  const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key]) params.append(key, data[key])
-  }
   return request({
-    url: '/admin/editMarketMan',
+    url: `/admin/editMarketMan?id=${data.id}&name=${data.name}&priceMarketType=${data.priceMarketType}&mobile=${data.mobile}&password=${data.password}&provinceId=${data.provinceId}&cityId=${data.cityId}&areaId=${data.areaId}&type=${data.type}&roleId=${data.roleId}`,
     method: 'post',
-    data: params
+    headers: {
+      'content-Type': 'application/json;charset=UTF-8'
+    },
+    data: data.priceMarketManDomain
   })
 }
 /**

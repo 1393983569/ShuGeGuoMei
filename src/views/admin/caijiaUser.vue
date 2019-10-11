@@ -28,7 +28,13 @@
         <el-table-column prop="name" label="用户名"/>
         <el-table-column prop="mobile" label="手机号"/>
         <el-table-column prop="password" label="密码"/>
-        <el-table-column prop="priceMarketName" label="市场名称"/>
+        <el-table-column prop="priceMarketName" label="市场名称">
+          <template slot-scope="scope">
+            <p class="outer">
+              <span v-for="item in scope.row.priceMarketMan">{{item.priceMarketName}}</span>,
+            </p>
+          </template>
+        </el-table-column>
         <el-table-column prop="priceMarketType" label="市场类别">
           <template slot-scope="scope">
             <p v-if="scope.row.priceMarketType===1">批发市场</p>
@@ -221,3 +227,13 @@ export default {
   }
 }
 </script>
+<style>
+.outer{
+    /* 文本强制不换行；*/
+    white-space: nowrap;
+     /* 文本溢出显示省略号； */
+    text-overflow:ellipsis;
+    /* 溢出的部分隐藏； */
+    overflow:hidden;
+}
+</style>

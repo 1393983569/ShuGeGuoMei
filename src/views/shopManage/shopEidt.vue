@@ -150,6 +150,24 @@ export default {
     selectorAddress, staff,Breadcrumb
   },
   data() {
+    // 手机号码验证
+    var checkPhone = (rule, value, callback) => {
+      const phoneReg = /^1[3|4|5|6|7|8][0-9]{9}$/
+      if (!value) {
+        return callback(new Error('电话号码不能为空'))
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(+value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          if (phoneReg.test(value)) {
+            callback()
+          } else {
+            callback(new Error('电话号码格式不正确'))
+          }
+        }
+      }, 100)
+    };
     return {
       breadState:false,
       showState:false,
@@ -187,7 +205,7 @@ export default {
         simpleName: [{ required: true, message: '请输入店铺简称', trigger: 'blur' }],
         // picture: [{ required: true, message: '请上传店铺图片', trigger: 'blur' }],
         adminName: [{ required: true, message: '请输入掌柜姓名', trigger: 'blur' }],
-        adminPhone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        adminPhone: [{ required: true,validator: checkPhone,trigger: 'blur' }],
         adminPassword: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
         detailsAddress: [{ required: true, message: '请输入详细地址', trigger: 'blur' }],
         area: [{ required: true, message: '请输入店铺面积', trigger: 'blur' }],
@@ -243,8 +261,6 @@ export default {
   },
   mounted() {
     this.getCategoryList()
-    // this.handleClose()
-    console.log(this.$route.params, 'this.$route.params')
     if(JSON.stringify(this.$route.params)!== '{}'){
       this.editObject= this.$route.params
       if(this.$route.params.imge){
@@ -262,7 +278,6 @@ export default {
           this.imgState = false
         }
       }
-      console.log(this.editObject, 'edit......')
     }else{
       this.editObject = ''
       this.showState = true
@@ -331,9 +346,9 @@ export default {
         this.$message.error('上传图片的大小不能超过 1M!');
       }
       // 限制图片上传个数
-      console.log(this.imgelist, 'length......')
+      // console.log(this.imgelist, 'length......')
       if(this.imgelist.length>=2){
-        console.log('chaoguo2........')
+        // console.log('chaoguo2........')
         this.imgState = false
       }
     },
@@ -452,14 +467,14 @@ export default {
       fileList.map(item => {
         this.imgelist.push(item.url)
       })
-      console.log(file, fileList, 'jsjsjsjsjsjsj')
+      // console.log(file, fileList, 'jsjsjsjsjsjsj')
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
     uploadSuccess(response, file, fileList){
-      console.log(response, 'respo.....')
+      // console.log(response, 'respo.....')
       this.imgelist.push(file.response.info)
     },
     handleEditPreview(e){
@@ -514,6 +529,7 @@ export default {
       })
       this.loadingState = true
       // 添加多个category
+
       this.shopForm.provinceId = parseInt(this.shopForm.provinceId)
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
@@ -569,15 +585,12 @@ export default {
         this.shopForm.management = 2
       }
       this.shopForm.imge = this.imgelist.toString()
-      console.log(this.imgelist, 'imgList.......')
-      // return
       editShop(this.shopForm).then(res => {
         if(res.status === 1){
            this.$message.success('操作成功')
           this.loadingState = false
           this.handleClose()
           this.$router.back()
-          // this.$parent.getShopList()
         }
       }).catch(error => {
         console.log(error)

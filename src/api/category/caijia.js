@@ -54,7 +54,7 @@ export const editCaijia = (data) => {
  */
 export const deleteCaijia = (id) => {
   return request({
-    url: `/basics/deleteMarket?id=${id}`,
+    url: `/basics/deleteMarket?id=${id}&priceMarketId=${id}`,
     method: 'get'
   })
 }
