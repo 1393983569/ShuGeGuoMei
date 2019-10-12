@@ -104,7 +104,7 @@ const actions = {
           commit('SET_ROLEID', response.info.roleId)
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)
-          commit('SET_AVATAR', 'http://qiniu.freshergo.com/1570850498521.png')
+          commit('SET_AVATAR', 'http://qiniu.freshergo.com/1569480562307.jpg')
           // console.log(state, 'state........')
           const data = {
             buttonRoleList: state.buttonRoleList,

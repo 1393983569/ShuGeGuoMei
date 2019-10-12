@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     backHandle(){
-      console.log('kjhggggg')
+      // console.log('kjhggggg')
       this.$router.back()
     },
     getBreadcrumb() {

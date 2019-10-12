@@ -4,8 +4,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <img :src="avatars" class="user-avatar"> -->
-          <span>{{adminName}}</span>
+          <img :src="avatar" class="user-avatar">
+          <span> {{adminName}}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -33,7 +33,7 @@ import Search from '@/components/HeaderSearch'
 export default {
   data(){
     return{
-      avatars:'',
+      // avatars:'',
       adminName:''
     }
   },
@@ -54,7 +54,7 @@ export default {
   },
   mounted(){
     this.adminName = this.$store.state.user.name
-    this.avatars = this.$store.state.user.avatar
+    // this.avatars = this.$store.state.user.avatar
   },
   methods: {
     toggleSideBar() {
@@ -73,7 +73,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  height: 50px;
+  height: 46px;
   overflow: hidden;
   position: relative;
   background: #fff;
@@ -132,22 +132,27 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        // margin-top: 1px;
         position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          margin-right:10px;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
-          right: -20px;
-          top: 25px;
+          right: -10px;
+          top: 20px;
           font-size: 12px;
+          left:88px;
         }
       }
     }
