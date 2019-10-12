@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
+    <div style="width:70%;" class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
     <el-table :data="tableData" style="width:70%;" border center show-summary :summary-method="getSummaries">
       <el-table-column label="序号" prop="index" width="60"/>
       <el-table-column label=" " prop="name"/>

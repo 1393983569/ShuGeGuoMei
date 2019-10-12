@@ -242,15 +242,28 @@ export default {
               if(disArray[i].name === '库存'){
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch5(disArray[i].tp)
-                disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                if(disArray[i].w){
+                  disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                }else{
+                  disArray[i].wv = 0
+                }
               }else if(disArray[i].name === '会员购买力指数(万)'){
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch7(disArray[i].c)
-                disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                if(disArray[i].w){
+                  disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                }else{
+                  disArray[i].wv = 0
+                }
               }else if(disArray[i].index==='2'||disArray[i].index==='3'||disArray[i].index==='4'){
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch6(disArray[i].tp)
-                disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                if(disArray[i].w){
+                  disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                }else{
+                  disArray[i].wv= 0
+                }
+
               }
             }
           }else{
