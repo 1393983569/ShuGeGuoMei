@@ -1,15 +1,17 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button type="primary" size="mini" @click="addCijiaHandle">新建</el-button>
-      <!-- <el-button type="primary" size="mini" v-else disabled>新建</el-button> -->
+      <el-button type="primary" size="mini" @click="addCijiaHandle" v-if="bottonList.includes('操作')">新建</el-button>
+      <el-button type="primary" size="mini" v-else disabled>新建</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
       <!-- <el-button @click="allArea" style="margin:3px;hight:28px;">全部区域</el-button> -->
       <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="province" @getCity="city" @getCounty="county"/>
       <div style="position:absolute;right:1%;">
-        <el-button @click="searchHandle" size="mini" type="primaryX">筛选</el-button>
-        <el-button @click="clearHandle" size="mini" type="info">清空</el-button>
+        <el-button @click="searchHandle" size="mini" type="primaryX" v-if="bottonList.includes('操作'||'查看')">筛选</el-button>
+        <el-button @click="searchHandle" size="mini" type="primaryX" v-else>筛选</el-button>
+        <el-button @click="clearHandle" size="mini" type="info" v-if="bottonList.includes('操作'||'查看')">清空</el-button>
+        <el-button @click="clearHandle" size="mini" type="info" v-else>清空</el-button>
       </div>
     </div>
     <el-table
@@ -20,8 +22,10 @@
       <el-table-column prop="name" label="名称"/>
       <el-table-column  prop="" label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="editCaijiaHandle(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="deleteCaijiaHandle(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="editCaijiaHandle(scope.row)" v-if="bottonList.includes('操作')">编辑</el-button>
+          <el-button type="primary" size="mini" v-else disabled>编辑</el-button>
+          <el-button type="danger" size="mini" @click="deleteCaijiaHandle(scope.row)" v-if="bottonList.includes('操作')">删除</el-button>
+          <el-button type="danger" size="mini" v-else disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -117,13 +121,28 @@ export default {
       caijiaTitle:'',
       eidtState:'',
       id:'',
+      bottonList:[],
     }
+  },
+  beforeRouteEnter (to, form, next) {
+  // console.log(to)
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+    })
   },
   components:{selectorAddress, Breadcrumb, hint},
   mounted(){
     this.getCaijiaList()
   },
   methods:{
+    getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      // console.log(this.bottonList)
+    },
     // addhandle(){},
     // 查询采价列表
     getCaijiaList(){

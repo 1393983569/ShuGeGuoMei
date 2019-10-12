@@ -1,5 +1,8 @@
+// 接口
 import { logout, login, getInfo } from '@/api/user'
+// Cookies中获取
 import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
+// getButtonRole：将权限的数据组成想要的格式，getRole：所有权限
 import { getButtonRole, getRole } from '@/utils/logic'
 import router, { resetRouter } from '@/router'
 
@@ -93,7 +96,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(getUserId()).then(response => {
         try {
-          // console.log(JSON.parse(response.info.menu), 'json.....')
+          // console.log(response, 'json.....')
           // return
           let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
           let roleList = getRole(JSON.parse(response.info.menu))
@@ -101,7 +104,7 @@ const actions = {
           commit('SET_ROLEID', response.info.roleId)
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)
-          commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+          commit('SET_AVATAR', 'http://qiniu.freshergo.com/1570850498521.png')
           // console.log(state, 'state........')
           const data = {
             buttonRoleList: state.buttonRoleList,

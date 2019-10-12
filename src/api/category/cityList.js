@@ -1,7 +1,7 @@
 import request from '../../utils/request'
 
 /**
- * 查询基础数据下的所有省份
+ * 查询所有省份
  */
 export const selectSysProvince = () => {
   return request({
@@ -11,7 +11,7 @@ export const selectSysProvince = () => {
 }
 
 /**
- * 查询基础数据省下的所有城市
+ * 查询所有城市
  * @param provinceId
  */
 export const selectSysCity = (provinceId) => {
@@ -30,7 +30,7 @@ export const selectAllData = () => {
   })
 }
 /**
- * 查询基础数据市下的区县
+ * 查询区县
  * @param cityId
  */
 export const selectSysArea = (cityId) => {

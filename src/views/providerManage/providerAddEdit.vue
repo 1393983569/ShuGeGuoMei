@@ -155,6 +155,73 @@ export default {
   components: { selectorAddress,grade ,gradeDetail, Breadcrumb },
   name: 'providerAddEdit',
   data() {
+    // 手机号验证
+    var validateMobilePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('手机号不可为空'));
+      } else {
+        if (value !== '') {
+          var reg=/^1[3456789]\d{9}$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入有效的手机号码'));
+          }
+        }
+        callback();
+      }
+    };
+    // 邮箱验证
+    var validateEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请正确填写邮箱'));
+      } else {
+        if (value !== '') {
+          var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入有效的邮箱'));
+          }
+        }
+        callback();
+      }
+    };
+    // 固定电话验证
+    var validatePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('电话不可为空'));
+      } else {
+        if (value !== '') {
+          var reg =/^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入正确的座机号格式为：0000-0000000'));
+          }
+        }
+        callback();
+      }
+    };
+    // 微信号
+    var validateWeixin = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('微信号不能为空'));
+      }else{
+        var reg= /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
+        if(!reg.test(value)){
+          callback(new Error('请输入正确的微信号码'));
+        }else{
+          callback();
+        }
+      }
+    };
+    var validateQQ = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('QQ号不能为空'));
+      }else{
+        var reg = /^[1-9]\d*$/;
+        if(!reg.test(value)||value.toString().length>12||value.toString().length<5){
+          callback(new Error('请输入正确的QQ号'));
+        }else{
+          callback();
+        }
+      }
+    };
     return {
       percentageHeader:0,
       percentageQua:0,
@@ -214,13 +281,19 @@ export default {
           { required: true, message: '请输入联系人', trigger: 'blur' },
         ],
         mobile: [
-          { required: true, message: '请输入座机号', trigger: 'blur' },
+          { required: true,validator:validateMobilePhone, trigger: 'blur' },
+        ],
+        wechat: [
+          { required: false,validator:validateWeixin, trigger: 'blur' },
+        ],
+        qq: [
+          { required: false,validator:validateQQ, trigger: 'blur' },
         ],
         phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { required: true,validator: validatePhone, trigger: 'blur' },
         ],
         email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { required: true, validator:validateEmail, trigger: 'blur' },
         ],
         addressDetail: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
@@ -269,7 +342,7 @@ export default {
       this.providerId = this.$route.params.id
       this.getProviderDetail()
     }else{
-
+      this.editState = false
     }
     this.getShopOption()
     this.ruleForm.shops = []

@@ -1,19 +1,19 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button type="primary" @click="showProvince">新建省</el-button>
-      <el-button type="primary" @click="showCity">新建市</el-button>
-      <el-button type="primary" @click="showCounty" v-if="bottonList.includes('操作')">新建区/县</el-button>
+      <!-- <el-button type="primary" @click="showProvince">新建省</el-button>
+      <el-button type="primary" @click="showCity">新建市</el-button> -->
+      <el-button type="primary" @click="showCounty" v-if="bottonList.includes('操作')">开通城市</el-button>
       <el-button type="primary" v-else disabled>新建区/县</el-button>
     </breadcrumb>
-    <!-- 新建区/县 -->
+    <!-- 新建省市区 -->
     <el-dialog
       title="新建区/县"
       :visible.sync="dialogCounty"
       modal
       :close-on-click-modal="false"
       width="40%">
-      <el-select @change="changeProvince" v-model="selectProvince3" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
+      <el-select @change="changeProvince1" v-model="selectProvince3" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
         <el-option
           v-for="item in optionsProvince"
           :key="`${item.id}_o`"
@@ -43,7 +43,7 @@
       </span>
     </el-dialog>
     <!-- 新建省 -->
-    <el-dialog
+    <!-- <el-dialog
       title="新建省"
       modal
       :close-on-click-modal="false"
@@ -61,9 +61,9 @@
         <el-button @click="dialogProvince = false">取 消</el-button>
         <el-button type="primary" @click="addChildren('省', selectProvince1)">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 新建市 -->
-    <el-dialog
+    <!-- <el-dialog
       title="新建市"
       modal
       :close-on-click-modal="false"
@@ -71,7 +71,7 @@
       width="40%">
       <el-select @change="changeProvince" v-model="selectProvince2" placeholder="请选择省" style="margin-bottom: 5px; width: 100%">
         <el-option
-          v-for="item in optionsProvince"
+          v-for="item in optionsBasicProvince"
           :key="`${item.id}_o`"
           :label="item.name"
           :value="item.id">
@@ -89,7 +89,7 @@
         <el-button @click="dialogCity = false">取 消</el-button>
         <el-button type="primary" @click="addChildren('市', selectProvince2, selectCity1)">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <el-table :data="dataList" :span-method="objectSpanMethod"
       stripe
       border
@@ -112,7 +112,8 @@
       </el-table-column>
       <el-table-column prop="" label="操作" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="deleteHandle(scope)">删除</el-button>
+          <el-button size="mini" type="danger" v-if="bottonList.includes('操作')" @click="deleteHandle(scope)">删除</el-button>
+          <el-button size="mini" type="danger" v-else disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -122,6 +123,7 @@
 
 <script>
 import hint from '@/components/Hint'
+import { getProvince, getCity, getArea } from '@/api/priovinCityArea.js'
 import { selectSysProvince, selectSysCity, selectSysArea, addSysArea, selectAllData,deleteSysArea } from '@/api/category/cityList'
 import Breadcrumb from '@/components/Breadcrumb'
 import { isNull } from 'util';
@@ -370,6 +372,7 @@ import { isNull } from 'util';
       },
       edit() {},
       removeData() {},
+      // 所有省份
       getSelectSysProvince() {
         this.optionsProvince = []
         selectSysProvince().then(res => {
@@ -378,6 +381,7 @@ import { isNull } from 'util';
           console.log(err)
         })
       },
+      // 所有市
       getSelectSysCity(id) {
         this.optionsCity = []
         selectSysCity(id).then(res => {
@@ -386,6 +390,7 @@ import { isNull } from 'util';
           console.log(err)
         })
       },
+      // 所有区
       getSelectSysArea(id){
         this.optionsCounty = []
         selectSysArea(id).then(res => {
@@ -394,11 +399,14 @@ import { isNull } from 'util';
           console.log(err)
         })
       },
-      changeProvince(e) {
-        this.getSelectSysCity(e)
-      },
       changeCity(e) {
+        this.selectCounty1= []
         this.getSelectSysArea(e)
+      },
+      changeProvince1(e) {
+        this.selectCity2 = ''
+        this.selectCounty1 = []
+        this.getSelectSysCity(e)
       },
       showProvince() {
         this.dialogProvince = true
@@ -406,12 +414,16 @@ import { isNull } from 'util';
         this.getSelectSysProvince()
       },
       showCity() {
+        this.optionsCity = []
+        this.selectBasicProvince()
         this.dialogCity = true
         this.selectCity1 = []
         this.selectProvince2 = ''
-        this.getSelectSysProvince()
+        // this.getSelectSysProvince()
       },
       showCounty() {
+        this.optionsCity = []
+        this.optionsCounty = []
         this.dialogCounty = true
         this.selectProvince3 = ''
         this.selectCity2 = ''

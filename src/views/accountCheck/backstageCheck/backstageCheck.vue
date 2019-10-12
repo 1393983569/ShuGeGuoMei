@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button type="primary" @click="exportHandle">导出</el-button>
+      <el-button size="mini" type="primary" @click="exportHandle" v-if="bottonList.includes('操作'||'查看')">导出</el-button>
+      <el-button size="mini" type="primary" v-else>导出</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
       <yearMonthPick @getPickDate="handlePickDate" :stateShow="stateShow"/>&nbsp;&nbsp;&nbsp;
@@ -17,8 +18,10 @@
         </el-select>
       </div>
       <div style="position:absolute;right:10px;">
-        <el-button type="primaryX" size="mini" @click="search">筛选</el-button>
-        <el-button type="info" size="mini" @click="clear">清空</el-button>
+        <el-button type="primaryX" size="mini" @click="search" v-if="bottonList.includes('操作'||'查看')">筛选</el-button>
+        <el-button type="primaryX" size="mini" v-else disabled>筛选</el-button>
+        <el-button type="info" size="mini" @click="clear" v-if="bottonList.includes('操作'||'查看')">清空</el-button>
+        <el-button type="info" size="mini" v-else>清空</el-button>
       </div>
     </div>
     <div style="display:flex;flex-direction:row;justify-content:space-between;width:100%;">
@@ -78,7 +81,9 @@
               size="mini"
               type="warning"
               @click="viewDetails(scope.$index, scope.row)"
+              v-if="bottonList.includes('操作'||'查看')"
             >查看详情</el-button>
+            <el-button size="mini" type="warning" v-else disabled>查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -152,8 +157,14 @@ export default {
       // 年月数据
       stateShow:false,
       year:'',
-      month:''
+      month:'',
+      bottonList:[]
     }
+  },
+  beforeRouteEnter (to, form, next) {
+    next(mv => {
+      mv.getButton(mv.$store.getters.buttonRoleList, to.name)
+    })
   },
   watch:{
     'shop'(e){
@@ -171,6 +182,14 @@ export default {
     this.getOrderList()
   },
   methods:{
+    getButton(list, name) {
+      list.forEach(item => {
+        if (item.name === name) {
+          this.bottonList = item.checkList
+        }
+      })
+      // console.log(this.bottonList)
+    },
     // 时间选择器
     handlePickDate(date){
       this.stateShow = false
@@ -249,9 +268,11 @@ export default {
     },
     handleSizeChange(e){
       this.pageSize = e
+      this.getOrderList()
     },
     handleCurrentChange(e){
       this.pageNum = e
+      this.getOrderList()
     },
     viewDetails(index, row){
       this.$router.push({name:'backstageCheckDetail', params:row})

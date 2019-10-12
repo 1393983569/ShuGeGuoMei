@@ -12,8 +12,8 @@
       :visible.sync="dialogVisible"
       width="50%"
     >
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="90px" class="demo-ruleForm">
-        <el-form-item label="用户名" prop="name">
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名：" prop="name">
           <el-input v-model="ruleForm.name" />
         </el-form-item>
         <el-form-item label="手机号：" prop="mobile">
@@ -29,8 +29,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="clickCancel">取 消</el-button>
-        <el-button type="primary" @click="addAdminClick" :loading="loading">确 定</el-button>
+        <el-button @click="clickCancel('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="addAdminClick('ruleForm')" :loading="loading">确 定</el-button>
       </span>
     </el-dialog>
     <hint v-model="hintState" :title="'删除'" :text="'是否删除该后台用户？'" @confirm="deleteUser" />
@@ -149,6 +149,20 @@ export default {
     }
   },
   data() {
+    // 手机号验证
+    var validateMobilePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('手机号不可为空'));
+      } else {
+        if (value !== '') {
+          var reg=/^1[3456789]\d{9}$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入有效的手机号码'));
+          }
+        }
+        callback();
+      }
+    };
     return {
       loadingSearch:false,
       loadingClear:false,
@@ -156,7 +170,20 @@ export default {
       stateShow:false,
       dataList: [],
       ruleForm: {},
-      rules: {},
+      rules: {
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        mobile: [
+          { required: true, validator:validateMobilePhone, trigger: 'blur' },
+        ],
+        roleId: [
+          { required: true, message: '请选择活动区域', trigger: 'blur' },
+        ],
+        password: [
+          { required: true, message: '请输入初始密码', trigger: 'blur' },
+        ],
+      },
       dialogVisible: false,
       hintState: false,
       listIndex: '',
@@ -299,26 +326,33 @@ export default {
       this.getAdminList()
     },
     // 添加用户
-    addAdminClick () {
+    addAdminClick (formName) {
       this.loading = true
       this.ruleForm.type=1
-      // 新建
-      if (this.state === 'add') {
-        addAdmin(this.ruleForm).then(res => {
-          this.addSuccess()
-        }).catch(err => {
-          this.loading = false
-          this.$message.success(err)
-        })
-      } else {
-        delete this.ruleForm.role
-        editAdmin(this.ruleForm).then(res => {
-          this.addSuccess()
-        }).catch(err => {
-          this.loading = false
-          this.$message.success(err)
-        })
-      }
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 新建
+          if (this.state === 'add') {
+            addAdmin(this.ruleForm).then(res => {
+              this.addSuccess()
+            }).catch(err => {
+              this.loading = false
+              this.$message.success(err)
+            })
+          } else {
+            delete this.ruleForm.role
+            editAdmin(this.ruleForm).then(res => {
+              this.addSuccess()
+            }).catch(err => {
+              this.loading = false
+              this.$message.success(err)
+            })
+          }
+        } else {
+          return false;
+        }
+      });
+
     },
     handleSizeChange(e) {
       this.pageSize = e
@@ -329,7 +363,8 @@ export default {
       this.getAdminList()
     },
     // 取消
-    clickCancel() {
+    clickCancel(formName) {
+      this.$refs[formName].resetFields();
       this.dialogVisible = false
       this.ruleForm = {}
       this.loading = false

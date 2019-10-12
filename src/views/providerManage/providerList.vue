@@ -183,7 +183,7 @@ export default {
       this.$router.push({name: 'providerAddEdit'})
     },
     editProvider(row) {
-      console.log(row,'888888888')
+      // console.log(row,'888888888')
       this.$router.push({name: 'providerAddEdit', params: row })
       this.$store.state.user.providerObject = row
     },

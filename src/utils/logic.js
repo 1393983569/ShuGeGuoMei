@@ -61,11 +61,10 @@ export const getButtonRole = (role) => {
 export const getRole = (role) => {
   let list = []
   const recursion = (listValue) => {
-    // console.log(listValue, 'list.....')
     listValue.forEach((item, index) => {
       if (item.checkList.length !== 0) {
         // if (item.checkList) {
-          // console.log(item, 'kkkkkkkkkkkk')
+          // 每个模块的例：["newsManage"]权限
         if (item.roles) {
           item.roles.forEach(itemx => {
             if (!list.includes(itemx)) {
@@ -78,7 +77,7 @@ export const getRole = (role) => {
         recursion(item.children)
       }
     })
-    // console.log(list, 'list/////////')
+    // 所有权限例：["newsManage", "news", "ADManage", "AD",.....]
     return list
   }
   return recursion(role)
