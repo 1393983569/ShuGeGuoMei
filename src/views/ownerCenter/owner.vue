@@ -54,6 +54,7 @@
 </template>
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
+import {getCode, forgetPwd} from '@/api/forgetPassword.js'
 export default {
   name:'owner',
   components:{Breadcrumb},
@@ -100,6 +101,11 @@ export default {
               clearInterval(auth_timetimer);
           }
       }, 1000);
+      getCode().then(res => {
+        console.log(res, '验证码。。。。。。。')
+      }).catch(err=> {
+
+      })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

@@ -28,7 +28,7 @@
             tabindex="1"
             auto-complete="on"
           >
-            请输入验证码el-icon-lock
+            请输入验证码
             <el-button slot="append">发送验证码</el-button>
           </md-input>
         </el-form-item>
@@ -183,7 +183,7 @@ export default {
           this.$router.push({
             path:'/login'
           })
-          this.$message.success('请重新登录！')
+          this.$message.success('请登录！')
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)
           //   .then(() => {

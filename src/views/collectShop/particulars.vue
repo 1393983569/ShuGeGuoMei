@@ -9,7 +9,7 @@
     <p>商品名称：{{ row.goodName}}</p>
     <div>
       <div style="display: inline-block; vertical-align: top">缩略图： </div>
-      <el-image
+      <img
         style="width: 100px; height: 100px; display: inline-block"
         :fit="fit"
         :src="row.goodSmallImg"
@@ -17,7 +17,7 @@
     </div>
     <div style="display: block">
       <div style="display: inline-block; vertical-align: top">展示图： </div>
-      <el-image
+      <img
         style="width: 150px; height: 150px; display: inline-block"
         :fit="fit"
         :src="row.goodBigImg"
@@ -94,21 +94,21 @@ export default {
       seeDetailsGoods(this.goodId).then(res => {
         console.log(res, '#######')
         if(res.info) {
-          this.row = res.info
-          this.province = res.info.province
-          this.city = res.info.city
-          this.area = res.info.area
+           console.log(res.info.categoryOne,res.info.categoryTwo, '&&&&&&&&&' )
           if(res.info.categoryOne){
             this.categoryOne = res.info.categoryOne
           }else{
             this.categoryOne = {name:'',id:''}
           }
           if(res.info.categoryTwo){
-            this.categoryOne = res.info.categoryTwo
+            this.categoryTwo = res.info.categoryTwo
           }else{
-            this.categoryTwo = {name:'',name:'',id:''}
+            this.categoryTwo = {name:'',id:''}
           }
-
+          this.row = res.info
+          this.province = res.info.province
+          this.city = res.info.city
+          this.area = res.info.area
         }else{
           this.$message.error('查询详情失败!')
         }
