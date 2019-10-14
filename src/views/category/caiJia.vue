@@ -66,7 +66,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <hint title="删除采价" v-model="showDelete" text="是否删除蔡家市场？" @confirm="deleteAdConfirm" />
+    <hint title="删除采价" v-model="showDelete" text="是否删除采价市场？" @confirm="deleteAdConfirm" />
   </div>
 </template>
 <script>

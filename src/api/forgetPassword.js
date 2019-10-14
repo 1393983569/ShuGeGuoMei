@@ -4,7 +4,7 @@ import request from '../utils/request'
  */
 export const getCode = () => {
   return request({
-    url: '/basics/getCode',
+    url: '/basics/getImgCode',
     method: 'get'
   })
 }
@@ -19,6 +19,21 @@ export const forgetPwd = (data) => {
   }
   return request({
     url: '/basics/forgetPwd',
+    method: 'post',
+    data: params
+  })
+}
+/**
+ * 修改密码
+ * @param {Object} data 用户密码信息
+ */
+export const editPwd = (data) => {
+  const params = new URLSearchParams()
+  for (const key in data) {
+    if (data[key]) params.append(key, data[key])
+  }
+  return request({
+    url: '/basics/editPwd',
     method: 'post',
     data: params
   })

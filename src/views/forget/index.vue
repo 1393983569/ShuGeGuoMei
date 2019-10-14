@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <i class="el-icon-back return" @click="returnHandle"></i>
       <div class="login-input">
-        <el-form-item prop="username">
+        <el-form-item prop="mobile">
           <md-input
             ref="username"
             v-model="loginForm.mobile"
@@ -17,20 +17,25 @@
             请输入手机号
           </md-input>
         </el-form-item>
-        <el-form-item prop="username">
-          <md-input
-            ref="username"
-            v-model="loginForm.mobile"
-            placeholder="Username"
-            name="username"
-            icon="密码"
-            type="text"
-            tabindex="1"
-            auto-complete="on"
-          >
-            请输入验证码
-            <el-button slot="append">发送验证码</el-button>
-          </md-input>
+        <el-form-item prop="msgCode" style="border-bottom:none;">
+          <div style="display:flex;flex-direction:row;border-bottom:none;align-items:center;">
+            <md-input
+              ref="验证码"
+              v-model="loginForm.msgCode"
+              placeholder="Username"
+              name="msgCode"
+              icon="密码"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+              style="width:500px;border-bottom:1px solid #DEEDC1;"
+            >
+              请输入验证码
+            </md-input>
+            <div @click="refreshCode" style="border:none;margin:0px;padding:0px;">
+              <Sidentify :identifyCode="identifyCode"></Sidentify>
+            </div>
+          </div>
         </el-form-item>
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
@@ -38,7 +43,7 @@
               v-model="loginForm.password"
               icon="密码"
               :key="passwordType"
-              ref="password"
+              ref="密码"
               :type="passwordType"
               placeholder="Password"
               name="password"
@@ -53,12 +58,12 @@
           </el-form-item>
         </el-tooltip>
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-          <el-form-item prop="password">
+          <el-form-item prop="confirmPassword">
             <md-input
-              v-model="loginForm.password"
+              v-model="loginForm.confirmPassword"
               icon="密码"
               :key="passwordType"
-              ref="password"
+              ref="确认密码"
               :type="passwordType"
               placeholder="Password"
               name="password"
@@ -80,13 +85,16 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import {getCode, forgetPwd, editPwd} from '@/api/forgetPassword.js'
+import Sidentify from '@/components/Sidentify'
 // import SocialSign from './components/SocialSignin'
 import MdInput from '@/components/MDinput'
 export default {
   name: 'forget',
   components: {
     // SocialSign
-    MdInput
+    MdInput,
+    Sidentify
   },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -104,13 +112,19 @@ export default {
       }
     }
     return {
+      identifyCode:'',
+      identifyCodes:'1234567890',
       loginForm: {
         mobile: '',
-        password: ''
+        password: '',
+        confirmPassword:'',
+        msgCode:''
       },
       loginRules: {
         mobile: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        confirmPassword: [{ required: true, trigger: 'blur', }],
+        msgCode: [{ required: true, trigger: 'blur',}]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -132,9 +146,11 @@ export default {
     }
   },
   created() {
+
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
+    this.refreshCode()
     if (this.loginForm.username === '') {
       // this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
@@ -145,6 +161,13 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    refreshCode(){
+      getCode().then(res => {
+        this.identifyCode = res.info.strCode
+      }).catch(err=> {
+        console.log(err)
+      })
+    },
     change(){
       console.log(this.$router, 'rrrrrrrrrrrr')
       this.$router.push({name:'forget'})
@@ -180,9 +203,16 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.$router.push({
-            path:'/login'
+          forgetPwd(this.loginForm).then(res => {
+            if(res.status === 1){
+              this.$router.push({
+                path:'/login'
+              })
+            }
+          }).catch(err=> {
+            this.$message.error('操作失败！')
           })
+
           this.$message.success('请登录！')
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)

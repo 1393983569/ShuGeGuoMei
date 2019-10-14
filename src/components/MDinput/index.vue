@@ -104,7 +104,7 @@
       >
       <span class="material-input-bar" />
       <label class="material-label">
-        <slot />
+        <slot/>
       </label>
     </div>
   </div>

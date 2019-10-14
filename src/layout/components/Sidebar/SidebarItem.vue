@@ -93,5 +93,11 @@ export default {
 }
 </script>
 <style>
-
+.menu-wrapper{
+  margin-left:5px;
+  margin-right:5px;
+}
+.nest-menu{
+  width:96%;
+}
 </style>

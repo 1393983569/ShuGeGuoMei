@@ -59,11 +59,11 @@
     .el-menu {
       border: none;
       height: 100%;
+      // 修改1014
       width: 100% !important;
       background-color: #fff;
       background-color: transparent;
     }
-
     // menu hover
     .submenu-title-noDropdown,
     .el-submenu__title {
@@ -92,31 +92,31 @@
       font-size:20px;
       font-family: "微软雅黑";
     }
-    .el-submenu__title.is-active{
+    .el-submenu__title .is-active{
       background-color: #2467E4;
     }
     .el-menu-item{
-      font-size:20px;
+      font-size:18px;
       font-family: "微软雅黑";
     }
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
-      min-width: $sideBarWidth !important;
+      // min-width: $sideBarWidth !important;
       // background-color: $subMenuBg !important;
       &:hover {
         color: #fff !important;
-        background-color: rgb(118, 185, 252) !important;
-        // border-radius: 5px;
+        background-color: #409EFF !important;
+        border-radius: 5px;
       }
       &:active{
         color: #fff !important;
-        background-color: rgb(118, 185, 252) !important;
-        // border-radius: 5px;
+        background-color: #409EFF !important;
+        border-radius: 5px;
       }
       &.is-active{
         color: #fff !important;
-        background-color: rgb(118, 185, 252) !important;
-        // border-radius: 5px;
+        background-color: #409EFF !important;
+        border-radius: 5px;
       }
     }
   }
