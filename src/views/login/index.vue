@@ -164,26 +164,27 @@ export default {
     handleLogin() {
       // 手机号验证
       if(this.isMobileNumber(this.loginForm.mobile)){
+        let _this = this
+        this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          _this.loading = true
+          _this.$store.dispatch('user/login', _this.loginForm)
+            .then(() => {
+              _this.$router.push({ path: '/', query: _this.otherQuery })
+              _this.loading = false
+            })
+            .catch(() => {
+              _this.loading = false
+            })
+        } else {
+          return false
+        }
+      })
 
       }else{
         return
       }
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          // console.log('error submit!!')
-          return false
-        }
-      })
+
     },
     isMobileNumber(value){
         if (!value) {

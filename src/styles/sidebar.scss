@@ -39,7 +39,7 @@
 
     &.has-logo {
       .el-scrollbar {
-        height: calc(100% - 110px);
+        height: calc(100% - 120px);
       }
     }
 
@@ -59,7 +59,8 @@
     .el-menu {
       border: none;
       height: 100%;
-      // 修改1014
+      // 父级之间的距离
+      margin:1px;
       width: 100% !important;
       background-color: #fff;
       background-color: transparent;
@@ -68,8 +69,9 @@
     .submenu-title-noDropdown,
     .el-submenu__title {
       &:hover {
+        // hover时父级背景色
         color: #fff !important;
-        background-color: $menuHover !important;
+        background-color: rgb(109, 179, 248) !important;
         border-radius: 5px;
       }
       &:active {
@@ -83,13 +85,15 @@
         border-radius: 5px;
       }
     }
+    // 父级字体颜色和背景颜色点击变化
     .is-active>.el-submenu__title {
-      color: $subMenuActiveText !important;
-      background-color: $menuActive !important;
+      // color: $subMenuActiveText !important;
+      // background-color: $menuActive !important;
       border-radius: 5px;
     }
     .el-submenu__title{
       font-size:20px;
+      padding:0px;
       font-family: "微软雅黑";
     }
     .el-submenu__title .is-active{
@@ -98,14 +102,18 @@
     .el-menu-item{
       font-size:18px;
       font-family: "微软雅黑";
+      padding:0px;
+      // 子级之间的距离
+      margin:1px;
     }
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       // min-width: $sideBarWidth !important;
       // background-color: $subMenuBg !important;
       &:hover {
+        // hover子级背景色
         color: #fff !important;
-        background-color: #409EFF !important;
+        background-color: rgb(109, 179, 248) !important;
         border-radius: 5px;
       }
       &:active{

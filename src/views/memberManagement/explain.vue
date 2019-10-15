@@ -1,6 +1,6 @@
 <template>
   <div>
-    <breadcrumb :stateShow ='false'>
+    <breadcrumb :stateShow ='stateShow'>
      <el-button type="primary" @click="addSystemMsg">保存</el-button>
     </breadcrumb>
     <h3>会员系统说明：</h3>
@@ -22,8 +22,12 @@ export default {
   },
   data() {
     return {
-      content: ''
+      content: '',
+      stateShow:false
     }
+  },
+  mounted(){
+    this.stateShow = true
   },
   methods:{
     addSystemMsg(){

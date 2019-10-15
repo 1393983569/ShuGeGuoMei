@@ -1,5 +1,6 @@
 <template>
   <div>
+    <breadcrumb :stateShow="false"></breadcrumb>
     <div>
       <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       <div style="float:right;margin:10px;">
@@ -110,9 +111,10 @@
 
 <script>
 import pickDate from '@/components/pickDate'
+import breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'CollectShop',
-  components:{pickDate},
+  components:{pickDate,breadcrumb},
   props: {
     row: {
       type: Array,

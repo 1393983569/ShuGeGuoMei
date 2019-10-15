@@ -73,7 +73,6 @@
       </el-form-item>
       <el-form-item label="标签：" prop="tab">
         <el-tag
-          v-if="ruleForm.tab.length<4"
           v-for="tag in ruleForm.tab"
           :key="tag"
           closable
@@ -91,7 +90,9 @@
           @keyup.enter.native="handleInputConfirm"
           @blur="handleInputConfirm"
         />
+        <p  v-if="hiddentab"></p>
         <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
+
       </el-form-item>
       <el-form-item label="规格：" prop="standards">
         <el-input v-model="ruleForm.standards" placeholder="请输入内容" style="width: 500px" />
@@ -151,9 +152,6 @@
           <el-table-column prop="price" label="价格" />
         </el-table>
       </el-form-item>
-      <el-form-item>
-
-      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -168,6 +166,7 @@ export default {
   components: { selectorAddress, Breadcrumb },
   data() {
     return {
+      hiddentab:false,
       percentageSmall:0,
       percentageBig:0,
       getAddressTable: [
@@ -303,7 +302,6 @@ export default {
       }
     },
     'ruleForm.name'(name){
-      console.log(name,name.length, 'name.......')
       if(name.length>30){
         this.ruleForm.name = ''
         this.$message.warning('字数已经超出上限，请重新填写！')
@@ -321,6 +319,7 @@ export default {
       if(e.length>4){
         this.ruleForm.unit = ''
         this.$message.warning('超出单位字符限制，请重新填写！')
+
       }
     },
     'ruleForm.standards'(standards){
@@ -330,6 +329,13 @@ export default {
         this.$message.warning('超出规格字符限制，请重新填写！')
       }
     },
+    'ruleForm.tab'(e){
+      if(e.length>=4){
+        this.hiddentab = true
+      }else{
+        this.hiddentab = false
+      }
+    }
   },
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
@@ -550,6 +556,9 @@ export default {
         }
         this.inputVisible = false
         this.inputValue = ''
+      }
+      if(this.ruleForm.tab.length>3){
+        this.hiddentab = true
       }
     }
   }

@@ -53,10 +53,9 @@
         </template>
       </el-table-column>
       <el-table-column label="商品ID" prop="id">
-        <template slot-scope="scope">
-          <!-- 显示商品id后四位 -->
+        <!-- <template slot-scope="scope">
           {{scope.row.id.toString().substring(scope.row.id.toString().length-4)}}
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="商品名称" prop="name" />
       <el-table-column label="状态" prop="state" />

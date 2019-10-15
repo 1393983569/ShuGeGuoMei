@@ -1,5 +1,6 @@
 <template>
   <div>
+    <breadcrumb :stateShow="false"></breadcrumb>
     <div style="display:flex;flex-direction:row;margin:10px;align-items:center;">
       <pickDate @getPickDate="getPickDate"></pickDate>
       市场类型：
@@ -98,9 +99,10 @@
 <script>
 import pickDate from '@/components/pickDate'
 import { getFirstCategory } from '@/api/category.js'
+import breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'CollectShop',
-  components:{pickDate},
+  components:{pickDate,breadcrumb},
   props: {
     row: {
       type: Array,

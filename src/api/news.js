@@ -9,8 +9,10 @@ export const addNews = (data) => {
   //   if (data[key]) params.append(key, data[key])
   // }
   params.append('shopJson', data.shopJson)
+  params.append('content', data.content)
   return request({
-    url: `/admin/addMess?title=${data.title}&category=${data.category}&content=${data.content}&deleteStatus=${data.deleteStatus}&shopIds=${data.shopIds}&thumbnail=${data.thumbnail}`,
+    // url: `/admin/addMess?title=${data.title}&category=${data.category}&content=${data.content}&deleteStatus=${data.deleteStatus}&shopIds=${data.shopIds}&thumbnail=${data.thumbnail}`,
+    url: `/admin/addMess?title=${data.title}&category=${data.category}&deleteStatus=${data.deleteStatus}&shopIds=${data.shopIds}&thumbnail=${data.thumbnail}`,
     // url: '/admin/addMess',
     method: 'post',
     //  headers: {

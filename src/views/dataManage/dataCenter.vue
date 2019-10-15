@@ -1,5 +1,6 @@
 <template>
-  <div style="margin:20px;">
+  <div>
+    <breadcrumb :stateShow="false"></breadcrumb>
     <div style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;align-items:center;">
       <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
       店铺名称：
@@ -73,9 +74,10 @@ import lossData from './jingying/lossData.vue'
 import goodsData from './jingying/goodsData.vue'
 import promitLoss from './promitLoss/promitLoss.vue'
 import pickDate from '@/components/pickDate'
+import breadcrumb from '@/components/Breadcrumb'
 import vip from './vip/vipData.vue'
 export default {
-  components: { incomTrend, lossData, goodsData, promitLoss, vip, pickDate },
+  components: { incomTrend, lossData, goodsData, promitLoss, vip, pickDate,breadcrumb },
   data() {
     return {
       shopList: [],

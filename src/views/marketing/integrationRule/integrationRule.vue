@@ -1,5 +1,6 @@
 <template>
   <div>
+    <breadcrumb :stateShow="false"></breadcrumb>
     <div style="margin:20px;">
       <el-button class="button">积分获取</el-button>
       <el-button class="button">积分兑换/抵扣</el-button>
@@ -10,8 +11,12 @@
   </div>
 </template>
 <script>
+import breadcrumb from '@/components/Breadcrumb'
 export default {
-
+  data(){
+    return{}
+  },
+  components:{breadcrumb}
 }
 </script>
 <style>

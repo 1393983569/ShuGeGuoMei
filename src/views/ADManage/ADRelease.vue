@@ -18,7 +18,7 @@
           <el-input v-model="ADForm.title" style="width:400px;" />
         </el-form-item>
         <el-form-item label="轮播图" prop="imge">
-         <div title="建议上传414*138px图片，大小不超过1m" style="dispaly:flex;">
+         <div style="dispaly:flex;">
            <el-upload
             class="avatar-uploader"
             :action="`${apiUrl}/basics/upload`"
@@ -28,6 +28,7 @@
             :before-upload="beforeAvatarUpload">
             <p v-if="addEditState"></p>
             <p v-else class="change-img">更换图片</p>
+            <div slot="tip" class="el-upload__tip">建议上传414*138px图片，大小不超过1m</div>
             <el-progress v-if="0<percentage&&percentage<=100" type="circle" :percentage="percentage" :width="177" style="width:178px;height:178px;"></el-progress>
             <img v-if="ADForm.imge" :src="ADForm.imge" class="avatar">
             <i v-else-if="!ADForm.imge&&percentage>100||percentage<=0" class="el-icon-plus avatar-uploader-icon"></i>
@@ -120,6 +121,7 @@ export default {
       const isLt20M = file.size / 1024 / 1024 < 1;
       if (!isLt20M) {
         this.$message.error('上传图片的大小不能超过 1M!');
+        return false
       }
       // console.log(this.valWidthAndHeight(file), 'function1.......')
       // if(this.valWidthAndHeight(file)){

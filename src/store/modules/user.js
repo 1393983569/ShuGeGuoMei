@@ -75,12 +75,10 @@ const actions = {
         const data = response
         commit('SET_TOKEN', 'chengGong')
         commit('SET_NAME', data.info.name)
-        // commit('SET_ROLEID', data.info.role.id)
         commit('SET_ID', data.info.id)
         commit('SET_MOBILE', data.info.mobile)
         commit('SET_ROLENAME', data.info.role.name)
         commit('SET_AVATAR', data.info.avatar)
-
         setUserId(data.info.role.id)
         setToken(data.info.token)
         resolve()

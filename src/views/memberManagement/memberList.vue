@@ -4,6 +4,7 @@
       <el-button @click="explainHandle" type="primary">会员系统说明</el-button>
     </breadcrumb>
     <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">
+      注册时间：<pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       店铺：
       <el-select v-model="shopId" placeholder="请选择" size="mini" style="width:140px;">
         <el-option
@@ -74,7 +75,12 @@
           {{scope.row.balance/100}}
         </template>
       </el-table-column>
-      <el-table-column prop="score" label="积分"></el-table-column>
+      <el-table-column prop="score" label="积分">
+        <template slot-scope="scope">
+          <p v-if='scope.row.score'>{{scope.row.score}}</p>
+          <p v-else>0</p>
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         width="280"
@@ -122,7 +128,7 @@ import { deleteVip, getVipList, vipDetail} from '@/api/member.js'
 export default {
   name: 'memberList',
   components:{
-    hint,Breadcrumb,
+    hint,Breadcrumb,pickDate
   },
   props: {
     row: {
@@ -133,6 +139,9 @@ export default {
   data() {
     return {
       bottonList:[],
+      yearPro:'',
+      monthPro:'',
+      dayPro:'',
       // 时间选择
       yearPro:'',
       monthPro:'',
@@ -203,6 +212,21 @@ export default {
     this.getVipLists()
   },
   methods: {
+    getPickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      console.log(dateArr, 'date')
+      if(dateArr.length === 2){
+        this.yearPro = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
+      }
+    },
     Trim(str){
       return str.replace(/(^\s*)|(\s*$)/g, "");
     },
@@ -242,13 +266,14 @@ export default {
     },
     searchVip(){
       this.getVipLists()
-      console.log('chaxun.....')
     },
     clearVip(){
+      this.yearPro = ''
+      this.monthPro = ''
+      this.dayPro = ''
       this.identity = ''
       this.level= ''
       this.shopId=''
-      this.yearPro = ''
       this.getVipLists()
     },
     // 确认删除会员
@@ -271,7 +296,7 @@ export default {
     },
     // 删除会员
     deleteVipHandle(row) {
-      console.log(row, 'row.....')
+      // console.log(row, 'row.....')
       this.vipId = row.id
       // this.showDelete = true
       if(row.score>0||row.balance>0){

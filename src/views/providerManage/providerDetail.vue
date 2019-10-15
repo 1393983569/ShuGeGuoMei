@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Breadcrumb :stateShow="stateShowBreadcrumb"></Breadcrumb>
+    <Breadcrumb :stateShow="stateShowBreadcrumb"><el-button size="mini" type="primary" @click="editPush">编辑</el-button></Breadcrumb>
     <p>供应商ID：{{providerObj.id}}</p>
     <!-- <p>供应商名称：{{providerObj.name}}</p> -->
     <div style="display:flex;flex-direction:row;align-items: flex-start;">门头照片：<img :src="providerObj.headerPic" style="width: 200px;height:200px;"/></div>
@@ -113,14 +113,14 @@ export default {
   },
   mounted(){
     this.stateShowBreadcrumb = true
-    console.log(this.$route.params,'HHHHHH')
     this.adminId = this.$store.state.user.roleId
     if(JSON.stringify(this.$route.params)!== '{}') {
-      console.log(this.$route.params.id,'kkkkkkkkkkk')
       this.providerId = this.$route.params.id
       this.getProviderDetail(this.providerId)
-    }else{
-      // this.$router.go(-1)
+    }else if(JSON.stringify(this.$store.state.user.providerObject)!=='{}'){
+      this.providerId = this.$store.state.user.providerObject.id
+      // console.log(id, 'id/////')
+      this.getProviderDetail(this.providerId)
     }
   },
   methods:{
@@ -233,6 +233,7 @@ export default {
     },
     dialogVisible(){
       this.showState = true
+      this.getProviderDetail(this.providerId)
       // 将查询结果放入评分修改框
       this.scoreRturn()
     },
@@ -257,6 +258,11 @@ export default {
     getGradeDetail(a){
       this.gradeDetail = a
     },
+    editPush(){
+      this.$router.push({
+        name:'providerAddEdit'
+      })
+    }
   }
 }
 </script>

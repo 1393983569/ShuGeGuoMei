@@ -1,5 +1,6 @@
 <template>
 <div>
+  <breadcrumb :stateShow="false"></breadcrumb>
   <div style="display: flex; flex-direction: row">
     <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
     <div>
@@ -113,9 +114,10 @@
 import pickDate from '@/components/pickDate'
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import { get } from 'http';
+import breadcrumb from "@/components/Breadcrumb"
 export default {
   name: 'orderFormList',
-  components:{pickDate},
+  components:{pickDate, breadcrumb},
   data() {
     return {
       yearPro:'',

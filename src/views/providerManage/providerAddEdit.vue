@@ -86,7 +86,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商品：" prop="">
+      <el-form-item label="供应商品：" prop="providerGoods">
        <div class="goodsContainer">
           <div>
             <div class="categoryHeader">品类</div>
@@ -224,6 +224,7 @@ export default {
     };
     return {
       percentageHeader:0,
+      getGradeObject:{},
       percentageQua:0,
       gradeObject:{},
       shopObject:[],
@@ -298,6 +299,9 @@ export default {
         addressDetail: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
         ],
+        providerGoods: [
+          { required: true, message: '请选择供应商品', trigger: 'blur' },
+        ],
         areaId: [
           { required: true, message: '请选择仓库地址', trigger: 'blur' },
         ],
@@ -323,7 +327,7 @@ export default {
   },
   watch: {
     'shopObject'(e) {
-      console.log(e, 'jjjjjjjjj')
+      // console.log(e, 'jjjjjjjjj')
     },
     'checkGoodsList'(e){
       // console.log(e, 'list.......')
@@ -340,6 +344,11 @@ export default {
       this.ruleForm.id = this.$route.params.id
       this.id = this.$route.params.id
       this.providerId = this.$route.params.id
+      this.getProviderDetail()
+    }else if(JSON.stringify(this.$store.state.user.providerObject!== '{}')){
+      // console.log('state.....')
+      this.editState = true
+      this.id = this.$store.state.user.providerObject.id
       this.getProviderDetail()
     }else{
       this.editState = false
@@ -358,7 +367,7 @@ export default {
     },
     dialogVisible(){
       this.showState = true
-      this.returnScore()
+      this.getProviderDetail()
     },
     getCloseState(state){
       if(!state){
@@ -424,6 +433,7 @@ export default {
     },
     // 查询供应商详情
     getProviderDetail() {
+      console.log('详情。。。。。')
       getProviderDetail(this.id).then(res => {
         // console.log(res, 'hhhhhhhh')
         if(res.status === 1){
@@ -503,7 +513,13 @@ export default {
       this.percentageQua = 101
       this.ruleForm.qualificationPics = file.info
     },
-    beforeAvatarUpload(file) {},
+    beforeAvatarUpload(file) {
+      const isLt20M = file.size / 1024 / 1024 < 1;
+      if (!isLt20M) {
+        this.$message.error('上传图片的大小不能超过 1M!');
+        return false
+      }
+    },
     beforeQualificationUpload(file) {},
     getProvince(e) {
       this.ruleForm.provinceId = e

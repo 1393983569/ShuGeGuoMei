@@ -12,7 +12,7 @@
           <el-input v-model="newsForm.title" style="width:400px;" />
         </el-form-item>
         <el-form-item label="缩略图:" prop="thumbnail">
-          <div title="建议上传120*80px图片，大小不超过1m">
+          <div>
             <el-upload
               class="avatar-uploader"
               :action="`${apiUrl}/basics/upload`"
@@ -20,6 +20,7 @@
               :on-success="handleAvatarSuccess"
               :on-progress="handleProgress"
               :before-upload="beforeAvatarUpload">
+              <div slot="tip" class="el-upload__tip">建议上传120*80px图片，大小不超过1m</div>
               <el-progress v-if="0<percentage&&percentage<=100" type="circle" :percentage="percentage" :width="177" style="width:178px;height:178px;"></el-progress>
               <img v-if="newsForm.thumbnail" :src="newsForm.thumbnail" class="avatar">
               <i v-else-if="!newsForm.thumbnail&&percentage>100||percentage<=0" class="el-icon-plus avatar-uploader-icon"></i>
@@ -200,7 +201,8 @@ export default {
     beforeAvatarUpload(file) {
       const isLt20M = file.size / 1024 / 1024 < 1;
       if (!isLt20M) {
-              this.$message.error('上传图片的大小不能超过 1M!');
+          this.$message.error('上传图片的大小不能超过 1M!');
+          return false
       }
     },
     handleAvatarSuccess(res) {

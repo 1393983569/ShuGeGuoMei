@@ -151,7 +151,13 @@ export default {
       this.avatar = file.info
     },
     // 上传文件前
-    beforeAvatarUpload(){},
+    beforeAvatarUpload(){
+      const isLt20M = file.size / 1024 / 1024 < 1;
+      if (!isLt20M) {
+        this.$message.error('上传图片的大小不能超过 1M!');
+        return false
+      }
+    },
     // 修改密码弹框
     changePassword(){
       this.refreshCode()

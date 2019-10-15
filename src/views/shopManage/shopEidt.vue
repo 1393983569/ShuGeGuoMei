@@ -31,7 +31,7 @@
         </el-form-item>
         <el-form-item label="店铺图片：" prop="picture">
           <!-- 添加上传图片 -->
-          <div class="size-color div-margin font-weight " v-if="showState">
+          <div v-if="showState">
             <el-upload
               :limit= "5"
               :on-exceed="outNumMax"
@@ -42,15 +42,17 @@
               :on-success="uploadSuccess"
               :before-upload="beforeAvatarUpload"
             >
-              <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
+              <!-- <div slot="tip" class="el-upload__tip">最多上传五张图片</div> -->
               <i class="el-icon-plus" />
             </el-upload>
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;">最多上传五张图片</p>
           </div>
+
           <!-- 编辑修改图片 -->
-          <div v-else style="display:flex;flex-direction:row;">
+          <div v-else>
             <el-upload
               :limit= "5"
               :on-exceed="outNumMax"
@@ -62,12 +64,12 @@
               :before-upload="beforeAvatarUpload"
               :file-list ="fileList"
             >
-              <div slot="tip" class="el-upload__tip">最多上传五张图片</div>
               <i class="el-icon-plus" />
             </el-upload>
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;">最多上传五张图片</p>
           </div>
         </el-form-item>
         <el-form-item label="掌柜姓名：" prop="adminName">
@@ -344,12 +346,14 @@ export default {
       const isLt20M = file.size / 1024 / 1024 < 1;
       if (!isLt20M) {
         this.$message.error('上传图片的大小不能超过 1M!');
+        return false
       }
       // 限制图片上传个数
       // console.log(this.imgelist, 'length......')
-      if(this.imgelist.length>=2){
+      if(this.imgelist.length>=5){
         // console.log('chaoguo2........')
         this.imgState = false
+        return false
       }
     },
     changeOneCate(row){

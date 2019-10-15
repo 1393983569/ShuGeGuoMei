@@ -422,18 +422,27 @@
         // }
         // id = arr[arr.length - 1].stairId
         let count = 0
+        let lentCount = 0
         this.stairInput.forEach((item, index) => {
           if(item.value){
-            stairList.push({
-              id: this.addId(id, index + 1),
-              name: item.value
-            })
+            if(item.value.length<=6){
+              stairList.push({
+                id: this.addId(id, index + 1),
+                name: item.value
+              })
+            }else{
+              lentCount++
+            }
           }else{
             count++
           }
         })
         if(count>0){
           this.$message.warning('一级品类的名称不能存在空值！')
+          return
+        }
+        if(lentCount>0){
+          this.$message.warning('一级品类的名称不能超过6个字符！')
           return
         }
         addCategoryOne(stairList).then(res => {
@@ -480,9 +489,13 @@
           id='01'
         }
         let count = 0
+        let lenCount = 0
         this.childrenInput.forEach((item, index) => {
           if(!item.value){
             count++
+          }
+          if(item.value.length>6){
+            lenCount++
           }
           let data = {
             id: this.addId(id, index + 1),
@@ -493,6 +506,10 @@
         })
         if(count>0){
           this.$message.warning('二级品类名称不能存在空值！')
+          return
+        }
+        if(lenCount>0){
+          this.$message.warning('二级品类名称不能超过6个字符！')
           return
         }
         addCategoryTwo(listChildren).then(res => {
@@ -528,6 +545,7 @@
         })
         if(count>0){
           this.$message.warning('二级品类名称超过6个汉字！')
+          return
         }
         this.childrenInput.push({
           value: ''
