@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column prop="" label="市场区域">
           <template slot-scope="scope">
-            {{scope.row.provinceDomain.name}}{{scope.row.cityDomain.name}}{{scope.row.areaDomain.name}}-{{scope.row.priceMarketName}}
+            <!-- {{scope.row.provinceDomain.name}}{{scope.row.cityDomain.name}}{{scope.row.areaDomain.name}}-{{scope.row.priceMarketName}} -->
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间"/>
@@ -81,7 +81,7 @@ export default {
       stateShow:false,
       searchInput: '',
       total: 0,
-      pagesize: 10,
+      pageSize: 10,
       pageNum: 1,
       cityId: '',
       provinceId: '',
@@ -166,7 +166,7 @@ export default {
     getCaijiaUser(){
       let obj = {}
       obj.param = this.param
-      obj.pagesize = this.pagesize
+      obj.pageSize = this.pageSize
       obj.pageNum = this.pageNum
       obj.priceMarketType = this.priceMarketType
       obj.provinceId = this.provinceId
@@ -191,9 +191,11 @@ export default {
     },
     handleSizeChange(e) {
       this.pageSize = e
+      this.getCaijiaUser()
     },
     handleCurrentChange(e) {
       this.pageNum = e
+      this.getCaijiaUser()
     },
     addHandle(){
       this.$router.push({
@@ -218,6 +220,13 @@ export default {
       })
     },
     editCaijiaUser(row){
+      let obj = {}
+      obj.name= row.adminName
+      obj.mobile= row.adminMobile
+      obj.password= row.adminPassword
+      obj.priceMarketType= row.priceMarketType
+      // 省市区
+      obj.name= row.adminName
       row.state = '编辑'
       this.$router.push({
         name:'caijiaUserAdd',

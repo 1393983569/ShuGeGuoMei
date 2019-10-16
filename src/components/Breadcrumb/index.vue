@@ -1,11 +1,11 @@
 <template>
-  <div style="border-bottom: 1px solid #bbbbbb; margin-bottom: 10px;display:flex;align-items:center;">
-    <div v-if="stateShow" class="back"><i class="el-icon-back" @click="backHandle"></i>&nbsp;<span style="font-weight:bold;">|</span></div>
+  <div style="border-bottom: 1px solid #bbbbbb; margin-bottom: 5px;display:flex;align-items:center;heigth:40px;">
+    <div v-if="stateShow" class="back"><i class="el-icon-back" @click="backHandle"></i>&nbsp;<span style="font-weight:bold;color:#C0C4CC;">|</span></div>
     <el-breadcrumb class="app-breadcrumb" separator="/">
       <transition-group name="breadcrumb">
         <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
           <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
-          <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
+          <span v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</span>
         </el-breadcrumb-item>
       </transition-group>
     </el-breadcrumb>
@@ -83,12 +83,12 @@ export default {
       return toPath(params)
     },
     handleLink(item) {
-      const { redirect, path } = item
-      if (redirect) {
-        this.$router.push(redirect)
-        return
-      }
-      this.$router.push(this.pathCompile(path))
+      // const { redirect, path } = item
+      // if (redirect) {
+      //   this.$router.push(redirect)
+      //   return
+      // }
+      // this.$router.push(this.pathCompile(path))
     }
   }
 }
@@ -96,17 +96,28 @@ export default {
 
 <style lang="scss" scoped>
 .app-breadcrumb.el-breadcrumb {
+  align-items: center;
   display: inline-block;
   font-size: 14px;
-  line-height: 50px;
+  line-height: 40px;
   margin-left: 8px;
+  color:#97a8be;
 
-  .no-redirect {
-    color: #97a8be;
-    cursor: text;
-  }
+  // .no-redirect {
+  //   color: #97a8be;
+  //   cursor: text;
+  // }
 }
 .back{
+  cursor: pointer;
+}
+span{
+  color:#97a8be;
+}
+i:hover{
+  color:#1890ff;
+}
+i{
   cursor: pointer;
 }
 </style>

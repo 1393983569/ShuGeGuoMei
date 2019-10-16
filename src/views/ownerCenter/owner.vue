@@ -15,7 +15,7 @@
             :before-upload="beforeAvatarUpload"
             :on-progress="handleProgress">
             <div class="avatar-change">更换头像</div>
-            <el-progress v-if="0<percent&&percent<=100" type="circle" :percentage="percent" :width="177" style="width:178px;height:178px;"></el-progress>
+            <el-progress v-if="0<percent&&percent<=100" type="circle" :percentage="percent" :width="119" style="width:120px;height:120px;"></el-progress>
             <img v-if="avatar" :src="avatar" class="avatar"/>
             <i v-else-if="!avatar&&percent>100||percent<=0" class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -64,6 +64,7 @@
 import Breadcrumb from '@/components/Breadcrumb'
 import Sidentify from '@/components/Sidentify'
 import {getCode, forgetPwd, editPwd} from '@/api/forgetPassword.js'
+import {editImage} from '@/api/admin/adminList.js'
 export default {
   name:'owner',
   components:{Breadcrumb,Sidentify},
@@ -94,7 +95,7 @@ export default {
   },
   mounted(){
     this.stateShow=true
-    console.log('this.$store：',this.$store)
+    // console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
     this.avatar = this.$store.state.user.avatar
     this.apiUrl = process.env.VUE_APP_BASE_API
@@ -157,6 +158,15 @@ export default {
     handleAvatarSuccess(file){
       this.percent = 101
       this.avatar = file.info
+      this.$store.state.user.avatar = this.avatar
+      editImage(this.user.id,this.avatar).then(res=> {
+        if(res.status === 1){
+          this.$message.success('修改头像成功！')
+        }
+      }).catch(err=> {
+        console.log(err)
+        this.$message.error(err)
+      })
     },
     // 上传文件前
     beforeAvatarUpload(file){

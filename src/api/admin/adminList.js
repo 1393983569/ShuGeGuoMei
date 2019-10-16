@@ -55,3 +55,18 @@ export const deleteAdmin = (id) => {
     method: 'get'
   })
 }
+/**
+ * 修改用户头像
+ * @param {Intger} id 用户id
+ * @param {String} image 头像地址
+ */
+export const editImage = (id,image) => {
+  const params = new URLSearchParams()
+  if(id) params.append('id', id)
+  if(image) params.append('image', image)
+  return request({
+    url: `/admin/editImage`,
+    method: 'post',
+    data: params
+  })
+}

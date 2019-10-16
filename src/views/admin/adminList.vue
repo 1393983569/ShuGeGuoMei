@@ -3,7 +3,8 @@
     <breadcrumb :stateShow ='stateShow'>
       <el-button size="mini" @click="addData" type="primary" v-if="bottonList.includes('操作')">新建</el-button>
       <el-button size="mini" @click="addData" type="primary" v-else disabled>新建</el-button>
-      <el-button size="mini" @click="roleSet" type="warning">角色设置</el-button>
+      <el-button size="mini" @click="roleSet" type="warning" v-if="bottonList.includes('操作')">角色设置</el-button>
+      <el-button size="mini" type="warning" v-else disabled>角色设置</el-button>
     </breadcrumb>
     <el-dialog
       :title="title"

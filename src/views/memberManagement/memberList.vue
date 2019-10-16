@@ -1,7 +1,8 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button @click="explainHandle" type="primary">会员系统说明</el-button>
+      <el-button @click="explainHandle" type="primary" v-if="bottonList.includes('操作')">会员系统说明</el-button>
+      <el-button type="primary" v-else disabled>会员系统说明</el-button>
     </breadcrumb>
     <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">
       注册时间：<pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>

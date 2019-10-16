@@ -17,7 +17,7 @@
       <el-table-column label="W" prop="w" width="140">
         <template slot-scope="scope">
           <P v-if="scope.row.index===''||scope.row.index==='5'||scope.row.index==='6'||scope.row.index==='7'">{{scope.row.w}}</P>
-          <P v-else><el-input-number  :min="0" :max="100"  v-if="deState" v-model="scope.row.w" style="width:120px;" placeholder="请填写"/><p v-else>{{scope.row.w}}</p></P>
+          <P v-else><el-input-number  @blur="blurInput" :min="0" :max="100"  v-if="deState" v-model="scope.row.w" style="width:120px;" placeholder="请填写"/><p v-else>{{scope.row.w}}</p></P>
         </template>
       </el-table-column>
       <el-table-column label="range" prop="range" width="120">
@@ -225,7 +225,7 @@ export default {
           c:'当前数据',
           tp:'目标设定（%）',
           t:'目标数据值',
-          w:'权重（合计100%）',
+          w:'权重（合计%）',
           range:'range条件',
           r:'range范围值（%）',
           ra:'range取值（%）',
@@ -251,6 +251,7 @@ export default {
         Arr.push(item)
       })
       this.tableData = Arr
+      this.blurInput()
     },
     'detailState'(e){
       this.deState = e
@@ -260,9 +261,28 @@ export default {
     }
   },
   mounted(){
+    this.blurInput()
     // console.log(this.tableData, 'table....')
   },
   methods:{
+    blurInput(){
+      let wTotal = 0
+      for(let i =1;i<this.tableData.length;i++){
+        if(i==5||i==6||i==7){
+
+        }else{
+          if(this.tableData[i].w){
+            wTotal+= this.tableData[i].w
+          }
+        }
+      }
+      if(wTotal<=100){
+        this.tableData[0].w=`权重（合计${wTotal}%）`
+      }else{
+        this.$message.warning('权重总和不能超过100！')
+      }
+
+    },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
