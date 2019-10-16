@@ -78,7 +78,7 @@ const actions = {
         commit('SET_ID', data.info.id)
         commit('SET_MOBILE', data.info.mobile)
         commit('SET_ROLENAME', data.info.role.name)
-        commit('SET_AVATAR', data.info.avatar)
+        commit('SET_AVATAR', data.info.image)
         setUserId(data.info.role.id)
         setToken(data.info.token)
         resolve()
@@ -94,7 +94,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(getUserId()).then(response => {
         try {
-          // console.log(response, 'json.....')
+          console.log(response, 'json.....')
           // return
           let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
           let roleList = getRole(JSON.parse(response.info.menu))
@@ -102,7 +102,6 @@ const actions = {
           commit('SET_ROLEID', response.info.roleId)
           commit('SET_BUTTONROLELIST', buttonRoleList)
           commit('SET_ROLES', roleList)
-          commit('SET_AVATAR', 'http://qiniu.freshergo.com/1569480562307.jpg')
           // console.log(state, 'state........')
           const data = {
             buttonRoleList: state.buttonRoleList,

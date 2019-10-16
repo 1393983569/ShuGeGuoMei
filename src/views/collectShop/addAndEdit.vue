@@ -426,9 +426,9 @@ export default {
             this.ruleForm.categoryTwoId = ''
           }
           if(obj.categoryOne){
-            this.ruleForm.categoryOne = obj.categoryOne.id
+            this.ruleForm.categoryOneId = obj.categoryOne.id
           }else{
-            this.ruleForm.categoryOne = ''
+            this.ruleForm.categoryOneId = ''
           }
           // this.ruleForm.categoryOneId = obj.categoryOne.id
           this.ruleForm.standards = obj.goodStandard
@@ -444,7 +444,9 @@ export default {
           this.ruleForm.smallImg = obj.goodSmallImg
           this.ruleForm.barCode = obj.barCode
           this.ruleForm.bigImg = obj.goodBigImg
-          this.ruleForm.tab = obj.goodTab.split(',')
+          if(obj.goodTab){
+            this.ruleForm.tab = obj.goodTab.split(',')
+          }
         // }
       }).catch(err => {
         console.log(err)

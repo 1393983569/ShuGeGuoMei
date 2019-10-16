@@ -165,6 +165,10 @@ export default {
         {
           name:'已派单',
           id:2
+        },
+        {
+          name:'已入库',
+          id:3
         }
       ],
       params:'',

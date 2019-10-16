@@ -383,8 +383,10 @@
         let intData = parseInt(data)
         let value = ''
         if (intData < 9) {
-         value = `0${intData + i}`
-        } else {
+         value = `00${intData + i}`
+        } else if(intData>9&&intData<99) {
+          value = `0${intData + i}`
+        }else{
           value = intData + i + ''
         }
         return value

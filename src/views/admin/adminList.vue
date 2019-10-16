@@ -333,6 +333,7 @@ export default {
         if (valid) {
           // 新建
           if (this.state === 'add') {
+            this.ruleForm.image = this.getUserAvatar(this.ruleForm.mobile)
             addAdmin(this.ruleForm).then(res => {
               this.addSuccess()
             }).catch(err => {
@@ -352,7 +353,20 @@ export default {
           return false;
         }
       });
-
+    },
+    // 默认头像设置
+    getUserAvatar(phone){
+      if(phone){
+        let str = phone.substring(phone.length-2)
+        let num = parseInt(str)
+        if(num%2===0){
+          return 'http://qiniu.freshergo.com/1571122700373.png'
+        }else{
+          return 'http://qiniu.freshergo.com/1571122731108.png'
+        }
+      }else{
+        return 'http://qiniu.freshergo.com/1571122700373.png'
+      }
     },
     handleSizeChange(e) {
       this.pageSize = e

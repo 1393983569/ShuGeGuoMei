@@ -26,7 +26,10 @@
         <span class="font-weight">初始密码：</span> {{ shopObject.adminPassword }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">店铺地址：</span>{{ shopObject.detailsAddress }}
+        <span class="font-weight">店铺地址：</span>{{shopObject.provinceDomain.name}}
+        <span v-if="shopObject.cityDomain">{{shopObject.cityDomain.name}}</span>
+        <span v-if="shopObject.areaDomain">{{shopObject.areaDomain.name}}</span>
+        <span v-if="shopObject.detailsAddress">{{ shopObject.detailsAddress }}</span>
       </div>
       <div class="size-color div-margin">
         <span class="font-weight"> 店铺面积：</span>{{ shopObject.area }} m&sup2;

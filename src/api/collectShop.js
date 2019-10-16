@@ -6,6 +6,7 @@ import request from '../utils/request'
 export const addGoods = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
+
     if (data[key]) params.append(key, data[key])
   }
   return request({
@@ -34,7 +35,9 @@ export const deleteGoods = (id) => {
 export const editGoods = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
-    if (data[key]) params.append(key, data[key])
+    if (data[key]!=='undefined'){
+      if (data[key]) params.append(key, data[key])
+    }
   }
   return request({
     url: '/admin/editGoods',
