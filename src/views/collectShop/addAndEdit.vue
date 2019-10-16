@@ -50,6 +50,8 @@
           :before-upload="beforeAvatarUpload"
           :on-progress="handleProgressSmall"
         >
+          <div v-if="addEditState"></div>
+          <div v-else class="changPic">更换照片</div>
           <div slot="tip" class="el-upload__tip">建议上传200*200px图片，大小不超过1m</div>
           <el-progress v-if="0<percentageSmall&&percentageSmall<=100" type="circle" :percentage="percentageSmall" :width="177" style="width:178px;height:178px;"></el-progress>
           <img v-if="ruleForm.smallImg" :src="ruleForm.smallImg" class="avatar">
@@ -57,19 +59,23 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="展示图：" prop="name">
-        <el-upload
-          class="avatar-uploader"
-          :action="`${apiUrl}/basics/upload`"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccessBig"
-          :before-upload="beforeAvatarUpload"
-          :on-progress="handleProgressBig"
-        >
-          <div slot="tip" class="el-upload__tip">建议上传500*500px图片，大小不超过1m</div>
-          <el-progress v-if="0<percentageBig&&percentageBig<=100" type="circle" :percentage="percentageBig" :width="177" style="width:178px;height:178px;"></el-progress>
-          <img v-if="ruleForm.bigImg" :src="ruleForm.bigImg" class="avatar">
-          <i v-else-if="!ruleForm.bigImg&&percentageBig>100||percentageBig<=0" class="el-icon-plus avatar-uploader-icon" />
-        </el-upload>
+        <div style="display:flex;">
+          <el-upload
+            class="avatar-uploader"
+            :action="`${apiUrl}/basics/upload`"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccessBig"
+            :before-upload="beforeAvatarUpload"
+            :on-progress="handleProgressBig"
+          >
+            <div v-if="addEditState"></div>
+            <div v-else class="changPic">更换照片</div>
+            <div slot="tip" class="el-upload__tip">建议上传500*500px图片，大小不超过1m</div>
+            <el-progress v-if="0<percentageBig&&percentageBig<=100" type="circle" :percentage="percentageBig" :width="177" style="width:178px;height:178px;"></el-progress>
+            <img v-if="ruleForm.bigImg" :src="ruleForm.bigImg" class="avatar">
+            <i v-else-if="!ruleForm.bigImg&&percentageBig>100||percentageBig<=0" class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </div>
       </el-form-item>
       <el-form-item label="标签：" prop="tab">
         <el-tag
@@ -605,5 +611,16 @@ export default {
     width: 90px;
     margin-left: 10px;
     vertical-align: bottom;
+  }
+  .changPic{
+    position:absolute;
+    right:0px;
+    line-height: 20px;
+    font-size:14px;
+    color:aliceblue;
+    width:72px;
+    height:20px;
+    background-color: rgba(1,1,1,0.5);
+    border-radius:5px;
   }
 </style>

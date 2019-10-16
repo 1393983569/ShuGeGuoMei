@@ -6,15 +6,18 @@
       <el-button size="mini" type="danger" @click="logout">退出登录</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
-      <div style="margin:20px;" title="更换头像">
+      <div style="margin:20px;">
         <el-upload
             class="avatar-uploader"
             :action="`${apiUrl}/basics/upload`"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="avatar" :src="avatar" class="avatar" alt="更换头像">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            :before-upload="beforeAvatarUpload"
+            :on-progress="handleProgress">
+            <div class="avatar-change">更换头像</div>
+            <el-progress v-if="0<percent&&percent<=100" type="circle" :percentage="percent" :width="177" style="width:178px;height:178px;"></el-progress>
+            <img v-if="avatar" :src="avatar" class="avatar"/>
+            <i v-else-if="!avatar&&percent>100||percent<=0" class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
       </div>
       <div style="margin:10px;margin-top:50px;width:20%;">
@@ -66,12 +69,13 @@ export default {
   components:{Breadcrumb,Sidentify},
   data(){
     return{
+      percent:0,
       identifyCode:'',
       // identifyCodes:'1234567890',
       stateShow:false,
       showCodeState:false,
       apiUrl:'',
-      avatar:'http://qiniu.freshergo.com/1569311477638.png',
+      avatar:'',
       user:{},
       dialogTableVisible:false,
       sendAuthCode:true,/*布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
@@ -89,10 +93,10 @@ export default {
     }
   },
   mounted(){
-
     this.stateShow=true
     console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
+    this.avatar = this.$store.state.user.avatar
     this.apiUrl = process.env.VUE_APP_BASE_API
   },
   methods:{
@@ -110,7 +114,10 @@ export default {
               clearInterval(auth_timetimer);
           }
       }, 1000);
-
+    },
+    handleProgress(event, file, fileList){
+      this.percent = event.percent
+      this.avatar = ''
     },
     refreshCode(){
       getCode().then(res => {
@@ -148,10 +155,11 @@ export default {
     },
     // 上传文件成功后
     handleAvatarSuccess(file){
+      this.percent = 101
       this.avatar = file.info
     },
     // 上传文件前
-    beforeAvatarUpload(){
+    beforeAvatarUpload(file){
       const isLt20M = file.size / 1024 / 1024 < 1;
       if (!isLt20M) {
         this.$message.error('上传图片的大小不能超过 1M!');
@@ -206,5 +214,16 @@ export default {
   }
   .code{
     cursor: pointer;
+  }
+  .avatar-change{
+    position:absolute;
+    right:0px;
+    line-height: 20px;
+    font-size:14px;
+    color:aliceblue;
+    width:72px;
+    height:20px;
+    background-color: rgba(1,1,1,0.5);
+    border-radius:5px;
   }
 </style>

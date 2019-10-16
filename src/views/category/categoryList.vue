@@ -39,16 +39,18 @@
     <el-dialog
       title="添加一级品类"
       :visible.sync="dialogStair"
-      width="40%">
-      <el-input style="margin-bottom: 5px;" v-for="(item, index) in stairInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类">
-        <i
-          style="margin-top:10px;cursor: pointer;"
-          class="el-icon-circle-close"
-          slot="suffix"
-          @click="handleIconClick(index)">
-        </i>
-      </el-input>
-      <el-button @click="addStairInput">+</el-button>
+      width="40%"  >
+        <virtual-list :remain="9" :size="40">
+          <el-input style="margin-bottom: 5px;" v-for="(item, index) in stairInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类">
+          <i
+            style="margin-top:10px;cursor: pointer;"
+            class="el-icon-circle-close"
+            slot="suffix"
+            @click="handleIconClick(index)">
+          </i>
+        </el-input>
+        <el-button @click="addStairInput">+</el-button>
+      </virtual-list>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogStair = false">取 消</el-button>
         <el-button type="primary" @click="addStair">确 定</el-button>
@@ -67,15 +69,17 @@
           :value="item.id">
         </el-option>
       </el-select>
-      <el-input style="margin-bottom: 5px" v-for="(item, index) in childrenInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类">
-        <i
-          style="margin-top:10px;cursor: pointer;"
-          class="el-icon-circle-close"
-          slot="suffix"
-          @click="handleSecondIconClick(index)">
-        </i>
-      </el-input>
-      <el-button @click="addChildrenInput">+</el-button>
+      <virtual-list :remain="9" :size="40">
+        <el-input style="margin-bottom: 5px" v-for="(item, index) in childrenInput" :key="`${index}_s`" v-model="item.value" placeholder="请输入品类">
+          <i
+            style="margin-top:10px;cursor: pointer;"
+            class="el-icon-circle-close"
+            slot="suffix"
+            @click="handleSecondIconClick(index)">
+          </i>
+        </el-input>
+        <el-button @click="addChildrenInput">+</el-button>
+      </virtual-list>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogChildren = false">取 消</el-button>
         <el-button type="primary" @click="addChildren">确 定</el-button>
@@ -161,6 +165,7 @@
 </template>
 
 <script>
+  import virtualList from 'vue-virtual-scroll-list'
   import hint from '@/components/Hint'
   import { getSecondCategory, deleteCategoryOne, delCategoryTwo, addCategoryOne, selectAll, addCategoryTwo, editCategoryTwo, updateCategoryOne } from '@/api/category/categoryList'
   import clonedeep from 'clonedeep'
@@ -169,7 +174,8 @@
     name: 'categoryList',
     components: {
       hint,
-      Breadcrumb
+      Breadcrumb,
+      virtualList
     },
     props: {
       row: {

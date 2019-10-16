@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column prop="finalMoney" label="支付金额">
           <template slot-scope="scope">
-            {{scope.row.finalMoney/100}}￥
+            ￥{{scope.row.finalMoney/100}}
           </template>
         </el-table-column>
       </el-table>

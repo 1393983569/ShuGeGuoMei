@@ -778,15 +778,14 @@ export default {
     border:1px solid #f0f2f3;
   }
   .change-img{
-    width:100px;
-    height:30px;
-    color:#ffffff;
     position:absolute;
-    left:78px;
-    top:0px;
-    background-color:#8c939d;
-    margin:0px;
-    border-radius:10%;
-    line-height: 30px;
+    right:0px;
+    line-height: 20px;
+    font-size:14px;
+    color:aliceblue;
+    width:72px;
+    height:20px;
+    background-color: rgba(1,1,1,0.5);
+    border-radius:5px;
   }
 </style>

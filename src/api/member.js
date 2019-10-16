@@ -117,4 +117,12 @@ export const categoryTwoAmount  = (memberId,categoryOneId) => {
     method: 'post'
   })
 }
-
+/**
+ *查询会员系统说明
+ */
+export const getMemberSysDetail = () => {
+  return request({
+    url: '/admin/memberSystemShow',
+    method: 'post'
+  })
+}

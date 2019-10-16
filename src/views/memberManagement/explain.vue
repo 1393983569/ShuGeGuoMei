@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { addSystemMsg } from '@/api/member.js'
+import { addSystemMsg,getMemberSysDetail } from '@/api/member.js'
 import tinymce from '@/components/Tinymce'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
@@ -28,6 +28,7 @@ export default {
   },
   mounted(){
     this.stateShow = true
+    this.handleMemberSysDetail()
   },
   methods:{
     addSystemMsg(){
@@ -41,6 +42,14 @@ export default {
       }).catch(err => {
         console.log(err)
         this.$message.error('保存出错！')
+      })
+    },
+    // 会员系统说明查询
+    handleMemberSysDetail(){
+      getMemberSysDetail().then(res => {
+        this.content = res.info.content
+      }).catch(err => {
+        console.log(err)
       })
     }
   }
