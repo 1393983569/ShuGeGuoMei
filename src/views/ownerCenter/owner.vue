@@ -34,13 +34,13 @@
         <el-form-item label="手机号：">{{user.mobile}}</el-form-item>
         <el-form-item label="验证码：" prop="msgCode">
           <div style="display:flex;flex-direction:row;">
-            <el-input placeholder="请输入验证码" style="width:23%;margin-right:1px;" v-model="ruleForm.msgCode">
-              <!-- <el-button slot="append" v-if="sendAuthCode" @click="getAuthCode">发送验证码</el-button> -->
-              <!-- <el-button slot="append" v-else>{{auth_time}}秒后重发</el-button> -->
+            <el-input placeholder="请输入验证码" style="width:44%;margin-right:1px;" v-model="ruleForm.msgCode">
+              <el-button slot="append" v-if="sendAuthCode" @click="getAuthCode">发送验证码</el-button>
+              <el-button slot="append" v-else>{{auth_time}}秒后重发</el-button>
             </el-input>
-            <div @click="refreshCode" style="border:none;">
+            <!-- <div @click="refreshCode" style="border:none;">
               <Sidentify :identifyCode="identifyCode"></Sidentify>
-            </div>
+            </div> -->
           </div>
         </el-form-item>
         <el-form-item label="新密码：" prop="password">
@@ -63,7 +63,7 @@
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
 import Sidentify from '@/components/Sidentify'
-import {getCode, forgetPwd, editPwd} from '@/api/forgetPassword.js'
+import {getCode, forgetPwd, editPwd, checkCode, sendCode} from '@/api/forgetPassword.js'
 import {editImage} from '@/api/admin/adminList.js'
 export default {
   name:'owner',
@@ -107,7 +107,7 @@ export default {
     },
     getAuthCode() {
       this.sendAuthCode = false;
-      this.auth_time = 40;
+      this.auth_time = 120;
       var auth_timetimer =  setInterval(()=>{
           this.auth_time--;
           if(this.auth_time<=0){
@@ -115,6 +115,14 @@ export default {
               clearInterval(auth_timetimer);
           }
       }, 1000);
+      this.getcode(this.ruleForm.mobile)
+    },
+    getcode(phone){
+      sendCode(phone).then(res => {
+
+      }).catch(err=> {
+        this.$message.error('验证码发送失败！')
+      })
     },
     handleProgress(event, file, fileList){
       this.percent = event.percent
@@ -135,24 +143,38 @@ export default {
       this.ruleForm.adminId = this.user.id
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          editPwd(this.ruleForm).then(res => {
-            if(res.status === 1){
-              this.$message.success('修改成功！')
-              this.dialogTableVisible = false
-            }
-          }).ctach(err=> {
-            console.log(err)
-            this.$message.error(err)
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
+          let bool = this.checkCodeHandle(this.ruleForm.mobile, this.ruleForm.msgCode)
+          if(bool){
+            editPwd(this.ruleForm).then(res => {
+              if(res.status === 1){
+                this.$message.success('修改成功！')
+                this.dialogTableVisible = false
+              }
+            }).ctach(err=> {
+              console.log(err)
+              this.$message.error(err)
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.dialogTableVisible = false
+    },
+    // 验证码错误
+    checkCodeHandle(phone, code){
+      checkCode(phone, code).then(res=> {
+        if(res.status === 1){
+          return true
+        }
+      }).catch(err => {
+        this.$message.error('验证码错误！')
+        return false
+      })
     },
     // 上传文件成功后
     handleAvatarSuccess(file){

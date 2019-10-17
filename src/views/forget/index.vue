@@ -7,14 +7,14 @@
           <md-input
             ref="username"
             v-model="loginForm.mobile"
-            placeholder="Username"
-            name="username"
+            placeholder="请输入手机号"
+            name="mobile"
             icon="用户"
             type="text"
             tabindex="1"
             auto-complete="on"
           >
-            请输入手机号
+          手机号
           </md-input>
         </el-form-item>
         <el-form-item prop="msgCode" style="border-bottom:none;">
@@ -22,19 +22,22 @@
             <md-input
               ref="验证码"
               v-model="loginForm.msgCode"
-              placeholder="Username"
+              placeholder="code"
               name="msgCode"
               icon="密码"
               type="text"
               tabindex="1"
               auto-complete="on"
-              style="width:500px;border-bottom:1px solid #DEEDC1;"
-            >
-              请输入验证码
-            </md-input>
-            <div @click="refreshCode" style="border:none;margin:0px;padding:0px;">
-              <Sidentify :identifyCode="identifyCode"></Sidentify>
+              style="width:100%;border-bottom:1px solid #DEEDC1;"
+            >验证码</md-input>
+            <div style="position:absolute;top:3px;right:0px;text-align:center;">
+              <div v-if="sendAuthCode" @click="getAuthCode" style="width: 110px;border-radius:5px;height:35px;background: #D0E6A5 100%;">发送验证码</div>
+              <div v-else style="width: 110px;border-radius:5px;height:35px;background: #D0E6A5 100%;">{{auth_time}}秒后重发</div>
             </div>
+            <!-- <div @click="refreshCode" style="border:none;margin:0px;padding:0px;">
+              <Sidentify :identifyCode="identifyCode"></Sidentify>
+            </div> -->
+
           </div>
         </el-form-item>
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
@@ -45,7 +48,7 @@
               :key="passwordType"
               ref="密码"
               :type="passwordType"
-              placeholder="Password"
+              placeholder="password"
               name="password"
               tabindex="2"
               auto-complete="on"
@@ -53,7 +56,7 @@
               @blur="capsTooltip = false"
               @keyup.enter.native="handleLogin"
             >
-              请输入新登录密码
+            新密码
             </md-input>
           </el-form-item>
         </el-tooltip>
@@ -65,15 +68,14 @@
               :key="passwordType"
               ref="确认密码"
               :type="passwordType"
-              placeholder="Password"
+              placeholder="password"
               name="password"
               tabindex="2"
               auto-complete="on"
               @keyup.native="checkCapslock"
               @blur="capsTooltip = false"
               @keyup.enter.native="handleLogin"
-            >
-              请确认新登录密码
+            >确认密码
             </md-input>
           </el-form-item>
         </el-tooltip>
@@ -85,7 +87,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import {getCode, forgetPwd, editPwd} from '@/api/forgetPassword.js'
+import {getCode, forgetPwd, editPwd, checkCode, sendCode} from '@/api/forgetPassword.js'
 import Sidentify from '@/components/Sidentify'
 // import SocialSign from './components/SocialSignin'
 import MdInput from '@/components/MDinput'
@@ -112,6 +114,8 @@ export default {
       }
     }
     return {
+      sendAuthCode:true,
+      auth_time: 0,
       identifyCode:'',
       identifyCodes:'1234567890',
       loginForm: {
@@ -121,10 +125,10 @@ export default {
         msgCode:''
       },
       loginRules: {
-        mobile: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        confirmPassword: [{ required: true, trigger: 'blur', }],
-        msgCode: [{ required: true, trigger: 'blur',}]
+        mobile: [{ required: true, trigger: 'blur', message:'请输入手机号', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', message:'请输入密码', validator: validatePassword }],
+        confirmPassword: [{ required: true,  message:'请输入密码',trigger: 'blur', }],
+        msgCode: [{ required: true, message:'请输入验证码', trigger: 'blur',}]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -169,7 +173,7 @@ export default {
       })
     },
     change(){
-      console.log(this.$router, 'rrrrrrrrrrrr')
+      // console.log(this.$router, 'rrrrrrrrrrrr')
       this.$router.push({name:'forget'})
     },
     returnHandle(){
@@ -203,17 +207,20 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          forgetPwd(this.loginForm).then(res => {
-            if(res.status === 1){
-              this.$router.push({
-                path:'/login'
-              })
-            }
-          }).catch(err=> {
-            this.$message.error('操作失败！')
-          })
-
-          this.$message.success('请登录！')
+          let bool = this.checkCodeHandle(this.loginForm.mobile, this.loginForm.msgCode)
+          console.log()
+          if(bool){
+            forgetPwd(this.loginForm).then(res => {
+              if(res.status === 1){
+                this.$router.push({
+                  path:'/login'
+                })
+              }
+            }).catch(err=> {
+              this.$message.error('操作失败！')
+            })
+          }
+          // this.$message.success('请登录！')
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)
           //   .then(() => {
@@ -229,6 +236,17 @@ export default {
         }
       })
     },
+    checkCodeHandle(mobile, code){
+      checkCode(mobile, code).then(res => {
+        console.log(res, 'kkkkkkkk')
+        if(res.status===1){
+          return true
+        }
+      }).catch(err=> {
+        console.log(err)
+        return false
+      })
+    },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {
@@ -236,6 +254,27 @@ export default {
         }
         return acc
       }, {})
+    },
+    getAuthCode() {
+      this.sendAuthCode = false;
+      this.auth_time = 120;
+      var auth_timetimer =  setInterval(()=>{
+          this.auth_time--;
+          if(this.auth_time<=0){
+              this.sendAuthCode = true;
+              clearInterval(auth_timetimer);
+          }
+      }, 1000);
+      // 发送验证码
+      if(this.loginForm.mobile){
+        this.sendCodeHandle(this.loginForm.mobile)
+      }
+    },
+    sendCodeHandle(phone){
+      sendCode(phone).then().catch(err=> {
+        console.log(err)
+        this.$message.error('验证码发送失败！')
+      })
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {

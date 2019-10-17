@@ -180,10 +180,14 @@ export default {
       this.pageNum = e
     },
     addProvider() {
-      this.$router.push({name: 'providerAddEdit'})
+      let row = {}
+      row.state="添加"
+      this.$store.state.user.providerObject = {}
+      this.$router.push({name: 'providerAddEdit', params:row})
     },
     editProvider(row) {
       // console.log(row,'888888888')
+      row.state = '编辑'
       this.$router.push({name: 'providerAddEdit', params: row })
       this.$store.state.user.providerObject = row
     },

@@ -5,37 +5,37 @@
     <!-- <el-dialog :visible="showDetail" width="1000px" height="700" :before-close="handleCloseDetail"> -->
       <!-- <div slot="title" class="title-size-color">店铺详情</div> -->
       <div class="size-color div-margin">
-        <span class="font-weight">店铺ID：</span>{{ shopObject.id }}
+        <span>店铺ID：</span>{{ shopObject.id }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">店铺名称：</span>{{ shopObject.name }}
+        <span>店铺名称：</span>{{ shopObject.name }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">店铺简称：</span>{{ shopObject.simpleName }}
+        <span>店铺简称：</span>{{ shopObject.simpleName }}
       </div>
       <div class="size-color div-margin" style="display:flex;flex-direction:row;align-items: flex-start;">
-        <span class="font-weight">店铺图片：</span> <div style="margin-left:4px;"  v-for="url in urlList"><img :src="url" style="width:100px;height:100px;"></div>
+        <span>店铺图片：</span> <div style="margin-left:4px;"  v-for="url in urlList"><img :src="url" style="width:100px;height:100px;"></div>
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">掌柜姓名：</span>{{ shopObject.adminName }}
+        <span>掌柜姓名：</span>{{ shopObject.adminName }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">手机号：</span>{{ shopObject.adminPhone }}
+        <span>手机号：</span>{{ shopObject.adminPhone }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">初始密码：</span> {{ shopObject.adminPassword }}
+        <span>初始密码：</span> {{ shopObject.adminPassword }}
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">店铺地址：</span>{{shopObject.provinceDomain.name}}
+        <span>店铺地址：</span>{{shopObject.provinceDomain.name}}
         <span v-if="shopObject.cityDomain">{{shopObject.cityDomain.name}}</span>
         <span v-if="shopObject.areaDomain">{{shopObject.areaDomain.name}}</span>
         <span v-if="shopObject.detailsAddress">{{ shopObject.detailsAddress }}</span>
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight"> 店铺面积：</span>{{ shopObject.area }} m&sup2;
+        <span> 店铺面积：</span>{{ shopObject.area }} m&sup2;
       </div>
       <div class="size-color div-margin">
-        <span class="font-weight">经营品类：</span>
+        <span>经营品类：</span>
         <!-- <el-table :data="categoryTable" :header-cell-style="tableHeaderColor" :span-method="objectSpanMethod"> -->
         <el-table
             :data="categoryTable"
@@ -74,17 +74,17 @@
       </div>
       <!-- <div class="" style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;"> -->
       <div>
-        <span style="font-weight:bold;">职员人数：</span>
+        <span>职员人数：</span>
         <staff :staffTable ="staffTable"></staff>
       </div>
       <div class="size-color">
-        <span class="font-weight">经营模式：</span>{{ shopObject.management }}
+        <span>经营模式：</span>{{ shopObject.management }}
       </div>
       <div class="size-color">
-        <span class="font-weight">成本结构：</span>
+        <span>成本结构：</span>
       </div>
       <div class="size-color">
-        <span class="font-weight">会员人数(人)：</span> {{shopObject.members}}
+        <span>会员人数(人)：</span> {{shopObject.members}}
       </div>
     <!-- </el-dialog> -->
   </div>

@@ -139,6 +139,7 @@ export default {
         align-items: center;
 
         .user-avatar {
+          border:1px solid #e3e3e3;
           cursor: pointer;
           width: 40px;
           height: 40px;

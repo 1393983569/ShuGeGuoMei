@@ -86,7 +86,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商品：" prop="providerGoods">
+      <el-form-item label="供应商品：" prop="">
        <div class="goodsContainer">
           <div>
             <div class="categoryHeader">品类</div>
@@ -200,7 +200,7 @@ export default {
     // 微信号
     var validateWeixin = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('微信号不能为空'));
+        // callback(new Error('微信号不能为空'));
       }else{
         var reg= /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
         if(!reg.test(value)){
@@ -212,7 +212,7 @@ export default {
     };
     var validateQQ = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('QQ号不能为空'));
+        // callback(new Error('QQ号不能为空'));
       }else{
         var reg = /^[1-9]\d*$/;
         if(!reg.test(value)||value.toString().length>12||value.toString().length<5){
@@ -299,9 +299,9 @@ export default {
         addressDetail: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
         ],
-        providerGoods: [
-          { required: true, message: '请选择供应商品', trigger: 'blur' },
-        ],
+        // goodArr: [
+        //   { required: true, message: '请选择供应商品', trigger: 'blur' },
+        // ],
         areaId: [
           { required: true, message: '请选择仓库地址', trigger: 'blur' },
         ],
@@ -337,20 +337,18 @@ export default {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getaAllCategory()
     this.adminId = this.$store.state.user.roleId
-    console.log(this.$store, 'hhhhhhhh')
-    if(JSON.stringify(this.$route.params) !== '{}'){
+    if(this.$route.params.state === '编辑'){
       this.editState = true
       this.checkGoodsList= []
       this.ruleForm.id = this.$route.params.id
       this.id = this.$route.params.id
       this.providerId = this.$route.params.id
       this.getProviderDetail()
-    }else if(this.$store.state.user.providerObject){
-      // console.log('state.....')
+    }else if(JSON.stringify(this.$store.state.user.providerObject)!=='{}'){
       this.editState = true
       this.id = this.$store.state.user.providerObject.id
       this.getProviderDetail()
-    }else{
+    }else if(this.$route.params.state === '添加'){
       this.editState = false
     }
     this.getShopOption()
@@ -393,6 +391,7 @@ export default {
           this.checkGoodsList.push(row)
         }
       console.log(this.checkGoodsList, 'listllllllll')
+      this.ruleForm.goodArr = this.checkGoodsList
     },
     // 商品全选
     selectGoodsAll(all){
@@ -415,6 +414,7 @@ export default {
           }
         }
       console.log(this.checkGoodsList, 'nnnnnnnnn')
+      this.ruleForm.goodArr = this.checkGoodsList
     },
 
     // 查询所有店铺

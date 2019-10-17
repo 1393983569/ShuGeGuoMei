@@ -205,6 +205,8 @@ export default {
         this.loadingClear = false
       }).catch(err => {
         console.log(err)
+         this.loadingSearch = false
+        this.loadingClear = false
         this.$message.error('采价端用户查询出错！')
       })
     },

@@ -101,7 +101,7 @@
         @focus="handleMdFocus"
         @blur="handleMdBlur"
         @input="handleModelInput"
-      >
+      />
       <span class="material-input-bar" />
       <label class="material-label">
         <slot/>
@@ -274,7 +274,7 @@ export default {
       &:focus {
         outline: none;
         border: none;
-        border-bottom: 1px solid transparent; // fixes the height issue
+        // border-bottom: 1px solid transparent; // fixes the height issue
       }
     }
     .material-label {
@@ -321,7 +321,6 @@ export default {
       }
     }
   }
-
   .material-input__component {
     background: $color-white;
     .material-input {
