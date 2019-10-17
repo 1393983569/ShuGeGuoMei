@@ -337,7 +337,7 @@ export default {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getaAllCategory()
     this.adminId = this.$store.state.user.roleId
-    // console.log(this.$store, 'hhhhhhhh')
+    console.log(this.$store, 'hhhhhhhh')
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.editState = true
       this.checkGoodsList= []
@@ -345,7 +345,7 @@ export default {
       this.id = this.$route.params.id
       this.providerId = this.$route.params.id
       this.getProviderDetail()
-    }else if(JSON.stringify(this.$store.state.user.providerObject!== '{}')){
+    }else if(this.$store.state.user.providerObject){
       // console.log('state.....')
       this.editState = true
       this.id = this.$store.state.user.providerObject.id
@@ -433,7 +433,7 @@ export default {
     },
     // 查询供应商详情
     getProviderDetail() {
-      console.log('详情。。。。。')
+      // console.log('详情。。。。。')
       getProviderDetail(this.id).then(res => {
         // console.log(res, 'hhhhhhhh')
         if(res.status === 1){
@@ -778,6 +778,8 @@ export default {
     border:1px solid #f0f2f3;
   }
   .change-img{
+    margin:0px;
+    padding:0px;
     position:absolute;
     right:0px;
     line-height: 20px;

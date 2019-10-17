@@ -135,9 +135,9 @@ export default {
         this.priceMarketIdList.push(str)
       })
       // 省市区回显
-      this.provinceId = this.userObject.provinceId.toString()
-      this.cityId = this.userObject.cityId.toString()
-      this.areaId = this.userObject.areaId.toString()
+      this.provinceId = this.userObject.province.id.toString()
+      this.cityId = this.userObject.city.id.toString()
+      this.areaId = this.userObject.area.id.toString()
     }
     // this.getPriceMarket()
   },

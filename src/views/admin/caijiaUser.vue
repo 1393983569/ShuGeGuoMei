@@ -31,20 +31,28 @@
         <el-table-column prop="priceMarketName" label="市场名称">
           <template slot-scope="scope">
             <p class="outer">
-              <span v-for="item in scope.row.priceMarketMan">{{item.priceMarketName}}</span>,
+              <span v-for="(item, index) in scope.row.priceMarketMan" v-if="index<3">
+                <span>{{item.priceMarketName}}</span><br/>
+              </span>
+              <span v-else>...</span>
             </p>
           </template>
         </el-table-column>
         <el-table-column prop="priceMarketType" label="市场类别">
           <template slot-scope="scope">
-            <p v-if="scope.row.priceMarketType===1">批发市场</p>
-            <p v-else-if="scope.row.priceMarketType===2">零售市场</p>
-            <p v-else-if="scope.row.priceMarketType===3">早市</p>
+            <p v-if="scope.row.priceMarketType&&scope.row.priceMarketType===1">批发市场</p>
+            <p v-else-if="scope.row.priceMarketType&&scope.row.priceMarketType===2">零售市场</p>
+            <p v-else-if="scope.row.priceMarketType&&scope.row.priceMarketType===3">早市</p>
           </template>
         </el-table-column>
         <el-table-column prop="" label="市场区域">
           <template slot-scope="scope">
-            <!-- {{scope.row.provinceDomain.name}}{{scope.row.cityDomain.name}}{{scope.row.areaDomain.name}}-{{scope.row.priceMarketName}} -->
+            <p class="outer">
+              <span v-for="(item, index) in scope.row.priceMarketMan" v-if="index<3">
+                <span>{{scope.row.province.name}}{{scope.row.city.name}}{{scope.row.area.name}}-{{item.priceMarketName}}</span><br/>
+              </span>
+              <span v-else>...</span>
+            </p>
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间"/>
@@ -173,12 +181,32 @@ export default {
       obj.cityId = this.cityId
       obj.areaId = this.areaId
       getCaijiaUser(obj).then(res => {
-        // console.log(res, 'res.....')
-        this.tableData = res.info.records
+        this.tableData = []
+        res.info.records.forEach(item => {
+          let obj  = {}
+          obj = item
+          if(item.priceMarketMan[0]){
+            obj.province = item.priceMarketMan[0].priceMarketDomain.provinceDomain
+            obj.city = item.priceMarketMan[0].priceMarketDomain.cityDomain
+            obj.area = item.priceMarketMan[0].priceMarketDomain.areaDomain
+            obj.priceMarketType = item.priceMarketMan[0].priceMarketType
+            this.tableData.push(obj)
+          }else{
+            obj.province = {}
+            obj.city = {}
+            obj.area = {}
+            obj.priceMarketType =''
+            this.tableData.push(obj)
+          }
+        })
+        console.log(this.tableData, 'table........')
         this.total = res.info.totalrecord
         this.loadingSearch = false
         this.loadingClear = false
-      }).catch(err => {})
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('采价端用户查询出错！')
+      })
     },
     getProvince(id) {
       this.provinceId = id
@@ -220,13 +248,15 @@ export default {
       })
     },
     editCaijiaUser(row){
-      let obj = {}
-      obj.name= row.adminName
-      obj.mobile= row.adminMobile
-      obj.password= row.adminPassword
-      obj.priceMarketType= row.priceMarketType
-      // 省市区
-      obj.name= row.adminName
+      // let obj = {}
+      // obj.name= row.name
+      // obj.mobile= row.mobile
+      // obj.password= row.password
+      // obj.priceMarketType= row.priceMarketType
+      // // 省市区
+      // obj.province = row.province
+      // obj.city = row.city
+      // obj.area = row.area
       row.state = '编辑'
       this.$router.push({
         name:'caijiaUserAdd',
