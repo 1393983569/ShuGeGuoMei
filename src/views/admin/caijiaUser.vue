@@ -180,6 +180,7 @@ export default {
       obj.provinceId = this.provinceId
       obj.cityId = this.cityId
       obj.areaId = this.areaId
+      obj.type=10
       getCaijiaUser(obj).then(res => {
         this.tableData = []
         res.info.records.forEach(item => {

@@ -97,6 +97,9 @@ export default {
     this.stateShow=true
     // console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
+
+    this.ruleForm.adminId = this.user.id
+    this.ruleForm.mobile = this.user.mobile
     this.avatar = this.$store.state.user.avatar
     this.apiUrl = process.env.VUE_APP_BASE_API
   },
@@ -119,7 +122,7 @@ export default {
     },
     getcode(phone){
       sendCode(phone).then(res => {
-
+        if(res.status === 1){}
       }).catch(err=> {
         this.$message.error('验证码发送失败！')
       })
@@ -143,21 +146,13 @@ export default {
       this.ruleForm.adminId = this.user.id
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let bool = this.checkCodeHandle(this.ruleForm.mobile, this.ruleForm.msgCode)
-          if(bool){
-            editPwd(this.ruleForm).then(res => {
-              if(res.status === 1){
-                this.$message.success('修改成功！')
-                this.dialogTableVisible = false
-              }
-            }).ctach(err=> {
-              console.log(err)
-              this.$message.error(err)
-            })
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
+          checkCode(this.ruleForm.mobile, this.ruleForm.msgCode).then(res=> {
+            if(res.status === 1){
+              this.editPwdHandle()
+            }
+          }).catch(err => {
+            this.$message.error('验证码错误！')
+          })
         }
       });
     },
@@ -165,15 +160,15 @@ export default {
       this.$refs[formName].resetFields();
       this.dialogTableVisible = false
     },
-    // 验证码错误
-    checkCodeHandle(phone, code){
-      checkCode(phone, code).then(res=> {
+    editPwdHandle(){
+      editPwd(this.ruleForm).then(res => {
         if(res.status === 1){
-          return true
+          this.$message.success('修改成功！')
+          this.dialogTableVisible = false
         }
-      }).catch(err => {
-        this.$message.error('验证码错误！')
-        return false
+      }).ctach(err=> {
+        console.log(err)
+        this.$message.error(err)
       })
     },
     // 上传文件成功后

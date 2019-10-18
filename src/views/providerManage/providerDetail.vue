@@ -59,13 +59,13 @@
     </p>
     <p>资质照片：<img :src="providerObj.qualificationPics"  style="width:300px;"/></p>
     <div>
-      评分：{{totalScore}}
+      评分：{{averageScore}}
       <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
       <!-- <el-button style="margin-left:20px;" size="mini" type="success" v-else disabled>去评分</el-button> -->
-      <gradeDetail :grade="gradeDetail"></gradeDetail>
+      <gradeDetail :grade="gradeDetail" @getTotal="getTotalHandle"></gradeDetail>
     </div>
     <!-- 评分弹框 -->
-    <grade @getCloseState="getCloseState" @getGradeDetail="getGradeDetail" :gradeObject="gradeObject" :showState="showState" :providerId="providerId" :adminId="adminId"></grade>
+    <grade @getCloseState="getCloseState" @getGradeObject="getGradeObject" @getGradeDetail="getGradeDetail" :gradeObject="gradeObject" :showState="showState" :providerId="providerId" :adminId="adminId"></grade>
   </div>
 </template>
 <script>
@@ -79,7 +79,7 @@ export default {
   components:{gradeDetail,grade, Breadcrumb},
   data() {
     return {
-      totalScore:0,
+      averageScore:0,
       stateShowBreadcrumb:false,
       showState:false,
       providerObj:{},
@@ -124,6 +124,12 @@ export default {
     }
   },
   methods:{
+    getGradeObject(e){
+      this.averageScore = (e.amount+e.price+e.qualification+e.quality+e.service)/5
+    },
+    getTotalHandle(e){
+      this.averageScore = e
+    },
     getButton(list, name){
       console.log()
       list.forEach(e => {
@@ -253,7 +259,7 @@ export default {
       this.grade.amount=this.providerObj.deliverShopScore
       this.gradeObject = this.grade
       this.gradeDetail = this.grade
-      this.totalScore = (this.grade.qualification+this.grade.price+this.grade.quality+this.grade.service+this.grade.amount)/5
+      this.averageScore = (this.grade.qualification+this.grade.price+this.grade.quality+this.grade.service+this.grade.amount)/5
     },
     getGradeDetail(a){
       this.gradeDetail = a

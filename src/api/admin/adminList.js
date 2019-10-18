@@ -6,9 +6,12 @@ import request from '../../utils/request'
  */
 export const addAdmin = (data) => {
   const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key]) params.append(key, data[key])
-  }
+  // if(data.id)params.append('id', data.id)
+  if(data.name)params.append('name', data.name)
+  if(data.password)params.append('password', data.password)
+  if(data.mobile)params.append('mobile', data.mobile)
+  if(data.roleId)params.append('roleId', data.roleId)
+  if(data.type)params.append('type', data.type)
   return request({
     url: '/admin/addAdmin',
     method: 'post',
@@ -25,9 +28,12 @@ export const addAdmin = (data) => {
  */
 export const editAdmin = (data) => {
   const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key] ) params.append(key, data[key])
-  }
+  if(data.id)params.append('id', data.id)
+  if(data.name)params.append('name', data.name)
+  if(data.password)params.append('password', data.password)
+  if(data.mobile)params.append('mobile', data.mobile)
+  if(data.roleId)params.append('roleId', data.roleId)
+  if(data.type)params.append('type', data.type)
   return request({
     url: '/admin/editAdmin',
     method: 'post',
@@ -41,7 +47,7 @@ export const editAdmin = (data) => {
  */
 export const selectPageAdmin = (pageNum,pageSize,param,roleId) => {
   return request({
-    url: `/admin/selectPageAdmin?pageNum=${pageNum}&pageSize=${pageSize}&param=${param}&roleId=${roleId}`,
+    url: `/admin/selectPageAdmin?pageNum=${pageNum}&pageSize=${pageSize}&param=${param}&roleId=${roleId}&type=1`,
     method: 'get'
   })
 }

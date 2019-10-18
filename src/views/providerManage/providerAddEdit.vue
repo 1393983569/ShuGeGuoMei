@@ -29,7 +29,7 @@
             :before-upload="beforeAvatarUpload"
             :on-progress="handleProgressHeader"
           >
-            <p v-if="editState" class="change-img">更换图片</p>
+            <p v-if="editState" class="change-img" style="position:absolute;left:106px;">更换图片</p>
             <p v-else></p>
             <div slot="tip" class="el-upload__tip">建议上传大小不超过1m的图片</div>
             <el-progress v-if="0<percentageHeader&&percentageHeader<=100" type="circle" :percentage="percentageHeader" :width="177" style="width:178px;height:178px;"></el-progress>
@@ -86,7 +86,10 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商品：" prop="">
+      <el-form-item prop="goodsArr">
+        <template slot="label">
+          <span style="color:red;">*</span> 供应商品：
+        </template>
        <div class="goodsContainer">
           <div>
             <div class="categoryHeader">品类</div>
@@ -120,7 +123,7 @@
           :before-upload="beforeQualificationUpload"
           :on-progress="handleProgressQua"
         >
-          <p v-if="editState" class="change-img">更换图片</p>
+          <p v-if="editState" class="change-img" style="position:absolute;right:0px;left:106px;">更换图片</p>
           <p v-else></p>
           <div slot="tip" class="el-upload__tip">建议上传大小不超过1m的图片</div>
           <el-progress v-if="0<percentageQua&&percentageQua<=100" type="circle" :percentage="percentageQua" :width="177" style="width:178px;height:178px;"></el-progress>
@@ -129,7 +132,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item v-if="editState" label="评分：" prop="">
-        {{totalScore}}
+        {{averageScore}}
         <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>
         <gradeDetail :grade="grades"></gradeDetail>
       </el-form-item>
@@ -137,7 +140,7 @@
 
       </el-form-item>
     </el-form>
-    <grade @getCloseState="getCloseState" :gradeObject="gradeObject" :showState ="showState" :provider-id="providerId" :admin-id="adminId"></grade>
+    <grade @getCloseState="getCloseState" @getGradeObject="getGradeObject" :gradeObject="gradeObject" :showState ="showState" :provider-id="providerId" :admin-id="adminId"></grade>
   </div>
 </template>
 <script>
@@ -222,9 +225,17 @@ export default {
         }
       }
     };
+    // var validateGoods = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('商品不能为空'));
+    //   }else{
+
+    //   }
+    // };
     return {
+
       percentageHeader:0,
-      getGradeObject:{},
+      // getGradeObject:{},
       percentageQua:0,
       gradeObject:{},
       shopObject:[],
@@ -271,6 +282,7 @@ export default {
         providerShops:'',
         providerGoods:[],
         status: 3,
+        goodsArr:[],
       },
       shopList: [],
       editState: false,
@@ -299,8 +311,8 @@ export default {
         addressDetail: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
         ],
-        // goodArr: [
-        //   { required: true, message: '请选择供应商品', trigger: 'blur' },
+        // goodsArr: [
+        //   { required: false, validator:validateGoods, trigger: 'change' },
         // ],
         areaId: [
           { required: true, message: '请选择仓库地址', trigger: 'blur' },
@@ -322,7 +334,7 @@ export default {
       toggleSelectionList:[],
       providerGoodsList:[],
       // 总分
-      totalScore:0,
+      averageScore:0,
     }
   },
   watch: {
@@ -346,6 +358,7 @@ export default {
       this.getProviderDetail()
     }else if(JSON.stringify(this.$store.state.user.providerObject)!=='{}'){
       this.editState = true
+      this.providerId = this.$store.state.user.providerObject.id
       this.id = this.$store.state.user.providerObject.id
       this.getProviderDetail()
     }else if(this.$route.params.state === '添加'){
@@ -371,6 +384,10 @@ export default {
       if(!state){
         this.showState = false
       }
+    },
+    // 总分反显
+    getGradeObject(e){
+      this.averageScore = (e.amount+e.price+e.qualification+e.quality+e.service)/5
     },
     // 商品单选
     selectGoods(a, row){
@@ -499,7 +516,7 @@ export default {
       this.grade.service=this.ruleForm.serviceScore
       this.grade.amount=this.ruleForm.deliverShopScore
       this.grades = this.grade
-      this.totalScore = (this.grade.qualification+this.grade.price+this.grade.quality+this.grade.service+this.grade.amount)/5
+      this.averageScore = (this.grade.qualification+this.grade.price+this.grade.quality+this.grade.service+this.grade.amount)/5
     },
 
     // 门头照片上传成功

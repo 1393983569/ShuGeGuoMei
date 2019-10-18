@@ -21,7 +21,7 @@
           <el-input v-model="ruleForm.mobile" />
         </el-form-item>
         <el-form-item label="角色：" prop="roleId">
-          <el-select v-model="ruleForm.roleId" placeholder="请选择活动区域" style="width: 100%" >
+          <el-select v-model="ruleForm.roleId" placeholder="请选择角色" style="width: 100%" >
             <el-option :label="item.name" :value="item.id" :key="`role_${index}`" v-for="(item, index) in roleList"></el-option>
           </el-select>
         </el-form-item>

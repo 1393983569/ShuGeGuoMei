@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- <div>
+      <span>评分：{{grades.total}}</span>&nbsp;&nbsp;<span>满分=5</span>
+    </div> -->
     <div>
       <span>资质：{{grades.qualification}}</span>&nbsp;&nbsp;<span>满分=5</span>
     </div>
@@ -34,6 +37,8 @@ export default {
     'grade'(res){
       console.log(res,'res.......')
       this.grades = res
+      this.grades.total = (res.qualification+res.price+res.quality+res.service+res.amount)/5
+      this.$emit('getTotal', this.grades.total)
     }
   }
 }

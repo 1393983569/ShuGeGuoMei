@@ -43,12 +43,14 @@
               :before-upload="beforeAvatarUpload"
             >
               <!-- <div slot="tip" class="el-upload__tip">最多上传五张图片</div> -->
-              <i class="el-icon-plus" />
+              <i class="el-icon-close" v-if="addDiabled"/>
+              <i class="el-icon-plus" v-else/>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
-            <p style="font-size:12px;color:#606266;margin-top: 7px;">最多上传五张图片</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;color:red;" v-if="addDiabled">图片已达到上限</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;" v-else>最多上传五张图片</p>
           </div>
 
           <!-- 编辑修改图片 -->
@@ -64,12 +66,14 @@
               :before-upload="beforeAvatarUpload"
               :file-list ="fileList"
             >
-              <i class="el-icon-plus" />
+              <i class="el-icon-close" v-if="editDiabled"/>
+              <i class="el-icon-plus" v-else/>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
-            <p style="font-size:12px;color:#606266;margin-top: 7px;">最多上传五张图片</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;color:red;" v-if="editDiabled">图片已达到上限</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;" v-else>最多上传五张图片</p>
           </div>
         </el-form-item>
         <el-form-item label="掌柜姓名：" prop="adminName">
@@ -171,6 +175,8 @@ export default {
       }, 100)
     };
     return {
+      editDiabled:false,
+      addDiabled:false,
       breadState:false,
       showState:false,
       oneState:false,
@@ -278,6 +284,10 @@ export default {
         })
         if(this.fileList.length>=5){
           this.imgState = false
+          this.editDiabled = true
+        }else{
+          this.imgState = true
+          this.editDiabled = false
         }
       }
     }else{
@@ -480,6 +490,13 @@ export default {
     uploadSuccess(response, file, fileList){
       // console.log(response, 'respo.....')
       this.imgelist.push(file.response.info)
+      if(this.imgelist.length>=5){
+        this.addDiabled = true
+        this.editDiabled = true
+      }else{
+        this.addDiabled = false
+        this.editDiabled = false
+      }
     },
     handleEditPreview(e){
       // console.log(e, 'fffffff')

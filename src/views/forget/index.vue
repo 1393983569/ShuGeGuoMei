@@ -207,19 +207,14 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          let bool = this.checkCodeHandle(this.loginForm.mobile, this.loginForm.msgCode)
-          console.log()
-          if(bool){
-            forgetPwd(this.loginForm).then(res => {
-              if(res.status === 1){
-                this.$router.push({
-                  path:'/login'
-                })
-              }
-            }).catch(err=> {
-              this.$message.error('操作失败！')
-            })
-          }
+          checkCode(this.loginForm.mobile, this.loginForm.msgCode).then(res => {
+            if(res.status===1){
+              this.forgetPwdHnadle()
+            }
+          }).catch(err=> {
+            console.log(err)
+            return
+          })
           // this.$message.success('请登录！')
           // this.loading = true
           // this.$store.dispatch('user/login', this.loginForm)
@@ -236,15 +231,15 @@ export default {
         }
       })
     },
-    checkCodeHandle(mobile, code){
-      checkCode(mobile, code).then(res => {
-        console.log(res, 'kkkkkkkk')
-        if(res.status===1){
-          return true
+    forgetPwdHnadle(){
+      forgetPwd(this.loginForm).then(res => {
+        if(res.status === 1){
+          this.$router.push({
+            path:'/login'
+          })
         }
       }).catch(err=> {
-        console.log(err)
-        return false
+        this.$message.error('操作失败！')
       })
     },
     getOtherQuery(query) {
