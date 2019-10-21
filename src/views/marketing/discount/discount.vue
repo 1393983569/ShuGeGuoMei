@@ -24,9 +24,9 @@
         </el-select>
       </div>
       <div style="position:absolute;right:0px;">
-        <el-button type="primaryX" size="mini" @click="handleSearch" v-if="buttonList.includes('查看')||buttonList.includes('操作')">筛选</el-button>
+        <el-button type="primaryX" size="mini" @click="handleSearch" v-if="buttonList.includes('查看'||'操作')">筛选</el-button>
         <el-button type="primaryX" size="mini" v-else disabled>筛选</el-button>
-        <el-button type="danger" size="mini" @click="handleClear" v-if="buttonList.includes('查看')||buttonList.includes('操作')">清除</el-button>
+        <el-button type="danger" size="mini" @click="handleClear" v-if="buttonList.includes('查看'||'操作')">清除</el-button>
         <el-button type="danger" size="mini" v-else disabled>清除</el-button>
       </div>
     </div>

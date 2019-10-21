@@ -16,11 +16,12 @@
         <el-form-item label="选择商品：">
           <el-button class="button" v-for="item in categoryOneList" :key="item.id" :value="item.id" @click="getGoodsHandle(item)">{{item.name}}</el-button>
           <div style="margin-left:80px;margin-top:10px;" v-if="showGoodsState"><el-button v-if="firstObj.goodsName" @click="getDiscountHnadle(firstObj)" class="button">{{firstObj.goodsName}}</el-button>&nbsp;&nbsp;<span v-if="firstObj.goodsName" class="span-color" @click="moreHandle">更多>></span></div>
+          <!-- 二级品类按钮 -->
           <div v-else class="goods">
-            <div><el-button class="button">{{buttonList[0].goodsName}}</el-button>&nbsp;&nbsp;<span class="span-color" @click="retractHandle">收起</span></div>
+            <div><el-button class="button" :type="buttonType">{{clickGoods}}</el-button>&nbsp;&nbsp;<span class="span-color" @click="retractHandle">收起</span></div>
             <hr style="border:0.5px solid #BBBBBB;"/>
             <div>
-              <el-button class="button" v-for="item in buttonList" :key="item.goods_id" :value="item.goods_id" @click="getDiscountHnadle(item)">{{item.goodsName}}</el-button>
+              <el-button class="button" v-for="(item, index) in buttonList" :key="item.goods_id" :value="item.goods_id" @click="getDiscountHnadle(item,index)">{{item.goodsName}}</el-button>
             </div>
           </div>
         </el-form-item>
@@ -48,6 +49,9 @@ export default {
   },
   data(){
     return{
+      clickGoods:'',
+      // keyButton:0,
+      buttonType:'',
       stateShowBread:false,
       showGoodsState:true,
       name:'',
@@ -64,7 +68,7 @@ export default {
       status:0,
       state:0,
       tableArray:[],
-      rowObject:{}
+      rowObject:{},
     }
   },
   mounted(){
@@ -82,9 +86,12 @@ export default {
   },
   methods:{
     moreHandle(){
+      this.clickGoods = this.firstObj.goodsName
       this.showGoodsState = false
+      this.buttonType = ''
     },
     retractHandle(){
+      this.buttonType = 'primary'
       this.showGoodsState = true
     },
      // 查询折扣详情
@@ -221,6 +228,7 @@ export default {
       getDiscountGoods(cateOne.id,this.id).then(res => {
         if(res.info.length>0){
           this.buttonList=res.info
+          this.clickGoods = this.buttonList[0].goodsName
           this.firstObj = this.buttonList[0]
         }
       }).catch(err => {
@@ -229,7 +237,9 @@ export default {
       })
     },
     // 根据商品查折扣包
-    getDiscountHnadle(e){
+    getDiscountHnadle(e,index){
+      this.buttonType = 'primary'
+      this.clickGoods = e.goodsName
       this.goodsName = e.goodsName
       getDiscountTable(this.recodeDiscountId,e.goods_id, this.shopId).then(res => {
         if(res.status === 1){
@@ -373,14 +383,17 @@ export default {
   color: rgb(29, 81, 155);
 }
 .goods{
-  width:80%;
+  width:65%;
   height: 400px;
   background-color: #FFFFFF;
   margin-left:80px;
   margin-top:10px;
   padding:10px;
 }
-.button:hover{
+.button{
+  margin-top:2px;
+}
+/* .button:hover{
   background-color: #999999;
   color: rgba(16, 16, 16, 1);
   font-size: 14px;
@@ -394,4 +407,11 @@ export default {
   font-family: Microsoft Yahei;
   border: 1px solid rgba(187, 187, 187, 1);
 }
+.button:active{
+  background-color: #999999;
+  color: rgba(16, 16, 16, 1);
+  font-size: 14px;
+  font-family: Microsoft Yahei;
+  border: 1px solid rgba(187, 187, 187, 1);
+} */
 </style>

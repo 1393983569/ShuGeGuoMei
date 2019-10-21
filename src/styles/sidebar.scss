@@ -60,7 +60,7 @@
       border: none;
       height: 100%;
       // 父级之间的距离
-      margin:1px;
+      // margin:1px;
       width: 100% !important;
       background-color: #fff;
       background-color: transparent;
@@ -71,17 +71,20 @@
       &:hover {
         // hover时父级背景色
         color: #fff !important;
-        background-color: rgb(109, 179, 248) !important;
+        background-color: rgb(240, 242, 243) !important;
+        background: url('../assets/img/father-bg2.png') no-repeat;
         border-radius: 5px;
       }
       &:active {
         color: #fff !important;
-        background-color: $menuHover !important;
+        background-color: rgb(240, 242, 243) !important;
+        background: url('../assets/img/father-bg2.png') no-repeat;
         border-radius: 5px;
       }
       &.is-active {
         color: #fff !important;
-        background-color: $menuHover !important;
+        background-color: rgb(240, 242, 243) !important;
+        background: url('../assets/img/father-bg2.png') no-repeat;
         border-radius: 5px;
       }
     }
@@ -113,17 +116,20 @@
       &:hover {
         // hover子级背景色
         color: #fff !important;
-        background-color: rgb(109, 179, 248) !important;
+        background-color: rgb(240, 242, 243) !important;
+        background: url('../assets/img/zibg.png') no-repeat;
         border-radius: 5px;
       }
       &:active{
         color: #fff !important;
-        background-color: #409EFF !important;
+        background-color: rgb(240, 242, 243) !important;
+        background: url('../assets/img/zibg.png') no-repeat;
         border-radius: 5px;
       }
       &.is-active{
         color: #fff !important;
-        background-color: #409EFF !important;
+        background-color: rgb(240, 242, 243) !important;
+        background: url('../assets/img/zibg.png') no-repeat;
         border-radius: 5px;
       }
     }

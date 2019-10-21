@@ -111,7 +111,7 @@ export default {
     }
   },
   mounted(){
-    this.stateShowBread = true
+    this.stateShowBread = false
     console.log(this.$route.params, 'canshu.....')
     if(JSON.stringify(this.$route.params)!== '{}'){
       if(this.$route.params.addEdit ==='编辑'){

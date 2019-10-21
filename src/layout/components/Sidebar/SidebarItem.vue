@@ -9,7 +9,9 @@
     </template>
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title"/>
+        <!-- <div style="height:40px;background-color:red;margin:0px;padding:0px;line-height:40px;"> -->
+          <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title"/>
+        <!-- </div> -->
       </template>
       <sidebar-item
         v-for="child in item.children"
@@ -98,6 +100,6 @@ export default {
   margin-right:5px;
 }
 .nest-menu{
-  width:96%;
+  /* width:96%; */
 }
 </style>

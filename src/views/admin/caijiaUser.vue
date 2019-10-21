@@ -1,7 +1,8 @@
 <template>
   <div>
     <Breadcrumb :stateShow ='stateShow'>
-      <el-button type="primary" size="mini" @click="addHandle">新建</el-button>
+      <el-button type="primary" size="mini" @click="addHandle" v-if="buttonList.includes('操作')">新建</el-button>
+      <el-button type="primary" size="mini"  v-else disabled>新建</el-button>
     </Breadcrumb>
     <div style="display:flex;flex-direction:row;align-items:center;">
       <selector-address :province1id="provinceId" :city1id="cityId" :county1id="areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
@@ -10,8 +11,10 @@
         <el-option v-for="item in shichangList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div style="position:absolute; right:10px;">
-        <el-button size="mini" type="primaryX" @click="search" :loading="loadingSearch">筛选</el-button>
-        <el-button size="mini" type="info" @click="clearSearch" :loading="loadingClear">清空</el-button>
+        <el-button size="mini" type="primaryX" @click="search" :loading="loadingSearch" v-if="buttonList.includes('操作'||'查看')">筛选</el-button>
+        <el-button size="mini" type="primaryX" v-else disabled>筛选</el-button>
+        <el-button size="mini" type="info" @click="clearSearch" :loading="loadingClear" v-if="buttonList.includes('操作'||'查看')">清空</el-button>
+        <el-button size="mini" type="info" v-else disabled>清空</el-button>
       </div>
     </div>
     <div style="margin-top:5px;margin-bottom:20px;">
@@ -21,7 +24,8 @@
         clearable
         v-model="param" style="width:400px;" size="mini">
       </el-input>
-      <el-button size="mini" @click="inputSearch" type="primary">搜索</el-button>
+      <el-button size="mini" @click="inputSearch" type="primary" v-if="buttonList.includes('操作'||'查看')">搜索</el-button>
+      <el-button size="mini" type="primary" v-else>搜索</el-button>
     </div>
     <div style="margin-top:5px;">
       <el-table :data="tableData">
@@ -58,8 +62,10 @@
         <el-table-column prop="createTime" label="创建时间"/>
         <el-table-column prop="" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="editCaijiaUser(scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click="deleteCaijiaUser(scope.row)">删除</el-button>
+            <el-button type="primary" size="mini" @click="editCaijiaUser(scope.row)" v-if="buttonList.includes('操作')">编辑</el-button>
+            <el-button type="primary" size="mini" v-else disabled>编辑</el-button>
+            <el-button type="danger" size="mini" @click="deleteCaijiaUser(scope.row)" v-if="buttonList.includes('操作')">删除</el-button>
+            <el-button type="danger" size="mini" v-else disabled>删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -120,7 +126,7 @@ export default {
     }
   },
   beforeRouteEnter (to, form, next) {
-   console.log(to)
+  //  console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
@@ -180,7 +186,7 @@ export default {
       obj.provinceId = this.provinceId
       obj.cityId = this.cityId
       obj.areaId = this.areaId
-      obj.type=10
+      obj.type=3
       getCaijiaUser(obj).then(res => {
         this.tableData = []
         res.info.records.forEach(item => {

@@ -117,6 +117,9 @@ export default {
           obj.priceMarketId = parseInt(el.split('/')[0])
           obj.priceMarketName = el.split('/')[1]
           obj.priceMarketType = this.ruleForm.priceMarketType
+          obj.provinceId = this.ruleForm.provinceId
+          obj.cityId = this.ruleForm.cityId
+          obj.areaId = this.ruleForm.areaId
           arr.push(obj)
         });
         this.ruleForm.priceMarketManDomain = JSON.stringify(arr)

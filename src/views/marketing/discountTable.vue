@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div style="width:70%;" class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
-    <el-table :data="tableData" style="width:70%;" border center show-summary :summary-method="getSummaries">
+    <div style="width:100%;" class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
+    <el-table :data="tableData" style="width:100%;" border center show-summary :summary-method="getSummaries">
       <el-table-column label="序号" prop="index" width="60"/>
       <el-table-column label=" " prop="name"/>
       <el-table-column label=" " prop="num" width="80"/>
@@ -325,7 +325,7 @@ p{
 }
 .header{
   height: 40px;
-  width: 70%;
+  width: 100%;
   background-color: #f0f2f3;
   border-bottom:1px solid #dfe6ec;
   color: #909399;
