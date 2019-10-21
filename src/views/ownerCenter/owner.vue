@@ -2,12 +2,15 @@
   <div>
     <breadcrumb :stateShow="stateShow">
       <!-- <div><i classs="el-icon-back"></i><span>|</span>个人中心</div> -->
+
+      <!-- <svg-icon icon-class="对账管理" style="background-color:red;"></svg-icon> -->
       <el-button size="mini" type="primary" @click="changePassword">修改密码</el-button>
       <el-button size="mini" type="danger" @click="logout">退出登录</el-button>
     </breadcrumb>
     <div style="display:flex;flex-direction:row;">
       <div style="margin:20px;">
         <el-upload
+            style="width:120px;height:120px;"
             class="avatar-uploader"
             :action="`${apiUrl}/basics/upload`"
             :show-file-list="false"
@@ -34,10 +37,9 @@
         <el-form-item label="手机号：">{{user.mobile}}</el-form-item>
         <el-form-item label="验证码：" prop="msgCode">
           <div style="display:flex;flex-direction:row;">
-            <el-input placeholder="请输入验证码" style="width:44%;margin-right:1px;" v-model="ruleForm.msgCode">
-              <el-button slot="append" v-if="sendAuthCode" @click="getAuthCode">发送验证码</el-button>
-              <el-button slot="append" v-else>{{auth_time}}秒后重发</el-button>
-            </el-input>
+            <el-input placeholder="请输入验证码" style="width:26%;margin-right:1px;" v-model="ruleForm.msgCode"/>
+            <el-button slot="append" v-if="sendAuthCode" @click="getAuthCode">发送验证码</el-button>
+            <el-button slot="append" v-else>{{auth_time}}秒后重发</el-button>
             <!-- <div @click="refreshCode" style="border:none;">
               <Sidentify :identifyCode="identifyCode"></Sidentify>
             </div> -->
@@ -95,6 +97,7 @@ export default {
   },
   mounted(){
     this.stateShow=true
+    this.ruleForm.msgCode = ''
     // console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
 
@@ -149,8 +152,11 @@ export default {
           checkCode(this.ruleForm.mobile, this.ruleForm.msgCode).then(res=> {
             if(res.status === 1){
               this.editPwdHandle()
+            }else{
+
             }
           }).catch(err => {
+            console.log(err)
             this.$message.error('验证码错误！')
           })
         }
@@ -166,7 +172,7 @@ export default {
           this.$message.success('修改成功！')
           this.dialogTableVisible = false
         }
-      }).ctach(err=> {
+      }).catch(err=> {
         console.log(err)
         this.$message.error(err)
       })
@@ -229,8 +235,8 @@ export default {
     text-align: center;
   }
   .avatar {
-    width: 120px;
-    height: 120px;
+    width: 100%;
+    height: 100%;
     display: block;
   }
   .header{

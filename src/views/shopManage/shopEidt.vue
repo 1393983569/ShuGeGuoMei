@@ -98,33 +98,35 @@
           </el-select>
         </el-form-item>
         <el-form-item label="经营品类：" prop="category">
-          <el-table
-            :data="categoryTable"
-            center
-            border
-            :span-method="arraySpanMethod"
-          >
-            <el-table-column prop="childrenName" label="一级品类">
-              <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.status" :label="scope.row.childrenId" @change="changeOneCate(scope.row)">{{ scope.row.childrenName }}</el-checkbox>
-              </template>
-            </el-table-column>
-            <el-table-column prop="childrenId" label="一级品类ID">
-              <template slot-scope="scope">
-                <p>{{ scope.row.childrenId }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column prop="name" label="二级品类">
-              <template slot-scope="scope">
-                <p>{{ scope.row.name }}</p>
-              </template>
-            </el-table-column>
-            <el-table-column prop="id" label="二级品类ID">
-              <template slot-scope="scope">
-                <el-checkbox v-if="scope.row.id!==''" v-model="scope.row.state" :label="scope.row" @change="changeTowCate(scope.row)">{{ scope.row.id }}</el-checkbox>
-              </template>
-            </el-table-column>
-          </el-table>
+          <virtual-list :remain="9" :size="70">
+            <el-table
+              :data="categoryTable"
+              center
+              border
+              :span-method="arraySpanMethod"
+            >
+              <el-table-column prop="childrenName" label="一级品类">
+                <template slot-scope="scope">
+                    <el-checkbox v-model="scope.row.status" :label="scope.row.childrenId" @change="changeOneCate(scope.row)">{{ scope.row.childrenName }}</el-checkbox>
+                </template>
+              </el-table-column>
+              <el-table-column prop="childrenId" label="一级品类ID">
+                <template slot-scope="scope">
+                  <p>{{ scope.row.childrenId }}</p>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="二级品类">
+                <template slot-scope="scope">
+                  <p>{{ scope.row.name }}</p>
+                </template>
+              </el-table-column>
+              <el-table-column prop="id" label="二级品类ID">
+                <template slot-scope="scope">
+                  <el-checkbox v-if="scope.row.id!==''" v-model="scope.row.state" :label="scope.row" @change="changeTowCate(scope.row)">{{ scope.row.id }}</el-checkbox>
+                </template>
+              </el-table-column>
+            </el-table>
+          </virtual-list>
         </el-form-item>
         <el-form-item label="职员人数：">
           <el-table :data="staffTables" style="width:40%;" size="mini">
@@ -135,9 +137,9 @@
     </el-table>
         </el-form-item>
         <div v-if="showState" />
-        <div v-else class="div-margin font-weight">成本结构：</div>
+        <div v-else style="font-size:14px;color: #606266;margin-left:10px;font-weight:bold;">成本结构：</div>
         <div v-if="showState" />
-        <div v-else class="div-margin font-weight"> 会员人数：</div>
+        <div v-else style="font-size:14px;color: #606266;margin-left:10px;font-weight:bold;"> 会员人数：</div>
 
       </el-form>
     <!-- </el-dialog> -->
@@ -145,6 +147,7 @@
 </template>
 <script>
 import staff from './staff.vue'
+import virtualList from 'vue-virtual-scroll-list'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { addShop, editShop } from '@/api/shop.js'
 import { getCategory } from '@/api/category.js'
@@ -153,7 +156,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name:'shopEidt',
   components: {
-    selectorAddress, staff,Breadcrumb
+    selectorAddress, staff,Breadcrumb, virtualList
   },
   data() {
     // 手机号码验证
@@ -481,6 +484,13 @@ export default {
       fileList.map(item => {
         this.imgelist.push(item.url)
       })
+      if(this.imgelist.length>=5){
+        this.addDiabled = true
+        this.editDiabled = true
+      }else{
+        this.addDiabled = false
+        this.editDiabled = false
+      }
       // console.log(file, fileList, 'jsjsjsjsjsjsj')
     },
     handlePictureCardPreview(file) {

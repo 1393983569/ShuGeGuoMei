@@ -2,7 +2,9 @@
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
-        <router-view :key="key" />
+        <!-- <div style="position:absolute;"> -->
+          <router-view :key="key"/>
+        <!-- </div> -->
       </keep-alive>
     </transition>
   </section>

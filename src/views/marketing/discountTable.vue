@@ -321,7 +321,10 @@ export default {
   margin:0px;
 }
 p{
-  align-content: center;
+  /* align-content: center; */
+  font-size: 14px;
+  color: #606266;
+  text-align: center;
 }
 .header{
   height: 40px;

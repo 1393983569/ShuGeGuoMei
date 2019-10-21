@@ -26,13 +26,14 @@ export const addNews = (data) => {
  */
 export const getNews = (data) => {
   const params = new URLSearchParams()
-  for (const key in data) {
-    if (data[key]) params.append(key, data[key])
-  }
+  if(data.pageNum) params.append('pageNum', data.pageNum )
+  if(data.pageSize) params.append('pageSize', data.pageSize )
+  if(data.year) params.append('year', data.year )
+  if(data.month) params.append('month', data.month )
+  if(data.category||data.category===0) params.append('category', data.category )
   return request({
     url: '/admin/getAllMess',
     method: 'post',
-
     data: params
   })
 }

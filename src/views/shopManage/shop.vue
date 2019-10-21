@@ -216,7 +216,7 @@ export default {
             this.shopTable.push(e)
           })
         } else {
-          this.$message.error('暂无数据！')
+          this.$message.warning('暂无店铺！')
         }
       }).catch(err => {
         console.log(err)

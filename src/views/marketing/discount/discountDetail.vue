@@ -14,11 +14,15 @@
           {{shopName}}
         </el-form-item>
         <el-form-item label="选择商品：">
-          <el-button class="button" v-for="item in categoryOneList" :key="item.id" :value="item.id" @click="getGoodsHandle(item)">{{item.name}}</el-button>
-          <div style="margin-left:80px;margin-top:10px;" v-if="showGoodsState"><el-button v-if="firstObj.goodsName" @click="getDiscountHnadle(firstObj)" class="button">{{firstObj.goodsName}}</el-button>&nbsp;&nbsp;<span v-if="firstObj.goodsName" class="span-color" @click="moreHandle">更多>></span></div>
+          <el-button class="button" v-for="item in categoryOneList" :key="item.id" :loading="cateOneLoading" :value="item.id" @click="getGoodsHandle(item)">{{item.name}}</el-button>
+          <div style="margin-left:80px;margin-top:10px;" v-if="showGoodsState">
+            <el-button v-if="firstObj.goodsName" :type="buttonType" @click="getDiscountHnadle(firstObj)" class="button">{{clickGoods}}</el-button>&nbsp;&nbsp;
+            <span v-if="firstObj.goodsName" class="span-color" @click="moreHandle">更多>></span>
+          </div>
           <!-- 二级品类按钮 -->
           <div v-else class="goods">
-            <div><el-button class="button" :type="buttonType">{{clickGoods}}</el-button>&nbsp;&nbsp;<span class="span-color" @click="retractHandle">收起</span></div>
+            <div><el-button class="button" :type="buttonType">{{clickGoods}}</el-button>&nbsp;&nbsp;
+            <span class="span-color" @click="retractHandle">收起</span></div>
             <hr style="border:0.5px solid #BBBBBB;"/>
             <div>
               <el-button class="button" v-for="(item, index) in buttonList" :key="item.goods_id" :value="item.goods_id" @click="getDiscountHnadle(item,index)">{{item.goodsName}}</el-button>
@@ -51,6 +55,7 @@ export default {
     return{
       clickGoods:'',
       // keyButton:0,
+      cateOneLoading:false,
       buttonType:'',
       stateShowBread:false,
       showGoodsState:true,
@@ -86,12 +91,11 @@ export default {
   },
   methods:{
     moreHandle(){
-      this.clickGoods = this.firstObj.goodsName
       this.showGoodsState = false
-      this.buttonType = ''
+      // this.buttonType = 'primary'
     },
     retractHandle(){
-      this.buttonType = 'primary'
+      // this.buttonType = 'primary'
       this.showGoodsState = true
     },
      // 查询折扣详情
@@ -225,11 +229,14 @@ export default {
     },
     // 查商品
     getGoodsHandle(cateOne){
+      this.cateOneLoading = true
       getDiscountGoods(cateOne.id,this.id).then(res => {
         if(res.info.length>0){
+          this.buttonType = ''
           this.buttonList=res.info
           this.clickGoods = this.buttonList[0].goodsName
           this.firstObj = this.buttonList[0]
+          this.cateOneLoading = false
         }
       }).catch(err => {
         console.log(err)
