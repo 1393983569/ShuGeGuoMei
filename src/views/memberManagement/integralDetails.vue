@@ -52,6 +52,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getScoreDetail } from '@/api/member.js'
 export default {

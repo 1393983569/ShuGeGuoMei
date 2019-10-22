@@ -111,6 +111,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import pickDate from '@/components/pickDate'
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import { get } from 'http';
@@ -199,7 +200,6 @@ export default {
       return str.replace(/(^\s*)|(\s*$)/g, "");
     },
     getButton(list, name){
-      console.log(list, name, 'llllll')
       list.forEach(e => {
         if(e.name === name){
           this.buttonList = e.checkList
@@ -225,7 +225,6 @@ export default {
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
       }else if(dateArr.length === 3) {

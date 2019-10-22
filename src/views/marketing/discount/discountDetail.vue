@@ -42,6 +42,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import discountTable from '../discountTable.vue'
 import hint from '@/components/Hint'
 import {discountDetail, getDiscountGoods, editStatus,getDiscountTable} from '@/api/marketing/discount.js'

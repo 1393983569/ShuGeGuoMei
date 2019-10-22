@@ -6,11 +6,11 @@
     </breadcrumb>
     <div style="display:float;flex-direction: row;align-items: center;">
       <selectorAddress :province1id="provinceId" :city1id="cityId" :county1id="countyId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
-      <span class="item">经营模式:</span>
+      <span >经营模式:</span>
       <el-select v-model="management" style="width:100px;" size="mini" clearable>
         <el-option v-for="item in managementList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      <span class="item">排序:</span>
+      <span>排序:</span>
       <el-select v-model="orderId" style="width:100px;" size="mini" clearable>
         <el-option v-for="item in orderList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
@@ -78,6 +78,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 // import { Message } from 'element-ui'
 import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'

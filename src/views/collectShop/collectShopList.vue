@@ -39,101 +39,101 @@
         <el-button size="mini" v-else type="info" disabled>清空</el-button>
       </div>
     </div>
-    <el-table
-      :data="tableData"
-      :header-cell-style="{background:'#f0f2f3', }"
-      center
-      stripe
-    >
-      <el-table-column
-        label="缩略图"
+      <el-table
+        :data="tableData"
+        :header-cell-style="{background:'#f0f2f3', }"
+        center
+        stripe
       >
-        <template slot-scope="scope">
-          <img :src="scope.row.smallImg" style="width: 80px; height: 80px">
-        </template>
-      </el-table-column>
-      <el-table-column label="商品ID" prop="id">
-        <!-- <template slot-scope="scope">
-          {{scope.row.id.toString().substring(scope.row.id.toString().length-4)}}
-        </template> -->
-      </el-table-column>
-      <el-table-column label="商品名称" prop="name" />
-      <el-table-column label="状态" prop="state" />
-      <el-table-column label="进价(元/单位)" prop="purchasePrice" />
-      <el-table-column label="出价(元/单位)" prop="sellPrice" />
-      <el-table-column label="零售价(元/单位)" prop="price" />
-      <el-table-column
-        label="操作"
-        width="350"
-      >
-        <template slot-scope="scope">
-          <el-button
-            v-if="buttonList.includes('操作'||'查看')"
-            size="mini"
-            type="warning"
-            @click="viewDetails(scope.row)"
-          >查看详情</el-button>
-          <el-button
-            v-else
-            disabled
-            size="mini"
-            type="warning"
-          >查看详情</el-button>
-          <el-button
-            v-if="buttonList.includes('操作')"
-            size="mini"
-            type="primary"
-            @click="handleEdit(scope.row)"
-          >编辑</el-button>
-          <el-button
-            v-else
-            disabled
-            size="mini"
-            type="primary"
-          >编辑</el-button>
-          <el-button
-            v-if="buttonList.includes('操作')&&scope.row.isShelf === 1"
-            size="mini"
-            type="up"
-            @click="handleShelf(scope.row)"
-          >上架</el-button>
-          <el-button
-            v-else-if="buttonList.includes('操作')&&scope.row.isShelf === 0"
-            size="mini"
-            type="down"
-            @click="handleShelf(scope.row)"
-          >下架</el-button>
-          <el-button
-            v-else
-            disabled
-            size="mini"
-            type="info"
-          >{{scope.row.isShelf === 1? '上架':'下架' }}</el-button>
-          <el-button
-            v-if="buttonList.includes('操作')"
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.row)"
-          >删除</el-button>
-          <el-button
-            v-else
-            disabled
-            size="mini"
-            type="danger"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div>
-      <el-pagination
-        :page-sizes="[6, 10]"
-        background
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
+        <el-table-column
+          label="缩略图"
+        >
+          <template slot-scope="scope">
+            <img :src="scope.row.smallImg" style="width: 80px; height: 80px">
+          </template>
+        </el-table-column>
+        <el-table-column label="商品ID" prop="id">
+          <!-- <template slot-scope="scope">
+            {{scope.row.id.toString().substring(scope.row.id.toString().length-4)}}
+          </template> -->
+        </el-table-column>
+        <el-table-column label="商品名称" prop="name" />
+        <el-table-column label="状态" prop="state" />
+        <el-table-column label="进价(元/单位)" prop="purchasePrice" />
+        <el-table-column label="出价(元/单位)" prop="sellPrice" />
+        <el-table-column label="零售价(元/单位)" prop="price" />
+        <el-table-column
+          label="操作"
+          width="350"
+        >
+          <template slot-scope="scope">
+            <el-button
+              v-if="buttonList.includes('操作'||'查看')"
+              size="mini"
+              type="warning"
+              @click="viewDetails(scope.row)"
+            >查看详情</el-button>
+            <el-button
+              v-else
+              disabled
+              size="mini"
+              type="warning"
+            >查看详情</el-button>
+            <el-button
+              v-if="buttonList.includes('操作')"
+              size="mini"
+              type="primary"
+              @click="handleEdit(scope.row)"
+            >编辑</el-button>
+            <el-button
+              v-else
+              disabled
+              size="mini"
+              type="primary"
+            >编辑</el-button>
+            <el-button
+              v-if="buttonList.includes('操作')&&scope.row.isShelf === 1"
+              size="mini"
+              type="up"
+              @click="handleShelf(scope.row)"
+            >上架</el-button>
+            <el-button
+              v-else-if="buttonList.includes('操作')&&scope.row.isShelf === 0"
+              size="mini"
+              type="down"
+              @click="handleShelf(scope.row)"
+            >下架</el-button>
+            <el-button
+              v-else
+              disabled
+              size="mini"
+              type="info"
+            >{{scope.row.isShelf === 1? '上架':'下架' }}</el-button>
+            <el-button
+              v-if="buttonList.includes('操作')"
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.row)"
+            >删除</el-button>
+            <el-button
+              v-else
+              disabled
+              size="mini"
+              type="danger"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div>
+        <el-pagination
+          :page-sizes="[6, 10]"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>``
     <!--删除商品-->
     <hint v-model="showDelete" title="删除商品" text="是否删除该商品？" @confirm="confirmDelete" />
     <!--上下架商品-->
@@ -142,13 +142,14 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getFirstCategory, getSecondCategory } from '@/api/category.js'
 import { getGoodsList, deleteGoods, shelfGoods } from '@/api/collectShop.js'
 export default {
   name: 'CollectShop',
-  components: { Breadcrumb, hint },
+  components: { Breadcrumb, hint, virtualList },
   data() {
     return {
       tableData: [],
@@ -180,7 +181,6 @@ export default {
   },
   beforeRouteEnter(to, form, next) {
     next(mv => {
-      console.log('hhhhhh')
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
     })
   },
@@ -274,7 +274,6 @@ export default {
         // this.titleShelf = '下架'
         this.isShelf = 0
       }
-      console.log(row, 'ggggg')
     },
     confirmShelf() {
       shelfGoods(this.id, this.isShelf).then(res => {
@@ -305,7 +304,6 @@ export default {
     // 查询一级品类
     getFirstCategory() {
       getFirstCategory().then(res => {
-        // console.log(res, 'kkkkkkkkkk')
         if (res.info.length > 0) {
           this.firstList = res.info
         } else {

@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import { getProvince, getCity, getArea } from '@/api/priovinCityArea.js'
 import { selectSysProvince, selectSysCity, selectSysArea, addSysArea, selectAllData,deleteSysArea } from '@/api/category/cityList'

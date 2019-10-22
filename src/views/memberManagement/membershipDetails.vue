@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import { vipDetail, categoryTwoAmount } from '@/api/member.js'
 export default {

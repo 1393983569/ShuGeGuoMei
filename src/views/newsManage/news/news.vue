@@ -4,8 +4,9 @@
       <el-button type="primary" v-if="buttonList.includes('操作')" @click="handleReleaseNews" size="mini">发布消息</el-button>
       <el-button type="primary" v-else disabled @click="handleReleaseNews" size="mini">发布消息</el-button>
     </breadcrumb>
+
     <!-- 头部查询 -->
-    <div style="display:flex;flex-direction:row;">
+    <div style="display:flex;flex-direction:row;margin-bottom:10px;">
       <pickDate @getPickDate="handlePickDate" :showDayState="showDayState" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
       消息类别：
       <el-select v-model="newsType" size="mini" style="width:120px;">
@@ -18,6 +19,7 @@
         <el-button size="mini" v-else disabled type="info">清空</el-button>
       </div>
     </div>
+    <virtual-list :remain="9" :size="90">
     <!-- 列表 -->
     <div style="margin-top:10px;">
       <el-table :data="newsTable" center stripe>
@@ -49,11 +51,13 @@
         />
       </div>
     </div>
+    </virtual-list>
     <!-- 删除确认弹框 -->
     <hint v-model="showDelete" title="删除消息" text="是否删除该消息？" @confirm="deleteNews" />
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import newsDetail from './newsDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'

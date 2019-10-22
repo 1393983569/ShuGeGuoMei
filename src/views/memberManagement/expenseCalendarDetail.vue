@@ -48,6 +48,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import breadcrumb from '@/components/Breadcrumb'
 import { getRecordsDetail } from '@/api/member.js'
 export default {

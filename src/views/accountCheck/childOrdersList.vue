@@ -75,6 +75,7 @@
 </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import hintSend from '@/views/collectShop/hintSend.vue'

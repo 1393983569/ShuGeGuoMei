@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import { sumList  } from '_u/logic'
 import hint from '@/components/Hint'
@@ -118,7 +119,6 @@ export default {
   },
   mounted() {
     this.stateShowBread = true
-    console.log(this.$route.params, 'hhhhhh')
     if(JSON.stringify(this.$route.params)!=='{}'){
       var obj = this.$route.params
       this.childrenNo = obj.suborder_no
@@ -177,7 +177,6 @@ export default {
     // 修改入库数量
     changeAmount(id, input){
       let inputQuantity = parseInt(input)
-      console.log(id, inputQuantity,'lllll')
       enterQuantity(id, inputQuantity).then(res => {
         this.$message.success('保存成功')
         this.inputState = false
@@ -219,7 +218,6 @@ export default {
     // 子订单详情查询
     getChildrenDtail(){
       orderSubDetail(this.childrenNo).then(res => {
-        console.log(res, 'xiangqing....')
         this.childrenObject = res.info[0]
         this.fatherId = res.info[0].orderId
         this.status = this.childrenObject.status

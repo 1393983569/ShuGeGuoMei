@@ -121,6 +121,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import pickDate from '@/components/pickDate'
 import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'

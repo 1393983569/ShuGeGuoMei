@@ -16,10 +16,10 @@
         <div style="width:90%;" v-html="detailtObject.content"/>
       </div>
       <div class="size-color div-margin"><span class="font-weight">发布者：</span>{{ detailtObject.name }}</div>
-    <!-- </el-dialog> -->
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name:'newsDetail',

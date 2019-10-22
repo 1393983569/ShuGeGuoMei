@@ -127,6 +127,7 @@ import {getOrder, orderDetail} from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
 import { getAllShop } from '@/api/shop.js'
+import virtualList from 'vue-virtual-scroll-list'
 export default {
   components:{
     Breadcrumb,

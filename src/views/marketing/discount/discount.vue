@@ -77,6 +77,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import breadcrumb from '@/components/Breadcrumb'
 import { getAllShop } from '@/api/shop.js'

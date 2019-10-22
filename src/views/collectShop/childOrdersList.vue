@@ -84,6 +84,7 @@
 </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import hintSend from '@/views/collectShop/hintSend.vue'
 import {deleteSubOrder, updateSubOrderStatus} from '@/api/collectShop/order.js'
@@ -117,7 +118,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.row, 'kkkkkkkk')
     // if(this.row.length === 0){
     //   this.$router.push({
     //     name:'orderFormList'
@@ -127,7 +127,6 @@ export default {
   methods: {
     // 查看详情
     viewDetails(row) {
-      console.log(row, 'row.....')
       this.$router.push({
         name: 'childOrdersDetails',
         params: row
@@ -135,7 +134,6 @@ export default {
     },
     // 派单
     sendOrders(row) {
-      console.log(row, 'row......')
       this.showSend = true
       this.subOrderNo = row.suborder_no
       this.subOrderId = row.id
@@ -152,7 +150,6 @@ export default {
     },
     // 删除
     removeOrder(row) {
-      console.log(row,this.row, 'id......')
       this.subOrderNo = row.suborder_no
       this.subOrderId=row.id
       this.fatherId = this.row.fatherId

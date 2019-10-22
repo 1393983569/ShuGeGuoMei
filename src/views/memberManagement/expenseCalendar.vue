@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { getVipRecords } from '@/api/member.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {

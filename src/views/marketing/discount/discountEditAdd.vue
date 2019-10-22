@@ -46,6 +46,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 // import timeCount from './timeCount.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import discountTable from '../discountTable.vue'

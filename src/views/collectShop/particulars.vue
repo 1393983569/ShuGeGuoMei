@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { seeDetailsGoods } from '@/api/collectShop.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
@@ -66,9 +67,7 @@ export default {
   // },
   mounted() {
     this.stateShow = true
-    console.log(this.$store.state, '$store..')
     if (JSON.stringify(this.$route.params)!=='{}') {
-      console.log(this.$route.params, 'kkkkkk')
       this.goodId = this.$route.params.id
       this.getDetailsGoods()
     } else if(this.$store.state.user.goodsObject){
@@ -80,7 +79,6 @@ export default {
   methods: {
     handleEdit() {
       if(this.row) {
-        console.log(this.row, 'jjjjjj')
         this.row.id = this.row.goodId
         this.$router.push({
           name: 'addAndEdit',
@@ -92,9 +90,7 @@ export default {
     },
     getDetailsGoods() {
       seeDetailsGoods(this.goodId).then(res => {
-        console.log(res, '#######')
         if(res.info) {
-           console.log(res.info.categoryOne,res.info.categoryTwo, '&&&&&&&&&' )
           if(res.info.categoryOne){
             this.categoryOne = res.info.categoryOne
           }else{

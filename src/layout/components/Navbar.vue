@@ -1,14 +1,14 @@
 <template>
-  <div class="navbar">
+  <div class="navbar" style="position: fixed;width:100%;z-index:20;top:0px;">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <div class="right-menu">
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" style="position:fixed;top:0px;z-index:21;right:0px;">
+        <div class="avatar-wrapper" style="height:5%;">
           <img :src="avatar" class="user-avatar">
           <span> {{adminName}}</span>
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown">
+        <el-dropdown-menu slot="dropdown" style="position:fixed;top:40px;z-index:21;right:0px;width:100px;">
           <el-dropdown-item>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
@@ -77,11 +77,11 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  // box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
     line-height: 46px;
-    height: 100%;
+    // height: 100%;
     float: left;
     cursor: pointer;
     transition: background .3s;
@@ -103,7 +103,7 @@ export default {
 
   .right-menu {
     float: right;
-    height: 100%;
+    // height: 100%;
     line-height: 50px;
 
     &:focus {
@@ -113,7 +113,7 @@ export default {
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
-      height: 100%;
+      // height: 100%;
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;

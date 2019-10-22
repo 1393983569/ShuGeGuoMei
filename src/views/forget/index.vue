@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { validUsername } from '@/utils/validate'
 import {getCode, forgetPwd, editPwd, checkCode, sendCode} from '@/api/forgetPassword.js'
 import Sidentify from '@/components/Sidentify'

@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { sumList  } from '_u/logic'
 import HeadButton from '@/components/HeadButton'
 import { orderSubDetail, enterQuantity } from '@/api/collectShop/order.js'

@@ -70,6 +70,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 // import caijiaAdd from './caijiaAdd.vue'
 import Breadcrumb from '@/components/Breadcrumb'

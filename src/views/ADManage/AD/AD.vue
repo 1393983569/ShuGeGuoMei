@@ -1,10 +1,9 @@
 <template>
-  <div class="body-margin" style="display:float;">
+  <div style="display:float;">
     <breadcrumb :stateShow ="stateShow">
       <el-button type="primary" size="mini" v-if="bottonList.includes('操作')" @click="handleRelease">广告发布</el-button>
       <el-button type="primary" size="mini" v-else disabled @click="handleRelease">广告发布</el-button>
     </breadcrumb>
-
     <el-table :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
       <el-table-column prop="title" label="标题">
@@ -17,7 +16,7 @@
           <img v-if="scope.row.imge" :src="scope.row.imge" class="avatar" style="width:240px;height:80px;">
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="上下架状态" />
+      <el-table-column prop="status" label="上下架状态"/>
       <el-table-column prop="operate" :width="460" label="操作">
         <template slot-scope="scope">
           <el-button type="warning" size="mini" v-if="bottonList.includes('查看'||'操作')" @click="handleDetail(scope.row)">查看详情</el-button>
@@ -60,6 +59,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import AdDetail from './ADDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'

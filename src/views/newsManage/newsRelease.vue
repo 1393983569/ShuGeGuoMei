@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Tinymce from '@/components/Tinymce'
 import { addNews } from '@/api/news.js'
 import { getAllShop } from '@/api/shop.js'

@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import { sumList } from '_u/logic'
 import { orderDetail } from '@/api/collectShop/order.js'

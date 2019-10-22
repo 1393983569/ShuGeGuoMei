@@ -163,6 +163,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { getFirstCategory, getSecondCategory } from '@/api/category.js'
 import { addGoods, seeDetailsGoods, editGoods } from '@/api/collectShop.js'
 import selectorAddress from '@/components/selectorAddress/selectAll.vue'

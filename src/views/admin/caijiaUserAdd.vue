@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import { getCaijiaUser, addCaijiaUser, editCaijiaUser, deleteCaijiaUser, getPriceMarket} from '@/api/admin/caijiaUser.js'

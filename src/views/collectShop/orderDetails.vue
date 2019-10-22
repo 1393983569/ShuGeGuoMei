@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
 import { sumList } from '_u/logic'
@@ -132,7 +133,6 @@ export default {
       this.orderNo = this.$store.state.user.orderObject.orderNo
       this.getOrderDetail()
     }else{
-      // console.log(this.$route.params, 'kkaksksjsskk')
       let obj = this.$route.params
       this.orderNo = obj.orderNo
       this.getOrderDetail()

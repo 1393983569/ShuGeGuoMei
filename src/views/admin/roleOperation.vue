@@ -42,6 +42,7 @@
 </template>
 
 <script>
+  import virtualList from 'vue-virtual-scroll-list'
   import Breadcrumb from '@/components/Breadcrumb'
   import { asyncRoutes } from '@/router/index'
   import { getAllMenu, addMenu, editMenu } from '@/api/admin/roleOperation'

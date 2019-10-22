@@ -68,6 +68,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { getAllShop } from '@/api/shop.js'
 import incomTrend from './jingying/incomTrend.vue'
 import lossData from './jingying/lossData.vue'

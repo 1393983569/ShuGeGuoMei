@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { addSystemMsg,getMemberSysDetail } from '@/api/member.js'
 import tinymce from '@/components/Tinymce'
 import Breadcrumb from '@/components/Breadcrumb'

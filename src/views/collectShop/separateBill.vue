@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import { getAllProvider } from '@/api/provider.js'
 import { orderDetail, separateBill, updateChoose } from '@/api/collectShop/order.js'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -76,14 +77,12 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.params, 'pppppp&&&&&&&&&&&&&&&')
     this.shopId = this.$route.params.shopId
     if(JSON.stringify(this.$route.params)!== '{}'){
       this.temObject = this.$route.params
       this.orderNo = this.temObject.orderNo
       this.orderId = this.temObject.id
       this.shopId = this.temObject.shopId
-      console.log(this.shopId, 'id......')
       this.getOrderList(this.temObject.orderNo)
     }
     this.getProviders()
@@ -151,14 +150,12 @@ export default {
       })
       let list = JSON.stringify(arr)
       // 派单
-      console.log(this.shopId, 'shopId......')
       separateBill(this.providerId, list, this.orderId, this.orderNo, this.subMoney, this.shopId).then(res => {
         this.$message.success('拆单成功！')
         this.$router.push({name: 'orderFormList'})
       }).catch(err => {
         this.$message.error('拆单失败！')
       })
-      console.log(this.orderId, 'hhhhhh')
       // 派单商品状态修改
       updateChoose(idArr.toString(),this.orderId).then(res => {
 
@@ -178,12 +175,9 @@ export default {
       })
     },
     selectable(row){
-      console.log(row, 'fffffff')
       if(row.choose === 1){
-        console.log(row, 'weixuan//////')
         return true
       }else{
-        console.log(row, 'yixuan////')
         return false
       }
     }

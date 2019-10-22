@@ -110,6 +110,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import pickDate from '@/components/pickDate'
 import breadcrumb from '@/components/Breadcrumb'
 export default {

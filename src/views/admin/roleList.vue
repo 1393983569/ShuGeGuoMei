@@ -37,6 +37,7 @@
 </template>
 
 <script>
+  import virtualList from 'vue-virtual-scroll-list'
   import Breadcrumb from '@/components/Breadcrumb'
   import { selectAfter } from '@/api/admin/roleList'
   export default {

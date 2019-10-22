@@ -132,6 +132,7 @@
 </template>
 
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import Breadcrumb from '@/components/Breadcrumb'
 import { addAdmin, selectPageAdmin, editAdmin, deleteAdmin } from '@/api/admin/adminList'

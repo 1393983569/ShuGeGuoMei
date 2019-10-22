@@ -84,6 +84,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import Breadcrumb from '@/components/Breadcrumb'

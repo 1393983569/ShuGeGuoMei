@@ -144,6 +144,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import gradeDetail from './gradeDetail.vue'
 import grade from './grade.vue'

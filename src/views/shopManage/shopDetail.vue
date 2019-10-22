@@ -90,6 +90,7 @@
   </div>
 </template>
 <script>
+import virtualList from 'vue-virtual-scroll-list'
 import staff from './staff.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
