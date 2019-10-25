@@ -135,26 +135,41 @@ export default {
         this.$message.error('查询折扣详情出错！')
       })
     },
+    // 折扣报数据处理
     detailArrFunction(res){
       let disArr = []
       let object = res
-      let stock = JSON.parse(object.stock)
-      disArr.push(stock[0])
-      let salesVolume = JSON.parse(object.salesVolume)
-      disArr.push(salesVolume[0])
-      let profitMargin = JSON.parse(object.profitMargin)
-      disArr.push(profitMargin[0])
-      let profit = JSON.parse(object.profit)
-      disArr.push(profit[0])
-      let member = JSON.parse(object.member)
-      disArr.push(member[0])
-      let purchasing = JSON.parse(object.purchasing)
-      disArr.push(purchasing[0])
-      let frequency = JSON.parse(object.frequency)
-      disArr.push(frequency[0])
-      let powerIndex = JSON.parse(object.powerIndex)
-      disArr.push(powerIndex[0])
+      // 库存
+      let stock =this.clearRaWv(JSON.parse(object.stock))
+      disArr.push(stock)
+      // 日销量
+      let salesVolume =this.clearRaWv(JSON.parse(object.salesVolume))
+      disArr.push(salesVolume)
+      // 利润率
+      let profitMargin =this.clearRaWv(JSON.parse(object.profitMargin))
+      disArr.push(profitMargin)
+      // 利润值
+      let profit =this.clearRaWv(JSON.parse(object.profit))
+      disArr.push(profit)
+      // 店铺会员数
+      let member =this.clearRaWv(JSON.parse(object.member))
+      disArr.push(member)
+      // 会员人均购买力
+      let purchasing =this.clearRaWv(JSON.parse(object.purchasing))
+      disArr.push(purchasing)
+      // 月复购频次
+      let frequency =this.clearRaWv(JSON.parse(object.frequency))
+      disArr.push(frequency)
+      // 会员购买力指数
+      let powerIndex =this.clearRaWv(JSON.parse(object.powerIndex))
+      disArr.push(powerIndex)
       return disArr
+    },
+    // 将每项ra和wv置空
+    clearRaWv(item){
+      item.ra = ''
+      item.wv = ''
+      return item
     },
     // 去重处理
     unique(arr) {
@@ -177,7 +192,7 @@ export default {
           return 85;break;
         case tp>=70&&tp<90:
           return 90;break;
-        case tp>=90&&tp<100:
+        case tp>=90&&tp<=100:
           return 95;break;
       }
     },
@@ -193,7 +208,7 @@ export default {
           return 92;break;
         case tp<200&&tp>=180:
           return 90;break;
-        case tp<300&&tp>=200:
+        case tp<=300&&tp>=200:
           return 85;break;
       }
     },
@@ -251,17 +266,19 @@ export default {
       this.goodsName = e.goodsName
       getDiscountTable(this.recodeDiscountId,e.goods_id, this.shopId).then(res => {
         if(res.status === 1){
+          // console.log(res.info, 'jjjjjjjjjzhekoubao...')
           let ob = res.info.discountPackageDomain
           // 将每个对象中的C赋值
           let disArray = this.arrFunction(res)
           // 计算每一项
-          if(res.info.computerStock>(2*res.info.salesVolume)){
+          // if(res.info.computerStock>(2*res.info.salesVolume)){
+            console.log('jisuan........')
             for(let i=0;i<disArray.length; i++){
               if(disArray[i].name === '库存'){
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch5(disArray[i].tp)
                 if(disArray[i].w){
-                  disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                  disArray[i].wv= (disArray[i].w*disArray[i].ra/10000).toFixed(2)
                 }else{
                   disArray[i].wv = 0
                 }
@@ -269,7 +286,7 @@ export default {
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch7(disArray[i].c)
                 if(disArray[i].w){
-                  disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                  disArray[i].wv= (disArray[i].w*disArray[i].ra/10000).toFixed(2)
                 }else{
                   disArray[i].wv = 0
                 }
@@ -277,16 +294,16 @@ export default {
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch6(disArray[i].tp)
                 if(disArray[i].w){
-                  disArray[i].wv= ((disArray[i].w/100)*(disArray[i].ra/100)).toFixed(2)
+                  disArray[i].wv= (disArray[i].w*disArray[i].ra/10000).toFixed(2)
                 }else{
                   disArray[i].wv= 0
                 }
 
               }
             }
-          }else{
+          // }else{
 
-          }
+          // }
           this.tableArray = disArray
         }
       }).catch(err => {
@@ -314,36 +331,36 @@ export default {
       let object = res.info.discountPackageDomain
 
       let stock = JSON.parse(object.stock)
-      stock[0].c = computerStocks
-      disArr.push(stock[0])
+      stock.c = computerStocks
+      disArr.push(stock)
 
       let salesVolume = JSON.parse(object.salesVolume)
-      salesVolume[0].c= salesVolumes
-      disArr.push(salesVolume[0])
+      salesVolume.c= salesVolumes
+      disArr.push(salesVolume)
 
       let profitMargin = JSON.parse(object.profitMargin)
-      profitMargin[0].c = profitMargins
-      disArr.push(profitMargin[0])
+      profitMargin.c = profitMargins
+      disArr.push(profitMargin)
 
       let profit = JSON.parse(object.profit)
-      profit[0].c= profits
-      disArr.push(profit[0])
+      profit.c= profits
+      disArr.push(profit)
 
       let member = JSON.parse(object.member)
-      member[0].c =members
-      disArr.push(member[0])
+      member.c =members
+      disArr.push(member)
 
       let purchasing = JSON.parse(object.purchasing)
-      purchasing[0].c = purchasings
-      disArr.push(purchasing[0])
+      purchasing.c = purchasings
+      disArr.push(purchasing)
 
       let frequency = JSON.parse(object.frequency)
-      frequency[0].c = frequencys
-      disArr.push(frequency[0])
+      frequency.c = frequencys
+      disArr.push(frequency)
 
       let powerIndex = JSON.parse(object.powerIndex)
-      powerIndex[0].c= (members*purchasings*frequencys)/10000
-      disArr.push(powerIndex[0])
+      powerIndex.c= (members*purchasings*frequencys)/10000
+      disArr.push(powerIndex)
 
       return disArr
     },

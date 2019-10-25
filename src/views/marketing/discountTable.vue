@@ -5,7 +5,12 @@
       <el-table-column label="序号" prop="index" width="60"/>
       <el-table-column label=" " prop="name"/>
       <el-table-column label=" " prop="num" width="80"/>
-      <el-table-column label="C" prop="c"/>
+      <el-table-column label="C" prop="c">
+        <template slot-scope="scope">
+          <p v-if="scope.row.c">{{scope.row.c}}</p>
+          <p v-else></p>
+        </template>
+      </el-table-column>
       <el-table-column label="TP" prop="tp" width="140">
         <template slot-scope="scope">
           <P v-if="scope.row.index===''||scope.row.index==='5'||scope.row.index==='6'||scope.row.index==='7'">{{scope.row.tp}}</P>
@@ -66,7 +71,7 @@ export default {
   data(){
     return{
       deState:false,
-      numCount:0,
+      numCount:100,
       productName:'',
       rangelist6:[
         ' TP<100',
@@ -308,8 +313,15 @@ export default {
           sums[index] = ''
         }
       });
-      this.numCount = sums
-      return sums;
+      if(sums[10]==="0.00"){
+        this.numCount[10] = 1
+        sums[10] = 1
+        return sums;
+      }else{
+        this.numCount = sums
+        return sums;
+      }
+
     }
   }
 }

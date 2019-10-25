@@ -563,6 +563,7 @@ export const asyncRoutes = [
       {
         path: 'buygift',
         name: 'buygift',
+        hidden:true,
         meta: {
           // roles: ['buygift'],
           icon: 'dashboard',

@@ -24,15 +24,10 @@
   </div>
 </template>
 <script>
-import { getSecondCategory } from '@/api/category/categoryList.js'
-import { getGoods } from '@/api/collectShop.js'
+import { getaAllCategory, getGoods } from '@/api/marketing/discount.js'
+// import { getGoods } from '@/api/collectShop.js'
 export default {
-  props:{
-    goodsArray:{
-      default:() => {},
-      type:Array
-    }
-  },
+  props:['goodsArray','shopId'],
   data(){
     return{
       dataTree:[],
@@ -41,6 +36,8 @@ export default {
       categoryOneId:'',
       categoryTwoId:'',
       toggleSelectionList:[],
+      // 店铺id
+      shopIdx:0,
     }
   },
   watch:{
@@ -56,11 +53,16 @@ export default {
       setTimeout(() =>{
         this.handleToggles(array, this.goodsList)
       }, 2000)
+    },
+    'shopId'(e){
+      this.shopIdx = e
+      // 查询品类接口
+      this.getaAllCategory(this.shopIdx)
+
     }
   },
   mounted(){
     this.checkGoodsList=[]
-    this.getaAllCategory()
   },
   methods:{
     // 商品单选
@@ -106,15 +108,15 @@ export default {
       console.log(this.checkGoodsList, 'nnnnnnnnn')
     },
     // 查询所有品类
-    getaAllCategory(){
-      getSecondCategory().then(res => {
+    getaAllCategory(id){
+      getaAllCategory(id).then(res => {
         this.categoryOneId = res.info[0].id
         this.categoryTwoId = res.info[0].seconds[0].id
         this.getGoods()
         res.info.forEach(item => {
           let arr = {}
-          arr.id = item.id
-          arr.label = item.name
+          arr.id = item.categoryOneId
+          arr.label = item.categoryOneName
           arr.children = item.seconds
           arr.children = []
           item.seconds.forEach(a => {
@@ -145,7 +147,7 @@ export default {
     },
     // 查询商品
     getGoods(){
-      getGoods(this.categoryOneId, this.categoryTwoId).then(res => {
+      getGoods(this.categoryOneId, this.categoryTwoId, this.shopIdx).then(res => {
         if(res.status === 1){
           this.goodsList = res.info
           this.handleToggle(res.info, this.checkGoodsList)

@@ -70,6 +70,7 @@ const actions = {
   // commit 解构赋值 默认传一个state 只取其中的commit
   login({ commit }, userInfo) {
     const { mobile, password } = userInfo
+    console.log(userInfo, 'userInfo....')
     return new Promise((resolve, reject) => {
       login({ mobile: mobile, password: password }).then(response => {
         const data = response
@@ -95,30 +96,34 @@ const actions = {
       getInfo(getUserId()).then(response => {
         try {
           console.log(response, 'json.....')
-          // return
-          let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
-          let roleList = getRole(JSON.parse(response.info.menu))
-          // console.log(roleList, 'roleList.....')
-          commit('SET_ROLEID', response.info.roleId)
-          commit('SET_BUTTONROLELIST', buttonRoleList)
-          commit('SET_ROLES', roleList)
-          // console.log(state, 'state........')
-          const data = {
-            buttonRoleList: state.buttonRoleList,
-            name: state.name,
-            avatar: state.avatar,
-            introduction: state.introduction,
-            roles: state.roles
+          if(response.info){
+            let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
+            let roleList = getRole(JSON.parse(response.info.menu))
+            // console.log(roleList, 'roleList.....')
+            commit('SET_ROLEID', response.info.roleId)
+            commit('SET_BUTTONROLELIST', buttonRoleList)
+            commit('SET_ROLES', roleList)
+            // console.log(state, 'state........')
+            const data = {
+              buttonRoleList: state.buttonRoleList,
+              name: state.name,
+              avatar: state.avatar,
+              introduction: state.introduction,
+              roles: state.roles
+            }
+            if (!data) {
+              reject('验证失败，请重新登录。')
+            }
+            const { roles, name, avatar, introduction } = data
+            // console.log(roles, 'kkkkklength.....')
+            if (!roles || roles.length <= 0) {
+              reject('getInfo:角色必须是非空数组!')
+            }
+            resolve(data)
+          }else{
+            reject('账号未注册！')
           }
-          if (!data) {
-            reject('验证失败，请重新登录。')
-          }
-          const { roles, name, avatar, introduction } = data
-          // console.log(roles, 'kkkkklength.....')
-          if (!roles || roles.length <= 0) {
-            reject('getInfo:角色必须是非空数组!')
-          }
-          resolve(data)
+
         } catch (e) {
           console.log(e)
         }

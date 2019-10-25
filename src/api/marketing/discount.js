@@ -125,3 +125,30 @@ export function getDiscountTable (discountId, goodsId,shopId) {
     data:params
   })
 }
+/**
+ * 根据店铺id查商品
+ * @param {Number} shopId 店铺ID
+ */
+export function getaAllCategory (shopId) {
+  return request({
+    url: `/admin/selectCategory?shopId=${shopId}`,
+    method: 'get',
+  })
+}
+/**
+ * 根据品类查询商品
+ * @param {Integer} categoryOneId
+ * @param {Integer} categoryTwoId
+ * @param {Integer} shopId 店铺id
+ */
+export const getGoods = (categoryOneId, categoryTwoId, shopId) => {
+  const params = new URLSearchParams()
+  if(categoryOneId)params.append('categoryOneId', categoryOneId)
+  if(categoryTwoId)params.append('categoryTwoId', categoryTwoId)
+  if(shopId)params.append('shopId', shopId)
+  return request({
+    url: '/admin/selectInventGoods',
+    method: 'post',
+    data: params
+  })
+}

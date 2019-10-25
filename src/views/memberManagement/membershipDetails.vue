@@ -13,7 +13,7 @@
       />
     </div>
     <div class="div_margin">
-      <span>余额：{{vipObject.balance/100}} </span><el-button type="success">查询详情</el-button>
+      <span>余额：{{vipObject.balance/100}} </span>
     </div>
     <div class="div_margin">
       <span>积分：

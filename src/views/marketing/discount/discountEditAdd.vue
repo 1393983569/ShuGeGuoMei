@@ -1,10 +1,12 @@
 <template>
   <div>
     <Breadcrumb :stateShow="stateShowBread">
+    <!-- 编辑 -->
       <div v-if="addEdit==='编辑'">
         <el-button size="mini" type="primary" @click="submitEditForm('discountForm')" :loading="editLoading">保存</el-button>
         <el-button size="mini" @click="resetForm('discountForm')" type="warning">取消</el-button>
       </div>
+      <!-- 添加 -->
       <div v-else>
         <el-button size="mini" type="primary" @click="submitForm('discountForm')" :loading="addLoading">保存</el-button>
         <el-button size="mini" @click="resetForm('discountForm')" type="warning">取消</el-button>
@@ -25,7 +27,7 @@
         </el-select><span style="color:red;">*</span>
       </el-form-item>
       <el-form-item label="选择商品：" prop="name"><span style="color:red;">*</span>
-        <pickGoods @getGoodFunction="getGoodFunction" :goodsArray="goodsArray"></pickGoods>
+        <pickGoods @getGoodFunction="getGoodFunction" :goodsArray="goodsArray" :shopId="getShopId"></pickGoods>
         <span class="hint">*S>2V参与计算，否则DR=100%</span>
         <discountTable :state="discountState" @getDiscountList="getDiscountList" :tableArray="tableArray" :detailState="detailstate"></discountTable>
       </el-form-item>
@@ -61,6 +63,8 @@ export default {
   name:"discountEditAdd",
   data(){
     return {
+      // 查询品类的店铺id
+      getShopId:'',
       stateShowBread:false,
       // 加载圈
       addLoading:false,
@@ -111,9 +115,13 @@ export default {
       wNum:0,
     }
   },
+  watch:{
+    'discountForm.shopId'(e){
+      this.getShopId = e
+    }
+  },
   mounted(){
     this.stateShowBread = false
-    console.log(this.$route.params, 'canshu.....')
     if(JSON.stringify(this.$route.params)!== '{}'){
       if(this.$route.params.addEdit ==='编辑'){
         this.addEdit = this.$route.params.addEdit
@@ -140,7 +148,7 @@ export default {
         this.$message.error('查询店铺出错')
       })
     },
-    // 必填项验证
+    // 添加必填项验证
     submitForm(formName) {
       this.discountState = true
       this.addLoading = true
@@ -167,6 +175,37 @@ export default {
 
       }, 200)
     },
+    // 折扣表的计算
+    switch5(tp){
+      switch(true){
+        case tp<20:
+          return 70;break;
+        case tp>=20&&tp<50:
+          return 80;break;
+        case tp>=50&&tp<70:
+          return 85;break;
+        case tp>=70&&tp<90:
+          return 90;break;
+        case tp>=90&&tp<=100:
+          return 95;break;
+      }
+    },
+    switch6(tp){
+      switch(true){
+        case tp<100:
+          return 100;break;
+        case tp<120&&tp>=100:
+          return 97;break;
+        case tp<150&&tp>=120:
+          return 95;break;
+        case tp<180&&tp>=150:
+          return 92;break;
+        case tp<200&&tp>=180:
+          return 90;break;
+        case tp<=300&&tp>=200:
+          return 85;break;
+      }
+    },
     // 数据处理
     handleData(){
       // 折扣商品
@@ -177,7 +216,6 @@ export default {
       this.discountForm.discountPackageGoods = goodsIdList.toString()
       // 折扣表参数处理
       let obj = {}
-      console.log(this.discountTable, 'addBefore.....')
       this.wNum = 0
       for(let i = 1; i<this.discountTable.length; i++){
           if(this.discountTable[i].tp){
@@ -197,29 +235,21 @@ export default {
 
           }
         if(this.discountTable[i].name==='库存'){
-            obj.stock= []
-            obj.stock.push(this.discountTable[i])
+            obj.stock= this.countModal(this.discountTable[i], '5')
           }else if(this.discountTable[i].name==='日销量'){
-            obj.salesVolume= []
-            obj.salesVolume.push(this.discountTable[i])
+            obj.salesVolume= this.countModal(this.discountTable[i], '6')
           }else if(this.discountTable[i].name==='利润率'){
-            obj.profitMargin= []
-            obj.profitMargin.push(this.discountTable[i])
+            obj.profitMargin=this.countModal(this.discountTable[i], '6')
           }else if(this.discountTable[i].name==='利润值'){
-            obj.profit= []
-            obj.profit.push(this.discountTable[i])
+            obj.profit= this.countModal(this.discountTable[i], '6')
           }else if(this.discountTable[i].name==='店铺会员数(取累计均值)'){
-            obj.member= []
-            obj.member.push(this.discountTable[i])
+            obj.member= this.discountTable[i]
           }else if(this.discountTable[i].name==='会员人均购买力(取累计均值)'){
-            obj.purchasing= []
-            obj.purchasing.push(this.discountTable[i])
+            obj.purchasing= this.discountTable[i]
           }else if(this.discountTable[i].name==='月复购频次(取累计均值)'){
-            obj.frequency= []
-            obj.frequency.push(this.discountTable[i])
+            obj.frequency= this.discountTable[i]
           }else if(this.discountTable[i].name==='会员购买力指数(万)'){
-            obj.powerIndex= []
-            obj.powerIndex.push(this.discountTable[i])
+            obj.powerIndex= this.discountTable[i]
           }
         }
         if(this.wNum===100){
@@ -230,6 +260,18 @@ export default {
           return false
         }
 
+    },
+    // 折扣表计算公式
+    countModal(obj, num){
+      if(num === '5'){
+        obj.ra = this.switch5(obj.tp)
+        obj.wv =obj.ra*obj.w
+        return obj
+      }else{
+        obj.ra = this.switch6(obj.tp)
+        obj.wv =obj.ra*obj.w
+        return obj
+      }
     },
     open() {
      this.outerHundred = true
@@ -265,25 +307,24 @@ export default {
             this.goodsArray = arr
             // 折扣包回显数据
             if(res.info.goods[0].findPackage){
-              console.log(res.info.goods[0].findPackage, 'kkkkkkkk')
               let disArr = []
               let object = res.info.goods[0].findPackage
-              let stock = JSON.parse(object.stock)
-              disArr.push(stock[0])
-              let salesVolume = JSON.parse(object.salesVolume)
-              disArr.push(salesVolume[0])
-              let profitMargin = JSON.parse(object.profitMargin)
-              disArr.push(profitMargin[0])
-              let profit = JSON.parse(object.profit)
-              disArr.push(profit[0])
-              let member = JSON.parse(object.member)
-              disArr.push(member[0])
-              let purchasing = JSON.parse(object.purchasing)
-              disArr.push(purchasing[0])
-              let frequency = this.frequencyArr
-              disArr.push(frequency[0])
-              let powerIndex = JSON.parse(object.powerIndex)
-              disArr.push(powerIndex[0])
+              let stock =this.clearRaWv(JSON.parse(object.stock))
+              disArr.push(stock)
+              let salesVolume =this.clearRaWv(JSON.parse(object.salesVolume))
+              disArr.push(salesVolume)
+              let profitMargin =this.clearRaWv(JSON.parse(object.profitMargin))
+              disArr.push(profitMargin)
+              let profit =this.clearRaWv(JSON.parse(object.profit))
+              disArr.push(profit)
+              let member =this.clearRaWv(JSON.parse(object.member))
+              disArr.push(member)
+              let purchasing =this.clearRaWv(JSON.parse(object.purchasing))
+              disArr.push(purchasing)
+              let frequency =this.clearRaWv(JSON.parse(object.frequency))
+              disArr.push(frequency)
+              let powerIndex =this.clearRaWv(JSON.parse(object.powerIndex))
+              disArr.push(powerIndex)
               this.tableArray = disArr
             }
           }
@@ -293,10 +334,15 @@ export default {
         this.$message.error('查询折扣详情出错！')
       })
     },
+    // 编辑是将每项的ra和wv放空
+    clearRaWv(item){
+      item.ra = ''
+      item.wv= ''
+      return item
+    },
     // 编辑必填项验证
     submitEditForm(formName) {
       this.editLoading = true
-      console.log('edit,.,,,,,,,,')
       this.discountState = true
       this.discountForm.id = this.id
       this.discountForm.discountPackageId = this.discountPackageId
