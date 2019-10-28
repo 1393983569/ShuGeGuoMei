@@ -203,7 +203,6 @@ export default {
       this.stateShow = false
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.year = dateArr[0]
         this.month = ''

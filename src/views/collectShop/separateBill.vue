@@ -130,7 +130,6 @@ export default {
     },
     // 拆单
     handleSeparateBill(){
-      console.log()
       let arr = []
       let idArr = []
       this.goodsArray.map(item => {

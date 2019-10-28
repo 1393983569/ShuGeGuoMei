@@ -118,7 +118,6 @@ export default {
     }
   },
   mounted(){
-    console.log(this.$store.state.user, 'user')
     if(JSON.stringify(this.$route.params) === '{}'){
       this.orderNo = this.$store.state.user.orderObject.orderNo
       this.getOrderDetail()

@@ -81,7 +81,7 @@ export default {
   },
   mounted() {
     this.stateShow = true
-    console.log(this.$store, 'store..')
+    // console.log(this.$store, 'store..')
     if(JSON.stringify(this.$route.params) === '{}') {
       this.vipObject = this.$store.state.user.vipObject
       this.mobile = this.vipObject.mobile

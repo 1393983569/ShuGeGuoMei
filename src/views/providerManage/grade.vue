@@ -82,14 +82,14 @@ export default {
       this.grade.adminId = res
     },
     'gradeObject'(obj){
-      console.log(obj, 'obj/////')
+      // console.log(obj, 'obj/////')
       this.grade = obj
     }
   },
   methods:{
     // 评分确定
     addGrade(){
-      console.log(this.grade, 'kkkkkkk')
+      // console.log(this.grade, 'kkkkkkk')
       addGrade(this.grade).then(res => {
         if(res.status === 1){
           this.$message.success('评分添加成功！')

@@ -70,7 +70,6 @@ export default {
       }
     }
     var isMobileNumber= (rule, value, callback) => {
-      console.log(value, 'yanzheng....')
         if (!value) {
           return new Error("请输入电话号码");
         } else {
@@ -136,7 +135,6 @@ export default {
   },
   methods: {
     change(){
-      console.log(this.$router, 'rrrrrrrrrrrr')
       this.$router.push({name:'forget'})
     },
     checkCapslock({ shiftKey, key } = {}) {

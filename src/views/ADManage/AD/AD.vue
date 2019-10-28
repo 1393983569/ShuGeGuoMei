@@ -89,7 +89,6 @@ export default {
     }
   },
  beforeRouteEnter (to, form, next) {
-   console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
@@ -97,7 +96,7 @@ export default {
   mounted() {
     this.apiUrl = process.env.VUE_APP_BASE_API
     this.getAdvertiseList()
-    console.log(this.$store, '&&&&&&&&&&&')
+    // console.log(this.$store, '&&&&&&&&&&&')
     // console.log(this.bottonList, '@@@@@@@@@@@@@@@@@@@@@@@', this)
   },
   methods: {

@@ -21,7 +21,6 @@ export const addShop = (data) => {
  * @param {Object} data 店铺信息对象
  */
 export const editShop = (data) => {
-  console.log(data, 'data....')
   const params = new URLSearchParams()
   params.append('categoryJson', data.categoryJson)
   return request({

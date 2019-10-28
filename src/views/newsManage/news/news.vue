@@ -129,7 +129,7 @@ export default {
     getButton(list, name) {
       list.forEach(item => {
         if(item.name === name){
-          console.log(item.checkList, 'jjjjj')
+          // console.log(item.checkList, 'jjjjj')
           this.buttonList = item.checkList
         }
       })
@@ -227,7 +227,7 @@ export default {
     handlePickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
+      // console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
         this.monthPro = ''

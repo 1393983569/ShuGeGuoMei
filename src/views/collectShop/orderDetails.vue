@@ -121,14 +121,12 @@ export default {
     }
   },
   beforeRouteEnter (to, form, next) {
-   console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
   },
   mounted(){
     this.stateShowBread = true
-    console.log(this.$store.state.user, 'user')
     if(JSON.stringify(this.$route.params) === '{}'){
       this.orderNo = this.$store.state.user.orderObject.orderNo
       this.getOrderDetail()

@@ -189,7 +189,6 @@ export default {
     'categoryOneId'(e) {
       if (e) {
         getSecondCategory(e).then(res => {
-          console.log(res)
           if (res.info.length > 0) {
             this.secondList = res.info
           } else {
@@ -220,7 +219,6 @@ export default {
     getGoodsList() {
       this.tableData = []
       getGoodsList(this.pageNum, this.pageSize, this.state, this.categoryOneId, this.categoryTwoId).then(res => {
-        // console.log(res, 'res,,,,,')
         if (res.info.records.length > 0) {
           this.total = res.info.totalrecord
           res.info.records.forEach(e => {

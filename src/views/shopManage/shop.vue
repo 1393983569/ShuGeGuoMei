@@ -177,7 +177,7 @@ export default {
           this.buttonList = item.checkList
         }
       })
-      console.log(this.bottonList)
+      // console.log(this.bottonList)
     },
     // 分页查询
     handleSizeChange(e) {
@@ -303,7 +303,7 @@ export default {
       })
     },
     handleEdit(row) {
-      console.log(row, 'kkkkkkkk')
+      // console.log(row, 'kkkkkkkk')
       row.showState = false
       this.$router.push({
         name:'shopEidt',
@@ -344,7 +344,6 @@ export default {
       this.getShopList()
     },
     closeEdit(e){
-      console.log(e, 'ggggg')
       this.showEdit = e
     }
   }

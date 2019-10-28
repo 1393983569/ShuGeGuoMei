@@ -126,7 +126,6 @@ export default {
     }
   },
   beforeRouteEnter (to, form, next) {
-  // console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
     })
@@ -142,7 +141,6 @@ export default {
           this.bottonList = item.checkList
         }
       })
-      // console.log(this.bottonList)
     },
     // addhandle(){},
     // 查询采价列表
@@ -246,7 +244,6 @@ export default {
             console.log(err)
             this.$message.error('编辑失败！')
           })
-          console.log('this.ruleForm:',this.ruleForm)
         } else {
           console.log('error submit!!');
           return false;

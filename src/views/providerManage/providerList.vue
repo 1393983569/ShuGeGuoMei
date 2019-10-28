@@ -80,7 +80,6 @@ export default {
     }
   },
   beforeRouteEnter (to, form, next) {
-   console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
@@ -195,11 +194,9 @@ export default {
     detailProvider(row) {
       this.$router.push({name: 'providerDetail', params: row })
       this.$store.state.user.providerObject = row
-      console.log(this.$store, 'xiangqing ')
     },
     deleteProviderHandle(row) {
       this.showDelete = true
-      console.log(row, '4444444')
       this.id = row.id
     },
     deleteAdConfirm() {

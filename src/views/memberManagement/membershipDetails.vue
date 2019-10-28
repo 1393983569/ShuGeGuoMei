@@ -199,7 +199,7 @@ export default {
       this.vipId = this.$store.state.user.vipObject.id
       this.getVipDetail()
     }else{
-      console.log(this.$route.params, 'khshdfghfh')
+      // console.log(this.$route.params, 'khshdfghfh')
       this.vipId = this.$route.params.id
       this.getVipDetail()
     }

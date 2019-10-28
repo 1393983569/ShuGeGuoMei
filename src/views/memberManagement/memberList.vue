@@ -194,7 +194,7 @@ export default {
     }
   },
   beforeRouteEnter (to, form, next) {
-   console.log(to)
+  //  console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
@@ -217,7 +217,7 @@ export default {
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
+      // console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
       }else if(dateArr.length === 3) {
@@ -238,12 +238,12 @@ export default {
           this.bottonList = item.checkList
         }
       })
-      console.log(this.bottonList)
+      // console.log(this.bottonList)
     },
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
+      // console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
       }else if(dateArr.length === 3) {

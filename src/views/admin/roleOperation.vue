@@ -64,7 +64,6 @@
       }
     },
     beforeRouteEnter (to, form, next) {
-    // console.log(to)
       next(mv => {
         mv.getButton(mv.$store.getters.buttonRoleList, to.name)
       })

@@ -239,7 +239,6 @@
             this.bottonList = item.checkList
           }
         })
-        // console.log(this.bottonList)
       },
       getList() {
         getSecondCategory().then(res => {
@@ -316,7 +315,6 @@
       },
       // 删除
       removeData(index, row, state) {
-        console.log(row,state, 'shanchu//////////')
         this.selectRow = row
         this.selectIndex = index
         this.removeState = state
@@ -333,10 +331,8 @@
       // 合并列
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 0 || columnIndex === 1) {
-          // console.log('this.spanArr:',this.spanArr)
           const _row = this.spanArr[rowIndex]
           const _col = _row > 0 ? 1 : 0
-          // console.log(_row,_col, '_row,_col' )
           return {
             rowspan: _row,
             colspan: _col
@@ -345,11 +341,9 @@
       },
       // 得到合并规则
       gteRule(err) {
-        // console.log(err, 'err')
         let listIndex = 0
         let listRule = []
         err.forEach((item, index) => {
-          // console.log(item, index, 'err')
           if (index === 0) {
             listRule.push(1)
             listIndex = 0
@@ -371,12 +365,10 @@
         this.rowSecond = row
         this.editState = state
         if (state === '一级') {
-          // console.log(row)
           this.stair = true
           this.showStairData.stairId = row.stairId
           this.showStairData.stairName = row.stairName
         } else {
-          // console.log(row)
           this.second = true
           this.showSecondData.stairId = row.stairId
           this.showSecondData.stairName = row.stairName
@@ -398,8 +390,6 @@
         return value
       },
       addStair() {
-        // console.log(this.stairInput, 'kkkkkkk')
-        // return
         let arr = this.dataList
         let id = ''
         let stairList = []
@@ -463,8 +453,6 @@
       },
       // 添加二级品类
       addChildren() {
-        // childrenInput
-        console.log()
         let arr = []
         let id = ''
         let listChildren = []
@@ -578,7 +566,6 @@
           this.$message.warning('二级品类的名称长度不能超过6汉字！')
           return
         }
-        console.log(this.showSecondData, 'showSecondData.....')
         let data = {
           name: this.showSecondData.childrenName,
           id: this.showSecondData.childrenId,
@@ -586,7 +573,6 @@
         }
 
         editCategoryTwo(data).then(res => {
-          console.log(res)
           if(res.status === 1){
             this.second = false
             this.$message.success('修改成功！')

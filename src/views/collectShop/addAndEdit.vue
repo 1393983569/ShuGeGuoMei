@@ -295,7 +295,6 @@ export default {
     'ruleForm.categoryOneId'(e) {
       if (e) {
         getSecondCategory(e).then(res => {
-          console.log(res)
           if (res.info.length > 0) {
             this.secondList = res.info
           } else {
@@ -322,7 +321,6 @@ export default {
       }
     },
     'ruleForm.unit'(e){
-      console.log(e.length)
       if(e.length>4){
         this.ruleForm.unit = ''
         this.$message.warning('超出单位字符限制，请重新填写！')
@@ -330,7 +328,6 @@ export default {
       }
     },
     'ruleForm.standards'(standards){
-      console.log(standards, standards.length)
       if(standards.length>6){
         this.ruleForm.standards = ''
         this.$message.warning('超出规格字符限制，请重新填写！')
@@ -350,7 +347,6 @@ export default {
       if(this.$route.params.row === '添加') {
         this.addEditState = true
       }else {
-        console.log(this.$route.params, 'this.$route.params.....')
         this.addEditState = false
         this.goodsId = this.$route.params.row.id
         // return
@@ -365,12 +361,10 @@ export default {
     handleProgressSmall(event, file, fileList){
       this.percentageSmall = event.percent
       this.ruleForm.smallImg = ''
-      // console.log(event, file, fileList, 'progress.....')
     },
     handleProgressBig(event, file, fileList){
       this.percentageBig = event.percent
       this.ruleForm.bigImg = ''
-      // console.log(event, file, fileList, 'progress.....')
     },
     getProvince(e) {
       this.ruleForm.provinceId = e
@@ -384,7 +378,6 @@ export default {
     // 查询一级品类
     getFirstCategory() {
       getFirstCategory().then(res => {
-        // console.log(res, 'kkkkkkkkkk')
         if (res.info.length > 0) {
           this.firstList = res.info
         } else {
@@ -419,7 +412,6 @@ export default {
     // 查询详情
     getDetailsGoods() {
       seeDetailsGoods(this.goodsId).then(res => {
-        console.log('res:',res)
         // if(res.status === 1) {
           let obj = {}
           obj = res.info
@@ -512,7 +504,6 @@ export default {
         if (valid) {
           this.handleGoodsEdit()
         } else {
-          // console.log('error submit!!');
           return false
         }
       })

@@ -35,7 +35,7 @@ export default {
   },
   watch:{
     'grade'(res){
-      console.log(res,'res.......')
+      // console.log(res,'res.......')
       this.grades = res
       this.grades.total = (res.qualification+res.price+res.quality+res.service+res.amount)/5
       this.$emit('getTotal', this.grades.total)

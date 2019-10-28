@@ -47,7 +47,6 @@ export default {
   },
   mounted() {
     this.breadState = true
-    console.log( this.$route.params, 'llllllll')
     this.adObject = this.$route.params
     // this.releasePerson = this.$store.state.user.name
   },

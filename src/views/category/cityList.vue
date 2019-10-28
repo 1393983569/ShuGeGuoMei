@@ -170,7 +170,6 @@ import { isNull } from 'util';
       }
     },
     beforeRouteEnter (to, form, next) {
-    console.log(to)
       next(mv => {
         mv.getButton(mv.$store.getters.buttonRoleList, to.name)
       })
@@ -344,18 +343,14 @@ import { isNull } from 'util';
       },
       // 删除按钮操作
       deleteHandle(res){
-        console.log('res:',res.row)
         this.showDelete = true
         this.deleteObj = res.row
 
         if(this.deleteObj.sunId){
-          console.log('sunId:', this.deleteObj.sunId)
           this.aId = this.deleteObj.sunId
         }else if(this.deleteObj.childrenId){
-          console.log('childrenId:', this.deleteObj.childrenId)
           this.cId = this.deleteObj.childrenId
         }else if(this.deleteObj.fatherId){
-          console.log('fatherId:', this.deleteObj.fatherId)
           this.pId = this.deleteObj.fatherId
         }
 

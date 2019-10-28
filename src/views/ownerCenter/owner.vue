@@ -98,7 +98,8 @@ export default {
   },
   mounted(){
     this.stateShow=true
-    this.ruleForm.msgCode = ''
+    this.$set(this.ruleForm, 'msgCode', '')
+    this.$set(this.ruleForm, 'password', '')
     // console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
 

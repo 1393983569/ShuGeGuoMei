@@ -63,7 +63,7 @@
         this.$emit('confirm')
       },
       shareH5(){
-        // console.log('lllllll')
+
       }
     }
   }

@@ -186,7 +186,6 @@ export default {
       obj.type = this.ruleForm.priceMarketType
       getPriceMarket(obj).then(res => {
         if(res.status === 1){
-          // console.log(res.info, 'kkkkkkkk')
           this.shichangList = res.info
         }
       }).catch(err=> {
@@ -195,11 +194,9 @@ export default {
       })
     },
     submitForm(formName) {
-      console.log('caijia1111......')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           //需要处理市场区域
-          console.log('caijia......')
           addCaijiaUser(this.ruleForm).then(res => {
             if(res.status === 1){
               this.$message.success('添加成功！')
@@ -209,7 +206,6 @@ export default {
             this.$message.error('添加失败！')
           })
         } else {
-          console.log('cuwu!!!')
           return false;
         }
       });

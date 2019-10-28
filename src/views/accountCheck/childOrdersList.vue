@@ -108,7 +108,6 @@ export default {
   methods: {
     // 查看详情
     viewDetails(row) {
-      console.log(row, 'row.....')
       this.$router.push({
         name: 'childShopCheckDetail',
         params: row

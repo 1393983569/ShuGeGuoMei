@@ -266,13 +266,11 @@ export default {
       this.goodsName = e.goodsName
       getDiscountTable(this.recodeDiscountId,e.goods_id, this.shopId).then(res => {
         if(res.status === 1){
-          // console.log(res.info, 'jjjjjjjjjzhekoubao...')
           let ob = res.info.discountPackageDomain
           // 将每个对象中的C赋值
           let disArray = this.arrFunction(res)
           // 计算每一项
           // if(res.info.computerStock>(2*res.info.salesVolume)){
-            console.log('jisuan........')
             for(let i=0;i<disArray.length; i++){
               if(disArray[i].name === '库存'){
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)

@@ -128,7 +128,6 @@ export default {
     getButton(list, name) {
       list.forEach(item => {
         if(item.name === name){
-          console.log(item.checkList, 'jjjjj')
           this.buttonList = item.checkList
         }
       })
@@ -142,7 +141,6 @@ export default {
     // 查询所有商铺
     getAllShop() {
       getAllShop().then(res => {
-        console.log(res, 'kkkkkkk')
         if (res.status === 1) {
           this.shopList = res.info
         } else {
@@ -165,7 +163,6 @@ export default {
     getDiscount(){
       queryDiscount(this.pageNum, this.pageSize, this.shopId, this.status).then(res => {
         if(res.status === 1){
-          // console.log(res, 'res......')
           this.dataList = res.info.records
           this.total = res.info.totalrecord
         }

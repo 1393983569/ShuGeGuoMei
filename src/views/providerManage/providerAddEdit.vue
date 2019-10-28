@@ -403,17 +403,13 @@ export default {
           count++
         }
       }
-      console.log(count, length, 'lenght/count.....')
       if(count>=length){
-          console.log('changduxiangtong....')
           this.checkGoodsList.push(row)
         }
-      console.log(this.checkGoodsList, 'listllllllll')
       this.ruleForm.goodArr = this.checkGoodsList
     },
     // 商品全选
     selectGoodsAll(all){
-      console.log(all,'alllllll')
         for(let i=0;i<all.length;i++){
           let count = 0
           let length = this.checkGoodsList.length
@@ -425,13 +421,10 @@ export default {
               count++
             }
           }
-          console.log(count, length, 'length....')
           if(count >= length){
-            console.log('length....')
             this.checkGoodsList.push(all[i])
           }
         }
-      console.log(this.checkGoodsList, 'nnnnnnnnn')
       this.ruleForm.goodArr = this.checkGoodsList
     },
 

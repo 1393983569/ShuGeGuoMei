@@ -78,7 +78,6 @@ export default {
   },
   mounted() {
     this.stateShow = true
-    console.log(this.$route.params, 'kkkkkkk')
     if(JSON.stringify(this.$route.params)!=='{}'){
       this.vipObject = this.$route.params
       this.vipId = this.vipObject.id
@@ -99,7 +98,7 @@ export default {
     getScoreDetail(){
       getScoreDetail(this.vipId).then(res => {
         // this.$message.success('查询积分详情成功！')
-        console.log(res, 'info.....')
+        // console.log(res, 'info.....')
         this.dataList = res.info.records
       }).catch(res => {
         this.$message.error('查询积分详情失败！')

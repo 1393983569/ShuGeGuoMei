@@ -8,7 +8,9 @@
           <el-option v-for="(item, key) in monthList" :key="key" :value="item" selected>{{item}}</el-option>
       </el-select>
       <!-- 整年 -->
-      日：<el-select v-if="dayState" disabled placeholder="----" class="datePick"></el-select>
+      日：<el-select v-if="dayState" v-model="day" disabled placeholder="----" class="datePick">
+        <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
+      </el-select>
       <!-- 非整年 -->
       <el-select v-else v-model="day" size="mini" class="datePick" @change="getDay">
         <el-option v-for="(item, key) in dayList" :key="key" :value="item" selected>{{item}}</el-option>
@@ -49,10 +51,15 @@ export default {
   },
   watch:{
     'yearPro'(e){
+      // console.log(e, 'kkkkk')
       if(!e){
+        // console.log(e, 'kkkkk')
         this.year = e
+        this.monthList = []
         this.month = ''
+        this.dayList = []
         this.day = ''
+        this.dayState = false
       }
     },
     // 'showDayState'(e){
@@ -123,7 +130,6 @@ export default {
     },
     // 号
     getDay(day){
-      console.log('day:',day)
       if(day === '整月'||day===''){
         this.tempDay = ''
         this.handleFinalDate()

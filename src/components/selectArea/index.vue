@@ -23,7 +23,7 @@
           lazy: true,
           lazyLoad (node, resolve) {
             let state = ''
-            console.log(node)
+            // console.log(node)
             if (node.data) {
               state = node.data.state
             } else {

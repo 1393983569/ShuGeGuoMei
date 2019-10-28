@@ -30,7 +30,7 @@
               auto-complete="on"
               style="width:100%;border-bottom:1px solid #DEEDC1;"
             >验证码</md-input>
-            <div style="position:absolute;top:3px;right:0px;text-align:center;">
+            <div style="position:absolute;top:3px;right:0px;text-align:center;cursor: pointer;">
               <div v-if="sendAuthCode" @click="getAuthCode" style="width: 110px;border-radius:5px;height:35px;background: #D0E6A5 100%;">发送验证码</div>
               <div v-else style="width: 110px;border-radius:5px;height:35px;background: #D0E6A5 100%;">{{auth_time}}秒后重发</div>
             </div>
@@ -155,6 +155,7 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
+    this.$set(this.loginForm, 'password', '')
     this.refreshCode()
     if (this.loginForm.username === '') {
       // this.$refs.username.focus()
@@ -174,11 +175,9 @@ export default {
       })
     },
     change(){
-      // console.log(this.$router, 'rrrrrrrrrrrr')
       this.$router.push({name:'forget'})
     },
     returnHandle(){
-      console.log('kkkkkkk')
       this.$router.push({
         path:'/login'
       })

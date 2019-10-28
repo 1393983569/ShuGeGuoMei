@@ -1,12 +1,33 @@
 <template>
   <div>
     <breadcrumb :stateShow="false"></breadcrumb>
-    <div>
+    <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:10px;">
+      店铺：<el-select size="mini" v-model="shopId" placeholder="请选择" style="width:10%;margin-right:10px;">
+        <el-option
+          v-for="item in shopList"
+          :key="item.value"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
       <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
-      <div style="float:right;margin:10px;">
-        <el-button size="mini" type="primary">筛选</el-button>
-        <el-button size="mini" type="danger">清除</el-button>
-      </div>
+      <!-- <div style="float:right;margin:10px;"> -->
+        时间段：<el-time-picker
+        size="mini"
+          style="width:16%;"
+          is-range
+          value-format="HH:mm:ss"
+          v-model="timeData"
+          range-separator="-"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          placeholder="选择时间范围">
+        </el-time-picker>
+        <div style="position:absolute;right:10px;">
+          <el-button size="mini" type="primary">筛选</el-button>
+          <el-button size="mini" type="danger" @click="clearFunction">清除</el-button>
+        </div>
+      <!-- </div> -->
     </div>
     <el-table
       :data="dataList"
@@ -113,6 +134,7 @@
 import virtualList from 'vue-virtual-scroll-list'
 import pickDate from '@/components/pickDate'
 import breadcrumb from '@/components/Breadcrumb'
+import {getAllShop} from '@/api/shop.js'
 export default {
   name: 'CollectShop',
   components:{pickDate,breadcrumb},
@@ -124,6 +146,11 @@ export default {
   },
   data() {
     return {
+      // 时间选择值
+      timeData: [new Date(), new Date()],
+      // 店铺数据
+      shopList:[],
+      shopId:'',
       dataList: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -149,14 +176,26 @@ export default {
       dayPro:''
     }
   },
+  watch:{
+    'timeData'(e){
+      console.log(e,  '时间段，，，，，')
+    }
+  },
   mounted() {
-
+    this.getAllShopFunction()
   },
   methods: {
+    // 查询所有店铺
+    getAllShopFunction(){
+      getAllShop().then(res => {
+        this.shopList = res.info
+      }).catch(err=> {
+        this.$message.error('店铺查询出错！')
+      })
+    },
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
       }else if(dateArr.length === 3) {
@@ -167,6 +206,14 @@ export default {
         this.monthPro = dateArr[1]
         this.dayPro = dateArr[2]
       }
+    },
+    // 清空筛选条件
+    clearFunction(){
+      this.yearPro = ''
+      this.monthPro = ''
+      this.dayPro = ''
+      this.timeData = []
+      this.shopId = ''
     },
     // 查看详情
     viewDetails(index, row) {

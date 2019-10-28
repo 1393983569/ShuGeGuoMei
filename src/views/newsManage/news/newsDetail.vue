@@ -43,7 +43,7 @@ export default {
   },
   mounted() {
     this.breadState = true
-    console.log(this.$route.params, 'this.$store ......')
+    // console.log(this.$route.params, 'this.$store ......')
     this.releaseperson = this.$store.state.user.name
     this.detailtObject = this.$route.params
   },

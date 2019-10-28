@@ -2,9 +2,9 @@
   <div>
     <breadcrumb :stateShow="false"></breadcrumb>
     <div style="display:flex;flex-direction:row;margin:10px;align-items:center;">
-      <pickDate @getPickDate="getPickDate"></pickDate>
+      <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       市场类型：
-      <el-select v-model="value1" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
+      <el-select v-model="typeId" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
         <el-option
           v-for="item in typeList"
           :key="item.id"
@@ -13,7 +13,7 @@
         </el-option>
       </el-select>
       区域：
-      <el-select v-model="value2" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
+      <el-select v-model="areaId" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
         <el-option
           v-for="item in areaList"
           :key="item.id"
@@ -32,7 +32,7 @@
       </el-select>
       <div style="position:absolute;right:10px;">
         <el-button size="mini" type="primary">筛选</el-button>
-        <el-button size="mini" type="danger">清空</el-button>
+        <el-button size="mini" type="danger" @click="clearFunction()">清空</el-button>
       </div>
     </div>
     <el-table
@@ -112,8 +112,12 @@ export default {
   },
   data() {
     return {
-      value1: '',
-      value2: '',
+      // 日期选择数据
+      yearPro:'',
+      monthPro:'',
+      dayPro:'',
+      // 市场类型
+      typeId:'',
       typeList: [
         {
           id: 0,
@@ -128,6 +132,8 @@ export default {
           name: '早市'
         }
       ],
+      // 市场区域
+      areaId:'',
       areaList:[
         {
           id: 0,
@@ -146,21 +152,11 @@ export default {
         date: '2016-05-02',
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
       }],
+      // 一级品类
       categoryOneList: [],
       categoryOneId: '',
+      // 分页数据
       total: 0,
       pageSize: 10,
       pageNum: 1,
@@ -170,7 +166,30 @@ export default {
     this.getCategory()
   },
   methods: {
-    getPickDate(){},
+    // 清空筛选条件
+    clearFunction(){
+      this.typeId = ''
+      this.areaId = ''
+      this.yearPro = ''
+      this.monthPro = ''
+      this.dayPro = ''
+      this.categoryOneId = ''
+    },
+    // 日期数据处理
+    getPickDate(date){
+      date = date+'-'
+      let dateArr = date.split('-')
+      if(dateArr.length === 2){
+        this.yearPro = dateArr[0]
+      }else if(dateArr.length === 3) {
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+      }else if(dateArr.length === 4){
+        this.yearPro = dateArr[0]
+        this.monthPro = dateArr[1]
+        this.dayPro = dateArr[2]
+      }
+    },
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({
@@ -180,19 +199,7 @@ export default {
         }
       })
     },
-    // 派单
-    separateBill(index, row) {
-      // this.$router.push({
-      //   name: 'separateBill',
-      //   params: {
-      //     row: row
-      //   }
-      // })
-    },
-    // 删除
-    removeOrder(index, row) {
-
-    },
+    // 查询所有一级品类
     getCategory(){
       getFirstCategory().then(res => {
         this.categoryOneList = res.info

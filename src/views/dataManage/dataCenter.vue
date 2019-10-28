@@ -95,7 +95,6 @@ export default {
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
       }else if(dateArr.length === 3) {
@@ -110,7 +109,6 @@ export default {
     // 查询所有商铺
     getAllShop() {
       getAllShop().then(res => {
-        // console.log(res, 'kkkkkkk')
         if (res.status === 1) {
           this.shopList = res.info
         } else {

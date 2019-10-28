@@ -170,7 +170,6 @@ export default {
   watch:{
     'shop'(e){
       if(e){
-        console.log(e, 'llllll')
        let arr = []
        arr = e.split(':')
        this.shopId = arr[0]
@@ -196,7 +195,6 @@ export default {
       this.stateShow = false
       date = date+'-'
       let dateArr = date.split('-')
-      console.log(dateArr, 'date')
       if(dateArr.length === 2){
         this.year = dateArr[0]
         this.month = ''
@@ -216,7 +214,6 @@ export default {
     },
     // 查询订单列表
     getOrderList() {
-      console.log(this.shopId, 'id...')
       let data = {}
       // data.orderNo = this.orderNo
       data.pageNum = this.pageNum

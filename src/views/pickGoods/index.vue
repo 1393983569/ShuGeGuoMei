@@ -42,11 +42,11 @@ export default {
   },
   watch:{
     'checkGoodsList'(e){
-      console.log(e, 'yingxiaobao')
+      // console.log(e, 'yingxiaobao')
       this.$emit('getGoodFunction', this.checkGoodsList)
     },
     'goodsArray'(e){
-      console.log(e, 'goodsArr......')
+      // console.log(e, 'goodsArr......')
       this.checkGoodsList = e
       let array =[]
       array = e
@@ -67,7 +67,7 @@ export default {
   methods:{
     // 商品单选
     selectGoods(a, row){
-      console.log(row, 'kkkkkkk')
+      // console.log(row, 'kkkkkkk')
       let count=0
       let length= this.checkGoodsList.length
       for(let i=0; i<this.checkGoodsList.length; i++){
@@ -78,16 +78,16 @@ export default {
           count++
         }
       }
-      console.log(count, length, 'lenght/count.....')
+      // console.log(count, length, 'lenght/count.....')
       if(count>=length){
-          console.log('changduxiangtong....')
+          // console.log('changduxiangtong....')
           this.checkGoodsList.push(row)
         }
-      console.log(this.checkGoodsList, 'listllllllll')
+      // console.log(this.checkGoodsList, 'listllllllll')
     },
     // 商品全选
     selectGoodsAll(all){
-      console.log(all,'alllllll')
+      // console.log(all,'alllllll')
         for(let i=0;i<all.length;i++){
           let count = 0
           let length = this.checkGoodsList.length
@@ -99,13 +99,12 @@ export default {
               count++
             }
           }
-          console.log(count, length, 'length....')
+          // console.log(count, length, 'length....')
           if(count >= length){
-            console.log('length....')
+            // console.log('length....')
             this.checkGoodsList.push(all[i])
           }
         }
-      console.log(this.checkGoodsList, 'nnnnnnnnn')
     },
     // 查询所有品类
     getaAllCategory(id){

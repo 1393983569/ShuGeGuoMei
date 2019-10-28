@@ -127,7 +127,6 @@ export default {
     }
   },
   beforeRouteEnter (to, form, next) {
-  //  console.log(to)
     next(mv => {
       mv.getButton(mv.$store.getters.buttonRoleList, to.name)
   	})
@@ -207,7 +206,6 @@ export default {
             this.tableData.push(obj)
           }
         })
-        console.log(this.tableData, 'table........')
         this.total = res.info.totalrecord
         this.loadingSearch = false
         this.loadingClear = false
@@ -241,7 +239,6 @@ export default {
       })
     },
     deleteCaijiaUser(row){
-      console.log('row:',row)
       this.userId = row.id
       this.showDelete = true
     },

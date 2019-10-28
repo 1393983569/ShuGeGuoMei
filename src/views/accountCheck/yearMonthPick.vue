@@ -28,7 +28,6 @@ export default {
   },
   watch:{
     'stateShow'(e){
-      console.log(e, 'stette////')
       if(e){
         this.year = ''
         this.month = ''
@@ -36,8 +35,6 @@ export default {
     }
   },
   mounted(){
-
-    // console.log('mmmm')
     this.setYear()
     this.setMonth()
   },
@@ -67,7 +64,6 @@ export default {
     },
     // 月
     getMonth(month){
-      console.log(month, this.tempYear)
       if(month === '整年'||month===''){
         this.tempMonth =''
         this.handleFinalDate()
