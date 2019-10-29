@@ -4,7 +4,7 @@
     <div style="display:flex;flex-direction:row;margin:10px;align-items:center;">
       <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>
       市场类型：
-      <el-select v-model="typeId" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
+      <el-select clearable v-model="typeId" filterable placeholder="请选择" size="mini" style="width:6%;margin-right:20px;">
         <el-option
           v-for="item in typeList"
           :key="item.id"
@@ -13,7 +13,7 @@
         </el-option>
       </el-select>
       区域：
-      <el-select v-model="areaId" filterable placeholder="请选择" size="mini" style="width:10%;margin-right:20px;">
+      <el-select clearable v-model="areaId" filterable placeholder="请选择" size="mini" style="width:6%;margin-right:20px;">
         <el-option
           v-for="item in areaList"
           :key="item.id"
@@ -22,7 +22,7 @@
         </el-option>
       </el-select>
       一级品类：
-      <el-select v-model="categoryOneId" filterable placeholder="蔬菜" size="mini" style="width:10%;">
+      <el-select clearable v-model="categoryOneId" filterable placeholder="请选择一级品类" size="mini" style="width:6%;">
         <el-option
           v-for="item in categoryOneList"
           :key="item.id"
@@ -31,7 +31,7 @@
         </el-option>
       </el-select>
       <div style="position:absolute;right:10px;">
-        <el-button size="mini" type="primary">筛选</el-button>
+        <el-button size="mini" type="primary" @click="searchFunction()">筛选</el-button>
         <el-button size="mini" type="danger" @click="clearFunction()">清空</el-button>
       </div>
     </div>
@@ -42,43 +42,43 @@
       stripe
     >
       <el-table-column
-        prop="date"
+        prop="goodsId"
         label="商品ID"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.date }}</p>
+          <p>{{ scope.row.goodsId }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="goodsName"
         label="商品名称"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.goodsName }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="standards"
         label="规格"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.standards }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="unit"
         label="单位"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.unit }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="price"
         label="价格"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.price/1000 }}</p>
         </template>
       </el-table-column>
     </el-table>
@@ -100,6 +100,8 @@
 import virtualList from 'vue-virtual-scroll-list'
 import pickDate from '@/components/pickDate'
 import { getFirstCategory } from '@/api/category.js'
+import { getAllCaijia } from '@/api/category/caijia.js'
+import { getAllPriceGoods } from '@/api/marketing/marketPrice.js'
 import breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'CollectShop',
@@ -134,20 +136,7 @@ export default {
       ],
       // 市场区域
       areaId:'',
-      areaList:[
-        {
-          id: 0,
-          name: '滩尖子批发市场'
-        },
-        {
-          id: 1,
-          name: '新港城批发市场'
-        },
-        {
-          id: 2,
-          name: '高新批发市场'
-        }
-      ],
+      areaList:[],
       dataList: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -164,8 +153,23 @@ export default {
   },
   mounted() {
     this.getCategory()
+    this.getAllCaijia()
+    this.getAllPriceGoods()
   },
   methods: {
+    // 查询价格行情列表
+    getAllPriceGoods(){
+      getAllPriceGoods(this.pageNum, this.pageSize, this.categoryOneId, this.yearPro,this.monthPro,this.dayPro,  this.areaId, this.typeId).then(res => {
+        this.dataList = res.info.records
+        this.total = res.info.totalrecord
+      }).catch(err => {
+        this.$message.error('查询价格行情出错！')
+      })
+    },
+    //
+    searchFunction(){
+      this.getAllPriceGoods()
+    },
     // 清空筛选条件
     clearFunction(){
       this.typeId = ''
@@ -174,6 +178,7 @@ export default {
       this.monthPro = ''
       this.dayPro = ''
       this.categoryOneId = ''
+      this.getAllPriceGoods()
     },
     // 日期数据处理
     getPickDate(date){
@@ -199,6 +204,14 @@ export default {
         }
       })
     },
+    // 查询所有采价市场
+    getAllCaijia(){
+      getAllCaijia().then(res => {
+        this.areaList = res.info
+      }).catch(err => {
+        this.$message.error('查询采价市场出错！')
+      })
+    },
     // 查询所有一级品类
     getCategory(){
       getFirstCategory().then(res => {
@@ -210,9 +223,11 @@ export default {
     },
     handleSizeChange(e) {
       this.pageSize = e
+      this.getAllPriceGoods()
     },
     handleCurrentChange(e) {
       this.pageNum = e
+      this.getAllPriceGoods()
     }
   }
 }

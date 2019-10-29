@@ -24,7 +24,7 @@
           placeholder="选择时间范围">
         </el-time-picker>
         <div style="position:absolute;right:10px;">
-          <el-button size="mini" type="primary">筛选</el-button>
+          <el-button size="mini" type="primary" @click="searchFunction">筛选</el-button>
           <el-button size="mini" type="danger" @click="clearFunction">清除</el-button>
         </div>
       <!-- </div> -->
@@ -36,11 +36,11 @@
       stripe
     >
       <el-table-column
-        prop="date"
+        prop="categoryOneName"
         label="一级品类"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.date }}</p>
+          <p>{{ scope.row.categoryOneName }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -48,63 +48,63 @@
         label="二级品类"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.categoryTwoName }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="goodsId"
         label="商品ID"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.goodsId }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="goodsName"
         label="商品名称"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.goodsName }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="standards"
         label="规格"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.standards }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="unit"
         label="单位"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.unit }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="computerStock"
         label="库存"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.computerStock }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="price"
         label="零售价"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.price/1000 }}</p>
         </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="rate"
         label="折扣率"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ scope.row.rate/100 }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,7 +112,7 @@
         label="折扣价"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <p>{{ (scope.row.price/1000)*(scope.row.rate/100)}}</p>
         </template>
       </el-table-column>
     </el-table>
@@ -135,6 +135,7 @@ import virtualList from 'vue-virtual-scroll-list'
 import pickDate from '@/components/pickDate'
 import breadcrumb from '@/components/Breadcrumb'
 import {getAllShop} from '@/api/shop.js'
+import { getAllInventoryGoods } from '@/api/marketing/pricing.js'
 export default {
   name: 'CollectShop',
   components:{pickDate,breadcrumb},
@@ -147,27 +148,11 @@ export default {
   data() {
     return {
       // 时间选择值
-      timeData: [new Date(), new Date()],
+      timeData: ['', ''],
       // 店铺数据
       shopList:[],
       shopId:'',
-      dataList: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      dataList: [],
       total: 0,
       pageSize: 10,
       pageNum: 1,
@@ -185,6 +170,15 @@ export default {
     this.getAllShopFunction()
   },
   methods: {
+    // 查询商品定价列表
+    getAllInventoryGoods(){
+      getAllInventoryGoods(this.pageNum, this.pageSize, this.shopId, this.yearPro, this.monthPro, this.dayPro, this.timeData[0], this.timeData[1]).then(res => {
+        this.dataList =  res.info.records
+        this.total == res.info.totalrecord
+      }).ctach(err=> {
+        this.$message.error('查询商品定价出错！')
+      })
+    },
     // 查询所有店铺
     getAllShopFunction(){
       getAllShop().then(res => {
@@ -207,6 +201,14 @@ export default {
         this.dayPro = dateArr[2]
       }
     },
+    searchFunction(){
+      if(this.shopId){
+        this.getAllInventoryGoods()
+      }else{
+        this.$message.warning('请选择店铺查询！')
+        return
+      }
+    },
     // 清空筛选条件
     clearFunction(){
       this.yearPro = ''
@@ -214,6 +216,7 @@ export default {
       this.dayPro = ''
       this.timeData = []
       this.shopId = ''
+      this.getAllInventoryGoods()
     },
     // 查看详情
     viewDetails(index, row) {

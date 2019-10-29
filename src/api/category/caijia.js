@@ -58,3 +58,12 @@ export const deleteCaijia = (id) => {
     method: 'get'
   })
 }
+/**
+ * 查询所有采价市场
+ */
+export const getAllCaijia = ()=> {
+  return request({
+    url: '/price/selectAll',
+    method: 'post'
+  })
+}

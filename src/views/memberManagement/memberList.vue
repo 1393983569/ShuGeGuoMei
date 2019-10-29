@@ -1,7 +1,7 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button @click="explainHandle" type="primary" v-if="bottonList.includes('操作')">会员系统说明</el-button>
+      <el-button @click="explainHandle" type="primary" v-if="bottonList.includes('操作')" size="mini">会员系统说明</el-button>
       <el-button type="primary" v-else disabled>会员系统说明</el-button>
     </breadcrumb>
     <div style="margin:10px;display:flex;flex-direction:row;align-items:center;">

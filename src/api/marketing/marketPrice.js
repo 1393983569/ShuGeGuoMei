@@ -1,5 +1,6 @@
+import request from '@/utils/request'
 /**
- *
+ * 价格行情
  * @param {Number} pageNum
  * @param {Number} pageSize
  * @param {Number} categoryOneId
@@ -9,7 +10,7 @@
  * @param {String} priceMarketName
  * @param {String} priceMarketType
  */
-export function queryDiscount(pageNum, pageSize, categoryOneId, year, month, day,priceMarketName,priceMarketType) {
+export function getAllPriceGoods(pageNum, pageSize, categoryOneId, year, month, day,priceMarketName,priceMarketType) {
   let params = new URLSearchParams()
   params.append('pageNum', pageNum)
   params.append('pageSize', pageSize)
