@@ -84,6 +84,7 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         hidden:true,
+        // component: () => import('@/views/newsManage/news/news.vue'),
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: '首页图表', icon: 'Cameramanagement_default', affix: true }

@@ -168,7 +168,7 @@ export default {
           _this.loading = true
           _this.$store.dispatch('user/login', _this.loginForm)
             .then(() => {
-              _this.$router.push({ path: '/', query: _this.otherQuery })
+              _this.$router.push({ name: 'news', query: _this.otherQuery })
               _this.loading = false
             })
             .catch(() => {

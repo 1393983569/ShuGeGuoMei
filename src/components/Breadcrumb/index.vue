@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       levelList: null,
-      title:'首页'
+      title:''
     }
   },
   watch: {
@@ -47,7 +47,7 @@ export default {
         this.title= ''
         this.getBreadcrumb()
       }else{
-        this.title="首页"
+        this.title=""
       }
     }
   },

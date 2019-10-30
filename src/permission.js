@@ -22,7 +22,7 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     if (to.path === '/login') {
       // 如果已登录，则重定向到主页
-      next({ path: '/' })
+      next({ name: 'news' })
       NProgress.done()
     } else {
       // 第一次登录还没调用过 gitInfo 说以会走else

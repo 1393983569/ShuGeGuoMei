@@ -173,9 +173,13 @@ export default {
     // 查询商品定价列表
     getAllInventoryGoods(){
       getAllInventoryGoods(this.pageNum, this.pageSize, this.shopId, this.yearPro, this.monthPro, this.dayPro, this.timeData[0], this.timeData[1]).then(res => {
-        this.dataList =  res.info.records
-        this.total == res.info.totalrecord
-      }).ctach(err=> {
+        if(res.info.records.length>0){
+          this.dataList =  res.info.records
+          this.total == res.info.totalrecord
+        }else{
+
+        }
+      }).catch(err=> {
         this.$message.error('查询商品定价出错！')
       })
     },
@@ -183,6 +187,8 @@ export default {
     getAllShopFunction(){
       getAllShop().then(res => {
         this.shopList = res.info
+        this.shopId = this.shopList[0].id
+        this.getAllInventoryGoods()
       }).catch(err=> {
         this.$message.error('店铺查询出错！')
       })

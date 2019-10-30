@@ -70,7 +70,6 @@ const actions = {
   // commit 解构赋值 默认传一个state 只取其中的commit
   login({ commit }, userInfo) {
     const { mobile, password } = userInfo
-    console.log(userInfo, 'userInfo....')
     return new Promise((resolve, reject) => {
       login({ mobile: mobile, password: password }).then(response => {
         const data = response
@@ -95,7 +94,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(getUserId()).then(response => {
         try {
-          console.log(response, 'json.....')
           if(response.info){
             let buttonRoleList = getButtonRole(JSON.parse(response.info.menu))
             let roleList = getRole(JSON.parse(response.info.menu))
