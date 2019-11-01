@@ -334,9 +334,10 @@ export default {
 }
 p{
   /* align-content: center; */
-  font-size: 14px;
+  font-size: 14px !important;
+  font-weight: 0px !important;
   color: #606266;
-  text-align: center;
+  text-align: center !important;
 }
 .header{
   height: 40px;
