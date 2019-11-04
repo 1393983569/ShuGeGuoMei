@@ -57,7 +57,7 @@
             <el-table-column prop="unit" label="单位"/>
           </el-table>
     </p>
-    <p>资质照片：<img :src="providerObj.qualificationPics"  style="width:300px;"/></p>
+    <div style="display:flex;flex-direction:row;align-items: flex-start;">资质照片：<img :src="providerObj.qualificationPics"  style="width:300px;"/></div>
     <div>
       评分：{{averageScore}}
       <el-button style="margin-left:20px;" size="mini" type="success" @click="dialogVisible">去评分</el-button>

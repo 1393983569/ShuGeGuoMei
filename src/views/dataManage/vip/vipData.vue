@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <profession />
+      <!-- <profession /> -->
     </div>
     <!-- <el-container>
       <el-aside width="100px">

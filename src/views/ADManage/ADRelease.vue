@@ -26,7 +26,7 @@
             :on-success="handleAvatarSuccess"
             :on-progress="handleProgress"
             :before-upload="beforeAvatarUpload">
-            <p v-if="addEditState"></p>
+            <span v-if="addEditState"></span>
             <p v-else class="change-img">更换图片</p>
             <div slot="tip" class="el-upload__tip">建议上传414*138px图片，大小不超过1m</div>
             <el-progress v-if="0<percentage&&percentage<=100" type="circle" :percentage="percentage" :width="177" style="width:178px;height:178px;"></el-progress>
@@ -234,7 +234,6 @@ export default {
     text-align: center;
   }
   .avatar {
-
     width: 178px;
     height: 178px;
     display: block;

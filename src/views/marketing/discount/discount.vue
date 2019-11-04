@@ -33,7 +33,7 @@
     <el-table :data="dataList">
       <el-table-column prop="name" label="折扣包名称"/>
       <el-table-column prop="shopName" label="使用店铺"/>
-      <el-table-column prop="" label="折扣商品">
+      <el-table-column prop="" label="折扣商品" :width="200">
         <template slot-scope="scope">
           <span class="outer" v-for="item in scope.row.goods">{{item.goodsName}},</span>
         </template>
