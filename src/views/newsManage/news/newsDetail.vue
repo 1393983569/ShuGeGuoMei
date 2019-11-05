@@ -9,11 +9,11 @@
         <span class="font-weight">缩略图：</span>
         <img :src="detailtObject.thumbnail" style="width:200px;"/>
       </div>
-      <div class="size-color div-margin"><span class="font-weight">对象：</span><span v-for="item in detailtObject.shopJson" :key="item.id">{{ item.name }} | </span></div>
+      <div class="size-color div-margin"><span class="font-weight">对象：</span><span v-for="item in detailtObject.shopJson" :key="item.id">{{ item.name }}，</span></div>
       <div class="size-color div-margin"><span class="font-weight">消息类型：</span>{{ detailtObject.category }}</div>
       <div class="size-color div-margin" style="display:flex;flex-direction:row;">
         <span class="font-weight">内容：</span>
-        <div style="width:90%;" v-html="detailtObject.content"/>
+        <div style="text-align:left;width:90%;" v-html="detailtObject.content"/>
       </div>
       <div class="size-color div-margin"><span class="font-weight">发布者：</span>{{ detailtObject.name }}</div>
   </div>

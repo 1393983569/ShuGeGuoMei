@@ -96,7 +96,7 @@
         label="零售价"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.price/1000 }}</p>
+          <p>￥{{ scope.row.price/100}}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,7 +112,7 @@
         label="折扣价"
       >
         <template slot-scope="scope">
-          <p>{{ (scope.row.price/1000)*(scope.row.rate/100)}}</p>
+          <p>{{(scope.row.price*scope.row.rate)/10000}}</p>
         </template>
       </el-table-column>
     </el-table>

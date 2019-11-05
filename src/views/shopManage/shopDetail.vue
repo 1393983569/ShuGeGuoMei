@@ -26,10 +26,10 @@
         <span>初始密码：</span> {{ shopObject.adminPassword }}
       </div>
       <div class="size-color div-margin">
-        <span>店铺地址：</span>{{shopObject.provinceDomain.name}}
-        <span v-if="shopObject.cityDomain">{{shopObject.cityDomain.name}}</span>
-        <span v-if="shopObject.areaDomain">{{shopObject.areaDomain.name}}</span>
-        <span v-if="shopObject.detailsAddress">{{ shopObject.detailsAddress }}</span>
+        <span>店铺地址：</span ><span v-if="provinceDomain">{{provinceDomain.name}}</span>
+        <span v-if="cityDomain">{{cityDomain.name}}</span>
+        <span v-if="areaDomain">{{areaDomain.name}}</span>
+        <span v-if="shopObject.detailsAddress">{{shopObject.detailsAddress }}</span>
       </div>
       <div class="size-color div-margin">
         <span> 店铺面积：</span>{{ shopObject.area }} m&sup2;
@@ -38,6 +38,7 @@
         <span>经营品类：</span>
         <!-- <el-table :data="categoryTable" :header-cell-style="tableHeaderColor" :span-method="objectSpanMethod"> -->
         <el-table
+            style="margin-left:20px;margin-top:10px;"
             :data="categoryTable"
             center
             border
@@ -75,13 +76,15 @@
       <!-- <div class="" style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;"> -->
       <div>
         <span>职员人数：</span>
-        <staff :staffTable ="staffTable"></staff>
+        <staff style="margin-left:20px;margin-top:10px;" :staffTable ="staffTable"></staff>
       </div>
       <div class="size-color">
         <span>经营模式：</span>{{ shopObject.management }}
       </div>
       <div class="size-color">
-        <span>成本结构：</span>
+        <span>成本结构：<br/>
+          <costTable style="margin-top:10px;margin-left:20px;" :costObject="costObject"></costTable>
+        </span>
       </div>
       <div class="size-color">
         <span>会员人数(人)：</span> {{shopObject.members}}
@@ -92,6 +95,7 @@
 <script>
 import virtualList from 'vue-virtual-scroll-list'
 import staff from './staff.vue'
+import costTable from './costTable.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'shopDetail',
@@ -101,7 +105,7 @@ export default {
   //     default: Array
   //   }
   // },
-  components:{staff, Breadcrumb},
+  components:{staff, Breadcrumb,costTable},
   data() {
     return {
       employeeTable: [],
@@ -111,13 +115,17 @@ export default {
       urlList: [],
       staffTable:[],
       breadState:false,
+      provinceDomain:'',
+      cityDomain:'',
+      areaDomain:'',
+      costObject:{},
     }
   },
   watch: {
    'shopObject'(e) {
     //  console.log(this.shopObject.imge, 'jjjjj')
     //  console.log(this.shopObject, 'jjjjj')
-
+      this.costObject = e
       let arr = JSON.parse(this.shopObject.categoryJson)
       this.recursionTableData(arr)
       this.getMergeList()
@@ -125,16 +133,17 @@ export default {
   },
   mounted() {
     this.breadState = true
-    // console.log(JSON.stringify(this.$route.params) == '{}', 'canshuooooooo')
     if(JSON.stringify(this.$route.params) !== '{}'){
       this.urlList= this.$route.params.imge.split(',')
       this.shopObject = this.$route.params
+      this.provinceDomain = this.shopObject.provinceDomain
+      this.cityDomain =  this.shopObject.cityDomain
+      this.areaDomain =  this.shopObject.areaDomain
       let arr = JSON.parse(this.shopObject.categoryJson)
       this.staffTable = this.shopObject.shopStaffList
       this.categoryTable = this.recursionTableData(arr)
       this.getMergeList()
     }else{
-      // this.$router.push({name: 'shop'})
       window.history.go(-1)
     }
   },

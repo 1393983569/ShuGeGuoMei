@@ -54,7 +54,7 @@
               <el-table-column prop="standards" label="规格"/>
               <el-table-column prop="unit" label="单价"/>
               <el-table-column prop="amount" label="下单数量"/>
-              <el-table-column  v-if="childrenObject.status === 2" prop="input_quantity" label="入库数量">
+              <el-table-column  v-if="childrenObject.status === 2" prop="input_quantity" label="入库数量" :width="200">
                 <template slot-scope="scope" style="align-item:center;">
                   <el-input v-model="scope.row.input_quantity" class="table-input" style="width:80px;"/>&nbsp;&nbsp;
                   <svg-icon icon-class="revise" style="font-size:24px;line-height:57px;" @click="changeAmount(scope.row.id,scope.row.input_quantity)" class="iconClass" />

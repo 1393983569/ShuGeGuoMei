@@ -1,5 +1,5 @@
 <template>
-  <div style="display:float;">
+  <div>
     <breadcrumb :stateShow ="stateShow">
       <el-button type="primary" size="mini" v-if="bottonList.includes('操作')" @click="handleRelease">广告发布</el-button>
       <el-button type="primary" size="mini" v-else disabled @click="handleRelease">广告发布</el-button>
@@ -65,7 +65,7 @@ import AdDetail from './ADDetail.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 import { getAdvertisement, shelfAdvertisement, deleteAdvertisement, topAdvertisement } from '@/api/advertisement.js'
 export default {
-  components: { AdDetail, Breadcrumb, hint },
+  components: { AdDetail, Breadcrumb, hint},
   data() {
     return {
       ADTable: [],
@@ -85,7 +85,7 @@ export default {
       editObject: {},
       bottonList: [],
       apiUrl: '',
-      adminName:''
+      adminName:'',
     }
   },
  beforeRouteEnter (to, form, next) {

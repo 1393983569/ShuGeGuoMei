@@ -52,7 +52,11 @@
         {{scope.row.goodsAmount[0].goodsAmount}}
       </template>
     </el-table-column>
-    <el-table-column label="订单金额(元)" prop="total_money"> </el-table-column>
+    <el-table-column label="订单金额(元)" prop="total_money">
+      <template slot-scope="scope">
+        ￥{{scope.row.total_money/100}}
+      </template>
+    </el-table-column>
     <el-table-column label="订单类型" prop="type">
       <template slot-scope="scope">
         <p v-if="scope.row.type ===1">销售</p>

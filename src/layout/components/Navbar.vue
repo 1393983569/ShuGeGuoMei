@@ -29,11 +29,12 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+import { getAvatar,getUserName } from '@/utils/auth'
 
 export default {
   data(){
     return{
-      // avatars:'',
+      avatar: '',
       adminName:''
     }
   },
@@ -48,13 +49,12 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
       'device'
     ])
   },
   mounted(){
-    this.adminName = this.$store.state.user.name
-    // this.avatars = this.$store.state.user.avatar
+    this.adminName = getUserName()
+    this.avatar = getAvatar()
   },
   methods: {
     toggleSideBar() {

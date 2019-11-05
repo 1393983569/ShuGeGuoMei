@@ -1,6 +1,5 @@
 <template>
-  <div style="border-bottom: 1px solid #bbbbbb;display:flex;align-items:center;heigth:40px;
-  position:fixed;top:46px;z-index:20;width:100%;background-color:rgb(246,246,246)">
+  <div style="border-bottom: 1px solid #bbbbbb;display:flex;align-items:center;heigth:40px;position:fixed;top:46px;z-index:20;width:100%;background-color:rgb(246,246,246)">
     <div v-if="stateShow" class="back"><i class="el-icon-back" @click="backHandle"></i>&nbsp;<span style="font-weight:bold;color:#C0C4CC;">|</span></div>
     <el-breadcrumb class="app-breadcrumb" separator="/">
       <transition-group name="breadcrumb">
@@ -10,16 +9,13 @@
         </el-breadcrumb-item>
       </transition-group>
     </el-breadcrumb>
-    <!-- <div style="display: inline-block; line-height: 50px; vertical-align: top; float: right;"> -->
     <div style="position: fixed;top:56px;z-index:20;right:10px;">
       <slot></slot>
     </div>
   </div>
 </template>
-
 <script>
 import pathToRegexp from 'path-to-regexp'
-
 export default {
   props:{
     stateShow:{

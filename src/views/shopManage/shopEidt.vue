@@ -49,8 +49,8 @@
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
-            <p style="font-size:12px;color:#606266;margin-top: 7px;color:red;margin-left:1px;" v-if="addDiabled">图片已达到上限</p>
-            <p style="font-size:12px;color:#606266;margin-top: 7px;margin-left:1px;" v-else>最多上传五张图片</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;color:red;text-align: left;" v-if="addDiabled">图片已达到上限</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;text-align: left;" v-else>最多上传五张图片</p>
           </div>
 
           <!-- 编辑修改图片 -->
@@ -72,8 +72,8 @@
             <el-dialog :visible.sync="dialogVisible" size="tiny" append-to-body>
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
-            <p style="font-size:12px;color:#606266;margin-top: 7px;color:red;margin-left:1px;" v-if="editDiabled">图片已达到上限</p>
-            <p style="font-size:12px;color:#606266;margin-top: 7px;margin-left:1px;" v-else>最多上传五张图片</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;color:red;text-align: left;" v-if="editDiabled">图片已达到上限</p>
+            <p style="font-size:12px;color:#606266;margin-top: 7px;text-align: left;" v-else>最多上传五张图片</p>
           </div>
         </el-form-item>
         <el-form-item label="掌柜姓名：" prop="adminName">
@@ -699,6 +699,7 @@ export default {
     margin:0px;
     border-radius:10%;
     line-height: 30px;
+
   }
 </style>
 

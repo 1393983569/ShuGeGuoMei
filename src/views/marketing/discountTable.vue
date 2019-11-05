@@ -28,17 +28,17 @@
       <el-table-column label="range" prop="range" width="120">
         <template slot-scope="scope" style="padding:0px;margin:0px;">
           <p v-if="scope.row.index===''">{{scope.row.range}}</p>
-          <p class="item" v-if="scope.row.rangNum===5" v-for="item in rangelist5" :value="item" :key="item">{{item}}</p>
-          <p class="item" v-if="scope.row.rangNum===6" v-for="item in rangelist6" :value="item" :key="item">{{item}}</p>
-          <p class="item" v-if="scope.row.rangNum===7" v-for="item in rangelist7" :value="item" :key="item">{{item}}</p>
+          <p style="font-size: 14px;color: #606266;font-weight: 0px;border-bottom: 1px solid rgb(223, 230, 236);margin:0px;" v-if="scope.row.rangNum===5" v-for="item in rangelist5" :value="item" :key="item">{{item}}</p>
+          <p style="font-size: 14px;color: #606266;font-weight: 0px;border-bottom: 1px solid rgb(223, 230, 236);margin:0px;" v-if="scope.row.rangNum===6" v-for="item in rangelist6" :value="item" :key="item">{{item}}</p>
+          <p style="font-size: 14px;color: #606266;font-weight: 0px;border-bottom: 1px solid rgb(223, 230, 236);margin:0px;" v-if="scope.row.rangNum===7" v-for="item in rangelist7" :value="item" :key="item">{{item}}</p>
         </template>
       </el-table-column>
       <el-table-column label="R" prop="r" width="120">
         <template slot-scope="scope">
           <p v-if="scope.row.index===''">{{scope.row.r}}</p>
-          <p class="item" v-if="scope.row.rangNum===5" v-for="item in rList5" :value="item" :key="item">{{item}}</p>
-          <p class="item" v-if="scope.row.rangNum===6" v-for="item in rList6" :value="item" :key="item">{{item}}</p>
-          <p class="item" v-if="scope.row.rangNum===7" v-for="item in rList7" :value="item" :key="item">{{item}}</p>
+          <p style="font-size: 14px;color: #606266;font-weight: 0px;border-bottom: 1px solid rgb(223, 230, 236);margin:0px;" v-if="scope.row.rangNum===5" v-for="item in rList5" :value="item" :key="item">{{item}}</p>
+          <p style="font-size: 14px;color: #606266;font-weight: 0px;border-bottom: 1px solid rgb(223, 230, 236);margin:0px;" v-if="scope.row.rangNum===6" v-for="item in rList6" :value="item" :key="item">{{item}}</p>
+          <p style="font-size: 14px;color: #606266;font-weight: 0px;border-bottom: 1px solid rgb(223, 230, 236);margin:0px;" v-if="scope.row.rangNum===7" v-for="item in rList7" :value="item" :key="item">{{item}}</p>
         </template>
       </el-table-column>
       <el-table-column label="RA" prop="ra"/>
@@ -328,15 +328,13 @@ export default {
 </script>
 <style>
 .item{
-  border-bottom: 1px solid rgb(223, 230, 236);
-  /* padding:0px;   */
-  margin:0px;
+  border-bottom: 1px solid rgb(223, 230, 236);margin:0px;
 }
 p{
   /* align-content: center; */
-  font-size: 14px !important;
-  font-weight: 0px !important;
+  font-size: 14px;
   color: #606266;
+  font-weight: 0px;
   text-align: center !important;
 }
 .header{

@@ -86,11 +86,12 @@ import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
 import shopEdit from './shopEidt.vue'
 // import shopDetail from './shopDetail.vue'
 import { getShopList, deleteShop, startShop } from '@/api/shop.js'
+import costTable from './costTable.vue'
 // import { sync } from 'glob'
 export default {
   name: 'shop',
   components: {
-    selectorAddress, shopEdit, Breadcrumb, hint
+    selectorAddress, shopEdit, Breadcrumb, hint,costTable
   },
   data() {
     return {

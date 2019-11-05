@@ -68,6 +68,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Sidentify from '@/components/Sidentify'
 import {getCode, forgetPwd, editPwd, checkCode, sendCode} from '@/api/forgetPassword.js'
 import {editImage} from '@/api/admin/adminList.js'
+import { getAvatar,getUserName,getUserMobile, getUserRole } from '@/utils/auth'
 export default {
   name:'owner',
   components:{Breadcrumb,Sidentify},
@@ -100,7 +101,6 @@ export default {
     this.stateShow=true
     this.$set(this.ruleForm, 'msgCode', '')
     this.$set(this.ruleForm, 'password', '')
-    // console.log('this.$store：',this.$store)
     this.user = this.$store.state.user
 
     this.ruleForm.adminId = this.user.id
@@ -238,7 +238,7 @@ export default {
   }
   .avatar {
     width: 100%;
-    height: 100%;
+    height: 120px;
     display: block;
   }
   .header{

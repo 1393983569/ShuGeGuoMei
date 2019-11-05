@@ -55,6 +55,7 @@ export default {
       return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
     },
     handleSubmit() {
+      console.log(this.fileList, 'imgList.....')
       const arr = Object.keys(this.listObj).map(v => this.listObj[v])
       console.log(this.checkAllSuccess(), )
       if (!this.checkAllSuccess()) {
