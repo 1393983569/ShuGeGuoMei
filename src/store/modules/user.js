@@ -1,7 +1,7 @@
 // 接口
 import { logout, login, getInfo } from '@/api/user'
 // Cookies中获取
-import { getToken, setToken, removeToken, setUserId, getUserId, setAvatar, getAvatar,setUserName,setUserMobile,setUserRole} from '@/utils/auth'
+import { getToken, setToken, removeToken, setUserId, getUserId, setAvatar, getAvatar,setUserName,setUserMobile,setUserRole, setAdminId,getAdminId} from '@/utils/auth'
 // getButtonRole：将权限的数据组成想要的格式，getRole：所有权限
 import { getButtonRole, getRole } from '@/utils/logic'
 import router, { resetRouter } from '@/router'
@@ -87,6 +87,7 @@ const actions = {
         setUserMobile(data.info.mobile)
         setUserRole(data.info.role.name)
         setToken(data.info.token)
+        setAdminId(data.info.id)
         resolve()
       }).catch(error => {
         reject(error)
@@ -140,7 +141,7 @@ const actions = {
   // 用户退出
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(getUserId()).then(() => {
+      logout(getAdminId()).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken()

@@ -47,6 +47,13 @@ export function getUserRole() {
 export function setUserRole(UserRole) {
   return Cookies.set('UserRole', UserRole)
 }
+// 用户角色
+export function getAdminId() {
+  return Cookies.get('AdminId')
+}
+export function setAdminId(AdminId) {
+  return Cookies.set('AdminId', AdminId)
+}
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }

@@ -69,7 +69,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Sidentify from '@/components/Sidentify'
 import {getCode, forgetPwd, editPwd, checkCode, sendCode} from '@/api/forgetPassword.js'
 import {editImage} from '@/api/admin/adminList.js'
-import { getAvatar,setAvatar,getUserName,getUserMobile, getUserRole, getUserId } from '@/utils/auth'
+import { getAvatar,setAvatar,getUserName,getUserMobile, getUserRole, getAdminId } from '@/utils/auth'
 export default {
   name:'owner',
   components:{Breadcrumb,Sidentify,navbar},
@@ -105,12 +105,12 @@ export default {
     this.$set(this.ruleForm, 'msgCode', '')
     this.$set(this.ruleForm, 'password', '')
     // 页面显示数据
-    this.user.adminId = getUserId()
+    this.user.adminId = getAdminId()
     this.user.mobile = getUserMobile()
     this.user.name=getUserName()
     this.user.rolename = getUserRole()
     // 修改密码回显数据
-    this.ruleForm.adminId = getUserId()
+    this.ruleForm.adminId = getAdminId()
     this.ruleForm.mobile = getUserMobile()
     this.avatar = getAvatar()
     this.ruleForm.name=getUserName()
@@ -156,7 +156,7 @@ export default {
         this.$message.warning('密码不一致！')
         return
       }
-      this.ruleForm.id = getUserId()
+      this.ruleForm.id = getAdminId()
       this.$refs[formName].validate((valid) => {
         if (valid) {
           checkCode(this.ruleForm.mobile, this.ruleForm.msgCode).then(res=> {
@@ -177,7 +177,7 @@ export default {
       this.dialogTableVisible = false
     },
     editPwdHandle(){
-      this.ruleForm.id = getUserId()
+      this.ruleForm.id = getAdminId()
       editPwd(this.ruleForm).then(res => {
         if(res.status === 1){
           this.$message.success('修改成功！')

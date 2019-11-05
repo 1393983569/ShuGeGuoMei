@@ -132,7 +132,7 @@
           />
         </el-select>
         <div v-if="ruleForm.countryId === 999999" />
-        <selectorAddress v-else :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
+        <selectGoodsAddress v-else :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty" />
       </el-form-item>
       <el-form-item label="状态：" prop="state">
         <el-select v-model="ruleForm.state" clearable placeholder="请选择" style="width: 300px">
@@ -166,11 +166,11 @@
 import virtualList from 'vue-virtual-scroll-list'
 import { getFirstCategory, getSecondCategory } from '@/api/category.js'
 import { addGoods, seeDetailsGoods, editGoods } from '@/api/collectShop.js'
-import selectorAddress from '@/components/selectorAddress/selectAll.vue'
+import selectGoodsAddress from '@/components/selectorAddress/selectGoodsAddress.vue'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'AddAndEdit',
-  components: { selectorAddress, Breadcrumb },
+  components: { selectGoodsAddress, Breadcrumb },
   data() {
     return {
       hiddentab:false,
