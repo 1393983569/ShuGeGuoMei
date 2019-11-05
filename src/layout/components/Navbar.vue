@@ -52,6 +52,11 @@ export default {
       'device'
     ])
   },
+  watch:{
+    'change'(e){
+      console.log(e, 'touxiangllllll')
+    }
+  },
   mounted(){
     this.adminName = getUserName()
     this.avatar = getAvatar()

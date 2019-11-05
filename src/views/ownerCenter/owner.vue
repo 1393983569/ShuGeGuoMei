@@ -63,17 +63,20 @@
   </div>
 </template>
 <script>
+import navbar from '@/layout/components/Navbar.vue'
 import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import Sidentify from '@/components/Sidentify'
 import {getCode, forgetPwd, editPwd, checkCode, sendCode} from '@/api/forgetPassword.js'
 import {editImage} from '@/api/admin/adminList.js'
-import { getAvatar,getUserName,getUserMobile, getUserRole } from '@/utils/auth'
+import { getAvatar,setAvatar,getUserName,getUserMobile, getUserRole, getUserId } from '@/utils/auth'
 export default {
   name:'owner',
-  components:{Breadcrumb,Sidentify},
+  components:{Breadcrumb,Sidentify,navbar},
+  inject:['reload'],
   data(){
     return{
+      change:false,
       percent:0,
       identifyCode:'',
       // identifyCodes:'1234567890',
@@ -101,11 +104,16 @@ export default {
     this.stateShow=true
     this.$set(this.ruleForm, 'msgCode', '')
     this.$set(this.ruleForm, 'password', '')
-    this.user = this.$store.state.user
-
-    this.ruleForm.adminId = this.user.id
-    this.ruleForm.mobile = this.user.mobile
-    this.avatar = this.$store.state.user.avatar
+    // 页面显示数据
+    this.user.adminId = getUserId()
+    this.user.mobile = getUserMobile()
+    this.user.name=getUserName()
+    this.user.rolename = getUserRole()
+    // 修改密码回显数据
+    this.ruleForm.adminId = getUserId()
+    this.ruleForm.mobile = getUserMobile()
+    this.avatar = getAvatar()
+    this.ruleForm.name=getUserName()
     this.apiUrl = process.env.VUE_APP_BASE_API
   },
   methods:{
@@ -148,7 +156,7 @@ export default {
         this.$message.warning('密码不一致！')
         return
       }
-      this.ruleForm.adminId = this.user.id
+      this.ruleForm.id = getUserId()
       this.$refs[formName].validate((valid) => {
         if (valid) {
           checkCode(this.ruleForm.mobile, this.ruleForm.msgCode).then(res=> {
@@ -169,6 +177,7 @@ export default {
       this.dialogTableVisible = false
     },
     editPwdHandle(){
+      this.ruleForm.id = getUserId()
       editPwd(this.ruleForm).then(res => {
         if(res.status === 1){
           this.$message.success('修改成功！')
@@ -183,8 +192,11 @@ export default {
     handleAvatarSuccess(file){
       this.percent = 101
       this.avatar = file.info
+      setAvatar(this.avatar)
+      this.reload();
       this.$store.state.user.avatar = this.avatar
-      editImage(this.user.id,this.avatar).then(res=> {
+      console.log(this.user.adminId, 'idlllllll')
+      editImage(this.user.adminId,this.avatar).then(res=> {
         if(res.status === 1){
           this.$message.success('修改头像成功！')
         }

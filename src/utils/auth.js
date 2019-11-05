@@ -47,7 +47,6 @@ export function getUserRole() {
 export function setUserRole(UserRole) {
   return Cookies.set('UserRole', UserRole)
 }
-
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }

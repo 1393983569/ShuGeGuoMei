@@ -6,36 +6,7 @@
       <el-button size="mini" @click="roleSet" type="warning" v-if="bottonList.includes('操作')">角色设置</el-button>
       <el-button size="mini" type="warning" v-else disabled>角色设置</el-button>
     </breadcrumb>
-    <el-dialog
-      :title="title"
-      :modal="true"
-      :close-on-click-modal="false"
-      :visible.sync="dialogVisible"
-      width="50%"
-    >
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="用户名：" prop="name">
-          <el-input v-model="ruleForm.name" />
-        </el-form-item>
-        <el-form-item label="手机号：" prop="mobile">
-          <el-input v-model="ruleForm.mobile" />
-        </el-form-item>
-        <el-form-item label="角色：" prop="roleId">
-          <el-select v-model="ruleForm.roleId" placeholder="请选择角色" style="width: 100%" >
-            <el-option :label="item.name" :value="item.id" :key="`role_${index}`" v-for="(item, index) in roleList"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="初始密码：" prop="password">
-          <el-input v-model="ruleForm.password" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="clickCancel('ruleForm')">取 消</el-button>
-        <el-button type="primary" @click="addAdminClick('ruleForm')" :loading="loading">确 定</el-button>
-      </span>
-    </el-dialog>
-    <hint v-model="hintState" :title="'删除'" :text="'是否删除该后台用户？'" @confirm="deleteUser" />
-    <!-- 搜索条件 -->
+     <!-- 搜索条件 -->
     <div style="display:flex;direction-flex:row;">
       <span style="font-weight:bold;">角色：</span>
       <el-select v-model="charactar" style="width:20%;" size="mini" placeholder="请选择活动区域" clearable>
@@ -128,6 +99,36 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <el-dialog
+      :title="title"
+      :modal="true"
+      :close-on-click-modal="false"
+      :visible.sync="dialogVisible"
+      width="50%"
+    >
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名：" prop="name">
+          <el-input v-model="ruleForm.name" />
+        </el-form-item>
+        <el-form-item label="手机号：" prop="mobile">
+          <el-input v-model="ruleForm.mobile" />
+        </el-form-item>
+        <el-form-item label="角色：" prop="roleId">
+          <el-select v-model="ruleForm.roleId" placeholder="请选择角色" style="width: 100%" >
+            <el-option :label="item.name" :value="item.id" :key="`role_${index}`" v-for="(item, index) in roleList"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="初始密码：" prop="password">
+          <el-input v-model="ruleForm.password" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="clickCancel('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="addAdminClick('ruleForm')" :loading="loading">确 定</el-button>
+      </span>
+    </el-dialog>
+    <hint v-model="hintState" :title="'删除'" :text="'是否删除该后台用户？'" @confirm="deleteUser" />
+
   </div>
 </template>
 
@@ -379,10 +380,12 @@ export default {
     },
     // 取消
     clickCancel(formName) {
-      this.$refs[formName].resetFields();
       this.dialogVisible = false
       this.ruleForm = {}
       this.loading = false
+      this.$refs[formName].resetFields();
+      // 刷新table列表
+      this.getAdminList()
     },
     clearSearch(){
       this.charactar = ''
