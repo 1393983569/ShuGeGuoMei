@@ -4,25 +4,25 @@
       <tr class="tr_class" >
         <th class="th_class" rowspan="9">成本</th>
         <th class="th_class" rowspan="4">固定成本（元）</th>
-        <th class="th_class">房租</th>
+        <th class="th_class">房租{{rentRate*100}}%</th>
         <th class="th_class">{{costData.rent/100}}</th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">工资支出</th>
+        <th class="th_class">工资支出{{wagesRate*100}}</th>
         <th class="th_class">{{costData.wages/100}}</th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">水电设备</th>
+        <th class="th_class">水电设备{{hydropowerRate*100}}</th>
         <th class="th_class">{{costData.hydropower/100}}</th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">其它固定费用总计</th>
+        <th class="th_class">其它固定费用总计{{otherExpensesRate*100}}</th>
         <th class="th_class">{{costData.otherExpenses/100}}</th>
       </tr>
 
       <tr class="tr_class">
         <th class="th_class" rowspan="5">可变成本（元）</th>
-        <th class="th_class" >营销费用</th>
+        <th class="th_class" >营销费用{{marketingRate*100}}</th>
         <th class="th_class">{{costData.marketing/100}}</th>
       </tr>
       <tr class="tr_class">
@@ -30,11 +30,11 @@
         <th class="th_class"></th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">其它可变费用总计</th>
+        <th class="th_class">其它可变费用总计{{otherVariablesRate}}</th>
         <th class="th_class">{{costData.otherVariables/100}}</th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">采购成本</th>
+        <th class="th_class">采购成本{{procurementRate}}</th>
         <th class="th_class">{{costData.procurement/100}}</th>
       </tr>
       <tr class="tr_class">
@@ -64,6 +64,7 @@ export default {
     'costObject'(e){
       this.costData = e.profitLossDomain
       console.log(e, 'eeeeeee')
+      this.percentFunction(this.costData )
     }
   },
   mounted(){},
@@ -73,19 +74,19 @@ export default {
       // 总成本
       let total = param.hydropower+param.marketing+param.otherExpenses+param.otherVariables+param.procurement+param.rent+param.wages
       // rent 房租占比
-      this.rentRate = param.rent/total
+      this.rentRate = (param.rent/total).toFixed(2)
       // wages 工资支出占比
-      this.wagesRate = param.wages/total
+      this.wagesRate = (param.wages/total).toFixed(2)
       // hydropower 水电暖合计占比
-      this.hydropowerRate = param.hydropower/total
+      this.hydropowerRate = (param.hydropower/total).toFixed(2)
       // otherExpenses 其他固定费用总计占比
-      this.otherExpensesRate = param.otherExpenses/total
+      this.otherExpensesRate = (param.otherExpenses/total).toFixed(2)
       // marketing 营销费用占比
-      this.marketingRate = param.marketing/total
+      this.marketingRate = (param.marketing/total).toFixed(2)
       // otherVariables 其他可变费用总计占比
-      this.otherVariablesRate = param.otherVariables/total
+      this.otherVariablesRate = (param.otherVariables/total).toFixed(2)
       // procurement 采购成本占比
-      this.procurementRate = param.procurement/total
+      this.procurementRate = (param.procurement/total).toFixed(2)
 
     }
 
