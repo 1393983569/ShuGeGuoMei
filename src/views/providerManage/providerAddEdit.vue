@@ -30,7 +30,6 @@
             :on-progress="handleProgressHeader"
           >
             <p v-if="editState" class="change-img" style="position:absolute;left:106px;">更换图片</p>
-            <p v-else></p>
             <div slot="tip" class="el-upload__tip">建议上传大小不超过1m的图片</div>
             <el-progress v-if="0<percentageHeader&&percentageHeader<=100" type="circle" :percentage="percentageHeader" :width="177" style="width:178px;height:178px;"></el-progress>
             <img v-if="ruleForm.headerPic" :src="ruleForm.headerPic" class="avatar">
@@ -57,7 +56,7 @@
         <el-input v-model="ruleForm.email" placeholder="请输入邮箱" style="width:400px;"/>
       </el-form-item>
       <el-form-item label="仓库地址：" prop="areaId">
-        <selector-address :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
+        <selectGoodsAddress :province1id="ruleForm.provinceId" :city1id="ruleForm.cityId" :county1id="ruleForm.areaId" @getProvince="getProvince" @getCity="getCity" @getCounty="getCounty"/>
       </el-form-item>
       <el-form-item label=" " prop="addressDetail">
         <el-input v-model="ruleForm.addressDetail" placeholder="请输入详细地址" style="width:400px;"/>
@@ -68,7 +67,7 @@
       <el-form-item label="备注：" prop="remark">
         <el-input v-model="ruleForm.remark" placeholder="请输入备注" style="width:400px;"/>
       </el-form-item>
-      <el-form-item label="可配送的店铺列表：" prop="shopObject">
+      <el-form-item prop="shopObject">
         <!-- <el-select v-model="ruleForm.shopObject" placeholder="请选择" multiple clearable style="width:500px;">
           <el-option
             v-for="item in shopList"
@@ -77,7 +76,10 @@
             :value="item.id">
           </el-option>
         </el-select> -->
-         <el-select v-model="shopObject" placeholder="请选择" multiple clearable style="width:500px;">
+        <template slot="label">
+          <span style="color:red;">*</span>可配送的店铺列表：
+        </template>
+         <el-select v-model="shopObject" placeholder="请选择" multiple clearable style="width:500px;" @blur="shopVaildate">
           <el-option
             v-for="item in shopList"
             :key="item.id"
@@ -85,6 +87,7 @@
             :value="item.id">
           </el-option>
         </el-select>
+        <p v-if="shopStatus" style="font-size:12px;color:red;">请选择配送店铺</p>
       </el-form-item>
       <el-form-item prop="goodsArr">
         <template slot="label">
@@ -124,7 +127,6 @@
           :on-progress="handleProgressQua"
         >
           <p v-if="editState" class="change-img" style="position:absolute;right:0px;left:106px;">更换图片</p>
-          <p v-else></p>
           <div slot="tip" class="el-upload__tip">建议上传大小不超过1m的图片</div>
           <el-progress v-if="0<percentageQua&&percentageQua<=100" type="circle" :percentage="percentageQua" :width="177" style="width:178px;height:178px;"></el-progress>
           <img v-if="ruleForm.qualificationPics" :src="ruleForm.qualificationPics" class="avatar">
@@ -149,14 +151,14 @@ import Breadcrumb from '@/components/Breadcrumb'
 import gradeDetail from './gradeDetail.vue'
 import grade from './grade.vue'
 import { getAllShop } from '@/api/shop.js'
-import selectorAddress from '@/components/selectorAddress/selectAll.vue'
+import selectGoodsAddress from '@/components/selectorAddress/selectGoodsAddress.vue'
 import { getProviderDetail, addProvider,editProvider,editProviderGoods, editProviderShop} from '@/api/provider.js'
 import { getSecondCategory } from '@/api/category/categoryList.js'
 import { getGoods } from '@/api/collectShop.js'
 import { constants } from 'fs';
 
 export default {
-  components: { selectorAddress,grade ,gradeDetail, Breadcrumb },
+  components: { selectGoodsAddress,grade ,gradeDetail, Breadcrumb },
   name: 'providerAddEdit',
   data() {
     // 手机号验证
@@ -312,9 +314,6 @@ export default {
         addressDetail: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
         ],
-        // goodsArr: [
-        //   { required: false, validator:validateGoods, trigger: 'change' },
-        // ],
         areaId: [
           { required: true, message: '请选择仓库地址', trigger: 'blur' },
         ],
@@ -336,11 +335,17 @@ export default {
       providerGoodsList:[],
       // 总分
       averageScore:0,
+      // 配送店铺
+      shopStatus:false,
     }
   },
   watch: {
     'shopObject'(e) {
-      // console.log(e, 'jjjjjjjjj')
+      if(e.length<=0){
+        this.shopStatus = true
+      }else{
+        this.shopStatus = false
+      }
     },
     'checkGoodsList'(e){
       // console.log(e, 'list.......')
@@ -369,6 +374,11 @@ export default {
     this.ruleForm.shops = []
   },
   methods: {
+    shopVaildate(){
+      if(this.shopObject.length<=0){
+        this.shopStatus = true
+      }else{}
+    },
     handleProgressHeader(event, file, fileList){
       this.percentageHeader = event.percent
       this.ruleForm.headerPic = ''

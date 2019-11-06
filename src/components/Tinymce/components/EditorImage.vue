@@ -5,7 +5,6 @@
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
       <el-upload
-        :multiple="true"
         :file-list="fileList"
         :show-file-list="true"
         :on-remove="handleRemove"
@@ -55,9 +54,7 @@ export default {
       return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
     },
     handleSubmit() {
-      console.log(this.fileList, 'imgList.....')
       const arr = Object.keys(this.listObj).map(v => this.listObj[v])
-      console.log(this.checkAllSuccess(), )
       if (!this.checkAllSuccess()) {
         this.$message('请等待所有图片上传成功。如果有网络问题，请刷新页面并重新上传!')
         return
@@ -67,7 +64,7 @@ export default {
       this.fileList = []
       this.dialogVisible = false
     },
-    handleSuccess(response, file) {
+    handleSuccess(response, file , fileList) {
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
@@ -89,6 +86,7 @@ export default {
       }
     },
     beforeUpload(file) {
+      console.log(file, 'before.....')
       // const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 1;
       if (!file.type) {

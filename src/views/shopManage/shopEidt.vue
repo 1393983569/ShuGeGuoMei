@@ -128,24 +128,25 @@
             </el-table>
           </virtual-list>
         </el-form-item>
-        <el-form-item label="职员人数：">
-          <el-table :data="staffTables" style="width:40%;" size="mini">
-          <el-table-column prop="role_id" label="序号"/>
-          <el-table-column prop="name" label="姓名"/>
-          <el-table-column prop="rank" label="职级"/>
-          <el-table-column prop="mobile" label="电话"/>
-    </el-table>
+        <!-- 职员人数 -->
+        <el-form-item label="职员人数：" v-if="!showState">
+          ({{staffData.length}}人)
+          <staff :staffTable="staffData"></staff>
         </el-form-item>
-        <div v-if="showState" />
-        <div v-else style="font-size:14px;color: #606266;margin-left:10px;font-weight:bold;">成本结构：</div>
-        <div v-if="showState" />
-        <div v-else style="font-size:14px;color: #606266;margin-left:10px;font-weight:bold;"> 会员人数：</div>
-
+        <!-- 成本结构 -->
+        <el-form-item label="成本结构：" v-if="!showState">
+          <costTable :costObject="costObject"></costTable>
+        </el-form-item>
+        <!-- 会员人数 -->
+        <el-form-item label="会员人数：" v-if="!showState">
+          {{this.editObject.members}}人
+        </el-form-item>
       </el-form>
     <!-- </el-dialog> -->
   </div>
 </template>
 <script>
+import costTable from './costTable.vue'
 import staff from './staff.vue'
 import virtualList from 'vue-virtual-scroll-list'
 import selectorAddress from '@/components/selectorAddress/selectorAddress.vue'
@@ -156,7 +157,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name:'shopEidt',
   components: {
-    selectorAddress, staff,Breadcrumb, virtualList
+    selectorAddress, staff,Breadcrumb, virtualList,costTable
   },
   data() {
     // 手机号码验证
@@ -178,6 +179,11 @@ export default {
       }, 100)
     };
     return {
+      // 职员数组
+      staffData:[],
+      // 成本结构
+      costObject:{},
+
       editDiabled:false,
       addDiabled:false,
       breadState:false,
@@ -274,6 +280,9 @@ export default {
     this.getCategoryList()
     if(JSON.stringify(this.$route.params)!== '{}'){
       this.editObject= this.$route.params
+      this.staffData = this.editObject.shopStaffList
+      console.log(this.editObject.profitLossDomain, 'stafff,,,,,')
+      this.costObject=this.editObject
       if(this.$route.params.imge){
         let e = this.$route.params
         this.fileList = []

@@ -109,23 +109,27 @@ export default {
     // 查询所有品类
     getaAllCategory(id){
       getaAllCategory(id).then(res => {
-        this.categoryOneId = res.info[0].id
-        this.categoryTwoId = res.info[0].seconds[0].id
-        this.getGoods()
-        res.info.forEach(item => {
-          let arr = {}
-          arr.id = item.categoryOneId
-          arr.label = item.categoryOneName
-          arr.children = item.seconds
-          arr.children = []
-          item.seconds.forEach(a => {
-            let obj = {}
-            obj.id = a.id
-            obj.label = a.name
-            arr.children.push(obj)
-          })
-          this.dataTree.push(arr)
-        });
+        if(res.info.length>0){
+          this.categoryOneId = res.info[0].id
+          this.categoryTwoId = res.info[0].seconds[0].id
+          this.getGoods()
+          res.info.forEach(item => {
+            let arr = {}
+            arr.id = item.categoryOneId
+            arr.label = item.categoryOneName
+            arr.children = item.seconds
+            arr.children = []
+            item.seconds.forEach(a => {
+              let obj = {}
+              obj.id = a.id
+              obj.label = a.name
+              arr.children.push(obj)
+            })
+            this.dataTree.push(arr)
+          });
+        }else{
+
+        }
       }).catch(err => {
         console.log(err)
         this.$message.error('查询品类出错！')

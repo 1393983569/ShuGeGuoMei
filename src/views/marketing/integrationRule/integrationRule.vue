@@ -2,16 +2,17 @@
   <div>
     <breadcrumb :stateShow="false"></breadcrumb>
     <div style="margin:20px;">
-      <el-button class="button">积分获取</el-button>
-      <el-button class="button">积分兑换/抵扣</el-button>
+      <el-button class="button" @click="changeFunction('积分获取')">积分获取</el-button>
+      <el-button class="button" @click="changeFunction('积分兑换')">积分兑换/抵扣</el-button>
     </div>
-    <div>
+    <div v-if="showState==='积分获取'">
       <span class="font-size" style="color:rgba(16, 16, 16, 1);">消费-积分汇率：{{ruleObject.content}}</span>&nbsp;&nbsp;&nbsp;
       <span class="font-size" style="color:rgba(153, 153, 153, 1);" v-if="ruleObject.status === 1">已启用</span>
       <span class="font-size" style="color:rgba(153, 153, 153, 1);" v-else>已停用</span>
       <el-button class="button" v-if="ruleObject.status === 1" @click="openRule(0)">停用</el-button>
       <el-button class="button" v-else @click="openRule(1)">启用</el-button>
     </div>
+    <div v-else> </div>
     <hint v-model="openScore" :title="scoreTitle" :text="scoreText" @confirm="scoreHandle" />
   </div>
 </template>
@@ -28,6 +29,7 @@ export default {
       scoreTitle:'',
       scoreText:'',
       scoreStatus:'',
+      showState:'积分获取',
     }
   },
   components:{breadcrumb, hint},
@@ -35,6 +37,10 @@ export default {
     this.getRuleHandle()
   },
   methods:{
+    // 页面转换
+    changeFunction(e){
+      this.showState  = e
+    },
     getRuleHandle(){
       getIntegralRule().then(res => {
         this.ruleObject = res.info

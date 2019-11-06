@@ -134,7 +134,7 @@ export default {
           this.loadingSearch = false
           this.loadingClear = false
         }else{
-          this.$message.info('暂无数据')
+          this.$message.info('暂无供应商')
           this.total = res.info.totalrecord
           this.tableData = res.info.records
           this.loadingSearch = false

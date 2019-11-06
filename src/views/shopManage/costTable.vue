@@ -2,44 +2,98 @@
   <div>
     <table class="table" border='0' cellspacing='0' cellpadding="0">
       <tr class="tr_class" >
-        <th class="th_class" rowspan="9">成本</th>
-        <th class="th_class" rowspan="4">固定成本（元）</th>
-        <th class="th_class">房租（{{rentRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData">{{costData.rent/100}}</span></th>
+        <th class="th_class" rowspan="9">成本({{totalCost}}万元)</th>
+        <th class="th_class" rowspan="4">
+          <span v-if="fixedCostRate">固定成本（元）{{fixedCostRate*100}}%</span>
+          <span v-else>固定成本（元）0</span>
+        </th>
+        <th class="th_class">
+          <span v-if="rentRate">房租（{{rentRate*100}}%）</span>
+          <span v-else>房租（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.rent">{{costData.rent/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">工资支出（{{wagesRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData">{{costData.wages/100}}</span></th>
+        <th class="th_class">
+          <span v-if="wagesRate">工资支出（{{wagesRate*100}}%）</span>
+          <span v-else>工资支出（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.wages">{{costData.wages/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">水电设备（{{hydropowerRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData"></span>{{costData.hydropower/100}}</th>
+        <th class="th_class">
+          <span v-if="hydropowerRate">水电设备（{{hydropowerRate*100}}%）</span>
+          <span v-else>水电设备（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.hydropower">{{costData.hydropower/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">其它固定费用总计（{{otherExpensesRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData">{{costData.otherExpenses/100}}</span></th>
+        <th class="th_class">
+          <span v-if="otherExpensesRate">其它固定费用总计（{{otherExpensesRate*100}}%）</span>
+          <span v-else>其它固定费用总计（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.otherExpenses">{{costData.otherExpenses/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
 
       <tr class="tr_class">
-        <th class="th_class" rowspan="5">可变成本（元）</th>
-        <th class="th_class" >营销费用（{{marketingRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData">{{costData.marketing/100}}</span></th>
+        <th class="th_class" rowspan="5">
+          <span v-if="changeCostRate">可变成本（元）{{changeCostRate*100}}%</span>
+          <span v-else>可变成本（元）0</span>
+        </th>
+        <th class="th_class" >
+          <span v-if="marketingRate">营销费用（{{marketingRate*100}}%）</span>
+          <span v-else>营销费用（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.marketing">{{costData.marketing/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">积分抵扣</th>
-        <th class="th_class"></th>
+        <th class="th_class">积分抵扣（0）</th>
+        <th class="th_class">
+          <span v-if="costData.cost">{{costData.cost/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">其它可变费用总计（{{otherVariablesRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData">{{costData.otherVariables/100}}</span></th>
+        <th class="th_class">
+          <span v-if="otherVariablesRate">其它可变费用总计（{{otherVariablesRate*100}}%）</span>
+          <span v-else>其它可变费用总计（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.otherVariables">{{costData.otherVariables/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">采购成本（{{procurementRate*100}}%）</th>
-        <th class="th_class"><span v-if="costData">{{costData.procurement/100}}</span></th>
+        <th class="th_class">
+          <span v-if="procurementRate">采购成本（{{procurementRate*100}}%）</span>
+          <span v-else>采购成本（0）</span>
+        </th>
+        <th class="th_class">
+          <span v-if="costData.procurement">{{costData.procurement/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">损耗成本</th>
-        <th class="th_class"></th>
+        <th class="th_class">损耗成本（0）</th>
+        <th class="th_class">
+          <span v-if="costData.cost">{{costData.cost/100}}</span>
+          <span v-else>0.00</span>
+        </th>
       </tr>
     </table>
   </div>
@@ -58,16 +112,20 @@ export default {
       marketingRate:'',
       otherVariablesRate:'',
       procurementRate:'',
+      // 固定成本
+      fixedCostRate:0,
+      // 可变成本
+      changeCostRate:0,
+      // 总成本
+      totalCost:0,
     }
   },
   watch:{
     'costObject'(e){
       if(e.profitLossDomain){
-        console.log(e, 'cost1........')
         this.costData = e.profitLossDomain
         this.percentFunction(this.costData )
       }else{
-        console.log(e, 'cost0........')
         this.costData.rent = 0
         this.costData.wages=0
         this.costData.hydropower=0
@@ -75,6 +133,9 @@ export default {
         this.costData.marketing=0
         this.costData.otherVariables=0
         this.costData.procurement=0
+        this.fixedCostRate = 0
+        this.changeCostRate = 0
+        this.totalCost  =0
       }
 
     }
@@ -86,11 +147,12 @@ export default {
       if(param){
         // 总成本
         let total = param.hydropower+param.marketing+param.otherExpenses+param.otherVariables+param.procurement+param.rent+param.wages
+        this.totalCost = (total/1000000).toFixed(2)
         // rent 房租占比
         this.rentRate = (param.rent/total).toFixed(2)
         // wages 工资支出占比
         this.wagesRate = (param.wages/total).toFixed(2)
-        // hydropower 水电暖合计占比
+        // hydropower 水电设备占比
         this.hydropowerRate = (param.hydropower/total).toFixed(2)
         // otherExpenses 其他固定费用总计占比
         this.otherExpensesRate = (param.otherExpenses/total).toFixed(2)
@@ -101,7 +163,9 @@ export default {
         // procurement 采购成本占比
         this.procurementRate = (param.procurement/total).toFixed(2)
         // 固定成本占比
-        // this.fixedCostRate = this.rentRate+this.wagesRate+this.hydropowerRate+
+        this.fixedCostRate = ((param.rent+param.wages+param.hydropower+param.otherExpenses)/total).toFixed(2)
+        // 可变成本
+        this.changeCostRate = ((param.marketing+param.otherVariables+param.procurement)/total).toFixed(2)
       }else{
 
       }

@@ -157,6 +157,15 @@ export default {
         if(this.handleData()){
           this.$refs[formName].validate((valid) => {
             if (valid) {
+              // 判断商品是否为空
+              if(this.discountForm.discountPackageGoods){
+
+              }else{
+                this.$message.warning('请选择折扣商品')
+                this.addLoading = false
+                return
+              }
+              console.log(this.discountForm, 'table...')
               addDiscount(this.discountForm).then(res => {
                 if(res.status === 1){
                   this.$message.success('添加成功！')
@@ -166,6 +175,7 @@ export default {
                 }
               }).catch(err=> {
                 this.$message.success('添加失败！')
+                this.addLoading = false
               })
             } else {
               return false
