@@ -206,7 +206,7 @@ export default {
     // 微信号
     var validateWeixin = (rule, value, callback) => {
       if (value === '') {
-        // callback(new Error('微信号不能为空'));
+        callback();
       }else{
         var reg= /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/;
         if(!reg.test(value)){
@@ -218,7 +218,7 @@ export default {
     };
     var validateQQ = (rule, value, callback) => {
       if (value === '') {
-        // callback(new Error('QQ号不能为空'));
+        callback();
       }else{
         var reg = /^[1-9]\d*$/;
         if(!reg.test(value)||value.toString().length>12||value.toString().length<5){
@@ -349,6 +349,9 @@ export default {
     },
     'checkGoodsList'(e){
       // console.log(e, 'list.......')
+    },
+    'ruleForm.contactName'(e){
+      console.log(e, 'eeeee')
     }
   },
   mounted() {

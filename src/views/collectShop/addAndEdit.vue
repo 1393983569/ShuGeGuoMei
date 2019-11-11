@@ -154,8 +154,13 @@
         <el-input v-model="ruleForm.price" placeholder="请输入内容" style="width: 444px" /> 元/单位
         <div style="margin-top:5px;font-weight:bold;">零售价参考价</div>
         <el-table :data="getAddressTable" size="mini" style="width:450px;">
-          <el-table-column prop="getAddress" label="采集点" />
-          <el-table-column prop="price" label="价格" />
+          <el-table-column prop="price_market_name" label="采集点" />
+          <el-table-column prop="price" label="价格">
+            <template slot-scope="scope">
+              <p v-if="scope.row.price === '--'">--</p>
+              <p v-else>{{parseFloat(scope.row.price)/100}}</p>
+            </template>
+          </el-table-column>
         </el-table>
       </el-form-item>
     </el-form>
@@ -446,6 +451,7 @@ export default {
           if(obj.goodTab){
             this.ruleForm.tab = obj.goodTab.split(',')
           }
+          this.getAddressTable=res.info.priceGoodsList
         // }
       }).catch(err => {
         console.log(err)
@@ -606,7 +612,7 @@ export default {
   }
   .changPic{
     position:absolute;
-    right:0px;
+    left:106px;
     line-height: 20px;
     font-size:14px;
     color:aliceblue;

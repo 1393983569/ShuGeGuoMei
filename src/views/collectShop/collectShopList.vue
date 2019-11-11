@@ -133,7 +133,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
-      </div>``
+      </div>
     <!--删除商品-->
     <hint v-model="showDelete" title="删除商品" text="是否删除该商品？" @confirm="confirmDelete" />
     <!--上下架商品-->

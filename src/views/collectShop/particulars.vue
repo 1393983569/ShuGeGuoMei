@@ -34,6 +34,18 @@
     <p>进价：{{ row.goodPurchasePrice/100 }}元</p>
     <p>出价：{{ row.goodSellPrice/100 }}元</p>
     <p>零售价：{{ row.goodPrice/100 }}元</p>
+    <div style="margin:20px;">
+      <p style="font-size:14px;font-weight:bold;">零售价参考价</p>
+      <el-table :data="getAddressTable" size="mini" style="width:450px;">
+          <el-table-column prop="price_market_name" label="采集点" />
+          <el-table-column prop="price" label="价格">
+            <template slot-scope="scope">
+              <p v-if="scope.row.price === '--'">--</p>
+              <p v-else>{{parseFloat(scope.row.price)/100}}</p>
+            </template>
+          </el-table-column>
+        </el-table>
+    </div>
   </div>
 </template>
 <script>
@@ -45,6 +57,12 @@ export default {
   components: { Breadcrumb },
   data() {
     return {
+      getAddressTable:[
+        {
+          getAddress:'采集点1',
+          price:13,
+        }
+      ],
       row: {},
       categoryOne: {},
       categoryTwo: {},
@@ -91,6 +109,7 @@ export default {
     getDetailsGoods() {
       seeDetailsGoods(this.goodId).then(res => {
         if(res.info) {
+          this.getAddressTable = res.info.priceGoodsList
           if(res.info.categoryOne){
             this.categoryOne = res.info.categoryOne
           }else{
