@@ -162,7 +162,7 @@ export default {
   data() {
     // 手机号码验证
     var checkPhone = (rule, value, callback) => {
-      const phoneReg = /^1[3|4|5|6|7|8][0-9]{9}$/
+      // const phoneReg = /d{11}$/
       if (!value) {
         return callback(new Error('电话号码不能为空'))
       }
@@ -170,11 +170,16 @@ export default {
         if (!Number.isInteger(+value)) {
           callback(new Error('请输入数字值'))
         } else {
-          if (phoneReg.test(value)) {
-            callback()
-          } else {
-            callback(new Error('电话号码格式不正确'))
+          if(value.length===11){
+
+          }else{
+            callback(new Error('电话号码长度有误！'))
           }
+          // if (phoneReg.test(value)) {
+          //   callback()
+          // } else {
+          //   callback(new Error('电话号码格式不正确'))
+          // }
         }
       }, 100)
     };

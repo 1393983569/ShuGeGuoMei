@@ -80,7 +80,7 @@
         />
       </div>
     </div>
-     <hint title="删除供应商" v-model="showDelete" text="是否删除供应商？" @confirm="deleteAdConfirm" />
+     <hint title="删除采价用户" v-model="showDelete" text="是否删除采价用户？" @confirm="deleteAdConfirm" />
   </div>
 </template>
 <script>
@@ -110,6 +110,10 @@ export default {
       buttonList:[],
       priceMarketType:'',
       shichangList:[
+        {
+          id:'',
+          name:'全部'
+        },
         {
           id:1,
           name:'批发市场'

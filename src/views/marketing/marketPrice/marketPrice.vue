@@ -122,6 +122,10 @@ export default {
       typeId:'',
       typeList: [
         {
+          id: '',
+          name: '全部'
+        },
+        {
           id: 0,
           name: '零售市场'
         },
@@ -207,7 +211,13 @@ export default {
     // 查询所有采价市场
     getAllCaijia(){
       getAllCaijia().then(res => {
-        this.areaList = res.info
+        this.areaList[0] = {
+          id:'',
+          name:'全部'
+        }
+        res.info.map(item => {
+          this.areaList.push(item)
+        })
       }).catch(err => {
         this.$message.error('查询采价市场出错！')
       })
@@ -215,7 +225,13 @@ export default {
     // 查询所有一级品类
     getCategory(){
       getFirstCategory().then(res => {
-        this.categoryOneList = res.info
+        this.categoryOneList[0] = {
+          id:'',
+          name:'全部'
+        }
+        res.info.map(item => {
+          this.categoryOneList.push(item)
+        })
       }).catch(err => {
         console.log(err)
         this.$message.error('查询品类出错')

@@ -98,6 +98,10 @@ export default {
       shopList: [],
       stateList:[
         {
+          id:'',
+          name:'全部'
+        },
+        {
           id:0,
           name:'停用'
         },
@@ -142,7 +146,13 @@ export default {
     getAllShop() {
       getAllShop().then(res => {
         if (res.status === 1) {
-          this.shopList = res.info
+          this.shopList[0] = {
+            id:'',
+            name:'全部'
+          }
+          res.info.map(item =>{
+            this.shopList.push(item)
+          })
         } else {
           this.$message.error('查询店铺失败')
         }

@@ -168,6 +168,10 @@ export default {
       secondList: [],
       stateList: [
         {
+          id: '',
+          name: '全部'
+        },
+        {
           id: 0,
           name: '有货'
         },
@@ -190,7 +194,13 @@ export default {
       if (e) {
         getSecondCategory(e).then(res => {
           if (res.info.length > 0) {
-            this.secondList = res.info
+            this.secondList[0] = {
+              id:'',
+              name:'全部'
+            }
+            res.info.map(item => {
+              this.secondList.push(item)
+            })
           } else {
             this.$message.info('此一级品类下暂无二级品类！')
             this.secondList = []
@@ -303,7 +313,13 @@ export default {
     getFirstCategory() {
       getFirstCategory().then(res => {
         if (res.info.length > 0) {
-          this.firstList = res.info
+          this.firstList[0]={
+            id:'',
+            name:'全部'
+          }
+          res.info.map(item => {
+            this.firstList.push(item)
+          })
         } else {
           this.$message.warning('暂无一级品类')
         }

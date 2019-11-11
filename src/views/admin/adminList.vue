@@ -10,7 +10,7 @@
     <div style="display:flex;direction-flex:row;">
       <span style="font-weight:bold;">角色：</span>
       <el-select v-model="charactar" style="width:20%;" size="mini" placeholder="请选择活动区域" clearable>
-        <el-option v-for="item in roleList" :key="item.id" :value="item.id" :label="item.name" />
+        <el-option v-for="item in searchRoleList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
       <div>
         <div style="position:absolute; right:10px;">
@@ -192,6 +192,7 @@ export default {
       listIndex: '',
       listRow: {},
       roleList: [],
+      searchRoleList:[],
       loading: false,
       bottonList:[],
       param:'',
@@ -275,6 +276,13 @@ export default {
     // 获取角色
     getRoles() {
       selectAfter().then(res => {
+        this.searchRoleList[0] = {
+          id:'',
+          name:'全部'
+        }
+        res.info.map(item => {
+          this.searchRoleList.push(item)
+        })
         this.roleList.push(...res.info)
       }).catch(err => {
         console.log(err)

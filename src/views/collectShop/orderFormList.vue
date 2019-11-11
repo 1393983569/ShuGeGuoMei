@@ -138,6 +138,10 @@ export default {
       type: '',
       typeList:[
         {
+          name:'全部',
+          id:''
+        },
+        {
           name:'销售',
           id:1
         },

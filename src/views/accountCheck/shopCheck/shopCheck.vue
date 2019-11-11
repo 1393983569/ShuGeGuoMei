@@ -214,7 +214,13 @@ export default {
     // 查询所有店铺
     getAllShopList() {
       getAllShop().then(res => {
-        this.shopList = res.info
+       this.shopList[0] ={
+          id:'',
+          name:'全部'
+        }
+        res.info.map(item => {
+          this.shopList.push(item)
+        })
       }).catch(err => {
         console.log(err)
         this.$message.error('查询店铺出错')
@@ -241,6 +247,7 @@ export default {
           }else{
             this.$message.info('暂无数据！')
             this.tableData=[]
+            this.total = res.info.totalrecord
           }
 
         }

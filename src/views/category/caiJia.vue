@@ -107,15 +107,15 @@ export default {
       shichang:'',
       shichangList:[
         {
-          id:1,
+          id:0,
           name:'批发市场'
         },
         {
-          id:2,
+          id:1,
           name:'零售市场'
         },
         {
-          id:3,
+          id:2,
           name:'早市'
         },
       ],

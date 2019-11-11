@@ -173,9 +173,9 @@ export default {
     // 查询商品定价列表
     getAllInventoryGoods(){
       getAllInventoryGoods(this.pageNum, this.pageSize, this.shopId, this.yearPro, this.monthPro, this.dayPro, this.timeData[0], this.timeData[1]).then(res => {
-        if(res.info.records.length>0){
+        if(res.info.records.length>=0){
           this.dataList =  res.info.records
-          this.total == res.info.totalrecord
+          this.total =res.info.totalrecord
         }else{
 
         }
@@ -186,8 +186,14 @@ export default {
     // 查询所有店铺
     getAllShopFunction(){
       getAllShop().then(res => {
-        this.shopList = res.info
-        this.shopId = this.shopList[0].id
+        this.shopList[0] = {
+          id:'',
+          name:'全部'
+        }
+        res.info.map(item => {
+          this.shopList.push(item)
+        })
+        // this.shopId = this.shopList[1].id
         this.getAllInventoryGoods()
       }).catch(err=> {
         this.$message.error('店铺查询出错！')
@@ -208,12 +214,7 @@ export default {
       }
     },
     searchFunction(){
-      if(this.shopId){
-        this.getAllInventoryGoods()
-      }else{
-        this.$message.warning('请选择店铺查询！')
-        return
-      }
+      this.getAllInventoryGoods()
     },
     // 清空筛选条件
     clearFunction(){

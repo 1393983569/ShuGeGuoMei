@@ -380,7 +380,7 @@ export const asyncRoutes = [
     meta: {
       roles: ['collectShop'],
       icon: 'Commoditybank_default',
-      title: '采集平台'
+      title: '集采平台'
     },
     children: [
       {
