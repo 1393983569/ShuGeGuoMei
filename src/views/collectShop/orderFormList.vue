@@ -49,7 +49,7 @@
     <el-table-column label="订单店铺" prop="name"></el-table-column>
     <el-table-column label="商品数量" prop="">
       <template slot-scope="scope">
-        {{scope.row.goodsAmount[0].goodsAmount}}
+        {{scope.row.goodsAmount[0]}}
       </template>
     </el-table-column>
     <el-table-column label="订单金额(元)" prop="total_money">
@@ -65,10 +65,12 @@
         <p v-else>调拨</p>
       </template>
     </el-table-column>
-    <el-table-column label="订单状态" prop="states">
+    <el-table-column label="订单状态" prop="status">
       <template slot-scope="scope">
         <p v-if="scope.row.status ===0">未拆单</p>
         <p v-else-if="scope.row.status===1">已拆单</p>
+        <p v-else-if="scope.row.status===2">已派单</p>
+        <p v-else-if="scope.row.status===3">已入库</p>
       </template>
     </el-table-column>
     <el-table-column label="子订单数" prop="">

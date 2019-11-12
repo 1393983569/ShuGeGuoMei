@@ -341,6 +341,7 @@ export default {
   },
   watch: {
     'shopObject'(e) {
+      console.log(e, 'shoplist....')
       if(e.length<=0){
         this.shopStatus = true
       }else{
@@ -478,6 +479,7 @@ export default {
           // 可配送店铺
           this.ruleForm.shopObject = []
           let arr =[]
+          console.log(res.info.providerShopList, 'hhhhhh')
           res.info.providerShopList.forEach(item => {
             if(item){
               arr.push(item.id)

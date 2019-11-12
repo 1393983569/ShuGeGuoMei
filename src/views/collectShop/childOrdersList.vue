@@ -139,7 +139,7 @@ export default {
       this.subOrderId = row.id
     },
     confirmSend(){
-      let status = 2
+      let status = 1
       updateSubOrderStatus(this.subOrderId,status).then(res => {
         this.$message.success('派单成功！')
         this.showSend = false

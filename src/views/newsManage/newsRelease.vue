@@ -201,15 +201,13 @@ export default {
         });
     },
     submitForm(formName) {
-      console.log(this.newsForm.content, 'jjjjjjj')
-      return
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     this.addNewsHandle();
-      //   } else {
-      //     return false;
-      //   }
-      // });
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.addNewsHandle();
+        } else {
+          return false;
+        }
+      });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
