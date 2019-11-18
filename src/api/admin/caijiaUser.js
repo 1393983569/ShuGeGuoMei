@@ -56,13 +56,13 @@ export const deleteCaijiaUser = (id) => {
   })
 }
 /**
- * 根据省市区查询采价端用户
+ * 根据省市区查询采价端
  * @param data
  */
 export const getPriceMarket = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
-    if (data[key]) params.append(key, data[key])
+    if (data[key]||data[key]===0) params.append(key, data[key])
   }
   return request({
     url: '/basics/selectPriceMarket',

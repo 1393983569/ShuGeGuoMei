@@ -171,9 +171,15 @@ export default {
         this.$message.warning('请选择区！')
         return
       }
+      console.log(this.ruleForm.priceMarketType, 'jjjjjj')
       if(!this.ruleForm.priceMarketType){
-        this.$message.warning('请选择市场类别！')
-        return
+        if(this.ruleForm.priceMarketType===0){
+
+        }else{
+          this.$message.warning('请选择市场类别！')
+          return
+        }
+
       }
       this.getPriceMarket()
     },
