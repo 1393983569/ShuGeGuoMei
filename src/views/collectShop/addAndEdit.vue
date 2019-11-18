@@ -157,7 +157,7 @@
           <el-table-column prop="price_market_name" label="采集点" />
           <el-table-column prop="price" label="价格">
             <template slot-scope="scope">
-              <p v-if="scope.row.price === '--'">--</p>
+              <p v-if="scope.row.price === '--'||''">--</p>
               <p v-else>{{parseFloat(scope.row.price)/100}}</p>
             </template>
           </el-table-column>
@@ -181,24 +181,7 @@ export default {
       hiddentab:false,
       percentageSmall:0,
       percentageBig:0,
-      getAddressTable: [
-        {
-          getAddress: '采集点1',
-          price: '￥3.00'
-        },
-        {
-          getAddress: '采集点1',
-          price: '￥3.00'
-        },
-        {
-          getAddress: '采集点1',
-          price: '￥3.00'
-        },
-        {
-          getAddress: '采集点1',
-          price: '￥3.00'
-        }
-      ],
+      getAddressTable: [],
       imageUrl: '',
       addLoading: false,
       stateList: [
@@ -265,22 +248,12 @@ export default {
       },
       rules: {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        // provinceId:[{ required: true, message: '请选择地址', trigger: 'blur' }],
-        // cityId: [{ required: true, message: '请输入', trigger: 'blur' }],
-        // countyId: [{ required: true, message: '请输入', trigger: 'blur' }],
-        // firstList:[{ required: true, message: '请输入', trigger: 'blur' }],
-        // secondList:[{ required: true, message: '请输入', trigger: 'blur' }],
-        // tab: [{ required: true, message: '请输入', trigger: 'blur' }],
         categoryOneId: [{ required: true, message: '请选择一级品类', trigger: 'blur' }],
         categoryTwoId: [{ required: true, message: '请选择二级品类', trigger: 'blur' }],
-        // tab: [{ required: true, message: '请添加标签', trigger: 'blur' }],
         standards: [{ required: true, message: '请输入规格', trigger: 'blur' }],
         unit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
-        // remark: [{ required: true, message: '请输入备注', trigger: 'blur' }],
         qualityDate: [{ required: false, message: '请选择保质期', trigger: 'blur' }],
         freshDate: [{ required: false, message: '请选择保鲜期', trigger: 'blur' }],
-        // areaId: [{ required: true, message: '请输入', trigger: 'blur' }],
-        // provinceId: [{ required: true, message: '请输入', trigger: 'blur' }],
         state: [{ required: true, message: '请选择状态', trigger: 'blur' }],
         purchasePrice: [{ required: true, message: '请输入进价', trigger: 'blur' }],
         sellPrice: [{ required: true, message: '请输入出价', trigger: 'blur' }],
@@ -351,6 +324,7 @@ export default {
     if(JSON.stringify(this.$route.params) !=="{}") {
       if(this.$route.params.row === '添加') {
         this.addEditState = true
+        this.getAddressTable = []
       }else {
         this.addEditState = false
         this.goodsId = this.$route.params.row.id

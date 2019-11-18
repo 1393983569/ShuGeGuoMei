@@ -45,7 +45,6 @@ export default {
   data(){
     // 手机号码验证
     var checkPhone = (rule, value, callback) => {
-      // const phoneReg = /^1[3|4|5|6|7|8][0-9]{9}$/
       if (!value) {
         return callback(new Error('电话号码不能为空'))
       }
@@ -54,15 +53,10 @@ export default {
           callback(new Error('请输入数字值'))
         } else {
           if(value.length===11){
-
+            callback()
           }else{
             callback(new Error('电话号码长度有误！'))
           }
-          // if (phoneReg.test(value)) {
-          //   callback()
-          // } else {
-          //   callback(new Error('电话号码格式不正确'))
-          // }
         }
       }, 100)
     };
@@ -97,15 +91,15 @@ export default {
       },
       shichangTypeList:[
         {
-          id:1,
+          id:0,
           name:'批发市场'
         },
         {
-          id:2,
+          id:1,
           name:'零售市场'
         },
         {
-          id:3,
+          id:2,
           name:'早市'
         },
       ],

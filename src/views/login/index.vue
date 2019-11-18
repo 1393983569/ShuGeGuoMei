@@ -1,6 +1,13 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
       <div class="login-input">
         <el-form-item prop="username">
           <md-input
@@ -12,11 +19,8 @@
             type="text"
             tabindex="1"
             auto-complete="on"
-          >
-            手机号
-          </md-input>
+          >手机号</md-input>
         </el-form-item>
-
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
             <md-input
@@ -32,24 +36,27 @@
               @keyup.native="checkCapslock"
               @blur="capsTooltip = false"
               @keyup.enter.native="handleLogin"
-            >
-              密码
-            </md-input>
+            >密码</md-input>
           </el-form-item>
         </el-tooltip>
         <p @click="change" class="forget-password">忘记密码</p>
-        <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleLogin()">登录</el-button>
+        <el-button
+          :loading="loading"
+          type="primary"
+          class="login-button"
+          @click.native.prevent="handleLogin()"
+        >登录</el-button>
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validUsername } from "@/utils/validate";
 // import SocialSign from './components/SocialSignin'
-import MdInput from '@/components/MDinput'
+import MdInput from "@/components/MDinput";
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
     // SocialSign
     MdInput
@@ -64,62 +71,56 @@ export default {
     // }
     const validatePassword = (rule, value, callback) => {
       if (value.length === 0) {
-        callback(new Error('请输入密码'))
+        callback(new Error("请输入密码"));
       } else {
-        callback()
+        callback();
       }
-    }
-    var isMobileNumber= (rule, value, callback) => {
-        if (!value) {
-          return new Error("请输入电话号码");
+    };
+    var isMobileNumber = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("电话号码不能为空"));
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(+value)) {
+          callback(new Error("请输入数字值"));
         } else {
-          const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-          const isPhone = reg.test(value);
-          value = Number(value); //转换为数字
-          if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
-          value = value.toString(); //转换成字符串
-            // if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
-            //   callback(new Error("手机号码格式如:138xxxx8754"));
-            // } else {
-            //   callback();
-            // }
-            if (value.length!==11) { //判断是否为11位手机号
-              callback(new Error("手机号码长度有误！"));
-            } else {
-              callback();
-            }
+          if (value.length === 11) {
+            callback();
           } else {
-            callback(new Error("请输入正确电话号码"));
+            callback(new Error("电话号码长度有误！"));
           }
         }
-    }
+      }, 100);
+    };
     return {
       loginForm: {
-        mobile: '',
-        password: ''
+        mobile: "",
+        password: ""
       },
       loginRules: {
         mobile: [
-          { required: true, trigger: 'blur'},
+          { required: true, trigger: "blur" },
           { validator: isMobileNumber, trigger: "blur" }
         ],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [
+          { required: true, trigger: "blur", validator: validatePassword }
+        ]
       },
 
-      passwordType: 'password',
+      passwordType: "password",
       capsTooltip: false,
       loading: false,
       redirect: undefined,
       otherQuery: {}
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
       immediate: true
@@ -129,9 +130,9 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
+    if (this.loginForm.username === "") {
       // this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
+    } else if (this.loginForm.password === "") {
       // this.$refs.password.focus()
     }
   },
@@ -139,84 +140,88 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    change(){
-      this.$router.push({name:'forget'})
+    change() {
+      this.$router.push({ name: "forget" });
     },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
-          this.capsTooltip = true
+        if (
+          (shiftKey && (key >= "a" && key <= "z")) ||
+          (!shiftKey && (key >= "A" && key <= "Z"))
+        ) {
+          this.capsTooltip = true;
         } else {
-          this.capsTooltip = false
+          this.capsTooltip = false;
         }
       }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
+      if (key === "CapsLock" && this.capsTooltip === true) {
+        this.capsTooltip = false;
       }
     },
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleLogin() {
       // 手机号验证
-      if(this.isMobileNumber(this.loginForm.mobile)){
-        let _this = this
+      if (this.isMobileNumber(this.loginForm.mobile)) {
+        let _this = this;
         this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          _this.loading = true
-          _this.$store.dispatch('user/login', _this.loginForm)
-            .then(() => {
-              _this.$router.push({ name: 'news', query: _this.otherQuery })
-              _this.loading = false
-            })
-            .catch(() => {
-              _this.loading = false
-            })
-        } else {
-          return false
-        }
-      })
-
-      }else{
-        return
-      }
-
-    },
-    isMobileNumber(value){
-        if (!value) {
-          this.$message.warning('请输入手机号码！')
-          return false
-        } else {
-          const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-          const isPhone = reg.test(value);
-          value = Number(value); //转换为数字
-          if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
-          value = value.toString(); //转换成字符串
-            if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
-              this.$message.warning('手机号码格式有误！')
-              return false
-            } else {
-              return true
-            }
+          if (valid) {
+            _this.loading = true;
+            _this.$store
+              .dispatch("user/login", _this.loginForm)
+              .then(() => {
+                _this.$router.push({ name: "news", query: _this.otherQuery });
+                _this.loading = false;
+              })
+              .catch(() => {
+                _this.loading = false;
+              });
           } else {
-            return true
+            return false;
           }
+        });
+      } else {
+        return;
+      }
+    },
+    isMobileNumber(value) {
+      if (!value) {
+        this.$message.warning("请输入手机号码！");
+        return false;
+      } else {
+        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+        const isPhone = reg.test(value);
+        value = Number(value); //转换为数字
+        if (typeof value === "number" && !isNaN(value)) {
+          //判断是否为数字
+          value = value.toString(); //转换成字符串
+          if (value.length < 0 || value.length > 12 || !isPhone) {
+            //判断是否为11位手机号
+            this.$message.warning("手机号码格式有误！");
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          return true;
         }
+      }
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
+        return acc;
+      }, {});
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -237,15 +242,15 @@ export default {
     //   }
     // }
   }
-}
+};
 </script>
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 // css3 判断
@@ -278,7 +283,7 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border-bottom: 1px solid #DEEDC1;
+    border-bottom: 1px solid #deedc1;
     /*background: rgba(0, 0, 0, 0.1);*/
     border-radius: 5px;
     color: #454545;
@@ -289,9 +294,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
@@ -315,19 +320,19 @@ $light_gray:#eee;
     margin: 0 auto;
     background-image: url(../../assets/log-img/登录框.png);
   }
-  .login-input{
+  .login-input {
     /*position: absolute;*/
     width: 600px;
     height: 420px;
     margin: 0 auto;
   }
   .login-button {
-    width:100%;
-    margin-bottom:30px;
+    width: 100%;
+    margin-bottom: 30px;
     margin-top: 20px;
-    background: #D0E6A5 100%;
-    border: solid 1px #C5CEB4;
-    box-shadow: 3px 3px 5px 0 #C5CEB4;
+    background: #d0e6a5 100%;
+    border: solid 1px #c5ceb4;
+    box-shadow: 3px 3px 5px 0 #c5ceb4;
   }
   .svg-container {
     padding: 6px 5px 6px 15px;
@@ -371,14 +376,13 @@ $light_gray:#eee;
     }
   }
 }
-.forget-password{
-  font-size:14px;
-  color:black;
-  font-family:'微软雅黑';
+.forget-password {
+  font-size: 14px;
+  color: black;
+  font-family: "微软雅黑";
   cursor: pointer;
-  width:99%;
+  width: 99%;
   display: flex;
   justify-content: flex-end;
-
 }
 </style>

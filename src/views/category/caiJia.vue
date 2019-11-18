@@ -167,9 +167,11 @@ export default {
     // 分页操作
     handleSizeChange(e) {
     this.pageSize = e
+    this.getCaijiaList()
     },
     handleCurrentChange(e) {
       this.pageNum = e
+      this.getCaijiaList()
     },
     // 获取省市区id
     getProvince(id) {

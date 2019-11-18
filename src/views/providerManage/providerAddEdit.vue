@@ -163,17 +163,20 @@ export default {
   data() {
     // 手机号验证
     var validateMobilePhone = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('手机号不可为空'));
-      } else {
-        if (value !== '') {
-          var reg=/^1[3456789]\d{9}$/;
-          if(!reg.test(value)){
-            callback(new Error('请输入有效的手机号码'));
+      if (!value) {
+        return callback(new Error('电话号码不能为空'))
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(+value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          if(value.length===11){
+            callback()
+          }else{
+            callback(new Error('电话号码长度有误！'))
           }
         }
-        callback();
-      }
+      }, 100)
     };
     // 邮箱验证
     var validateEmail = (rule, value, callback) => {
@@ -341,7 +344,7 @@ export default {
   },
   watch: {
     'shopObject'(e) {
-      console.log(e, 'shoplist....')
+      // console.log(e, 'shoplist....')
       if(e.length<=0){
         this.shopStatus = true
       }else{
@@ -352,7 +355,7 @@ export default {
       // console.log(e, 'list.......')
     },
     'ruleForm.contactName'(e){
-      console.log(e, 'eeeee')
+      // console.log(e, 'eeeee')
     }
   },
   mounted() {
@@ -449,7 +452,7 @@ export default {
           // console.log(res, '$$$$$$$$$')
           this.shopList = res.info
         }else{
-          this.$message.info('暂无店铺数据')
+          // this.$message.info('暂无店铺数据')
         }
       }).catch(err => {
         console.log(err)

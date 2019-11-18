@@ -171,15 +171,10 @@ export default {
           callback(new Error('请输入数字值'))
         } else {
           if(value.length===11){
-
+            callback()
           }else{
             callback(new Error('电话号码长度有误！'))
           }
-          // if (phoneReg.test(value)) {
-          //   callback()
-          // } else {
-          //   callback(new Error('电话号码格式不正确'))
-          // }
         }
       }, 100)
     };
@@ -645,7 +640,6 @@ export default {
     addShopHandle(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          //
           this.addShopHandles()
         } else {
           return false

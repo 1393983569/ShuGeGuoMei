@@ -225,7 +225,7 @@ export default {
           if (res.info.length > 0) {
             this.objectList = res.info;
           } else {
-            this.$message.error("商铺暂无数据！");
+
           }
         })
         .catch(err => {

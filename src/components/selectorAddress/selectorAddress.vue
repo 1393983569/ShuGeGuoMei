@@ -2,11 +2,11 @@
   <div style="margin:10px;display:inline;">
     <!-- <p>{{province1Id, city1Id, county1Id}}</p> -->
     <span>省:</span>
-    <el-select v-model="provinceId" style="width:90px;" size="mini" clearable>
-      <el-option v-for="item in provinceList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
+    <el-select  v-model="provinceId" @focus="openSelectPro" style="width:90px;" size="mini" clearable>
+      <el-option  v-for="item in provinceList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span>市:</span>
-    <el-select v-model="cityId" style="width:90px;"  size="mini" clearable>
+    <el-select v-model="cityId" style="width:90px;" @focus="openSelectCit"  size="mini" clearable>
       <el-option v-for="item in cityList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span>区/县:</span>
@@ -18,23 +18,7 @@
 <script>
 import { getProvince, getCity, getArea } from '@/api/priovinCityArea.js'
 export default {
-  props: {
-    province1id: {
-      type: String,
-      default: '',
-      require: true
-    },
-    city1id: {
-      type: String,
-      default: '',
-      require: true
-    },
-    county1id: {
-      type: String,
-      default: '',
-      require: true
-    }
-  },
+  props: ['province1id','city1id','county1id'],
   data() {
     return {
       provinceId: '',
@@ -42,19 +26,34 @@ export default {
       countyId: '',
       cityList: [],
       countyList: [],
-      provinceList: []
+      provinceList: [],
+      statePro:false,
+      stateCit:false,
+    }
+  },
+  mounted(){
+    this.getProvinceList()
+    if (this.province1id) {
+      this.provinceId = this.province1id
+    }
+    if (this.city1id) {
+      this.cityId = this.city1id
+    }
+    if (this.county1id) {
+      this.countyId = this.county1id
     }
   },
   watch: {
     'provinceId'(e) {
       if (e) {
         this.provinceId = e
+        if(this.statePro){
+          this.cityId = ''
+          this.countyId = ''
+        }
         this.$emit('getProvince', this.provinceId)
-        this.cityId = ''
-        this.countyId = ''
         getCity(this.provinceId).then(res => {
           if (res.info.length > 0) {
-            // console.log(res.info, 'city;;;;')
             this.cityList = res.info
           } else {
             // this.$message.error('暂无城市')
@@ -73,8 +72,10 @@ export default {
     },
     'cityId'(e) {
       if (e) {
-        this.countyId = ''
         this.cityId = e
+        if(this.stateCit){
+          this.countyId = ''
+        }
         this.$emit('getCity', this.cityId)
         getArea(this.cityId).then(res => {
           if (res.info.length > 0) {
@@ -105,19 +106,13 @@ export default {
       this.countyId = e
     }
   },
-  mounted() {
-    this.getProvinceList()
-    if (this.province1id) {
-      this.provinceId = this.province1id
-    }
-    if (this.city1id) {
-      this.cityId = this.city1id
-    }
-    if (this.county1id) {
-      this.countyId = this.county1id
-    }
-  },
   methods: {
+    openSelectPro(event, item){
+      this.statePro = true
+    },
+    openSelectCit(event, item){
+      this.stateCit = true
+    },
     getProvinceList() {
       getProvince().then(res => {
         if (res.info.length > 0) {
