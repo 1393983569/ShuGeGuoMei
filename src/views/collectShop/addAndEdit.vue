@@ -123,7 +123,7 @@
         <el-input v-model="ruleForm.freshDate" placeholder="请输入保鲜期" style="width:200px;" /> 小时
       </el-form-item>
       <el-form-item label="产地：" prop="provinceId">
-        <el-select v-model="ruleForm.countryId " clearable placeholder="请选择" style="width: 100px">
+        <el-select v-model="ruleForm.countryId " placeholder="请选择" style="width: 100px">
           <el-option
             v-for="item in countryList"
             :key="item.id"
@@ -256,6 +256,7 @@ export default {
         freshDate: [{ required: false, message: '请选择保鲜期', trigger: 'blur' }],
         state: [{ required: true, message: '请选择状态', trigger: 'blur' }],
         purchasePrice: [{ required: true, message: '请输入进价', trigger: 'blur' }],
+        provinceId: [{ required: true, message: '请选择产地', trigger: 'blur' }],
         sellPrice: [{ required: true, message: '请输入出价', trigger: 'blur' }],
         price: [{ required: true, message: '请输入零售价', trigger: 'blur' }]
       },

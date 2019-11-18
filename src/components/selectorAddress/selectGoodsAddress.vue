@@ -2,11 +2,11 @@
   <div style="display:inline;">
     <!-- <p>{{province1Id, city1Id, county1Id}}</p> -->
     <span class="font-weight">省:</span>
-    <el-select v-model="provinceId" style="width:90px;" size="mini" clearable>
+    <el-select v-model="provinceId" @focus="openSelectPro" style="width:90px;" size="mini" clearable>
       <el-option v-for="item in provinceList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span class="font-weight">市:</span>
-    <el-select v-model="cityId" style="width:90px;"  size="mini" clearable>
+    <el-select v-model="cityId" style="width:90px;" @focus="openSelectCit"  size="mini" clearable>
       <el-option v-for="item in cityList" v-if="item" :key="item.id" :value="item.id" :label="item.name" />
     </el-select>
     <span class="font-weight">区/县:</span>
@@ -42,13 +42,19 @@ export default {
       countyId: '',
       cityList: [],
       countyList: [],
-      provinceList: []
+      provinceList: [],
+      statePro:false,
+      stateCit:false,
     }
   },
   watch: {
     'provinceId'(e) {
-      if (e !== null) {
+      if (e) {
         this.provinceId = e
+        if(this.statePro){
+          this.cityId = ''
+          this.countyId = ''
+        }
         this.$emit('getProvince', this.provinceId)
         getAllCity(this.provinceId).then(res => {
           if (res.info.length > 0) {
@@ -69,10 +75,11 @@ export default {
       }
     },
     'cityId'(e) {
-      // console.log(e)
-      // return
       if (e) {
         this.cityId = e
+        if(this.stateCit){
+          this.countyId = ''
+        }
         this.$emit('getCity', this.cityId)
         getAllCity(this.cityId).then(res => {
           if (res.info.length > 0) {
@@ -121,6 +128,12 @@ export default {
     }
   },
   methods: {
+    openSelectCit(){
+      this.stateCit = true
+    },
+    openSelectPro(){
+      this.statePro = true
+    },
     getProvinceList() {
       getAllProvince().then(res => {
         if (res.info.length > 0) {
