@@ -69,9 +69,9 @@ const actions = {
   // 用户登录
   // commit 解构赋值 默认传一个state 只取其中的commit
   login({ commit }, userInfo) {
-    const { mobile, password } = userInfo
+    const { mobile, password, type } = userInfo
     return new Promise((resolve, reject) => {
-      login({ mobile: mobile, password: password }).then(response => {
+      login({ mobile: mobile, password: password,type: type }).then(response => {
         const data = response
         // console.log('data.info:', data.info)
         commit('SET_TOKEN', 'chengGong')

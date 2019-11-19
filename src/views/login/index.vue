@@ -95,7 +95,8 @@ export default {
     return {
       loginForm: {
         mobile: "",
-        password: ""
+        password: "",
+        type:1
       },
       loginRules: {
         mobile: [
@@ -174,6 +175,7 @@ export default {
         let _this = this;
         this.$refs.loginForm.validate(valid => {
           if (valid) {
+            console.log(_this.loginForm, 'vvvvv')
             _this.loading = true;
             _this.$store
               .dispatch("user/login", _this.loginForm)
