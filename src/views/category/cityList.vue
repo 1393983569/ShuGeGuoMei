@@ -3,8 +3,8 @@
     <breadcrumb :stateShow ='false'>
       <!-- <el-button type="primary" @click="showProvince">新建省</el-button>
       <el-button type="primary" @click="showCity">新建市</el-button> -->
-      <el-button type="primary" @click="showCounty" v-if="bottonList.includes('操作')">开通城市</el-button>
-      <el-button type="primary" v-else disabled>新建区/县</el-button>
+      <el-button size="mini" type="primary" @click="showCounty" v-if="bottonList.includes('操作')">开通城市</el-button>
+      <el-button size="mini" type="primary" v-else disabled>新建区/县</el-button>
     </breadcrumb>
     <!-- 新建省市区 -->
     <el-dialog

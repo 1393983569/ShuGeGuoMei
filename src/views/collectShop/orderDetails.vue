@@ -47,7 +47,12 @@
               <el-table-column prop="goodsName" label="商品名称"/>
               <el-table-column prop="id" label="商品ID"/>
               <el-table-column prop="standards" label="规格"/>
-              <el-table-column prop="unit" label="单价"/>
+              <el-table-column prop="unit" label="单位"/>
+              <el-table-column prop="price" label="单价">
+                <template slot-scope="scope">
+                  {{scope.row.price/100}}
+                </template>
+              </el-table-column>
               <el-table-column prop="detailAmount" label="下单数量"/>
               <el-table-column prop="money" label="金额">
                 <template slot-scope="scope">
@@ -63,16 +68,16 @@
         </el-col>
       </el-row>
     </div>
-    <div>订单状态：
-      <span v-if="type ===0">未拆单</span>
-      <span v-else-if="type===1">已拆单</span>
-      <span v-else-if="type===2">已派单</span>
-      <span v-else-if="type===3">已入库</span>
+    <div v-if="type===3">订单状态：
+      <span v-if="status ===0">未拆单</span>
+      <span v-else-if="status===1">已拆单</span>
+      <span v-else-if="status===2">已派单</span>
+      <span v-else-if="status===3">已入库</span>
     </div>
-    <div>
+    <div  v-if="type===3">
       子订单列表：
     </div>
-    <el-row style="margin-bottom: 10px">
+    <el-row  v-if="type===3" style="margin-bottom: 10px">
       <el-col :span="2">
         <div>
           &nbsp;

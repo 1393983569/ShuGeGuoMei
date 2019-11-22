@@ -1,10 +1,10 @@
 <template>
   <div>
     <breadcrumb :stateShow ='false'>
-      <el-button v-if="bottonList.includes('操作')" type="primary" @click="dialogStair = true, stairInput = [{value: ''}]">添加一级品类</el-button>
-      <el-button v-else type="primary" disabled>添加一级品类</el-button>
-      <el-button v-if="bottonList.includes('操作')" type="primary" @click="dialogChildren = true, childrenInput = [{value: ''}], optionValue = ''">添加二级品类</el-button>
-      <el-button v-else type="primary" disabled>添加二级品类</el-button>
+      <el-button size="mini" v-if="bottonList.includes('操作')" type="primary" @click="dialogStair = true, stairInput = [{value: ''}]">添加一级品类</el-button>
+      <el-button  size="mini" v-else type="primary" disabled>添加一级品类</el-button>
+      <el-button  size="mini" v-if="bottonList.includes('操作')" type="primary" @click="dialogChildren = true, childrenInput = [{value: ''}], optionValue = ''">添加二级品类</el-button>
+      <el-button  size="mini" v-else type="primary" disabled>添加二级品类</el-button>
     </breadcrumb>
     <el-dialog
       title="编辑一级品类"

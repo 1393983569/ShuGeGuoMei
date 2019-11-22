@@ -97,9 +97,9 @@
           size="mini"
           type="primary"
           @click="separateBill(scope.$index, scope.row)"
-          v-if="buttonList.includes('操作')"
+          v-if="buttonList.includes('操作')&&scope.row.type===3"
         >拆单</el-button>
-        <el-button size="mini" type="primary" v-else disabled>拆单</el-button>
+        <el-button v-else-if="scope.row.type===3" size="mini" type="primary" v-else disabled>拆单</el-button>
       </template>
     </el-table-column>
   </el-table>
