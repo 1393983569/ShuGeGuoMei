@@ -7,7 +7,7 @@
     </breadcrumb>
     <div>
       关联供应商：
-      <el-select v-model="providerId" placeholder="请选择" style="width: 280px">
+      <el-select v-model="providerId" clearable placeholder="请选择" style="width: 280px">
         <el-option
           v-for="item in optionsProvider"
           :key="item.id"
@@ -22,7 +22,7 @@
       </div>
       <div style="width:60%">
         <el-table
-          :data="goodsList"
+          :data="dataTable"
           :header-cell-style="{   }"
           @selection-change="handleSelectionChange"
           center
@@ -42,7 +42,14 @@
               {{scope.row.money/100}}
             </template>
           </el-table-column>
-          <el-table-column type="selection" :selectable="selectable" width="55"/>
+          <el-table-column prop="" label="状态">
+            <template slot-scope="scope">
+              <p v-if="scope.row.choose===0">已派</p>
+              <p v-else>未派</p>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="ifOpen"  type="selection" :selectable="selectable" width="55"/>
+
         </el-table>
       </div>
     </div>
@@ -54,6 +61,7 @@
 import virtualList from 'vue-virtual-scroll-list'
 import { getAllProvider } from '@/api/provider.js'
 import { orderDetail, separateBill, updateChoose } from '@/api/collectShop/order.js'
+import {getSupplyGoods} from '@/api/collectShop.js'
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'separateBill',
@@ -65,7 +73,6 @@ export default {
       goodsList: [],
       optionsProvider:[],
       providerId:'',
-      goodsList:[],
       temObject:{},
       subOrderNo:'',
       subMoney:0,
@@ -74,6 +81,10 @@ export default {
       shopId:0,
       orderId:0,
       addButton:false,
+      // 商品是否可选
+      ifOpen:false,
+      currentGoodsList:[],
+      dataTable:[],
     }
   },
   mounted() {
@@ -87,7 +98,40 @@ export default {
     }
     this.getProviders()
   },
+  watch:{
+    'providerId'(e){
+      this.ifOpen = false
+      if(e){
+        this.ifOpen = true
+        this.getSupplyGoodsFunction(e)
+      }else{
+        this.ifOpen = false
+        this.dataTable = this.goodsList
+      }
+    }
+  },
   methods: {
+    getSupplyGoodsFunction(id){
+      this.dataTable = []
+      getSupplyGoods(id).then(res => {
+        if(res.info.length>0){
+          this.currentGoodsList = res.info
+          for(let i= 0;i<this.goodsList.length;i++){
+            for(let j=0;j<this.currentGoodsList.length;j++){
+              if(this.goodsList[i].id === this.currentGoodsList[j].goodsId){
+                this.dataTable.push(this.goodsList[i])
+                console.log(this.currentGoodsList[j].goodsId)
+                continue
+              }else{
+                continue
+              }
+            }
+          }
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 查看详情
     viewDetails(index, row) {
       this.$router.push({
@@ -99,6 +143,7 @@ export default {
     getOrderList(orderNo){
       orderDetail(orderNo).then(res => {
         this.goodsList = res.info[0].orderDetailList
+        this.dataTable = res.info[0].orderDetailList
         this.goodsList.forEach(item => {
           if(item.choose ===1){
             this.addButton = true
@@ -173,8 +218,8 @@ export default {
         params:''
       })
     },
-    selectable(row){
-      if(row.choose === 1){
+    selectable(row,index){
+      if(row.choose===1){
         return true
       }else{
         return false

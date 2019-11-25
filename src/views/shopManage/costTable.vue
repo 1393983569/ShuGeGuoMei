@@ -2,14 +2,12 @@
   <div>
     <table class="table" border='0' cellspacing='0' cellpadding="0">
       <tr class="tr_class" >
-        <th class="th_class" rowspan="9">成本({{totalCost}}万元)</th>
+        <th class="th_class" rowspan="9">成本({{isNaN(totalCost)?0:totalCost}}万元)</th>
         <th class="th_class" rowspan="4">
-          <span v-if="fixedCostRate">固定成本（元）{{fixedCostRate*100}}%</span>
-          <span v-else>固定成本（元）0</span>
+          <span>固定成本（元）{{isNaN(fixedCostRate)?0:fixedCostRate*100}}%</span>
         </th>
         <th class="th_class">
-          <span v-if="rentRate">房租（{{rentRate*100}}%）</span>
-          <span v-else>房租（0）</span>
+          <span>房租（{{isNaN(rentRate)?0:rentRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.rent">{{costData.rent/100}}</span>
@@ -18,8 +16,7 @@
       </tr>
       <tr class="tr_class">
         <th class="th_class">
-          <span v-if="wagesRate">工资支出（{{wagesRate*100}}%）</span>
-          <span v-else>工资支出（0）</span>
+          <span>工资支出（{{isNaN(wagesRate)?0:wagesRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.wages">{{costData.wages/100}}</span>
@@ -28,8 +25,7 @@
       </tr>
       <tr class="tr_class">
         <th class="th_class">
-          <span v-if="hydropowerRate">水电设备（{{hydropowerRate*100}}%）</span>
-          <span v-else>水电设备（0）</span>
+          <span>水电设备（{{isNaN(hydropowerRate)?0:hydropowerRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.hydropower">{{costData.hydropower/100}}</span>
@@ -38,8 +34,7 @@
       </tr>
       <tr class="tr_class">
         <th class="th_class">
-          <span v-if="otherExpensesRate">其它固定费用总计（{{otherExpensesRate*100}}%）</span>
-          <span v-else>其它固定费用总计（0）</span>
+          <span>其它固定费用总计（{{isNaN(otherExpensesRate)?0:otherExpensesRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.otherExpenses">{{costData.otherExpenses/100}}</span>
@@ -49,12 +44,10 @@
 
       <tr class="tr_class">
         <th class="th_class" rowspan="5">
-          <span v-if="changeCostRate">可变成本（元）{{changeCostRate*100}}%</span>
-          <span v-else>可变成本（元）0</span>
+          <span>可变成本（元）{{isNaN(changeCostRate)?0:changeCostRate*100}}%</span>
         </th>
         <th class="th_class" >
-          <span v-if="marketingRate">营销费用（{{marketingRate*100}}%）</span>
-          <span v-else>营销费用（0）</span>
+          <span>营销费用（{{isNaN(marketingRate)?0:marketingRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.marketing">{{costData.marketing/100}}</span>
@@ -62,7 +55,7 @@
         </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">积分抵扣（0）</th>
+        <th class="th_class">积分抵扣（0%）</th>
         <th class="th_class">
           <span v-if="costData.cost">{{costData.cost/100}}</span>
           <span v-else>0.00</span>
@@ -70,8 +63,7 @@
       </tr>
       <tr class="tr_class">
         <th class="th_class">
-          <span v-if="otherVariablesRate">其它可变费用总计（{{otherVariablesRate*100}}%）</span>
-          <span v-else>其它可变费用总计（0）</span>
+          <span>其它可变费用总计（{{isNaN(otherVariablesRate)?0:otherVariablesRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.otherVariables">{{costData.otherVariables/100}}</span>
@@ -80,8 +72,7 @@
       </tr>
       <tr class="tr_class">
         <th class="th_class">
-          <span v-if="procurementRate">采购成本（{{procurementRate*100}}%）</span>
-          <span v-else>采购成本（0）</span>
+          <span>采购成本（{{isNaN(procurementRate)?0:procurementRate*100}}%）</span>
         </th>
         <th class="th_class">
           <span v-if="costData.procurement">{{costData.procurement/100}}</span>
@@ -89,7 +80,7 @@
         </th>
       </tr>
       <tr class="tr_class">
-        <th class="th_class">损耗成本（0）</th>
+        <th class="th_class">损耗成本（0%）</th>
         <th class="th_class">
           <span v-if="costData.cost">{{costData.cost/100}}</span>
           <span v-else>0.00</span>

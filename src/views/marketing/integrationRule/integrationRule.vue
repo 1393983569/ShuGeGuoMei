@@ -6,9 +6,10 @@
       <el-button class="button" @click="changeFunction('积分兑换')">积分兑换/抵扣</el-button>
     </div>
     <div v-if="showState==='积分获取'">
-      <span class="font-size" style="color:rgba(16, 16, 16, 1);">消费-积分汇率：{{ruleObject.content}}</span>&nbsp;&nbsp;&nbsp;
-      <span class="font-size" style="color:rgba(153, 153, 153, 1);" v-if="ruleObject.status === 1">已启用</span>
-      <span class="font-size" style="color:rgba(153, 153, 153, 1);" v-else>已停用</span>
+      <span class="font-size" style="color:rgba(16, 16, 16, 1);">消费-积分汇率：
+        <span>{{ruleObject.content?ruleObject.content:'1元=10分'}}</span>
+      </span>&nbsp;&nbsp;&nbsp;
+      <span class="font-size" style="color:rgba(153, 153, 153, 1);">{{ruleObject.status===1?'已启用':'已停用'}}</span>
       <el-button class="button" v-if="ruleObject.status === 1" @click="openRule(0)">停用</el-button>
       <el-button class="button" v-else @click="openRule(1)">启用</el-button>
     </div>
@@ -62,7 +63,7 @@ export default {
 
     },
     scoreHandle(){
-      changeStatus(this.ruleObject.id, this.scoreStatus).then(res => {
+      changeStatus(this.ruleObject.id?this.ruleObject.id:1, this.scoreStatus).then(res => {
         if(res.status === 1){
           this.$message.success('操作成功！')
           this.getRuleHandle()

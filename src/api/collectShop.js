@@ -106,3 +106,16 @@ export const getGoods = (categoryOneId, categoryTwoId) => {
     data: params
   })
 }
+/**
+ * 根据供应商查供应商品
+ * @param {Number} id
+ */
+export const getSupplyGoods = (id) => {
+  const params = new URLSearchParams()
+  params.append('providerId', id)
+  return request({
+    url: '/admin/findProviderGoods',
+    method: 'post',
+    data: params
+  })
+}
