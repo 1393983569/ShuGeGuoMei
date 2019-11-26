@@ -11,15 +11,18 @@
   </div>
 </template>
 <script>
+import {getIncomeTrend} from '@/api/dataManage/dataCenter'
 export default {
+  props:['incomeTrend'],
   data() {
     return {
+      currentIncome:{},
       option: {
         backgroundColor: '#FFFFFF',
         tooltip: {},
         title: [{
           // text: '在线构建',
-          subtext: '总计 ' + 10887,
+          subtext: '单位: 元',
           x: '80%',
           textAlign: 'center'
         }],
@@ -32,7 +35,7 @@ export default {
         }],
         xAxis: [{
           type: 'value',
-          max: 160000,
+          // max: 160000,
           splitLine: {
             show: false
           }
@@ -71,20 +74,7 @@ export default {
               show: true
             }
           },
-          data: [
-            { value: 130000.00 },
-            { value: 90000.00 },
-            { value: 110000.00 },
-            { value: 140000.00 },
-            { value: 120000.00 },
-            { value: 130000.00 },
-            { value: 50900.00 },
-            { value: 110000.00 },
-            { value: 140000.00 },
-            { value: 120000.00 },
-            { value: 9000.00 },
-            { value: 120000.00 }
-          ]
+          data: []
         },
         {
           type: 'bar',
@@ -102,12 +92,38 @@ export default {
     }
   },
   mounted() {
+    this.currentIncome = this.incomeTrend
     this.chartHandle()
+  },
+  watch:{
+    'incomeTrend'(e){
+      this.currentIncome = e
+    }
   },
   methods: {
     chartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart1)
       myChart.setOption(this.option)
+      let op = this.option
+      getIncomeTrend(this.currentIncome.year, this.currentIncome.shopId).then(res => {
+        let arr = []
+        arr.push(res.info.december/100)
+        arr.push(res.info.november/100)
+        arr.push(res.info.october/100)
+        arr.push(res.info.september/100)
+        arr.push(res.info.august/100)
+        arr.push(res.info.july/100)
+        arr.push(res.info.june/100)
+        arr.push(res.info.may/100)
+        arr.push(res.info.april/100)
+        arr.push(res.info.march/100)
+        arr.push(res.info.february/100)
+        arr.push(res.info.january/100)
+        op.series[0].data = arr
+        myChart.setOption(op)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

@@ -36,7 +36,7 @@
           </div>
           <div class="item">
             <div style="font-size:30px;color:#ffa96a;margin-top:50px;">
-              0
+              {{this.businessObj.notMember}}
             </div><br>
             <div>非会员人数（人）</div>
           </div>
@@ -72,7 +72,6 @@ export default {
   },
   methods:{
     getBusinessFunction(){
-      console.log(this.currentData.shopId, 'data.....bus....')
       getBusiness(this.currentData.year, this.currentData.month, this.currentData.day, this.currentData.shopId).then(res => {
         if(res.status === 1){
           this.businessObj = res.info

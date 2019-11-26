@@ -11,69 +11,100 @@
   </div>
 </template>
 <script>
+import {getIncomeLoss} from '@/api/dataManage/dataCenter'
 export default {
+  props:['incomLoss'],
   data() {
     return {
-      option: {
-        backgroundColor: '#FFFFFF',
-        // title: {
-        //   text: '折线图堆叠'
-        // },
+      currentData:{},
+
+      option : {
+        backgroundColor:"#FFFFFF",
         tooltip: {
-          trigger: 'axis'
+            trigger: 'none',
+            axisPointer: {
+              type: 'cross'
+            }
         },
         legend: {
-          data: ['收入', '利润', '成本']
-        },
+              data: ['利润', '成本','收入']
+            },
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
+            top: 70,
+            bottom: 50
         },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-        },
-        yAxis: {
-          type: 'value'
-        },
+        xAxis: [
+            {
+                type: 'category',
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        color: 'black'
+                    }
+                },
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+            },
+            {
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        // color: 'red'
+                    }
+                },
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
         series: [
-          {
-            name: '收入',
-            type: 'line',
-            stack: '总量',
-            data: [120, 132, 101, 134, 90, 230, 210, 101, 134, 90, 230, 200]
-          },
-          {
-            name: '利润',
-            type: 'line',
-            stack: '总量',
-            data: [220, 182, 191, 234, 290, 330, 310, 101, 134, 90, 230, 100]
-          },
-          {
-            name: '成本',
-            type: 'line',
-            stack: '总量',
-            data: [150, 232, 201, 154, 190, 330, 410, 101, 134, 90, 230, 210]
-          }
+            {
+                name:'成本',
+                type:'line',
+                xAxisIndex: 1,
+                smooth: false,
+                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+            },
+            {
+                name:'收入',
+                type:'line',
+                smooth: false,
+                data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
+            },
+            {
+                name:'利润',
+                type:'line',
+                smooth: false,
+                data: [3.0, 5.0, 11.0, 18.0, 4.0, 6.0, 231.6, 46.0, 55.0, 18.4, 10.3, 9]
+            }
         ]
-      }
+    }
     }
   },
   mounted() {
+    this.currentData = this.incomLoss
     this.chartHandle()
+  },
+  watch:{
+    'incomLoss'(e){
+      this.currentData = e
+    }
   },
   methods: {
     chartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart1)
       myChart.setOption(this.option)
+      // getIncomeLoss(this.currentData.year,this.currentData.shopId).then(res => {
+      //   let arrIncome = []
+
+      // }).catch(err => {
+      //   console.log(err)
+      // })
     }
   }
 }

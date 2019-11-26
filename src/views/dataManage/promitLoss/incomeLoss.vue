@@ -1,35 +1,11 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="100px" class="background-colors">
-        经营数据
+      <el-aside width="100px" class="incomeLoss">
+        盈亏数据
       </el-aside>
       <el-main>
         <table class="table" border='0' cellspacing='0' cellpadding="0">
-          <tr class="tr_class" >
-            <th class="th_class" rowspan="2" colspan="2">
-              <span v-if="sell>=10000">销售额（{{sell/10000}}万元）</span>
-              <span v-else>销售额（{{sell}}元）</span>
-            </th>
-            <th class="th_class">收银损耗（元）</th>
-            <th class="th_class">{{this.jingyingData.loss?this.jingyingData.loss/100:0}}</th>
-          </tr>
-          <tr class="tr_class" >
-            <th class="th_class">实收金额（元）</th>
-            <th class="th_class">{{this.jingyingData.payMoneyCount?this.jingyingData.payMoneyCount/100:0}}</th>
-          </tr>
-          <tr class="tr_class">
-            <th class="th_class" colspan="3">实收（元）</th>
-            <th class="th_class">{{this.jingyingData.payMoneyCount?this.jingyingData.payMoneyCount/100:0}}</th>
-          </tr>
-          <tr class="tr_class" >
-            <th class="th_class" colspan="3">销售笔数（单）</th>
-            <th class="th_class">{{this.jingyingData.consumeOrder?this.jingyingData.consumeOrder:0}}</th>
-          </tr>
-          <tr class="tr_class" >
-            <th class="th_class" colspan="3">人均消费</th>
-            <th class="th_class">{{this.jingyingData.avgOrderMoney?this.jingyingData.avgOrderMoney:0}}</th>
-          </tr>
           <tr class="tr_class">
             <th class="th_class" rowspan="9">
               <span v-if="this.currentTotal>10000">成本（{{this.currentTotal?this.currentTotal/1000000:0}}元）</span>
@@ -40,11 +16,11 @@
             <th class="th_class">{{this.jingyingData.rent?this.jingyingData.rent/100:0}}</th>
           </tr>
           <tr class="tr_class" >
-            <th class="th_class">工资支出（{{this.wagesPercent}}}%）</th>
+            <th class="th_class">工资支出（{{this.wagesPercent}}%）</th>
             <th class="th_class">{{this.jingyingData.wages?this.jingyingData.wages/100:0}}</th>
           </tr>
           <tr class="tr_class" >
-            <th class="th_class">水电暖合计（{{this.hydropowerPercent}}}%）</th>
+            <th class="th_class">水电暖合计（{{this.hydropowerPercent}}%）</th>
             <th class="th_class">{{this.jingyingData.hydropower?this.jingyingData.hydropower/100:0}}</th>
           </tr>
           <tr class="tr_class" >
@@ -84,7 +60,7 @@
 <script>
 import {getJintYing} from '@/api/dataManage/dataCenter'
 export default {
-  props:['jyObject'],
+  props:['ykObject'],
   data() {
     return {
       jingyingData:{
@@ -121,11 +97,11 @@ export default {
     }
   },
   mounted(){
-    this.currentData = this.jyObject
+    this.currentData = this.ykObject
     this.getJYFunction()
   },
   watch:{
-    'jyObject'(e){
+    'ykObject'(e){
       this.currentData = e
       this.getJYFunction()
     }
@@ -187,7 +163,7 @@ export default {
   padding:0px;
   margin:0px;
 }
-.background-colors{
-  line-height: 700px;
+.incomeLoss{
+  line-height: 500px;
 }
 </style>

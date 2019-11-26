@@ -12,13 +12,19 @@
     <!-- 营业概况 -->
     <business :bus-obj="dataObject"></business><br>
     <div><jingying-data :jyObject="dataObject"></jingying-data></div><br/>
-    <div><incomTrend /></div><br>
-    <div><lossData /></div><br><div><goodsData /></div><br>
+    <div><income :incomObject="dataObject"></income></div><br/>
+    <div><incomTrend :incomeTrend="dataObject" /></div><br>
+    <div><lossData :lossObject="dataObject" /></div><br>
+    <div><goodsData /></div>
+    <div><goodsCate :goodsSale="dataObject"></goodsCate></div>
     <div class="font-weight">盈亏分析</div>
-    <div style="margin-top:4px;"><promitLoss /></div>
+    <div style="margin-top:4px;"><promitLoss :incomLoss="dataObject"/></div>
     <br>
+    <div>
+      <incomeLoss :ykObject="dataObject"></incomeLoss>
+    </div>
     <div class="font-weight">会员分析</div>
-    <div style="margin-top:4px;"><vip /></div>
+    <div style="margin-top:4px;"><vip :vipObject="dataObject" /></div>
   </div>
 </template>
 <script>
@@ -26,6 +32,9 @@ import virtualList from 'vue-virtual-scroll-list'
 import { getAllShop } from '@/api/shop.js'
 import incomTrend from './jingying/incomTrend.vue'
 import jingyingData from './jingying/jingyingData.vue'
+import incomeLoss from './promitLoss/incomeLoss.vue'
+import goodsCate from './jingying/goodsCate.vue'
+import income from './jingying/income.vue'
 import business from './jingying/business.vue'
 import lossData from './jingying/lossData.vue'
 import goodsData from './jingying/goodsData.vue'
@@ -35,7 +44,9 @@ import breadcrumb from '@/components/Breadcrumb'
 import vip from './vip/vipData.vue'
 
 export default {
-  components: { incomTrend, lossData, goodsData, promitLoss, vip, pickDate,breadcrumb, jingyingData, business },
+  components: { incomTrend, lossData, goodsData,
+    promitLoss, vip, pickDate,breadcrumb,
+    jingyingData, business, income, goodsCate, incomeLoss },
   data() {
     return {
       shopList: [],

@@ -2,7 +2,7 @@
   <div>
     <div style="width:100%;height:100%;">
       <div class="header">
-        <div class="header-item">会员总数（人）: 1000</div>
+        <div class="header-item">会员总数（人）: {{membersCount}}</div>
         <div class="header-item">新增会员（人）: 700</div>
       </div>
       <div class="header">
@@ -38,11 +38,15 @@
   </div>
 </template>
 <script>
+import {getVip} from '@/api/dataManage/dataCenter'
 import profession from './profession.vue'
 export default {
+  props:['vipObject'],
   components: { profession },
   data() {
     return {
+      currentVip:{},
+      membersCount:0,
       optionSex: {
         tooltip: {
           trigger: 'item',
@@ -139,7 +143,7 @@ export default {
         },
         series: [
           {
-            name: '访问来源',
+            name: '会员分析',
             type: 'pie',
             radius: ['40%', '60%'],
             avoidLabelOverlap: false,
@@ -161,19 +165,22 @@ export default {
                 show: false
               }
             },
-            data: [
-              { value: 200, name: 'VIP会员' },
-              { value: 800, name: '家庭会员' }
-            ]
+            data: []
           }
         ]
       }
     }
   },
   mounted() {
+    this.currentVip = this.vipObject
     this.handleSex()
     this.handleIdentity()
     this.handleRank()
+  },
+  watch:{
+    'vipObject'(e){
+      this.currentVip = e
+    }
   },
   methods: {
     handleSex() {
@@ -183,6 +190,23 @@ export default {
     handleIdentity() {
       var myChart = this.$echarts.init(this.$refs.chart2)
       myChart.setOption(this.optionIdentity)
+      let op = this.optionIdentity
+      getVip(this.currentVip.year,this.currentVip.month,this.currentVip.day,this.currentVip.shopId).then(res => {
+        let arr = []
+        let obj1= {}
+        obj1.name ='家庭会员'
+        obj1.value = res.info.family
+        arr.push(obj1)
+        let obj2= {}
+        obj2.name ='VIP会员'
+        obj2.value = res.info.members
+        arr.push(obj2)
+        op.series[0].data = arr
+        myChart.setOption(op)
+        this.membersCount = res.info.memberCount
+      }).catch(err => {
+        console.log(err)
+      })
     },
     handleRank() {
       var myChart = this.$echarts.init(this.$refs.chart3)
