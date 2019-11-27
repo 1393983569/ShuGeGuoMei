@@ -4,10 +4,13 @@
     <div style="margin:10px;display:flex;flex-direction: row;font-size:18px;color:#6e7b99;font-weight:bold;align-items:center;">
       <pickDate @getPickDate="getPickDate" :yearPro="yearPro" :monthPro="monthPro" :dayPro="dayPro"></pickDate>&nbsp;
       店铺名称：
-      <el-select v-model="shopId">
+      <el-select v-model="shopId" clearable>
         <el-option v-for="item in shopList" :key="item.id" :value="item.id" :label="item.name" />
       </el-select>
-      <el-button type="primary" @click="searchFunction">搜索</el-button>
+      <div style="position:absolute;right:10px;">
+        <el-button type="primary" size="mini" @click="searchFunction">搜索</el-button>
+        <el-button type="info" size="mini" @click="clearFunction">清空</el-button>
+      </div>
     </div>
     <!-- 营业概况 -->
     <business :bus-obj="dataObject"></business><br>
@@ -24,7 +27,9 @@
       <incomeLoss :ykObject="dataObject"></incomeLoss>
     </div>
     <div class="font-weight">会员分析</div>
-    <div style="margin-top:4px;"><vip :vipObject="dataObject" /></div>
+    <div style="margin-top:4px;"><vip :vipObject="dataObject" /></div><br/>
+    <div><monthPurch :countObject="dataObject"></monthPurch></div><br/>
+    <div><frequency :categoryObject="dataObject"></frequency></div>
   </div>
 </template>
 <script>
@@ -39,6 +44,8 @@ import business from './jingying/business.vue'
 import lossData from './jingying/lossData.vue'
 import goodsData from './jingying/goodsData.vue'
 import promitLoss from './promitLoss/promitLoss.vue'
+import frequency from './vip/frequency.vue'
+import monthPurch from './vip/monthPurch.vue'
 import pickDate from '@/components/pickDate'
 import breadcrumb from '@/components/Breadcrumb'
 import vip from './vip/vipData.vue'
@@ -46,7 +53,7 @@ import vip from './vip/vipData.vue'
 export default {
   components: { incomTrend, lossData, goodsData,
     promitLoss, vip, pickDate,breadcrumb,
-    jingyingData, business, income, goodsCate, incomeLoss },
+    jingyingData, business, income, goodsCate, incomeLoss,frequency,monthPurch },
   data() {
     return {
       shopList: [],
@@ -70,6 +77,14 @@ export default {
       obj.shopId = this.shopId
       this.dataObject = obj
     },
+    clearFunction(){
+      let obj = {}
+      obj.year = ''
+      obj.month = ''
+      obj.day = ''
+      obj.shopId = ''
+      this.dataObject = obj
+    },
     getPickDate(date){
       date = date+'-'
       let dateArr = date.split('-')
@@ -89,8 +104,6 @@ export default {
       getAllShop().then(res => {
         if (res.status === 1) {
           this.shopList = res.info
-          this.shopId = this.shopList[0].id
-          this.dataObject.shopId = this.shopId
         } else {
           this.$message.error('查询店铺失败')
         }

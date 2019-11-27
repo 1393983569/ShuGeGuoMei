@@ -98,6 +98,7 @@ export default {
   watch:{
     'incomeTrend'(e){
       this.currentIncome = e
+      this.chartHandle()
     }
   },
   methods: {

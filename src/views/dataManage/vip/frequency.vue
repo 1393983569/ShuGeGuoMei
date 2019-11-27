@@ -1,70 +1,82 @@
 <template>
   <div>
-    <el-container>
-      <el-aside width="100px" class="aside-background-color">
-
-      </el-aside>
-      <el-main style="width:100%;">
+    <div style="display:flex;flex-direction:row;background-color:#ffffff;width:100%;">
+      <div class="catcery_asides">
+        <div style="margin:3px;width:20px;margin-left:52px;color:#333;font-size:16px;">消费习惯排行榜<br/>&nbsp;|复购品类排名</div>
+      </div>
+      <div style="width:90%;">
         <el-table  :data="dataList" :span-method="objectSpanMethod"
           border
           style="margin:10px;"
           >
-          <el-table-column prop="" label="一级品类" align="center">
+          <el-table-column prop="" label="一级分类" align="center">
             <template slot-scope="scope">
               {{ scope.row.categoryOneName}}
             </template>
           </el-table-column>
-          <el-table-column prop="" label="二级品类" align="center">
+          <el-table-column prop="" label="一级分类ID" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.categoryOneId}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="二级分类" align="center">
             <template slot-scope="scope">
               {{ scope.row.categoryTwoName}}
             </template>
           </el-table-column>
+          <el-table-column prop="" label="二级分类ID" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.categoryTwoId}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="商品ID" align="center">
+            <template slot-scope="scope">
+            {{ scope.row.goods_id}}
+            </template>
+          </el-table-column>
           <el-table-column prop="" label="商品名称" align="center">
             <template slot-scope="scope">
-            {{ scope.row.goodsName}}
+            {{ scope.row.goods_name}}
             </template>
           </el-table-column>
-          <el-table-column prop="" label="销量（斤）" align="center">
+          <el-table-column prop="" label="销量（元）" align="center">
             <template slot-scope="scope">
-            {{ scope.row.computerStock}}
+            {{ scope.row.moneySum?scope.row.moneySum/100:0}}
             </template>
           </el-table-column>
-          <el-table-column prop="" label="库存（斤）" align="center">
-            <template slot-scope="scope">
-            {{ scope.row.sales}}
-            </template>
-          </el-table-column>
+          <el-table-column prop="" label="排行" type="index" align="center" width="100"></el-table-column>
         </el-table>
-      </el-main>
-    </el-container>
+      </div>
+    </div>
 
   </div>
 </template>
 <script>
-import {getGoodsSale} from '@/api/dataManage/dataCenter.js'
+import {getFrequency} from '@/api/dataManage/dataCenter.js'
 export default {
-  props:['goodsSale'],
+  props:['categoryObject'],
   data(){
     return{
       currentGoods:{},
       dataList:[],
       oneCateRule:[],
       twoCateRule:[],
+      num:1,
     }
   },
   mounted(){
-    this.currentGoods = this.goodsSale
-    this.getGoodsFunction()
+    this.currentGoods = this.categoryObject
+    this.getFrequencyFunction()
   },
   watch:{
-    'goodsSale'(e){
+    'categoryObject'(e){
       this.currentGoods = e
-      this.getGoodsFunction()
+      this.getFrequencyFunction()
     }
   },
   methods:{
-    getGoodsFunction(){
-      getGoodsSale(this.currentGoods.year,this.currentGoods.month,this.currentGoods.day,this.currentGoods.shopId,).then(res=> {
+    getFrequencyFunction(){
+      getFrequency(this.currentGoods.year,this.currentGoods.month,this.currentGoods.day,this.currentGoods.shopId,).then(res=> {
         this.dataList = res.info
         let span = this.gteRule(res.info)
         this.oneCateRule = span.oneCate
@@ -124,8 +136,24 @@ export default {
             colspan: _col
           }
         }
+        if (columnIndex === 1 ) {
+          const _row = this.oneCateRule[rowIndex]
+          const _col = _row > 0 ? 1 : 0
+          return {
+            rowspan: _row,
+            colspan: _col
+          }
+        }
         // 合并第二列
-        if(columnIndex === 1){
+        if(columnIndex === 2){
+          const rows = this.twoCateRule[rowIndex]
+          const cols = rows > 0 ? 1 : 0
+          return {
+            rowspan: rows,
+            colspan: cols
+          }
+        }
+         if(columnIndex === 3){
           const rows = this.twoCateRule[rowIndex]
           const cols = rows > 0 ? 1 : 0
           return {
@@ -137,3 +165,12 @@ export default {
   }
 }
 </script>
+<style>
+.catcery_asides{
+ width:120px;
+ background-color: #D3DCE6;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+}
+</style>

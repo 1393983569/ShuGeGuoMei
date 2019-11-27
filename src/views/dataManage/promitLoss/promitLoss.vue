@@ -1,10 +1,15 @@
 <template>
-  <div>
+  <div >
     <el-container>
       <el-aside width="100px" class="aside-background-color">
         年度盈亏曲线
       </el-aside>
       <el-main>
+        <div style="width:80px;text-align:center;">
+          <el-button size="mini" style="margin:5px;" type="primary">全部</el-button>
+          <el-button size="mini" style="margin:5px;" type="warning">直营</el-button>
+          <el-button size="mini"  style="margin:5px;" type="success">加盟</el-button>
+        </div>
         <div ref="chart1" class="chartStyle" />
       </el-main>
     </el-container>
@@ -26,6 +31,12 @@ export default {
               type: 'cross'
             }
         },
+        title: [{
+          // text: '在线构建',
+          subtext: '单位: 元',
+          x: '80%',
+          textAlign: 'center'
+        }],
         legend: {
               data: ['利润', '成本','收入']
             },
@@ -68,19 +79,19 @@ export default {
                 type:'line',
                 xAxisIndex: 1,
                 smooth: false,
-                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+                data: []
             },
             {
                 name:'收入',
                 type:'line',
                 smooth: false,
-                data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
+                data: []
             },
             {
                 name:'利润',
                 type:'line',
                 smooth: false,
-                data: [3.0, 5.0, 11.0, 18.0, 4.0, 6.0, 231.6, 46.0, 55.0, 18.4, 10.3, 9]
+                data: []
             }
         ]
     }
@@ -93,18 +104,82 @@ export default {
   watch:{
     'incomLoss'(e){
       this.currentData = e
+      this.chartHandle()
     }
   },
   methods: {
     chartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart1)
       myChart.setOption(this.option)
-      // getIncomeLoss(this.currentData.year,this.currentData.shopId).then(res => {
-      //   let arrIncome = []
+      let op = this.option
+      getIncomeLoss(this.currentData.year,this.currentData.shopId).then(res => {
+        let arrIncome = []
+        let arrLoss = []
+        let arrProfit = []
+        if(res.status === 1){
+          let loss=res.msg
+          let income=res.info
+          let profit = {}
+          // 收入
+          arrIncome.push(income.januaryIncome?income.januaryIncome/100:0)
+          arrIncome.push(income.februaryIncome?income.februaryIncome/100:0)
+          arrIncome.push(income.marchIncome?income.marchIncome/100:0)
+          arrIncome.push(income.aprilIncome?income.aprilIncome/100:0)
+          arrIncome.push(income.mayIncome?income.mayIncome/100:0)
+          arrIncome.push(income.juneIncome?income.juneIncome/100:0)
+          arrIncome.push(income.julyIncome?income.julyIncome/100:0)
+          arrIncome.push(income.augustIncome?income.augustIncome/100:0)
+          arrIncome.push(income.septemberIncome?income.septemberIncome/100:0)
+          arrIncome.push(income.octoberIncome?income.octoberIncome/100:0)
+          arrIncome.push(income.novemberIncome?income.novemberIncome/100:0)
+          arrIncome.push(income.decemberIncome?income.decemberIncome/100:0)
+          // 成本
+          arrLoss.push(loss.januaryCost?loss.januaryCost/100:0)
+          arrLoss.push(loss.februaryCost?loss.februaryCost/100:0)
+          arrLoss.push(loss.marchCost?loss.marchCost/100:0)
+          arrLoss.push(loss.aprilCost?loss.aprilCost/100:0)
+          arrLoss.push(loss.mayCost?loss.mayCost/100:0)
+          arrLoss.push(loss.juneCost?loss.juneCost/100:0)
+          arrLoss.push(loss.julyCost?loss.julyCost/100:0)
+          arrLoss.push(loss.augustCost?loss.augustCost/100:0)
+          arrLoss.push(loss.septemberCost?loss.septemberCost/100:0)
+          arrLoss.push(loss.octoberCost?loss.octoberCost/100:0)
+          arrLoss.push(loss.novemberCost?loss.novemberCost/100:0)
+          arrLoss.push(loss.decemberCost?loss.decemberCost/100:0)
+          // 利润
+          profit.one = (income.januaryIncome-loss.januaryCost)/100
+          profit.two = (income.februaryIncome-loss.februaryCost)/100
+          profit.three = (income.marchIncome-loss.marchCost)/100
+          profit.four = (income.aprilIncome-loss.aprilCost)/100
+          profit.five = (income.mayIncome-loss.mayCost)/100
+          profit.six = (income.januaryIncome-loss.juneCost)/100
+          profit.seven = (income.juneIncome-loss.julyCost)/100
+          profit.eight = (income.augustIncome-loss.augustCost)/100
+          profit.nine = (income.septemberIncome-loss.septemberCost)/100
+          profit.ten = (income.octoberIncome-loss.octoberCost)/100
+          profit.eleven = (income.novemberIncome-loss.novemberCost)/100
+          profit.twelve = (income.decemberIncome-loss.decemberCost)/100
+          arrProfit.push(profit.one)
+          arrProfit.push(profit.two)
+          arrProfit.push(profit.three)
+          arrProfit.push(profit.four)
+          arrProfit.push(profit.five)
+          arrProfit.push(profit.six)
+          arrProfit.push(profit.seven)
+          arrProfit.push(profit.eight)
+          arrProfit.push(profit.nine)
+          arrProfit.push(profit.ten)
+          arrProfit.push(profit.eleven)
+          arrProfit.push(profit.twelve)
 
-      // }).catch(err => {
-      //   console.log(err)
-      // })
+          op.series[0].data = arrLoss
+          op.series[1].data = arrIncome
+          op.series[2].data = arrProfit
+          myChart.setOption(op)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

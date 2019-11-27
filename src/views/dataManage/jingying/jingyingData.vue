@@ -40,11 +40,11 @@
             <th class="th_class">{{this.jingyingData.rent?this.jingyingData.rent/100:0}}</th>
           </tr>
           <tr class="tr_class" >
-            <th class="th_class">工资支出（{{this.wagesPercent}}}%）</th>
+            <th class="th_class">工资支出（{{this.wagesPercent}}%）</th>
             <th class="th_class">{{this.jingyingData.wages?this.jingyingData.wages/100:0}}</th>
           </tr>
           <tr class="tr_class" >
-            <th class="th_class">水电暖合计（{{this.hydropowerPercent}}}%）</th>
+            <th class="th_class">水电暖合计（{{this.hydropowerPercent}}%）</th>
             <th class="th_class">{{this.jingyingData.hydropower?this.jingyingData.hydropower/100:0}}</th>
           </tr>
           <tr class="tr_class" >

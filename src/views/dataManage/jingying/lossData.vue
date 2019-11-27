@@ -59,6 +59,7 @@ export default {
   watch:{
     'lossObject'(e){
       this.currentObj = e
+      this.lossDataHandle()
     }
   },
   methods: {

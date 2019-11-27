@@ -144,3 +144,41 @@ export const getIncomeLoss = (year,shopId) => {
     data: params
   })
 }
+/**
+ * 查询复购品类排名
+ * @param {String} year
+ * @param {String} month
+ * @param {String} day
+ * @param {Number} shopId
+ */
+export const getFrequency = (year, month, day, shopId) => {
+  const params = new URLSearchParams()
+  if(year)params.append('year', year)
+  if(month)params.append('month', month)
+  if(day)params.append('day', day)
+  if(shopId)params.append('shopId', shopId)
+  return request({
+    url: '/admin/selectGoodsNumber',
+    method: 'post',
+    data: params
+  })
+}
+/**
+ * 查询复购频次
+ * @param {String} year
+ * @param {String} month
+ * @param {String} day
+ * @param {Number} shopId
+ */
+export const getBuyCount = (year, month, day, shopId) => {
+  const params = new URLSearchParams()
+  if(year)params.append('year', year)
+  if(month)params.append('month', month)
+  if(day)params.append('day', day)
+  if(shopId)params.append('shopId', shopId)
+  return request({
+    url: '/admin/selectBuyCount',
+    method: 'post',
+    data: params
+  })
+}

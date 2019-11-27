@@ -3,7 +3,7 @@
     <div style="width:100%;height:100%;">
       <div class="header">
         <div class="header-item">会员总数（人）: {{membersCount}}</div>
-        <div class="header-item">新增会员（人）: 700</div>
+        <div class="header-item">新增会员（人）: {{addMember}}</div>
       </div>
       <div class="header">
         <div class="body">
@@ -47,6 +47,7 @@ export default {
     return {
       currentVip:{},
       membersCount:0,
+      addMember:0,
       optionSex: {
         tooltip: {
           trigger: 'item',
@@ -204,6 +205,7 @@ export default {
         op.series[0].data = arr
         myChart.setOption(op)
         this.membersCount = res.info.memberCount
+        this.addMember = res.info.addMember
       }).catch(err => {
         console.log(err)
       })
