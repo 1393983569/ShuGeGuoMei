@@ -117,12 +117,14 @@ export const getVip = (year, month, day, shopId) => {
  * @param {String} day
  * @param {Number} shopId
  */
-export const getGoodsSale = (year, month, day, shopId) => {
+export const getGoodsSale = (year, month, day, shopId,cateOneId, cateTwoId) => {
   const params = new URLSearchParams()
   if(year)params.append('year', year)
   if(month)params.append('month', month)
   if(day)params.append('day', day)
   if(shopId)params.append('shopId', shopId)
+  if(cateOneId)params.append('categoryOneId', cateOneId)
+  if(cateTwoId)params.append('categoryTwoId', cateTwoId)
   return request({
     url: '/admin/selectSales',
     method: 'post',
@@ -134,10 +136,11 @@ export const getGoodsSale = (year, month, day, shopId) => {
  * @param {String} year
  * @param {Number} shopId
  */
-export const getIncomeLoss = (year,shopId) => {
+export const getIncomeLoss = (year,shopId,management) => {
   const params = new URLSearchParams()
   if(year)params.append('year', year)
   if(shopId)params.append('shopId', shopId)
+  if(management)params.append('management', management)
   return request({
     url: '/admin/selectProfitLoss',
     method: 'post',

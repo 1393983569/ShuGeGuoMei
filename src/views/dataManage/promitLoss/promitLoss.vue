@@ -6,9 +6,9 @@
       </el-aside>
       <el-main>
         <div style="width:80px;text-align:center;">
-          <el-button size="mini" style="margin:5px;" type="primary">全部</el-button>
-          <el-button size="mini" style="margin:5px;" type="warning">直营</el-button>
-          <el-button size="mini"  style="margin:5px;" type="success">加盟</el-button>
+          <el-button size="mini" style="margin:5px;" type="primary" @click="searchFunction('')">全部</el-button>
+          <el-button size="mini" style="margin:5px;" type="warning" @click="searchFunction(1)">直营</el-button>
+          <el-button size="mini"  style="margin:5px;" type="success" @click="searchFunction(2)">加盟</el-button>
         </div>
         <div ref="chart1" class="chartStyle" />
       </el-main>
@@ -17,12 +17,13 @@
 </template>
 <script>
 import {getIncomeLoss} from '@/api/dataManage/dataCenter'
+import { type } from 'os';
 export default {
   props:['incomLoss'],
   data() {
     return {
       currentData:{},
-
+      type:'',
       option : {
         backgroundColor:"#FFFFFF",
         tooltip: {
@@ -108,11 +109,17 @@ export default {
     }
   },
   methods: {
+    searchFunction(type){
+      this.type = type
+
+      this.chartHandle()
+    },
     chartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart1)
       myChart.setOption(this.option)
       let op = this.option
-      getIncomeLoss(this.currentData.year,this.currentData.shopId).then(res => {
+      console.log(this.type, 'kkkkk')
+      getIncomeLoss(this.currentData.year,this.currentData.shopId, this.type).then(res => {
         let arrIncome = []
         let arrLoss = []
         let arrProfit = []

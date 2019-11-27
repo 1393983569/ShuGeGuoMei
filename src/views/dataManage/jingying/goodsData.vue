@@ -5,15 +5,47 @@
         商品数据
       </el-aside>
       <el-main>
+        <div>
+          <div style="margin:10px;display:flex;flex-direction:row;font-size:12px;width:200px;">
+            一级品类：
+            <el-select v-model="categoryOneId" clearable placeholder="请选择" style="width: 120px" size="mini">
+              <el-option
+                v-for="item in firstList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </div>
+          <div style="margin:10px;display:flex;flex-direction:row;font-size:12px;width:200px;">
+            二级品类：
+            <el-select v-model="categoryTwoId" clearable placeholder="请选择" style="width: 120px" size="mini">
+              <el-option
+                v-for="item in secondList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </div>
+        </div>
         <div ref="chart1" class="chartStyle" />
       </el-main>
     </el-container>
   </div>
 </template>
 <script>
+import { getFirstCategory, getSecondCategory } from '@/api/category.js'
+import {getGoodsSale} from '@/api/dataManage/dataCenter.js'
 export default {
+  props:['goodsObject'],
   data() {
     return {
+      currentGoods:{},
+      categoryOneId: '',
+      categoryTwoId: '',
+      firstList: [],
+      secondList: [],
       option: {
         backgroundColor: '#FFFFFF',
         tooltip: {
@@ -39,7 +71,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: ['白菜', '青菜', '萝卜', '油麦菜', '韭菜', '菠菜', '空心菜', '生菜', '香菜'],
+            data: [],
             axisPointer: {
               type: 'shadow'
             }
@@ -50,7 +82,7 @@ export default {
             type: 'value',
             name: '库存',
             min: 0,
-            max: 250,
+            // max: 250,
             interval: 50,
             axisLabel: {
               formatter: '{value} (斤)'
@@ -60,7 +92,7 @@ export default {
             type: 'value',
             name: '销量',
             min: 0,
-            max: 25,
+            // max: 25,
             interval: 5,
             axisLabel: {
               formatter: '{value} (斤)'
@@ -71,25 +103,99 @@ export default {
           {
             name: '库存',
             type: 'bar',
-            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7]
+            data: []
           },
           {
             name: '销量',
             type: 'line',
             yAxisIndex: 1,
-            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0]
+            data: []
           }
         ]
-      }
+      },
+
     }
   },
   mounted() {
+    this.currentGoods = this.goodsObject
     this.goodsChartHandle()
+    this.getFirstCategory()
+  },
+  watch:{
+    'goodsObject'(e){
+      this.currentGoods = e
+      this.goodsChartHandle()
+    },
+    // 查询一级品类下的二级品类
+    'categoryOneId'(e) {
+      this.goodsChartHandle()
+      if (e) {
+        getSecondCategory(e).then(res => {
+          if (res.info.length > 0) {
+            this.secondList[0] = {
+              id:'',
+              name:'全部'
+            }
+            res.info.map(item => {
+              this.secondList.push(item)
+            })
+          } else {
+            this.$message.info('此一级品类下暂无二级品类！')
+            this.secondList = []
+            this.categoryTwoId = ''
+          }
+        }).catch(err => {
+          console.log(err)
+          this.$message.warning('暂无二级品类')
+        })
+      }else{
+        this.categoryTwoId = ''
+      }
+    },
+    'categoryTwoId'(e){
+      this.goodsChartHandle()
+    }
   },
   methods: {
+    // 查询一级品类
+    getFirstCategory() {
+      getFirstCategory().then(res => {
+        if (res.info.length > 0) {
+          this.firstList[0]={
+            id:'',
+            name:'全部'
+          }
+          res.info.map(item => {
+            this.firstList.push(item)
+          })
+        } else {
+          this.$message.warning('暂无一级品类')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('查询一级品类出错！')
+      })
+    },
     goodsChartHandle() {
       var myChart = this.$echarts.init(this.$refs.chart1)
       myChart.setOption(this.option)
+      let op = this.option
+      getGoodsSale(this.currentGoods.year,this.currentGoods.month,this.currentGoods.day,this.currentGoods.shopId,this.categoryOneId, this.categoryTwoId).then(res=> {
+        let nameList = []
+        let stockList = []
+        let saleList = []
+        res.info.map(item => {
+          nameList.push(item.goodsName)
+          stockList.push(item.computerStock)
+          saleList.push(item.sales)
+        })
+        op.xAxis[0].data = nameList
+        op.series[0].data = stockList
+        op.series[1].data = saleList
+        myChart.setOption(op)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

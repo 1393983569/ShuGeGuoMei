@@ -13,20 +13,23 @@
       </div>
     </div>
     <!-- 营业概况 -->
-    <business :bus-obj="dataObject"></business><br>
+    <div style="font-weight:bold;margin:10px;margin-top:30px;">
+      经营分析
+    </div>
+    <business :bus-obj="dataObject" lazy></business><br>
     <div><jingying-data :jyObject="dataObject"></jingying-data></div><br/>
     <div><income :incomObject="dataObject"></income></div><br/>
     <div><incomTrend :incomeTrend="dataObject" /></div><br>
     <div><lossData :lossObject="dataObject" /></div><br>
-    <div><goodsData /></div>
+    <div><goodsData :goodsObject="dataObject" /></div>
     <div><goodsCate :goodsSale="dataObject"></goodsCate></div>
-    <div class="font-weight">盈亏分析</div>
+    <div style="font-weight:bold;margin:10px;margin-top:30px;">盈亏分析</div>
     <div style="margin-top:4px;"><promitLoss :incomLoss="dataObject"/></div>
     <br>
     <div>
       <incomeLoss :ykObject="dataObject"></incomeLoss>
     </div>
-    <div class="font-weight">会员分析</div>
+    <div style="font-weight:bold;margin:10px;margin-top:30px;">会员分析</div>
     <div style="margin-top:4px;"><vip :vipObject="dataObject" /></div><br/>
     <div><monthPurch :countObject="dataObject"></monthPurch></div><br/>
     <div><frequency :categoryObject="dataObject"></frequency></div>
@@ -72,8 +75,8 @@ export default {
     searchFunction(){
       let obj = {}
       obj.year = this.yearPro
-      obj.month = this.month
-      obj.day = this.day
+      obj.month = this.monthPro
+      obj.day = this.dayPro
       obj.shopId = this.shopId
       this.dataObject = obj
     },
@@ -83,6 +86,10 @@ export default {
       obj.month = ''
       obj.day = ''
       obj.shopId = ''
+      this.shopId = ''
+      this.yearPro = ''
+      this.monthPro = ''
+      this.dayPro = ''
       this.dataObject = obj
     },
     getPickDate(date){
