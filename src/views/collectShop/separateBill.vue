@@ -177,17 +177,21 @@ export default {
     handleSeparateBill(){
       let arr = []
       let idArr = []
+      console.log(this.goodsArray, 'goodsArr....')
+      return
       this.goodsArray.map(item => {
         idArr.push(item.id)
         let obj = {}
         obj.standards = item.standards
         obj.unit = item.unit
         obj.categoryOneId = item.category_one_id
+
         obj.money = item.money
         obj.price = item.price
+        obj.amount = item.detailAmount
+
         obj.goodsId = item.id
         obj.goodsName = item.goodsName
-        obj.amount = item.detailAmount
         obj.orderId = this.orderId
         obj.orderNo = this.orderNo
         arr.push(obj)

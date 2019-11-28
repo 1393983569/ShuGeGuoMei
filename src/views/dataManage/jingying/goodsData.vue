@@ -55,7 +55,8 @@ export default {
             crossStyle: {
               color: '#999'
             }
-          }
+          },
+          formatter:"{b0}<br />{a0}: {c0}<br/>{a1}:{c1}<br/>",
         },
         toolbox: {
           feature: {
@@ -74,6 +75,17 @@ export default {
             data: [],
             axisPointer: {
               type: 'shadow'
+            },
+            axisLabel:{
+              formatter:function(params) {
+                var res  = params
+                if(res.includes('[')){
+                   return res.split('[')[0]
+                }else{
+                  return res
+                }
+
+              }
             }
           }
         ],
@@ -97,7 +109,7 @@ export default {
             axisLabel: {
               formatter: '{value} (斤)'
             }
-          }
+          },
         ],
         series: [
           {
@@ -110,7 +122,7 @@ export default {
             type: 'line',
             yAxisIndex: 1,
             data: []
-          }
+          },
         ]
       },
 
@@ -185,6 +197,15 @@ export default {
         let stockList = []
         let saleList = []
         res.info.map(item => {
+          if(item.stockWarning===0){
+            item.goodsName=item.goodsName+'[库存预警]'
+          }
+          if(item.periodWarning===0){
+            item.goodsName=item.goodsName+'[保鲜期预警]'
+          }
+          if(item.overdueWarning===0){
+            item.goodsName=item.goodsName+'[过期预警]'
+          }
           nameList.push(item.goodsName)
           stockList.push(item.computerStock)
           saleList.push(item.sales)

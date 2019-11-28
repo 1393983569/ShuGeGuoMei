@@ -216,11 +216,11 @@ export default {
       switch(true){
         case c>=12:
           return 95;break;
-        case c<=8&&c<12:
+        case c>=8&&c<12:
           return 92;break;
-        case c<=5&&c<8:
+        case c>=5&&c<8:
           return 88;break;
-        case c<=2.5&&c<5:
+        case c>=2.5&&c<5:
           return 85;break;
         case c<2.5:
           return 80;break;
@@ -273,25 +273,31 @@ export default {
           // if(res.info.computerStock>(2*res.info.salesVolume)){
             for(let i=0;i<disArray.length; i++){
               if(disArray[i].name === '库存'){
+                // t=c*tp
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch5(disArray[i].tp)
                 if(disArray[i].w){
+                  // wv=w*ra
                   disArray[i].wv= (disArray[i].w*disArray[i].ra/10000).toFixed(2)
                 }else{
                   disArray[i].wv = 0
                 }
               }else if(disArray[i].name === '会员购买力指数(万)'){
+                // t=c*tp
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch7(disArray[i].c)
                 if(disArray[i].w){
+                  // wv=w*ra
                   disArray[i].wv= (disArray[i].w*disArray[i].ra/10000).toFixed(2)
                 }else{
                   disArray[i].wv = 0
                 }
               }else if(disArray[i].index==='2'||disArray[i].index==='3'||disArray[i].index==='4'){
+                // t=c*tp
                 disArray[i].t= (disArray[i].c*(disArray[i].tp/100)).toFixed(2)
                 disArray[i].ra=this.switch6(disArray[i].tp)
                 if(disArray[i].w){
+                  // wv=w*ra
                   disArray[i].wv= (disArray[i].w*disArray[i].ra/10000).toFixed(2)
                 }else{
                   disArray[i].wv= 0
@@ -310,6 +316,7 @@ export default {
     },
     // 折扣表table数据处理
     arrFunction(res){
+      console.log(res, 'c,,,,,,')
       // 库存s
       let computerStocks = res.info.computerStock
       // 日销量v

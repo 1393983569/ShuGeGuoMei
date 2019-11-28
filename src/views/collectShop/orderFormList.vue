@@ -232,13 +232,17 @@ export default {
       this.getOrderList()
     },
     getPickDate(date){
+      console.log(date, 'llllllll')
       date = date+'-'
       let dateArr = date.split('-')
       if(dateArr.length === 2){
         this.yearPro = dateArr[0]
+        this.monthPro = ''
+        this.dayPro = ''
       }else if(dateArr.length === 3) {
         this.yearPro = dateArr[0]
         this.monthPro = dateArr[1]
+        this.dayPro = ''
       }else if(dateArr.length === 4){
         this.yearPro = dateArr[0]
         this.monthPro = dateArr[1]
