@@ -25,7 +25,7 @@
           子订单明细：
         </span>
       </div>
-      <el-row>
+      <el-row v-if="type===3">
         <el-col :span="2">
           <div>
             &nbsp;
@@ -67,6 +67,9 @@
           </div>
         </el-col>
       </el-row>
+      <div v-else>
+        <orderDetailComponent :messageObject="messageObject"></orderDetailComponent>
+      </div>
     </div>
     <div v-if="type===3">订单状态：
       <span v-if="status ===0">未拆单</span>
@@ -91,6 +94,7 @@
 </template>
 
 <script>
+import orderDetailComponent from './orderDetailComponent'
 import virtualList from 'vue-virtual-scroll-list'
 import Breadcrumb from '@/components/Breadcrumb'
 import hint from '@/components/Hint'
@@ -101,7 +105,8 @@ import { filter } from 'minimatch';
 export default {
   name: 'OrderDetails',
   components: {
-    childOrdersList, hint, Breadcrumb
+    childOrdersList, hint, Breadcrumb,
+    orderDetailComponent
   },
   data() {
     return {
@@ -123,6 +128,7 @@ export default {
       orderTotalMoney:'',
       temNum:0,
       buttonArray:[],
+      messageObject:{},
     }
   },
   beforeRouteEnter (to, form, next) {
@@ -165,6 +171,7 @@ export default {
         if(res.status === 1){
           let arr = {}
           this.tempOrder = res.info[0]
+          this.messageObject = res.info[0]
           arr= res.info[0]
           this.orderNo = arr.orderNo
           this.orderDate = arr.createTime
@@ -177,6 +184,8 @@ export default {
           this.status = arr.status
           this.amount = arr.amount
           this.orderDetailList = arr.orderDetailList
+
+          console.log(this.messageObject, 'qian.....')
           let sum = 0
           this.orderDetailList.forEach(item => {
             sum += item.money

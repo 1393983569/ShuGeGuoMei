@@ -16,23 +16,28 @@
     <div style="font-weight:bold;margin:10px;margin-top:30px;">
       经营分析
     </div>
-    <business :bus-obj="dataObject" lazy></business><br>
+    <div><business :bus-obj="dataObject" lazy></business></div><br>
     <div><jingying-data :jyObject="dataObject"></jingying-data></div><br/>
-    <div><income :incomObject="dataObject"></income></div><br/>
-    <div><incomTrend :incomeTrend="dataObject" /></div><br>
-    <div><lossData :lossObject="dataObject" /></div><br>
-    <div><goodsData :goodsObject="dataObject" /></div>
-    <div><goodsCate :goodsSale="dataObject"></goodsCate></div>
-    <div style="font-weight:bold;margin:10px;margin-top:30px;">盈亏分析</div>
-    <div style="margin-top:4px;"><promitLoss :incomLoss="dataObject"/></div>
+    <div v-if="slideState>=1"><income :incomObject="dataObject"></income></div><br/>
+    <div v-if="slideState>=1"><incomTrend :incomeTrend="dataObject" /></div><br>
+    <div v-if="slideState>=2"><lossData :lossObject="dataObject" /></div><br>
+    <div  v-if="slideState>=3"><goodsData :goodsObject="dataObject" /></div>
+    <div  v-if="slideState>=3"><goodsCate :goodsSale="dataObject"></goodsCate></div>
+    <div v-if="slideState>=4" style="font-weight:bold;margin:10px;margin-top:30px;">盈亏分析</div>
+    <div v-if="slideState>=4" style="margin-top:4px;"><promitLoss :incomLoss="dataObject"/></div>
     <br>
-    <div>
+    <div v-if="slideState>=5">
       <incomeLoss :ykObject="dataObject"></incomeLoss>
     </div>
-    <div style="font-weight:bold;margin:10px;margin-top:30px;">会员分析</div>
-    <div style="margin-top:4px;"><vip :vipObject="dataObject" /></div><br/>
-    <div><monthPurch :countObject="dataObject"></monthPurch></div><br/>
-    <div><frequency :categoryObject="dataObject"></frequency></div>
+    <div  v-if="slideState>=6" style="font-weight:bold;margin:10px;margin-top:30px;">会员分析</div>
+    <div  v-if="slideState>=6" style="margin-top:4px;"><vip :vipObject="dataObject" /></div><br/>
+    <div  v-if="slideState>=7"><monthPurch :countObject="dataObject"></monthPurch></div><br/>
+    <div  v-if="slideState>=8"><frequency :categoryObject="dataObject"></frequency></div>
+    <div v-if="slideState<=8" style="width:100%;display: flex;flex-direction:row-reverse;align-items: center;">
+      <div :title="loadTitle" @click="slideFunction" style="position: fixed;top:80%;background-color: #fff;width:50px;height:50px;border-radius: 50%;color: #409eff;display: flex;flex-direction:row-reverse;align-items: center;justify-content: center;font-size: 20px;box-shadow: 0 0 6px rgba(0,0,0,.12);cursor: pointer;z-index:100;">
+        <i style="font-size:30px;" class="el-icon-caret-bottom"></i>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -65,13 +70,25 @@ export default {
       monthPro:'',
       dayPro:'',
       dataObject:{},
+      slideState:0,
+      loadTitle:'点击加载未加载统计图'
     }
   },
   mounted() {
     this.getAllShop()
+    window.scrollY = 500
 
   },
   methods: {
+    slideFunction(){
+      this.slideState+=1
+      this.dataObject.slideState = this.slideState
+      window.scrollTo(100,window.scrollY+=430);
+      if(this.slideState>8){
+        window.alert('统计图已加载完！')
+        this.loadTitle = '统计图已加载完！'
+      }
+    },
     searchFunction(){
       let obj = {}
       obj.year = this.yearPro

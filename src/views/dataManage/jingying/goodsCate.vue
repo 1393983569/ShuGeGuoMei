@@ -24,14 +24,14 @@
             {{ scope.row.goodsName}}
             </template>
           </el-table-column>
-          <el-table-column prop="" label="销量（斤）" align="center">
+          <el-table-column prop="" label="销量" align="center">
             <template slot-scope="scope">
-            {{ scope.row.computerStock}}
+            {{ scope.row.sales}}（{{scope.row.unit}}）
             </template>
           </el-table-column>
-          <el-table-column prop="" label="库存（斤）" align="center">
+          <el-table-column prop="" label="库存" align="center">
             <template slot-scope="scope">
-            {{ scope.row.sales}}
+            {{ scope.row.computerStock}}（{{scope.row.unit}}）
             </template>
           </el-table-column>
         </el-table>

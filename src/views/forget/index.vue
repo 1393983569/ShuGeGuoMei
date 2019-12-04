@@ -372,7 +372,7 @@ $light_gray:#eee;
     /*position: absolute;*/
     width: 600px;
     height: 420px;
-    margin: 0 auto;
+    // margin: 0 auto;
   }
   .login-button {
     width:100%;

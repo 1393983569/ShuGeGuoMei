@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width:100%;" class="header"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
+    <div style="width:100%;text-align:center;height: 40px;background-color: #f0f2f3;border-bottom:1px solid #dfe6ec;color: #909399;font-weight: 500;line-height: 40px;font-weight: bold;"><span>{{productName}}&nbsp;&nbsp;&nbsp;</span>DR:{{numCount[10]}}</div>
     <el-table :data="tableData" style="width:100%;" border center show-summary :summary-method="getSummaries">
       <el-table-column label="序号" prop="index" width="60"/>
       <el-table-column label=" " prop="name"/>
@@ -8,7 +8,7 @@
       <el-table-column label="C" prop="c">
         <template slot-scope="scope">
           <p v-if="scope.row.c">{{scope.row.c}}</p>
-          <p v-else></p>
+          <p v-else>0</p>
         </template>
       </el-table-column>
       <el-table-column label="TP" prop="tp" width="140">
@@ -336,16 +336,5 @@ p{
   color: #606266;
   font-weight: 0px;
   text-align: center !important;
-}
-.header{
-  height: 40px;
-  width: 100%;
-  background-color: #f0f2f3;
-  border-bottom:1px solid #dfe6ec;
-  color: #909399;
-  font-weight: 500;
-  text-align:center;
-  line-height: 40px;
-  font-weight: bold;
 }
 </style>

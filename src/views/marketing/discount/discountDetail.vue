@@ -318,19 +318,19 @@ export default {
     arrFunction(res){
       console.log(res, 'c,,,,,,')
       // 库存s
-      let computerStocks = res.info.computerStock
+      let computerStocks = res.info.computerStock?res.info.computerStock:0
       // 日销量v
-      let salesVolumes = res.info.salesVolume
+      let salesVolumes = res.info.salesVolume?res.info.salesVolume:0
       // 利润率pm
-      let profitMargins = res.info.profitMargin
+      let profitMargins = res.info.profitMargin?res.info.profitMargin:0
       // 利润值p
-      let profits = res.info.profit
+      let profits = res.info.profit?res.info.profit:0
       // 店铺会员数m
-      let members = res.info.members
+      let members = res.info.members?res.info.members:0
       // 会员人均购买力b
-      let purchasings = res.info.purchasing
+      let purchasings = res.info.purchasing?res.info.purchasing:0
       // 月复购频次fm
-      let frequencys = res.info.frequency
+      let frequencys = res.info.frequency?res.info.frequency:0
 
       let disArr = []
       let object = res.info.discountPackageDomain
@@ -364,8 +364,13 @@ export default {
       disArr.push(frequency)
 
       let powerIndex = JSON.parse(object.powerIndex)
-      powerIndex.c= (members*purchasings*frequencys)/10000
-      disArr.push(powerIndex)
+      if(members===0||purchasings===0||frequencys===0){
+        powerIndex.c= 0
+        disArr.push(powerIndex)
+      }else{
+        powerIndex.c= (members*purchasings*frequencys)/10000
+        disArr.push(powerIndex)
+      }
 
       return disArr
     },

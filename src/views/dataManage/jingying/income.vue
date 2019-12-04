@@ -1,28 +1,17 @@
 <template>
-  <div style="width:100%;height:150px;display:flex;flex-direction:row;color:#333;font-size:16px;font-weight:bold;background-color:#ffffff;">
-    <div class="income_aside">收入构成</div>
-    <div style="width:90%;padding-top:20px;">
-      <div style="width:100%;display:flex;flex-direction:row;">
-        <p :style="xianjinTitle" v-if="xianjinTitle.width!=='0.00%'">现金</p>
-        <p style="width:1px;height:30px;border-left:2px solid #FFC000;" v-else>现金</p>
-        <p :style="phoneTitle">手机</p>
-        <p :style="moneyTitle" v-if="moneyTitle.width!=='0.00%'">余额</p>
-        <p style="width:1px;height:30px;border-left:2px solid #FFC000;margin-left:10px" v-else>余额</p>
+  <div style="display:flex;flex-direction:row;">
+    <div class='title'>
+      收入构成
+    </div>
+    <div style="width:100%;background-color:#ffffff;padding:10px;">
+      <div style="color:#FFC000;">现金：<el-progress style="margin:5px;" :text-inside="true" :stroke-width="26" :percentage="perxianjin" color="#FFC000"></el-progress></div>
+      <div style="color:#8BC34A;"><hr style="border:1px solid #e9e9e9;"/>手机：
+        <el-progress :format="formatWx" style="margin:5px;" :text-inside="true" :stroke-width="26" :percentage="perweixin" color="#8BC34A"></el-progress>
+        <el-progress :format="formatZfb" style="margin:5px;" :text-inside="true" :stroke-width="26" :percentage="perzhifubao" color="#4BB7F2"></el-progress>
+        <el-progress :format="formatQt" style="margin:5px;" :text-inside="true" :stroke-width="26" :percentage="perqita" color="#FF8C75"></el-progress>
       </div>
-      <div style="width:100%;display:flex;flex-direction:row;">
-        <p :style="xianjin">{{xianjin.width?xianjin.width:'0'}}</p>
-        <p :style="weixin">{{weixin.width?weixin.width:'0'}}</p>
-        <p :style="zhifubao">{{zhifubao.width?zhifubao.width:'0'}}</p>
-        <p :style="qita">{{qita.width?qita.width:'0'}}</p>
-        <p :style="money">{{money.width==='0.00%'?'':money.width}}</p>
-      </div>
-      <div style="width:100%;display:flex;flex-direction:row;">
-        <p :style="xianjinTitle"></p>
-        <p :style="weixinTitle" v-if="weixinTitle.width!=='0.00%'">微信</p>
-        <p :style="zhifubaoTitle" v-if="zhifubaoTitle.width!=='0.00%'">支付宝</p>
-        <p :style="qitaTitle" v-if="qitaTitle.width!=='0.00%'">其它</p>
-        <p :style="moneyTitle"></p>
-      </div>
+      <div style="color:#009688;"><hr style="border:1px solid #e9e9e9;"/>余额
+      <el-progress style="margin:5px;" :text-inside="true" :stroke-width="26" :percentage="peryue" color="#009688"></el-progress><br/></div>
     </div>
   </div>
 </template>
@@ -33,72 +22,11 @@ export default {
   data() {
     return {
       currentData:{},
-      xianjin: {
-        width: "10%",
-        // color:'#ffffff',
-        backgroundColor: "#FFC000",
-        textAlign:'center',
-        lineHeight:'25px',
-        height: "25px",
-      },
-      money: {
-        width: "30%",
-        // color:'#ffffff',
-        backgroundColor: "#009688",
-        textAlign:'center',
-        lineHeight:'25px',
-        height: "25px"
-      },
-      weixin: {
-        width: "10%",
-        backgroundColor: "#8BC34A",
-        // color: "#ffffff",
-        height: "25px",
-        textAlign:'center',
-        lineHeight:'25px',
-      },
-      zhifubao: {
-        width: "20%",
-        // color: "#ffffff",
-        backgroundColor: "#4BB7F2",
-        textAlign:'center',
-        lineHeight:'25px',
-        height: "25px"
-      },
-      qita: {
-        width: "30%",
-        // color: "#ffffff",
-        backgroundColor: "#FF8C75",
-        textAlign:'center',
-        lineHeight:'25px',
-        height: "25px"
-      },
-      xianjinTitle:{
-        height:'30px',
-        borderRight:'2px solid #FFC000',
-        width:'10%',
-      },
-      phoneTitle:{
-        height:'30px',
-        width:'60%'
-      },
-      weixinTitle:{
-        width:'10%',
-        height:'30px',
-      },
-      zhifubaoTitle:{
-        width:'20%',
-        height:'30px',
-      },
-      qitaTitle:{
-        width:'30%',
-        // borderRight:'2px solid #FFC000',
-      },
-      moneyTitle:{
-        height:'30px',
-        width:'30%',
-        borderLeft:'2px solid #FFC000',
-      }
+      perxianjin:0,
+      perweixin:0,
+      perzhifubao:0,
+      perqita:0,
+      peryue:0,
     };
   },
   mounted(){
@@ -112,6 +40,16 @@ export default {
     }
   },
   methods:{
+    formatWx(percentage){
+      console.log(percentage, 'wx...')
+      return `微信${percentage}%`
+    },
+    formatZfb(percentage){
+      return `支付宝${percentage}%`
+    },
+    formatQt(percentage){
+      return `其它${percentage}%`
+    },
     getIncomeFunction(){
       getIncome(this.currentData.year,this.currentData.month,this.currentData.day,this.currentData.shopId,).then(res => {
         if(res.status === 1){
@@ -121,22 +59,32 @@ export default {
               total+=res.info[key]
             }
           }
+          if(res.info.one!==0){
+            this.peryue = ((res.info.one/total)*100).toFixed(2)
+          }else{
+            this.peryue = 0
+          }
 
-
-          let phoneTotal = res.info.three+res.info.four+res.info.five
-          this.phoneTitle.width=((phoneTotal/total)*100).toFixed(2).toString()+'%'
-
-          this.xianjin.width = ((res.info.two/total)*100).toFixed(2).toString()+'%'
-          this.money.width = ((res.info.one/total)*100).toFixed(2).toString()+'%'
-          this.weixin.width= ((res.info.three/total)*100).toFixed(2).toString()+'%'
-          this.zhifubao.width= ((res.info.four/total)*100).toFixed(2).toString()+'%'
-          this.qita.width= ((res.info.five/total)*100).toFixed(2).toString()+'%'
-
-          this.xianjinTitle.width = this.xianjin.width
-          this.moneyTitle.width = this.money.width
-          this.weixinTitle.width= ((res.info.three/total)*100).toFixed(2).toString()+'%'
-          this.zhifubaoTitle.width= ((res.info.four/total)*100).toFixed(2).toString()+'%'
-          this.qitaTitle.width= ((res.info.five/total)*100).toFixed(2).toString()+'%'
+          if(res.info.two!==0){
+            this.perxianjin = ((res.info.two/total)*100).toFixed(2)
+          }else{
+            this.perxianjin=0
+          }
+          if(res.info.three!==0){
+            this.perweixin= ((res.info.three/total)*100).toFixed(2)
+          }else{
+            this.weixin.width =0
+          }
+          if(res.info.four!==0){
+             this.perzhifubao= ((res.info.four/total)*100).toFixed(2)
+          }else{
+            this.perzhifubao =0
+          }
+          if(res.info.five!==0){
+           this.perqita= ((res.info.five/total)*100).toFixed(2)
+          }else{
+            this.perqita =0
+          }
         }
       }).catch(err => {
         console.log(err)
@@ -162,5 +110,15 @@ p {
   font-size: 16px;
   margin-right: 3px;
   font-weight: normal;
+}
+.title{
+  width:100px;
+  height:300px;
+  background-color:pink;
+  text-align: center;
+  line-height: 300px;
+  background-color: #D3DCE6;
+  color:#333;
+  font-size: 16px;
 }
 </style>

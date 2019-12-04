@@ -27,7 +27,7 @@
             <div>总单量（单）</div>
           </div>
           <div class="item">
-            <div style="font-size:30px;color:#ffa96a;margin-top:50px;">{{this.businessObj.avgOrder?this.businessObj.avgOrder/100:0}}</div><br>
+            <div style="font-size:30px;color:#ffa96a;margin-top:50px;">{{this.businessObj.avgOrder?this.businessObj.avgOrder:0}}</div><br>
             <div>单均价（元）</div>
           </div>
           <div class="item">
