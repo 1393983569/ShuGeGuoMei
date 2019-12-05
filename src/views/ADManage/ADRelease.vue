@@ -79,7 +79,7 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         imge: [{ required: true, message: '请上传轮播图', trigger: 'blur' }],
-        content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
+        content: [{ required: false, message: '请输入内容', trigger: 'blur' }]
       },
       apiUrl: '',
       addEditState: false,
