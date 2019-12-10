@@ -470,6 +470,8 @@ export default {
       this.goodsObject.sellPrice = this.goodsObject.sellPrice*100
       this.goodsObject.price = this.goodsObject.price*100
       this.goodsObject.state = this.goodsObject.state + ''
+      // console.log(this.goodsObject, './././')
+      // return
       editGoods(this.goodsObject).then(res => {
         this.$message.success('编辑商品成功')
         this.addLoading = false

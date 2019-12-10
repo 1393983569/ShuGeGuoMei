@@ -377,7 +377,17 @@
         }
       },
       // ID补位
-      addId(data, i) {
+      addIdOne(data, i) {
+        let intData = parseInt(data)
+        let value = ''
+        if (intData < 9) {
+         value = `0${intData + i}`
+        }else{
+          value = intData + i + ''
+        }
+        return value
+      },
+      addIdTwo(data, i) {
         let intData = parseInt(data)
         let value = ''
         if (intData < 9) {
@@ -425,7 +435,7 @@
           if(item.value){
             if(item.value.length<=6){
               stairList.push({
-                id: this.addId(id, index + 1),
+                id: this.addIdOne(id, index + 1),
                 name: item.value
               })
             }else{
@@ -456,12 +466,14 @@
         let arr = []
         let id = ''
         let listChildren = []
+        console.log(this.dataList,'kkkkkkkkk......')
 
         arr = this.dataList.filter(item => {
           if (item.childrenId) return item
         })
         if(arr.length>0){
           let quickSort = (list) => {
+            // console.log(list, 'jjjjjjjlist.....')
            let len = list.length
             if (len < 2) {
               return list
@@ -471,7 +483,7 @@
               let right = []
               for (let i = 1; len > i; i++) {
                 let tmp = list[i]
-                if (flag.childrenId > tmp.childrenId) {
+                if (parseInt(flag.childrenId) > parseInt(tmp.childrenId)) {
                   left.push(tmp)
                 } else {
                   right.push(tmp)
@@ -481,11 +493,14 @@
             }
           }
           id = quickSort(arr)[arr.length - 1].childrenId
+          console.log('id:', id, 'quickSort(arr):', quickSort(arr))
+
         }else{
-          id='01'
+          id='001'
         }
         let count = 0
         let lenCount = 0
+        console.log(this.childrenInput, 'childrenInput')
         this.childrenInput.forEach((item, index) => {
           if(!item.value){
             count++
@@ -494,7 +509,7 @@
             lenCount++
           }
           let data = {
-            id: this.addId(id, index + 1),
+            id: this.addIdTwo(id, index + 1),
             categoryOneId : this.optionValue,
             name: item.value
           }

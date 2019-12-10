@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-size:18px;">
     <Breadcrumb :stateShow="stateShowBreadcrumb">
       <el-button size="mini" type="primary" @click="editPush">编辑</el-button>
     </Breadcrumb>
@@ -17,10 +17,11 @@
     <p>座机号：{{providerObj.phone}}</p>
     <p>微信：{{providerObj.wechat}}</p>
     <p>QQ：{{providerObj.qq}}</p>
-    <p>邮箱：{{providerObj.email}}</p>仓库地址：
-    <span>{{province}}</span>
-    <span>{{city}}</span>
-    <span>{{area}}</span>
+    <p>邮箱：{{providerObj.email}}</p>
+    <p> 仓库地址：
+      <span>{{province}}</span>
+      <span>{{city}}</span>
+      <span>{{area}}</span></p>
     <p>详细地址：{{providerObj.addressDetail}}</p>
     <p>
       仓库面积：{{providerObj.area}}m
@@ -29,7 +30,7 @@
     <p>备注：{{providerObj.remark}}</p>
     <div style="display:flex;flex-direction: row;">可配送店铺列表：
       <span v-for="item in providerObj.providerShopList">
-        <i style="font-style:normal;" v-if="item">{{item.name}},</i>
+        <i style="font-style:normal;margin-right:10px;" v-if="item">{{item.name}}</i>
       </span>
     </div>
     <p>供应商品：
@@ -51,12 +52,12 @@
         </el-table-column>
         <el-table-column prop="childrenId" label="一级品类ID">
           <template slot-scope="scope">
-            <p>{{ scope.row.childrenId}}</p>
+            {{ scope.row.childrenId}}
           </template>
         </el-table-column>
         <el-table-column prop="name" label="二级品类">
           <template slot-scope="scope">
-            <p>{{ scope.row.name}}</p>
+            {{ scope.row.name}}
           </template>
         </el-table-column>
         <el-table-column prop="id" label="二级品类ID">
@@ -383,5 +384,10 @@ el-tree {
   // width:200px;
   height: 746px;
   border: 1px solid #f0f2f3;
+}
+p{
+  font-size: 18px;
+  margin-top:10px;
+  text-align: left;
 }
 </style>

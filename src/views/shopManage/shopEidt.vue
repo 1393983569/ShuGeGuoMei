@@ -574,7 +574,8 @@ export default {
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
-      this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
+      // this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
+      this.shopForm.adminPassword = this.shopForm.adminPassword
       this.shopForm.area = parseInt(this.shopForm.area)
       let arr = this.handleJson(this.finalArray)
       this.shopForm.categoryJson = JSON.stringify(arr)
@@ -614,7 +615,8 @@ export default {
       this.shopForm.cityId = parseInt(this.shopForm.cityId)
       this.shopForm.countyId = parseInt(this.shopForm.countyId)
       this.shopForm.adminPhone = parseInt(this.shopForm.adminPhone)
-      this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
+      // this.shopForm.adminPassword = parseInt(this.shopForm.adminPassword)
+      this.shopForm.adminPassword = this.shopForm.adminPassword
       this.shopForm.area = parseInt(this.shopForm.area)
       if (cateArray.length > 0) {
         this.shopForm.categoryJson = JSON.stringify(cateArray)
