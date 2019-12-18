@@ -7,7 +7,7 @@ export const addGoods = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
 
-    if (data[key]) params.append(key, data[key])
+    if (data[key]||data[key]===0) params.append(key, data[key])
   }
   return request({
     url: '/admin/addGoods',
@@ -36,7 +36,7 @@ export const editGoods = (data) => {
   const params = new URLSearchParams()
   for (const key in data) {
     if (data[key]!=='undefined'){
-      if (data[key]) params.append(key, data[key])
+      if (data[key]||data[key]===0) params.append(key, data[key])
     }
   }
   return request({

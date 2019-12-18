@@ -61,7 +61,7 @@
       :visible.sync="dialogChildren"
       width="40%">
       <!-- :key="`${item.id}_o`" -->
-      <el-select v-model="optionValue" placeholder="请选择一级品类" style="margin-bottom: 5px; width: 100%">
+    <el-select v-model="optionValue" placeholder="请选择一级品类" style="margin-bottom: 5px; width: 100%">
         <el-option
           v-for="item in optionsStair"
           :key="item.id"
@@ -381,18 +381,22 @@
         let intData = parseInt(data)
         let value = ''
         if (intData < 9) {
-         value = `0${intData + i}`
+         if((intData+i)<10){
+           value = `0${intData + i}`
+         }else{
+           value = intData + i+''
+         }
         }else{
-          value = intData + i + ''
+          value = intData + i+''
         }
         return value
       },
       addIdTwo(data, i) {
         let intData = parseInt(data)
         let value = ''
-        if (intData < 9) {
+        if (intData < 9&&(intData+i)<10) {
          value = `00${intData + i}`
-        } else if(intData>9&&intData<99) {
+        } else if((intData>9&&intData<99)||((intData+i)>=10&&(intData+i)<100)) {
           value = `0${intData + i}`
         }else{
           value = intData + i + ''
@@ -431,11 +435,17 @@
         // id = arr[arr.length - 1].stairId
         let count = 0
         let lentCount = 0
+        let i = 0
+        // console.log(this.stairInput, 'stairInput//////')
+        if(this.dataList.length>0){
+          i = 1
+        }
         this.stairInput.forEach((item, index) => {
           if(item.value){
             if(item.value.length<=6){
+              console.log(id, index, )
               stairList.push({
-                id: this.addIdOne(id, index + 1),
+                id: this.addIdOne(id, index+i),
                 name: item.value
               })
             }else{
@@ -453,6 +463,9 @@
           this.$message.warning('一级品类的名称不能超过6个字符！')
           return
         }
+
+        // console.log(stairList, 'stairList....')
+        // return
         addCategoryOne(stairList).then(res => {
           this.dialogStair = false
           this.getList()
@@ -466,14 +479,12 @@
         let arr = []
         let id = ''
         let listChildren = []
-        console.log(this.dataList,'kkkkkkkkk......')
 
         arr = this.dataList.filter(item => {
           if (item.childrenId) return item
         })
         if(arr.length>0){
           let quickSort = (list) => {
-            // console.log(list, 'jjjjjjjlist.....')
            let len = list.length
             if (len < 2) {
               return list
@@ -500,7 +511,13 @@
         }
         let count = 0
         let lenCount = 0
-        console.log(this.childrenInput, 'childrenInput')
+        let i= 0
+        this.dataList.map(item=> {
+          if(item.childrenName){
+            i= 1
+            return
+          }
+        })
         this.childrenInput.forEach((item, index) => {
           if(!item.value){
             count++
@@ -509,7 +526,7 @@
             lenCount++
           }
           let data = {
-            id: this.addIdTwo(id, index + 1),
+            id: this.addIdTwo(id, index+i),
             categoryOneId : this.optionValue,
             name: item.value
           }
@@ -523,6 +540,8 @@
           this.$message.warning('二级品类名称不能超过6个字符！')
           return
         }
+
+        // return
         addCategoryTwo(listChildren).then(res => {
           this.dialogChildren = false
           this.getList()
