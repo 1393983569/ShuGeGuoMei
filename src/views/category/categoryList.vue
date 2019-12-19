@@ -380,24 +380,28 @@
       addIdOne(data, i) {
         let intData = parseInt(data)
         let value = ''
-        if (intData < 9) {
-         if((intData+i)<10){
-           value = `0${intData + i}`
-         }else{
-           value = intData + i+''
-         }
+        if(i==0){
+          value = '001'
         }else{
-          value = intData + i+''
+          if (intData < 9) {
+            if((intData+i)<10){
+              value = `0${intData + i}`
+            }else{
+              value = intData + i+''
+            }
+          }else{
+            value = intData + i+''
+          }
         }
         return value
       },
       addIdTwo(data, i) {
         let intData = parseInt(data)
         let value = ''
-        if (intData < 9&&(intData+i)<10) {
-         value = `00${intData + i}`
-        } else if((intData>9&&intData<99)||((intData+i)>=10&&(intData+i)<100)) {
-          value = `0${intData + i}`
+        if (intData+i < 10) {
+         value = `00${intData + i}`+''
+        } else if(intData+i>=9&&intData+i<100) {
+          value = `0${intData + i}`+''
         }else{
           value = intData + i + ''
         }
