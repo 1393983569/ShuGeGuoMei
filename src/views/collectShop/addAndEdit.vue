@@ -14,7 +14,15 @@
    </breadcrumb>
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="一级品类：" prop="categoryOneId">
-        <el-select v-model="ruleForm.categoryOneId" clearable placeholder="请选择" style="width: 500px">
+        <el-select v-if="!addEditState" disabled v-model="ruleForm.categoryOneId" clearable placeholder="请选择" style="width: 500px">
+          <el-option
+            v-for="item in firstList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+        <el-select v-else v-model="ruleForm.categoryOneId" clearable placeholder="请选择" style="width: 500px">
           <el-option
             v-for="item in firstList"
             :key="item.id"
