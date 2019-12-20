@@ -239,7 +239,7 @@ export default {
           return
         }
         const values = data.map(item => {
-          if (column.property === 'money' && item[column.property]) {
+          if (column.property === 'money' && (item[column.property]+'')) {
             return Number(item[column.property])
           }
         })

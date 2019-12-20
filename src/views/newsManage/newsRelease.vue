@@ -180,6 +180,7 @@ export default {
       });
       addArray.shopJson = JSON.stringify(shopJson);
       addArray.shopIds = shopIdList.toString();
+      this.addLoading = true
       addNews(addArray)
         .then(res => {
           if (res.status === 1) {

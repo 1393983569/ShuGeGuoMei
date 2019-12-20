@@ -1,7 +1,7 @@
 <template>
   <div class="box-margin">
     <breadcrumb :stateShow ='false'>
-      <el-button size="mini" type="primary" @click="handleSeparateBill" v-if="addButton">保存</el-button>
+      <el-button size="mini" type="primary" @click="handleSeparateBill" v-if="addButton" :loading="spillLoading">保存</el-button>
       <el-button size="mini" type="primary" v-else disabled>保存</el-button>
       <el-button size="mini" type="warning" @click="handleCancel">取消</el-button>
     </breadcrumb>
@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      spillLoading:false,
       goodsList: [],
       optionsProvider:[],
       providerId:'',
@@ -197,12 +198,15 @@ export default {
         arr.push(obj)
       })
       let list = JSON.stringify(arr)
+      this.spillLoading = true
       // 派单
       separateBill(this.providerId, list, this.orderId, this.orderNo, this.subMoney, this.shopId).then(res => {
         this.$message.success('拆单成功！')
         this.$router.push({name: 'orderFormList'})
+        this.spillLoading = false
       }).catch(err => {
         this.$message.error('拆单失败！')
+        this.spillLoading = false
       })
       // 派单商品状态修改
       updateChoose(idArr.toString(),this.orderId).then(res => {

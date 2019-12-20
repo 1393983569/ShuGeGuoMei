@@ -3,11 +3,11 @@
   <div class="body-margin">
     <Breadcrumb>
       <div v-if="addEditState">
-        <el-button size="mini" type="primary" @click="submitForm('ADForm')">确定</el-button>
+        <el-button size="mini" type="primary" @click="submitForm('ADForm')" :loading="addLoading">确定</el-button>
         <el-button size="mini" type="warning" @click="resetForm('ADForm')">取消</el-button>
       </div>
       <div v-else>
-        <el-button size="mini" type="primary" @click="submitEditForm('ADForm')">修改</el-button>
+        <el-button size="mini" type="primary" @click="submitEditForm('ADForm')" :loading="editLoading">修改</el-button>
         <el-button size="mini" type="warning" @click="resetForm('ADForm')">取消</el-button>
       </div>
     </Breadcrumb>
@@ -64,6 +64,8 @@ export default {
   // },
   data() {
     return {
+      addLoading:false,
+      editLoading:false,
       percentage:0,
       picture: [],
       // 富文本内容
@@ -166,15 +168,19 @@ export default {
       // console.log(formName, 'formName....')
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.addLoading = true
           // 发布广告接口
           addAdvertisement(this.ADForm).then(res => {
             this.$message.success('添加广告成功！')
+            this.addLoading = false
             window.history.go(-1)
           }).catch(err => {
             console.log(err)
+            this.addLoading = false
           })
         } else {
           return false
+
         }
       })
     },
@@ -188,22 +194,25 @@ export default {
       this.$router.back()
     },
     submitEditForm(formName) {
+
       // console.log(formName, 'formName....')
       this.$refs[formName].validate((valid) => {
         if (valid) {
+
           // 发布广告接口
-          console.log(this.ADForm, '^^^^^^')
-          // return
           if(this.ADForm.status === '上架') {
             this.ADForm.status = 0
           } else {
             this.ADForm.status = 1
           }
+          this.editLoading = true
           editAdvertisement(this.ADForm).then(res => {
             this.$message.success('编辑成功！')
+            this.editLoading = false
             window.history.go(-1)
           }).catch(err => {
             console.log(err)
+            this.editLoading = false
             this.$message.error('编辑失败！')
           })
         } else {
