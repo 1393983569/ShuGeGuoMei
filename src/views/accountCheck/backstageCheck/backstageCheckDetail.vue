@@ -1,5 +1,6 @@
 <template>
   <div class="box-margin">
+    <breadcrumb :stateShow ='true'></breadcrumb>
     <div>订单编号：{{orderNo}}</div>
     <div>
       订单时间：{{orderDate}}
@@ -85,6 +86,7 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import virtualList from 'vue-virtual-scroll-list'
 import hint from '@/components/Hint'
 import { sumList } from '_u/logic'
@@ -94,7 +96,7 @@ import { filter } from 'minimatch';
 export default {
   name: 'backstageCheckDetail',
   components: {
-    childOrdersList, hint
+    childOrdersList, hint, Breadcrumb
   },
   data() {
     return {
@@ -202,7 +204,7 @@ export default {
           return
         }
         const values = data.map(item => {
-          if (column.property === 'money' && item[column.property]) {
+          if (column.property === 'money' && item[column.property]+'') {
             return Number(item[column.property])
           }
         })

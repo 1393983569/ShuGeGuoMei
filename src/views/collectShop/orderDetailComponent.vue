@@ -7,18 +7,18 @@
         <el-table-column prop="unit" label="单位"/>
         <el-table-column prop="price" label="单价">
           <template slot-scope="scope">
-            {{scope.row.price/100}}
+            {{scope.row.price?(scope.row.price/100):0}}
           </template>
         </el-table-column>
         <el-table-column prop="account" label="折扣">
           <template slot-scope="scope">
-            {{scope.row.rate/100}}
+            {{scope.row.rate?(scope.row.rate/100):''}}
           </template>
         </el-table-column>
         <el-table-column prop="detailAmount" label="数量"/>
         <el-table-column prop="money" label="金额">
           <template slot-scope="scope">
-            {{scope.row.money/100}}
+            {{scope.row.money?(scope.row.money/100):0}}
           </template>
         </el-table-column>
       </el-table>

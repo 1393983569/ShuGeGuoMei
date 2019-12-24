@@ -1,5 +1,6 @@
 <template>
   <div class="box-margin">
+    <breadcrumb :stateShow ='true'></breadcrumb>
     <!-- <HeadButton v-if="childrenObject.status !== 2">
       <el-button type="primary" style=" margin-left: 10px" @click="sendOrders">派单</el-button>
       <el-button type="danger" @click="deleteOrder">删除</el-button>
@@ -76,6 +77,7 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb'
 import virtualList from 'vue-virtual-scroll-list'
 import { sumList  } from '_u/logic'
 import HeadButton from '@/components/HeadButton'
@@ -83,7 +85,7 @@ import { orderSubDetail, enterQuantity } from '@/api/collectShop/order.js'
 export default {
   name: 'childShopCheckDetail',
   components: {
-    HeadButton
+    HeadButton,Breadcrumb
   },
   data() {
     return {
@@ -152,7 +154,7 @@ export default {
           return
         }
         const values = data.map(item => {
-          if (column.property === 'money' && item[column.property]) {
+          if (column.property === 'money' && item[column.property]+'') {
             return Number(item[column.property])
           }
         })

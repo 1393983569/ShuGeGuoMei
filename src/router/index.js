@@ -828,7 +828,7 @@ export const asyncRoutes = [
         meta: {
           // roles: ['accountCheck'],
           icon: 'dashboard',
-          title: '店铺对账单详情'
+          title: '子订单对账详情'
         },
         component: () => import('@/views/accountCheck/shopCheck/childShopCheckDetail.vue')
       },
