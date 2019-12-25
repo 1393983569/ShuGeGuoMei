@@ -30,8 +30,14 @@ export default {
       getBuyCount(this.currentData.year,this.currentData.month,this.currentData.day,this.currentData.shopId,).then(res=> {
         if(res.status === 1){
           console.log(res, 'jhgf.....')
-          this.count = res.info.count
-          this.averagePur  = res.info.memMoney?res.info.memMoney/100:0
+          let count = res.info.count
+          if(!isNaN(count)){
+            this.count = count
+          }
+          let averagePur = res.info.memMoney?res.info.memMoney/100:0
+          if(!isNaN(averagePur)){
+            this.averagePur = averagePur
+          }
         }
       }).catch(err => {
         console.log(err)

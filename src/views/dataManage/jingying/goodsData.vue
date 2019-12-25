@@ -8,7 +8,7 @@
         <div>
           <div style="margin:10px;display:flex;flex-direction:row;font-size:12px;width:200px;">
             一级品类：
-            <el-select v-model="categoryOneId" clearable placeholder="请选择" style="width: 120px" size="mini">
+            <el-select v-model="categoryOneId" placeholder="请选择" style="width: 120px" size="mini">
               <el-option
                 v-for="item in firstList"
                 :key="item.id"
@@ -19,7 +19,7 @@
           </div>
           <div style="margin:10px;display:flex;flex-direction:row;font-size:12px;width:200px;">
             二级品类：
-            <el-select v-model="categoryTwoId" clearable placeholder="请选择" style="width: 120px" size="mini">
+            <el-select v-model="categoryTwoId" placeholder="请选择" style="width: 120px" size="mini">
               <el-option
                 v-for="item in secondList"
                 :key="item.id"
@@ -59,12 +59,12 @@ export default {
           formatter:"{b0}<br />{a0}: {c0}<br/>{a1}:{c1}<br/>",
         },
         toolbox: {
-          feature: {
-            dataView: { show: true, readOnly: false },
-            magicType: { show: true, type: ['line', 'bar'] },
-            restore: { show: true },
-            saveAsImage: { show: true }
-          }
+          // feature: {
+          //   dataView: { show: true, readOnly: false },
+          //   magicType: { show: true, type: ['line', 'bar'] },
+          //   restore: { show: true },
+          //   saveAsImage: { show: true }
+          // }
         },
         legend: {
           data: ['库存', '销量']
@@ -95,7 +95,7 @@ export default {
             name: '库存',
             min: 0,
             // max: 250,
-            interval: 50,
+            // interval: 50,
             axisLabel: {
               formatter: '{value} (斤)'
             }
@@ -105,7 +105,7 @@ export default {
             name: '销量',
             min: 0,
             // max: 25,
-            interval: 5,
+            // interval: 5,
             axisLabel: {
               formatter: '{value} (斤)'
             }
@@ -144,13 +144,14 @@ export default {
       if (e) {
         getSecondCategory(e).then(res => {
           if (res.info.length > 0) {
-            this.secondList[0] = {
-              id:'',
-              name:'全部'
-            }
+            // this.secondList[0] = {
+            //   id:'',
+            //   name:'全部'
+            // }
             res.info.map(item => {
               this.secondList.push(item)
             })
+            this.categoryTwoId = this.secondList[0].id
           } else {
             this.$message.info('此一级品类下暂无二级品类！')
             this.secondList = []
@@ -173,13 +174,10 @@ export default {
     getFirstCategory() {
       getFirstCategory().then(res => {
         if (res.info.length > 0) {
-          this.firstList[0]={
-            id:'',
-            name:'全部'
-          }
           res.info.map(item => {
             this.firstList.push(item)
           })
+          this.categoryOneId = this.firstList[0].id
         } else {
           this.$message.warning('暂无一级品类')
         }
@@ -223,7 +221,7 @@ export default {
 </script>
 <style>
 .chartStyle {
-  height: 400px;
+  /* height: 400px; */
   width:100%;
   box-sizing: border-box;
   line-height: 400px;

@@ -21,8 +21,8 @@
     <div v-if="slideState>=1"><income :incomObject="dataObject"></income></div><br/>
     <div v-if="slideState>=1"><incomTrend :incomeTrend="dataObject" /></div><br>
     <div v-if="slideState>=2"><lossData :lossObject="dataObject" /></div><br>
-    <div  v-if="slideState>=3"><goodsData :goodsObject="dataObject" /></div>
-    <div  v-if="slideState>=3"><goodsCate :goodsSale="dataObject"></goodsCate></div>
+    <div v-if="slideState>=3"><goodsData :goodsObject="dataObject" /></div>
+    <div v-if="slideState>=3"><goodsCate :goodsSale="dataObject"></goodsCate></div>
     <div v-if="slideState>=4" style="font-weight:bold;margin:10px;margin-top:30px;">盈亏分析</div>
     <div v-if="slideState>=4" style="margin-top:4px;"><promitLoss :incomLoss="dataObject"/></div>
     <br>
@@ -38,6 +38,7 @@
         <i style="font-size:30px;" class="el-icon-caret-bottom"></i>
       </div>
     </div>
+    <el-divider v-if="slideState>=8" style="background-color:rag(246, 246, 246)">我是有底线的</el-divider>
   </div>
 </template>
 <script>

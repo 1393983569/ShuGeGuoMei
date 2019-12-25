@@ -1,5 +1,7 @@
 <template>
-  <div style="border-bottom: 1px solid #bbbbbb;display:flex;align-items:center;heigth:40px;position:fixed;top:46px;z-index:20;width:100%;background-color:rgb(246,246,246)">
+  <div style="border-bottom: 1px solid #bbbbbb;display:flex;align-items:center;
+  heigth:40px;position:fixed;top:46px;z-index:20;width:100%;
+  background-color:rgb(246,246,246);-webkit-transform:translateZ(0);">
     <div v-if="stateShow" class="back"><i class="el-icon-back" @click="backHandle"></i>&nbsp;<span style="font-weight:bold;color:#C0C4CC;">|</span></div>
     <el-breadcrumb class="app-breadcrumb" separator="/">
       <transition-group name="breadcrumb">
