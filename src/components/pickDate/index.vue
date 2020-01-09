@@ -112,10 +112,10 @@ export default {
     },
     // 月
     getMonth(month){
+      console.log(month, 'month.....')
       this.dayList = []
       this.day =''
       if(month === '整年'||month===''){
-
         this.tempMonth = ''
         this.tempDay = ''
         this.day = ''
@@ -148,6 +148,7 @@ export default {
       }else if(this.tempYear&&!this.tempMonth&&!this.tempDay){
          pickDate = this.tempYear
       }
+      console.log(pickDate, 'pickDate//////')
       this.$emit('getPickDate',pickDate )
     }
   }

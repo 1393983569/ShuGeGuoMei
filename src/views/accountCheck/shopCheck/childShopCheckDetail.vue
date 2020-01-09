@@ -55,7 +55,7 @@
               </el-table-column>
               <el-table-column prop="money" label="金额">
                 <template slot-scope="scope">
-                  {{scope.row.money/100}}
+                  {{scope.row.money?(scope.row.money/100):0}}
                 </template>
               </el-table-column>
             </el-table>

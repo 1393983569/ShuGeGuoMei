@@ -139,17 +139,19 @@ export default {
           let fixation = this.jingyingData.rent+this.jingyingData.wages+this.jingyingData.hydropower+this.jingyingData.otherExpenses
           let change = this.jingyingData.marketing+this.jingyingData.otherVariables+this.jingyingData.totalMoney+this.jingyingData.lossMoney
           this.currentTotal =(fixation+change)
-          this.fixPercent = ((fixation/this.currentTotal)*100).toFixed(2)
-          this.changePercent = ((change/this.currentTotal)*100).toFixed(2)
+          if(this.currentTotal){
+            this.fixPercent = ((fixation/this.currentTotal)*100).toFixed(2)
+            this.changePercent = ((change/this.currentTotal)*100).toFixed(2)
 
-          this.rentPercent = ((this.jingyingData.rent/this.currentTotal)*100).toFixed(2)
-          this.wagesPercent = ((this.jingyingData.wages/this.currentTotal)*100).toFixed(2)
-          this.hydropowerPercent = ((this.jingyingData.hydropower/this.currentTotal)*100).toFixed(2)
-          this.otherExpensesPercent = ((this.jingyingData.otherExpenses/this.currentTotal)*100).toFixed(2)
-          this.marketingPercent = ((this.jingyingData.marketing/this.currentTotal)*100).toFixed(2)
-          this.otherVariablesPercent = ((this.jingyingData.otherVariables/this.currentTotal)*100).toFixed(2)
-          this.totalMoneyPercent = ((this.jingyingData.totalMoney/this.currentTotal)*100).toFixed(2)
-          this.lossMoneyPercent = ((this.jingyingData.lossMoney/this.currentTotal)*100).toFixed(2)
+            this.rentPercent = ((this.jingyingData.rent/this.currentTotal)*100).toFixed(2)
+            this.wagesPercent = ((this.jingyingData.wages/this.currentTotal)*100).toFixed(2)
+            this.hydropowerPercent = ((this.jingyingData.hydropower/this.currentTotal)*100).toFixed(2)
+            this.otherExpensesPercent = ((this.jingyingData.otherExpenses/this.currentTotal)*100).toFixed(2)
+            this.marketingPercent = ((this.jingyingData.marketing/this.currentTotal)*100).toFixed(2)
+            this.otherVariablesPercent = ((this.jingyingData.otherVariables/this.currentTotal)*100).toFixed(2)
+            this.totalMoneyPercent = ((this.jingyingData.totalMoney/this.currentTotal)*100).toFixed(2)
+            this.lossMoneyPercent = ((this.jingyingData.lossMoney/this.currentTotal)*100).toFixed(2)
+          }
 
           // 利润  loss payMoneyCount
           this.profit = (this.jingyingData.loss+this.jingyingData.payMoneyCount-this.currentTotal)/100

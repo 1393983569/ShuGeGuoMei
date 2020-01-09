@@ -50,13 +50,13 @@
               <el-table-column prop="unit" label="单位"/>
               <el-table-column prop="price" label="单价">
                 <template slot-scope="scope">
-                  {{scope.row.price/100}}
+                  {{sscope.row.price?(cope.row.price/100):0}}
                 </template>
               </el-table-column>
               <el-table-column prop="detailAmount" label="下单数量"/>
               <el-table-column prop="money" label="金额">
                 <template slot-scope="scope">
-                  {{scope.row.money/100}}
+                  {{scope.row.money?(scope.row.money/100):0}}
                 </template>
               </el-table-column>
             </el-table>
