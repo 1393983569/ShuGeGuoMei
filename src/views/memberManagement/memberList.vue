@@ -48,6 +48,7 @@
       <el-button size="mini" @click="handleFind">搜索</el-button>
     </div>
     <el-table
+      v-loading="loadingTable"
       :data="dataList"
       :header-cell-style="{   }"
       center
@@ -140,6 +141,7 @@ export default {
   },
   data() {
     return {
+      loadingTable: false,
       bottonList:[],
       yearPro:'',
       monthPro:'',
@@ -288,7 +290,9 @@ export default {
     },
     // 确认删除会员
     confirmDelete(){
+      this.loadingTable = true
       deleteVip(this.vipId).then(res => {
+        this.loadingTable = false
         if(res.status === 1){
           this.getVipLists()
           this.$message.success('删除成功！')
@@ -297,6 +301,7 @@ export default {
           this.$message.error('删除失败')
         }
       }).catch(err => {
+        this.loadingTable = false
         this.$message.error('删除失败')
       })
     },

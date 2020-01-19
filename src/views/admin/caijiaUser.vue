@@ -28,7 +28,7 @@
       <el-button size="mini" type="primary" v-else>搜索</el-button>
     </div>
     <div style="margin-top:5px;">
-      <el-table :data="tableData">
+      <el-table v-loading="loadingTable" :data="tableData">
         <el-table-column prop="name" label="用户名"/>
         <el-table-column prop="mobile" label="手机号"/>
         <el-table-column prop="password" label="密码"/>
@@ -93,6 +93,7 @@ export default {
   components: { selectorAddress, Breadcrumb, hint },
   data(){
     return{
+      loadingTable: false,
       stateShow:false,
       searchInput: '',
       total: 0,
@@ -182,6 +183,7 @@ export default {
     },
     // 查询用户列表
     getCaijiaUser(){
+      this.loadingTable = true
       let obj = {}
       obj.param = this.param
       obj.pageSize = this.pageSize
@@ -192,6 +194,7 @@ export default {
       obj.areaId = this.areaId
       obj.type=3
       getCaijiaUser(obj).then(res => {
+        this.loadingTable = false
         this.tableData = []
         res.info.records.forEach(item => {
           let obj  = {}
@@ -214,6 +217,7 @@ export default {
         this.loadingSearch = false
         this.loadingClear = false
       }).catch(err => {
+        this.loadingTable = true
         console.log(err)
          this.loadingSearch = false
         this.loadingClear = false

@@ -23,6 +23,7 @@
     </div>
     <div>
       <el-table
+        v-loading="loadingTable"
         ref="singleTable"
         :row-style="tableRowStyle"
         :data="shopTable"
@@ -95,6 +96,7 @@ export default {
   },
   data() {
     return {
+      loadingTable:false,
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -191,6 +193,7 @@ export default {
     },
     // 查询店铺列表
     getShopList() {
+      this.loadingTable = true
       this.shopTable = []
       const obj = {}
       obj.pageNum = this.pageNum
@@ -206,6 +209,7 @@ export default {
         obj.management = this.management
       }
       getShopList(obj).then(res => {
+        this.loadingTable = false
         if (res.info.records.length > 0) {
           this.total = res.info.totalrecord
           res.info.records.map(e => {
@@ -221,6 +225,7 @@ export default {
           this.$message.warning('暂无店铺！')
         }
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('商铺查询出错！')
       })

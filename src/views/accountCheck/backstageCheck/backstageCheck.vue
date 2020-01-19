@@ -32,6 +32,7 @@
       <p>当月后台利润：<span v-if="cost[0]&&purchaseAmount[0]">{{purchaseAmount[0]/100-cost[0]/100}}</span></p>
     </div>
     <el-table
+        v-loading="loadingTable"
         :data="tableData"
         :header-cell-style="{   }"
         center
@@ -137,6 +138,7 @@ export default {
   },
   data() {
     return{
+      loadingTable: false,
       // 订单成本
       orderCost:[],
       // 后台成本
@@ -220,6 +222,7 @@ export default {
     },
     // 查询订单列表
     getOrderList() {
+      this.loadingTable = true
       let data = {}
       // data.orderNo = this.orderNo
       data.pageNum = this.pageNum
@@ -231,6 +234,7 @@ export default {
       data.type = this.type
       data.param = this.params
       getOrder(data).then(res => {
+        this.loadingTable = false
         if(res.status === 1){
           if(res.info.records.length>0){
             this.tableData = res.info.records
@@ -245,6 +249,7 @@ export default {
           }
         }
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('查询订单出错！')
       })

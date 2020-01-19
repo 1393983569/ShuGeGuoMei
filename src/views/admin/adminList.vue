@@ -35,7 +35,7 @@
       ></el-input>
       <el-button size="mini" @click="inputSearch" type="primary">搜索</el-button>
     </div>
-    <el-table :data="dataList" center stripe>
+    <el-table v-loading="loadingTable" :data="dataList" center stripe>
       <el-table-column prop="date" label="用户名">
         <template slot-scope="scope">
           <p>{{ scope.row.name }}</p>
@@ -173,6 +173,7 @@ export default {
       }, 100);
     };
     return {
+      loadingTable: false,
       loadingSearch: false,
       loadingClear: false,
       title: "",
@@ -253,9 +254,11 @@ export default {
       });
     },
     getAdminList() {
+      this.loadingTable  = true
       this.dataList = [];
       selectPageAdmin(this.pageNum, this.pagesize, this.param, this.charactar)
         .then(res => {
+          this.loadingTable  = false
           this.dataList = [];
           this.total = res.info.totalrecord;
           res.info.records.map(item => {
@@ -268,6 +271,7 @@ export default {
           });
         })
         .catch(err => {
+          this.loadingTable  = false
           console.log(err);
         });
     },

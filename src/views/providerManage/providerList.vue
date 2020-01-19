@@ -20,7 +20,7 @@
       </el-input>
       <el-button size="mini" @click="inputSearch">搜索</el-button>
     </div>
-    <el-table :data="tableData" stripe>
+    <el-table v-loading="loadingTable" :data="tableData" stripe>
       <el-table-column prop="id" label="供应商ID"/>
       <el-table-column prop="name" label="供应商名称" />
       <el-table-column prop="mobile" label="手机号" />
@@ -63,6 +63,7 @@ export default {
   components: { selectorAddress, Breadcrumb, hint },
   data() {
     return {
+      loadingTable: false,
       searchInput: '',
       total: 0,
       pagesize: 10,
@@ -114,6 +115,7 @@ export default {
     },
     // 查询供应商列表
     getProviderList(){
+      this.loadingTable = true
       let data= {}
       data.pageSize = this.pagesize
       data.pageNum = this.pageNum
@@ -122,6 +124,7 @@ export default {
       data.areaId = this.areaId
       data.param = this.param
       getProvider(data).then(res => {
+        this.loadingTable = false
         if(res.info.records.length > 0){
           this.total = res.info.totalrecord
           // res.info.records.forEach(item => {
@@ -141,6 +144,7 @@ export default {
           this.loadingClear = false
         }
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('查询供应商出错')
       })

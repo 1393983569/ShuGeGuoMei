@@ -4,7 +4,7 @@
       <el-button type="primary" size="mini" v-if="bottonList.includes('操作')" @click="handleRelease">广告发布</el-button>
       <el-button type="primary" size="mini" v-else disabled @click="handleRelease">广告发布</el-button>
     </breadcrumb>
-    <el-table :data="ADTable" center stripe>
+    <el-table v-loading="loadingTable" :data="ADTable" center stripe>
       <el-table-column prop="createTime" label="发布时间" />
       <el-table-column prop="title" label="标题">
         <span slot-scope="scope" class="outer">
@@ -68,6 +68,7 @@ export default {
   components: { AdDetail, Breadcrumb, hint},
   data() {
     return {
+      loadingTable:false,
       ADTable: [],
       showAdDetail: false,
       showAdEdit: false,
@@ -124,14 +125,17 @@ export default {
     // },
     // 查询广告列表
     getAdvertiseList() {
+      this.loadingTable = true
       this.ADTable = []
       getAdvertisement(this.pageNum, this.pageSize).then(res => {
+        this.loadingTable = false
         this.total = res.info.totalrecord
         res.info.records.forEach(e => {
           e.status = e.status === 0 ? '已上架' : '已下架'
           this.ADTable.push(e)
         })
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('查询广告失败！')
       })

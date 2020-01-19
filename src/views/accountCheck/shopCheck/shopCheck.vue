@@ -30,6 +30,7 @@
       <p style="position:absolute;right:10px;">当前采购金额：{{purchaseAmount[0]/100}}</p>
     </div>
     <el-table
+        v-loading="loadingTable"
         :data="tableData"
         :header-cell-style="{   }"
         center
@@ -136,6 +137,7 @@ export default {
   },
   data() {
     return{
+      loadingTable: false,
       shopList:[],
       shop:'',
       shopName:'',
@@ -228,6 +230,7 @@ export default {
     },
     // 查询订单列表
     getOrderList() {
+      this.loadingTable = true
       let data = {}
       // data.orderNo = this.orderNo
       data.pageNum = this.pageNum
@@ -239,6 +242,7 @@ export default {
       data.type = this.type
       data.param = this.params
       getOrder(data).then(res => {
+        this.loadingTable = false
         if(res.status === 1){
           if(res.info.records.length>0){
             this.purchaseAmount = res.info.records[0].purchaseAmount
@@ -252,6 +256,7 @@ export default {
 
         }
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('查询订单出错！')
       })

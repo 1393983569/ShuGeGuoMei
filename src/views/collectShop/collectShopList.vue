@@ -40,6 +40,7 @@
       </div>
     </div>
       <el-table
+        v-loading="loadingTable"
         :data="tableData"
         :header-cell-style="{background:'#f0f2f3', }"
         center
@@ -152,6 +153,7 @@ export default {
   components: { Breadcrumb, hint, virtualList },
   data() {
     return {
+      loadingTable:false,
       tableData: [],
       total: 0,
       pageNum: 1,
@@ -228,7 +230,9 @@ export default {
     // 查询商品列表
     getGoodsList() {
       this.tableData = []
+      this.loadingTable = true
       getGoodsList(this.pageNum, this.pageSize, this.state, this.categoryOneId, this.categoryTwoId).then(res => {
+        this.loadingTable = false
         if (res.info.records.length > 0) {
           this.total = res.info.totalrecord
           res.info.records.forEach(e => {
@@ -242,6 +246,7 @@ export default {
           this.$message.warning('暂无商品')
         }
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('查询商品出错')
       })

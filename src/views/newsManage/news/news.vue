@@ -22,7 +22,7 @@
     <virtual-list :remain="9" :size="90">
     <!-- 列表 -->
     <div style="margin-top:10px;">
-      <el-table :data="newsTable" center stripe>
+      <el-table v-loading="loadingTable" :data="newsTable" center stripe>
         <el-table-column prop="createTime" label="发布时间"/>
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="category" label="类型" />
@@ -68,6 +68,7 @@ export default {
   components: { newsDetail, Breadcrumb, hint, pickDate },
   data() {
     return {
+      loadingTable:false,
       showReturn:false,
       showDayState:false,
       yearPro:'',
@@ -145,6 +146,7 @@ export default {
     },
     // 查询消息列表
     getNewsList() {
+      this.loadingTable = true
       this.newsTable = []
       const obj = {}
       obj.pageNum = this.currentPage
@@ -158,6 +160,7 @@ export default {
         obj.category = this.newsType
       }
       getNews(obj).then(res => {
+        this.loadingTable = false
         this.total = res.info.totalrecord
         // const array = []
         res.info.records.forEach(e => {
@@ -166,6 +169,7 @@ export default {
           this.newsTable.push(e)
         })
       }).catch(err => {
+        this.loadingTable = false
         console.log(err)
         this.$message.error('查询失败')
       })

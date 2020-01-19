@@ -15,6 +15,7 @@
       </div>
     </div>
     <el-table
+      v-loading="loadingTable"
       :data="tableData"
       :header-cell-style="{   }"
       center
@@ -79,6 +80,7 @@ import {selectCaijia, addCaijia, editCaijia, deleteCaijia} from '@/api/category/
 export default {
   data(){
     return{
+      loadingTable:false,
       tableData:[],
       ruleForm:{
         name:'',
@@ -145,6 +147,7 @@ export default {
     // addhandle(){},
     // 查询采价列表
     getCaijiaList(){
+      this.loadingTable = true
       let data = {}
       data.pageSize = this.pageSize
       data.pageNum = this.pageNum
@@ -152,6 +155,7 @@ export default {
       data.cityId = this.cityId
       data.areaId = this.areaId
       selectCaijia(data).then(res=> {
+        this.loadingTable = false
         if(res.status === 1){
           this.total = res.info.totalrecord
           if(res.info.records.length>0){
@@ -161,7 +165,9 @@ export default {
             this.$message.info('暂无数据！')
           }
         }
-      }).catch(err => {})
+      }).catch(err => {
+        this.loadingTable = false
+      })
     },
     allArea(){},
     // 分页操作

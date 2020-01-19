@@ -36,6 +36,7 @@
       </div>
     </div>
     <el-table
+      v-loading="loadingTable"
       :data="dataList"
       :header-cell-style="{   }"
       center
@@ -114,6 +115,7 @@ export default {
   },
   data() {
     return {
+      loadingTable:false,
       // 日期选择数据
       yearPro:'',
       monthPro:'',
@@ -163,10 +165,13 @@ export default {
   methods: {
     // 查询价格行情列表
     getAllPriceGoods(){
+      this.loadingTable = true
       getAllPriceGoods(this.pageNum, this.pageSize, this.categoryOneId, this.yearPro,this.monthPro,this.dayPro,  this.areaId, this.typeId).then(res => {
+        this.loadingTable = false
         this.dataList = res.info.records
         this.total = res.info.totalrecord
       }).catch(err => {
+        this.loadingTable = false
         this.$message.error('查询价格行情出错！')
       })
     },

@@ -39,6 +39,7 @@
     <el-button size="mini" disabled v-else>搜索</el-button>
   </div>
   <el-table
+    v-loading="loadingTable"
     :data="tableData"
     :header-cell-style="{   }"
     center
@@ -127,6 +128,7 @@ export default {
   components:{pickDate, breadcrumb},
   data() {
     return {
+      loadingTable:false,
       yearPro:'',
       monthPro:'',
       dayPro:'',
@@ -232,7 +234,6 @@ export default {
       this.getOrderList()
     },
     getPickDate(date){
-      console.log(date, 'llllllll')
       date = date+'-'
       let dateArr = date.split('-')
       if(dateArr.length === 2){
@@ -259,6 +260,7 @@ export default {
     },
     // 查询订单列表
     getOrderList() {
+      this.loadingTable = true
       let data = {}
       data.orderNo = this.orderNo
       data.pageNum = this.pageNum
@@ -271,6 +273,7 @@ export default {
       data.param = this.params
       getOrder(data).then(res => {
         if(res.status === 1){
+          this.loadingTable = false
           this.tableData = res.info.records
           this.total = res.info.totalrecord
         }

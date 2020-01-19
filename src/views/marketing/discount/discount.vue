@@ -30,7 +30,7 @@
         <el-button type="danger" size="mini" v-else disabled>清除</el-button>
       </div>
     </div>
-    <el-table :data="dataList">
+    <el-table v-loading="loadingTable" :data="dataList">
       <el-table-column prop="name" label="折扣包名称"/>
       <el-table-column prop="shopName" label="使用店铺"/>
       <el-table-column prop="" label="折扣商品" :width="200">
@@ -88,6 +88,7 @@ export default {
   },
   data() {
     return {
+      loadingTable: false,
       showDelete:false,
       title:'',
       text:'',
@@ -171,12 +172,15 @@ export default {
     },
     // 查询折扣列表
     getDiscount(){
+      this.loadingTable = true
       queryDiscount(this.pageNum, this.pageSize, this.shopId, this.status).then(res => {
+        this.loadingTable = false
         if(res.status === 1){
           this.dataList = res.info.records
           this.total = res.info.totalrecord
         }
       }).catch(err => {
+        this.loadingTable = false
         this.$message.error('查询折扣列表失败！')
       })
     },
